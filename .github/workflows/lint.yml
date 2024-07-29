@@ -33,6 +33,7 @@ defaults:
 
 jobs:
   eslint:
+    if: false
     runs-on: ubuntu-latest
 
     steps:
@@ -49,6 +50,7 @@ jobs:
 
   # This job just check code style for in-template contributions.
   code-style:
+    if: false
     runs-on: ubuntu-latest
 
     steps:

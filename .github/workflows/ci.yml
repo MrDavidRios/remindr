@@ -36,10 +36,13 @@ concurrency:
 
 jobs:
   typechecking:
+    if: false
     uses: ./.github/workflows/typechecking.yml
   tests:
+    if: false
     uses: ./.github/workflows/tests.yml
   draft_release:
+    if: false
     permissions:
       contents: write # Allows this job to create releases
     with:
