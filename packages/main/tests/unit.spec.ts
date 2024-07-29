@@ -1,5 +1,5 @@
 import type { MockedClass, MockedObject } from 'vitest';
-import { beforeEach, expect, test, vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { restoreOrCreateWindow } from '../src/mainWindow';
 
 import { BrowserWindow } from 'electron';
@@ -21,6 +21,11 @@ vi.mock('electron', () => {
   bw.prototype.isMinimized = vi.fn();
   bw.prototype.focus = vi.fn();
   bw.prototype.restore = vi.fn();
+  bw.prototype.removeMenu = vi.fn();
+
+  Object.defineProperty(bw.prototype, 'webContents', {
+    value: { once: vi.fn() },
+  });
 
   const app: Pick<Electron.App, 'getAppPath'> = {
     getAppPath(): string {
@@ -28,11 +33,23 @@ vi.mock('electron', () => {
     },
   };
 
-  return { BrowserWindow: bw, app };
+  const ipcMain: Pick<Electron.IpcMain, 'on'> = {
+    on: vi.fn(),
+  };
+
+  return { BrowserWindow: bw, app, ipcMain };
 });
 
-beforeEach(() => {
-  vi.clearAllMocks();
+vi.mock('electron-store', () => {
+  return {
+    default: vi.fn(() => {
+      return {
+        get: vi.fn(() => {}),
+        set: vi.fn(() => {}),
+        delete: vi.fn(() => {}),
+      };
+    }),
+  };
 });
 
 test('Should create a new window', async () => {
