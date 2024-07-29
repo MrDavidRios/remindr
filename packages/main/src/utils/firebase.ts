@@ -1,10 +1,8 @@
 import { app } from 'electron';
 import { initializeApp } from 'firebase/app';
+import type { Auth, User, UserCredential } from 'firebase/auth';
 import {
-  Auth,
   EmailAuthProvider,
-  User,
-  UserCredential,
   createUserWithEmailAndPassword,
   reauthenticateWithCredential,
   sendEmailVerification,
@@ -36,11 +34,15 @@ export function createUser(auth: Auth, email: string, password: string): Promise
       // User successfully created
       return JSON.stringify(userCredential);
     })
-    .catch((err) => err.code);
+    .catch(err => err.code);
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
-export function reauthenticateUser(user: User, email: string, password: string): Promise<boolean | string> {
+export function reauthenticateUser(
+  user: User,
+  email: string,
+  password: string,
+): Promise<boolean | string> {
   const credential = EmailAuthProvider.credential(email, password);
 
   return reauthenticateWithCredential(user, credential)
@@ -48,7 +50,7 @@ export function reauthenticateUser(user: User, email: string, password: string):
       // User re-authenticated
       return true;
     })
-    .catch((err) => err);
+    .catch(err => err);
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
@@ -57,7 +59,7 @@ export function sendVerificationEmail(user: User): Promise<boolean | string> {
     .then(() => {
       return true;
     })
-    .catch((err) => err);
+    .catch(err => err);
 }
 
 export function sendPassResetEmail(auth: Auth, email: string): Promise<boolean | string> {
@@ -65,7 +67,7 @@ export function sendPassResetEmail(auth: Auth, email: string): Promise<boolean |
     .then(() => {
       return true;
     })
-    .catch((err) => err);
+    .catch(err => err);
 }
 
 export function signInUser(auth: Auth, email: string, password: string): Promise<boolean | string> {
@@ -75,7 +77,7 @@ export function signInUser(auth: Auth, email: string, password: string): Promise
       storeAuthCredential(email, password);
       return true;
     })
-    .catch((err) => err);
+    .catch(err => err);
 }
 
 // https://firebase.google.com/docs/reference/node/firebase.auth.EmailAuthProvider
@@ -102,7 +104,7 @@ export function updateUserEmail(user: User, newEmail: string): Promise<boolean |
       // User re-authenticated
       return true;
     })
-    .catch((err) => err);
+    .catch(err => err);
 }
 
 export function getUserObjPath(): string {

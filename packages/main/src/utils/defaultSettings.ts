@@ -1,8 +1,8 @@
-import { AppMode } from '../../../../types/appMode.js';
-import { DateFormat } from '../../../../types/dateformat.js';
-import type { Settings } from '../../../../types/settings.js';
-import { Theme } from '../../../../types/theme.js';
-import { Timeframe } from '../../../../types/timeframe.js';
+import { AppMode } from '../../../shared/src/types/classes/appMode.js';
+import type { Settings } from '../../../shared/src/types/classes/settings.js';
+import { DateFormat } from '../../../shared/src/types/dateformat.js';
+import { Theme } from '../../../shared/src/types/theme.js';
+import { Timeframe } from '../../../shared/src/types/timeframe.js';
 
 export function createDefaultSettings(overrides: Partial<Settings> = {}): Settings {
   return {

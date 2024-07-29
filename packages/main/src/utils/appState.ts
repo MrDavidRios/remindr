@@ -1,11 +1,10 @@
 import { app, ipcMain } from 'electron';
-import { AppMode } from '../types/classes/appMode';
-
-const Store = require('electron-store');
+import Store from 'electron-store';
+import { AppMode } from '../../../shared/src/types/classes/appMode.js';
 
 const store = new Store();
 
-let appMode: AppMode = store.get('app-mode', AppMode.Online);
+let appMode: AppMode = store.get('app-mode', AppMode.Online) as AppMode;
 
 /**
  * Initializes listeners that handle app state (e.g. sync app mode, get version)
@@ -18,7 +17,7 @@ export function initAppStateListeners() {
     appMode = updatedAppMode;
   });
 
-  ipcMain.on('get-version', (event) => {
+  ipcMain.on('get-version', event => {
     event.returnValue = app.getVersion();
   });
 }

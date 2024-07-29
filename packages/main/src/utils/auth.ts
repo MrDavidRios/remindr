@@ -1,5 +1,11 @@
-import { BrowserWindow, ipcMain } from 'electron';
-import { Auth, EmailAuthCredential, getAuth, onAuthStateChanged, signInWithCredential } from 'firebase/auth';
+import { ipcMain, type BrowserWindow } from 'electron';
+import type { Auth } from 'firebase/auth';
+import {
+  EmailAuthCredential,
+  getAuth,
+  onAuthStateChanged,
+  signInWithCredential,
+} from 'firebase/auth';
 import {
   createUser,
   getAuthCredential,
@@ -10,7 +16,7 @@ import {
   sendVerificationEmail,
   signInUser,
   updateUserEmail,
-} from './firebase';
+} from './firebase.js';
 
 const fs = require('fs');
 
@@ -83,7 +89,7 @@ export default function initAuthEventListeners(mainWindow: BrowserWindow | null)
     return updateUserEmail(user, newEmail);
   });
 
-  ipcMain.on('auth-credential-exists', (event) => {
+  ipcMain.on('auth-credential-exists', event => {
     event.returnValue = fs.existsSync(getAuthCredentialPath());
   });
 
@@ -91,23 +97,23 @@ export default function initAuthEventListeners(mainWindow: BrowserWindow | null)
     deleteAuthCredential();
   });
 
-  ipcMain.on('check-if-user-signed-in', (event) => {
+  ipcMain.on('check-if-user-signed-in', event => {
     event.returnValue = auth!.currentUser !== null;
   });
 
-  ipcMain.on('check-if-user-email-verified', (event) => {
+  ipcMain.on('check-if-user-email-verified', event => {
     event.returnValue = auth!.currentUser?.emailVerified ?? 'User not found.';
   });
 
-  ipcMain.on('get-user-email', (event) => {
+  ipcMain.on('get-user-email', event => {
     event.returnValue = auth!.currentUser?.email ?? undefined;
   });
 
-  ipcMain.on('get-user-uid', (event) => {
+  ipcMain.on('get-user-uid', event => {
     event.returnValue = getUserUID();
   });
 
-  ipcMain.on('get-current-user', (event) => {
+  ipcMain.on('get-current-user', event => {
     if (!auth) {
       event.returnValue = undefined;
       return;

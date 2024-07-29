@@ -1,0 +1,9 @@
+{
+  "name": "@remindr/shared",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  }
+}

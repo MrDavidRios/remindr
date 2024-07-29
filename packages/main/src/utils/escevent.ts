@@ -1,4 +1,4 @@
-export const escEvent = (e: React.KeyboardEvent, callback: () => void) => {
+export const escEvent = (e: KeyboardEvent, callback: () => void) => {
   if (e.key === 'Escape') {
     callback();
   }

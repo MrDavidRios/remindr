@@ -7,3 +7,5 @@ thumbs.db
 .eslintcache
 .browserslistrc
 .electron-vendors.cache.json
+
+packages/shared/dist

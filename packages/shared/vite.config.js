@@ -1,4 +1,6 @@
+import typescript from '@rollup/plugin-typescript';
 import { join } from 'node:path';
+import { typescriptPaths } from 'rollup-plugin-typescript-paths';
 import { node } from '../../.electron-vendors.cache.json';
 
 const PACKAGE_ROOT = __dirname;
@@ -14,12 +16,10 @@ const config = {
   envDir: PROJECT_ROOT,
   resolve: {
     alias: {
-      '/@/': join(PACKAGE_ROOT, 'src') + '/',
-      '/@shared/': join(PROJECT_ROOT, 'packages/shared') + '/dist/',
+      '@utils/': join(PACKAGE_ROOT, 'src/utils') + '/',
     },
   },
   build: {
-    ssr: true,
     sourcemap: 'inline',
     target: `node${node}`,
     outDir: 'dist',
@@ -30,9 +30,20 @@ const config = {
       formats: ['es'],
     },
     rollupOptions: {
+      external: [],
       output: {
         entryFileNames: '[name].js',
       },
+      plugins: [
+        typescriptPaths({
+          preserveExtensions: true,
+        }),
+        typescript({
+          sourceMap: false,
+          declaration: true,
+          outDir: 'dist',
+        }),
+      ],
     },
     emptyOutDir: true,
     reportCompressedSize: false,

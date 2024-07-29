@@ -6,14 +6,18 @@
     "sourceMap": false,
     "moduleResolution": "NodeNext",
     "skipLibCheck": true,
+    "composite": true,
     "strict": true,
+    "declaration": true,
+    "declarationMap": true,
     "isolatedModules": true,
     "types": ["node"],
     "baseUrl": ".",
+    "outDir": "dist",
     "paths": {
-      "/@/*": ["./src/*"]
+      "@utils/*": ["./src/utils/*"]
     }
   },
-  "include": ["src/**/*.ts", "../../types/**/*.d.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

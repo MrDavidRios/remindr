@@ -2,9 +2,10 @@
  * @module preload
  */
 
+import type { Settings } from '@remindr/shared/src/types';
 import type { IpcRendererEvent, MessageBoxOptions, OpenDialogOptions } from 'electron';
 import { contextBridge, ipcRenderer } from 'electron';
-
+import type { AppMode } from '../../shared/src/types/classes/appMode.js';
 import type { Channels } from './channels.js';
 import { sha256sum } from './nodeCrypto.js';
 import { versions } from './versions.js';

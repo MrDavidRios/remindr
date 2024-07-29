@@ -26,6 +26,7 @@
       }
     ],
     "@typescript-eslint/no-var-requires": "off",
+    "no-extra-semi": "off",
     "@typescript-eslint/consistent-type-imports": "error",
     /**
      * Having a semicolon helps the optimizer interpret your code correctly.
