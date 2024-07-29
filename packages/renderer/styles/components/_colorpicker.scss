@@ -1,0 +1,68 @@
+#colorPickerWrapper {
+  position: absolute;
+  top: -30px;
+  left: 190px;
+  z-index: 2;
+  box-shadow:
+    rgba(0, 0, 0, 0.3) 0px 0px 2px,
+    rgba(0, 0, 0, 0.3) 0px 4px 8px;
+  background-color: var(--surface-primary) !important;
+  border-radius: 4px;
+
+  .chrome-picker {
+    background-color: transparent !important;
+    box-shadow: none !important;
+
+    input,
+    label {
+      color: var(--text-color-primary) !important;
+    }
+
+    input {
+      margin: 0;
+    }
+
+    svg {
+      fill: var(--text-color-primary) !important;
+
+      &:hover {
+        fill: var(--ui-accent-color-dark) !important;
+        background-color: var(--surface-secondary) !important;
+      }
+    }
+  }
+
+  .action-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    padding: 0 8px 8px 8px;
+
+    button {
+      box-shadow: none;
+      background-color: transparent;
+
+      color: var(--text-color-primary);
+
+      &:hover {
+        color: var(--ui-accent-color-dark);
+      }
+
+      &:active {
+        position: static;
+      }
+    }
+  }
+}
+
+#colorPickerBtn {
+  border-radius: 20px;
+  width: 30px;
+  height: 30px;
+
+  margin-right: 10px;
+  cursor: pointer;
+
+  background-color: white;
+}

@@ -1,0 +1,88 @@
+.task-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.task-group-container {
+  .task-group-header::before {
+    transform: rotateZ(0deg);
+  }
+
+  &.expanded {
+    .task-group-header {
+      margin-bottom: 5px;
+    }
+
+    .task-group-header::before {
+      transform: rotateZ(90deg);
+    }
+  }
+}
+
+.task-group-header {
+  height: 30px;
+  width: min-content;
+
+  padding: 5px 9px 5px 10px;
+
+  display: grid;
+  align-items: center;
+  grid-template-columns: 15px auto auto;
+
+  column-gap: 5px;
+
+  border-radius: 5px;
+
+  &.animate {
+    transition: margin 0.25s ease-in-out;
+  }
+
+  .task-group-counter {
+    color: gray;
+  }
+
+  span {
+    white-space: nowrap;
+  }
+
+  &.icon {
+    grid-template-columns: 15px auto auto auto;
+
+    div {
+      margin: 0 2px 0 2px;
+    }
+  }
+
+  div {
+    width: min-content;
+    max-width: calc(100vw - 300px);
+
+    margin: 0 2px 0 5px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    background-color: var(--surface-secondary);
+    box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
+  }
+
+  &::before {
+    background-image: url('../../../assets/icons/expand-arrow.png');
+
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+
+    filter: var(--img-filter);
+    opacity: 0.5;
+
+    content: '';
+  }
+}

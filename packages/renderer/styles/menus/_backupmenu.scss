@@ -1,0 +1,46 @@
+#backupDataMenu,
+#restoreDataMenu {
+  min-width: 320px;
+}
+
+.modal-menu {
+  flex-direction: column;
+  margin: 36px;
+
+  &,
+  .titlebar,
+  .settings-checkbox {
+    display: flex;
+    align-items: center;
+  }
+
+  .titlebar {
+    height: 60px;
+
+    justify-content: center;
+  }
+
+  #checkboxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 28px;
+    align-items: baseline;
+  }
+
+  .settings-checkbox {
+    gap: 6px;
+    height: 20px;
+    line-height: 12px;
+    margin-bottom: 4px;
+  }
+
+  .last-updated-text {
+    font-size: 14px;
+    color: var(--text-color-secondary);
+    margin-left: 20px;
+  }
+
+  height: min-content;
+  padding-bottom: 16px;
+}

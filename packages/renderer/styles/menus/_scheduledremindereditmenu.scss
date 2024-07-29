@@ -1,0 +1,59 @@
+#scheduledReminderEditMenu {
+  position: absolute;
+  border-radius: var(--menu-border-radius);
+  display: flex;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+  /* Styling inner elements */
+  color: var(--text-color-primary);
+
+  @media (max-width: 500px) {
+    left: calc(100vw - 400px - 40px) !important;
+  }
+
+  z-index: 3;
+
+  #timeInputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-right: 8px;
+  }
+
+  #repeatIntervalInputButton,
+  #timeInputWrapper {
+    button img {
+      width: 20px;
+      height: 20px;
+    }
+
+    ul {
+      width: 120px;
+
+      li {
+        font-size: 14px;
+      }
+    }
+  }
+
+  #saveTaskButton {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+
+    width: 36px;
+    height: 36px;
+
+    img {
+      width: 28px;
+      height: 28px;
+    }
+
+    &:active {
+      top: initial;
+      bottom: 6px;
+    }
+  }
+}

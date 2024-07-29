@@ -1,0 +1,168 @@
+@use '../base/mixins' as *;
+
+#taskCreationWindow {
+  position: absolute;
+  z-index: 3;
+  left: 50px;
+  top: 32px;
+
+  width: 325px;
+
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+
+  h3 {
+    text-align: center;
+    padding-right: 12px;
+  }
+
+  &.hide-overflow {
+    .task-modification-interface,
+    .task-modification-interface > div {
+      overflow-x: hidden !important;
+      overflow-y: hidden !important;
+    }
+  }
+}
+
+#taskCreationWindow,
+#taskEditWindow {
+  // Action bar buttons
+  .action-button {
+    grid-column: 2;
+
+    cursor: pointer;
+
+    &.absolute {
+      position: absolute;
+    }
+
+    &:hover img {
+      filter: var(--ui-accent-color-filter); /*#75DDDD by default*/
+    }
+  }
+
+  #unpinBtn img {
+    margin-left: 4px;
+  }
+}
+
+.task-modification-interface {
+  height: 100%;
+
+  padding: 16px 0 16px 12px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    overflow-y: visible;
+  }
+
+  h3,
+  h4,
+  p {
+    color: var(--text-color-primary);
+    font-weight: normal;
+
+    // Without this, the header tends to wrap when constricted by the menu close animation
+    white-space: nowrap;
+  }
+
+  h4 {
+    line-height: 16px;
+  }
+}
+
+.dynamic-text-area {
+  @include task-menu-input();
+
+  max-height: 180px;
+}
+
+#taskTitleInput {
+  font-size: 15px;
+}
+
+#timeInputLabel {
+  margin-left: 10px;
+
+  cursor: pointer;
+}
+
+#timeInputLabel:focus,
+#repeatIntervalInputLabel:focus {
+  outline: none;
+  color: var(--ui-accent-color);
+}
+
+#timeInputLabel:hover,
+#meridiemInputText:hover {
+  color: var(--ui-accent-color);
+}
+
+.time-input {
+  height: 30px;
+  width: 30px;
+
+  font-size: 15px;
+}
+
+#timeInputColon {
+  padding-bottom: 4px;
+}
+
+#meridiemInputText {
+  margin-left: 2px;
+  padding: 4px;
+  font-size: 15px;
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  &:hover {
+    background: transparent;
+  }
+
+  &:active {
+    top: 0;
+  }
+}
+
+#meridiemInputText:focus {
+  color: var(--ui-accent-color);
+}
+
+#saveTaskButton img {
+  width: 30px;
+  height: 30px;
+}
+
+#taskActionsBar {
+  height: 50px;
+  width: 100%;
+  padding: 10px;
+
+  display: flex;
+  justify-content: space-between;
+
+  > div {
+    display: flex;
+    gap: 4px;
+  }
+
+  &.action-buttons-hidden {
+    justify-content: end;
+  }
+
+  align-items: center;
+
+  box-shadow: 0px -2px 21px -6px rgba(0, 0, 0, 0.75);
+}

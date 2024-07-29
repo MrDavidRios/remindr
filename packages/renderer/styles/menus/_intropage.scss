@@ -1,0 +1,38 @@
+#introScreen {
+  font-family: 'Lato', sans-serif;
+}
+
+h1 {
+  color: var(--text-color-primary) !important;
+}
+
+#promptText {
+  color: var(--text-color-primary);
+  padding-bottom: 10px;
+}
+
+#nameInput {
+  width: 200px;
+  height: 30px;
+
+  display: block;
+
+  margin: auto;
+  margin-top: 10px;
+}
+
+#introScreenContinueButton {
+  height: 35px;
+  width: 215px;
+
+  margin-top: 35px;
+}
+
+#introScreenBackButton {
+  padding: 10px;
+
+  p {
+    color: var(--text-color-primary);
+    white-space: nowrap;
+  }
+}

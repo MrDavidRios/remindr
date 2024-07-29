@@ -1,0 +1,204 @@
+// Import all unmigrated css files
+@use './src/_generalmenu.css';
+@use './src/_master.css';
+@use './src/_timepicker.css';
+
+// Import all migrated css (now scss) files
+@use './menus/_toolbar';
+@use './menus/_titlebar';
+
+// Menus
+@use './menus/_taskcreationmenu';
+@use './menus/_taskmenus';
+@use './menus/_accountmenu';
+@use './menus/_settingsmenu';
+@use './menus/_reminderui';
+@use './menus/scheduledremindereditmenu';
+@use './menus/_backupmenu';
+
+@use './menus/contextmenus';
+
+@use './components/messageModal';
+
+// Components
+@use './components/colorpicker';
+@use './components/datepicker';
+@use './components/slider';
+@use './components/dropdown';
+
+@use './components/tasktile';
+@use './components/taskgroup';
+
+@use './components/reminderseditor';
+@use './components/noteseditor';
+@use './components/linkseditor';
+
+// Pages
+@use './menus/_login';
+@use './menus/_intropage';
+
+// Base
+@use './base/svg';
+@use './base/frosted_background';
+@use './base/mixins';
+
+@font-face {
+  font-family: 'Lato';
+  src: url('../../../assets/fonts/Lato-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../../../assets/fonts/Inter-Regular.ttf');
+}
+
+// Variables
+:root {
+  --ui-background-overlay: rgba(35, 35, 35, 0.75);
+  --ui-background-overlay-hover: rgba(39, 39, 39, 0.75);
+
+  --ui-background-overlay-light: rgba(60, 60, 60, 0.75);
+  --ui-background-overlay-light-hover: rgba(75, 75, 75, 0.75);
+
+  --ui-background-overlay-menu: rgba(35, 35, 35, 1);
+  --ui-background-overlay-menu-hover: rgba(39, 39, 39, 1);
+
+  --ui-accent-color: #75dddd;
+  --ui-accent-color-dark: #508991;
+
+  --ui-accent-color-filter: invert(86%) sepia(33%) saturate(534%) hue-rotate(123deg) brightness(89%) contrast(94%);
+  --ui-accent-color-dark-filter: invert(48%) sepia(43%) saturate(355%) hue-rotate(139deg) brightness(93%) contrast(92%);
+
+  --error-color: #f44336;
+  --error-filter: invert(34%) sepia(86%) saturate(2663%) hue-rotate(342deg) brightness(98%) contrast(95%);
+
+  --menu-border-radius: 6px;
+}
+
+.no-animation {
+  transition: none !important;
+}
+
+html,
+body,
+#root,
+#root > div,
+#backgroundWrapper,
+#backgroundWrapper div {
+  height: 100%;
+  width: 100%;
+}
+
+#backgroundWrapper,
+#backgroundWrapper div {
+  position: fixed;
+}
+
+input,
+textarea {
+  font-family: 'Lato', sans-serif;
+}
+
+.responsive {
+  border: none;
+  appearance: none;
+  transition: all ease-in 0.05s;
+  opacity: 0.9;
+}
+
+.responsive:hover {
+  transform: scale(1.05);
+}
+
+button {
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+
+  &:focus-visible {
+    outline: var(--ui-accent-color) solid 1px;
+  }
+}
+
+input[type='checkbox']:focus {
+  outline: 2px solid var(--ui-accent-color);
+}
+
+input[aria-invalid='true'] {
+  border: 1px solid var(--error-color);
+
+  &:focus-visible {
+    border: 2px solid var(--error-color);
+  }
+}
+
+p.error {
+  margin-top: 6px;
+  color: var(--error-color) !important;
+  font-size: 14px;
+}
+
+.accessible-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 40px;
+  width: 40px;
+
+  border-radius: 6px;
+
+  &:hover {
+    background: transparent;
+  }
+}
+
+div:focus-visible,
+li:focus-visible {
+  outline: var(--ui-accent-color) solid 2px;
+}
+
+.menu {
+  border-radius: var(--menu-border-radius);
+  background-color: var(--surface-primary);
+
+  color: var(--text-color-primary);
+}
+
+.primary-button {
+  background-color: var(--ui-accent-color);
+  padding: 4px 8px;
+  border-radius: var(--menu-border-radius);
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+}
+
+.secondary-button {
+  background-color: var(--surface-secondary);
+  padding: 4px 8px;
+  border-radius: var(--menu-border-radius);
+  box-shadow: var(--subtle-box-shadow);
+}
+
+label.required {
+  position: relative;
+
+  &:after {
+    position: absolute;
+    left: -10px;
+
+    content: ' *';
+    color: red;
+  }
+}

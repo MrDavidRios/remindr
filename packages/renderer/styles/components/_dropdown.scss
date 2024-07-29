@@ -1,0 +1,100 @@
+.select-box {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  width: 100%;
+  text-align: left;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  &:active {
+    position: inherit;
+  }
+
+  &,
+  .options-container,
+  .option {
+    width: min-content;
+  }
+
+  .options-container {
+    background: var(--surface-primary);
+    color: var(--text-color-primary);
+    margin-top: 30px;
+    position: absolute;
+
+    box-sizing: border-box;
+    border-top: 2px solid var(--ui-accent-color-dark);
+    box-shadow: 0px 20px 24px 10px rgba(0, 0, 0, 0.2);
+
+    .bottom-option {
+      border: none !important;
+    }
+  }
+}
+
+.selected-option {
+  background: var(--surface-primary);
+  color: var(--text-color-primary);
+
+  text-align: left;
+  position: relative;
+
+  border-bottom: none !important;
+
+  filter: brightness(1.2);
+
+  &:hover {
+    background: var(--surface-secondary);
+  }
+
+  &:active {
+    background: var(--surface-active);
+  }
+
+  &::after {
+    content: '';
+    background-image: url('../../../assets/icons/expand-arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    position: absolute;
+    height: 100%;
+    width: 14px;
+    right: 16px;
+    top: 1px;
+
+    transform: rotateZ(90deg);
+
+    filter: var(--img-filter);
+  }
+}
+
+.select-box.active .options-container + .selected-option::after {
+  transform: rotateX(180deg) rotateZ(90deg);
+}
+
+.select-box .option,
+.selected-option {
+  padding: 5px 36px 5px 8px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--surface-active);
+}
+
+.select-box {
+  label {
+    cursor: pointer;
+  }
+
+  .option {
+    .radio {
+      display: none;
+    }
+
+    &:hover {
+      background-color: var(--surface-active);
+    }
+  }
+}

@@ -1,0 +1,237 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#appWrapper {
+  display: grid;
+  grid-template-rows: 32px auto;
+}
+
+#appMainPageContainer {
+  height: calc(100vh - 32px);
+  display: grid;
+  grid-template-columns: min-content auto;
+  width: 100%;
+}
+
+#appMainPageContainer > div {
+  height: calc(100vh - 32px);
+}
+
+#mainContainer {
+  grid-column: 2;
+  width: 100%;
+  display: flex;
+}
+
+body {
+  height: 100%;
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+  user-select: none;
+  overflow: hidden;
+}
+
+h1 {
+  user-select: none;
+  margin: 30px 0px;
+  color: var(--text-color-primary);
+  font-weight: 900;
+}
+
+.general-button {
+  font-family: 'Lato', sans-serif;
+  background-color: var(--ui-accent-color);
+  border-radius: 30px;
+  cursor: pointer;
+  color: #000;
+  font-size: 17px;
+  padding: 16px 14px;
+  margin-left: 10px;
+  text-decoration: none;
+  border: 0;
+  outline: none;
+  display: inline-block;
+  transition: all 0.1s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--ui-accent-color);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  position: relative;
+  top: 1px;
+}
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  width: 100%;
+}
+
+#dateSelectedButton {
+  width: 150px;
+  margin-top: 20px;
+}
+
+#meridiem-input {
+  margin-left: 10px;
+  border-radius: 5px;
+}
+
+.reminder-name-input {
+  height: 30px;
+  width: 300px;
+}
+
+input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--text-color-primary);
+  text-align: center;
+  color: var(--text-color-primary);
+  transition-property: border-bottom;
+  transition-duration: 0.5s;
+  font-family: 'Lato', sans-serif;
+}
+
+::-webkit-input-placeholder {
+  transition: all 0.25s;
+}
+
+input:hover::-webkit-input-placeholder {
+  margin-bottom: 5px;
+}
+
+.form-group {
+  position: relative;
+  margin: auto;
+}
+
+/*Border bottom center*/
+.form-input {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  border: none;
+  padding: 0 10px;
+  box-shadow: none;
+  outline: none;
+  transition: all 0.5s ease;
+}
+
+.form-input.border-bottom {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  border-bottom: 2px solid var(--text-color-primary);
+}
+.form-input.border-bottom ~ .border-bottom-animation {
+  position: absolute;
+  content: '';
+  width: 0;
+  background: var(--text-color-primary);
+  height: 2px;
+  z-index: 99;
+  transition: all 0.5s ease;
+}
+
+/* Border bottom center */
+.form-input.border-bottom ~ .border-bottom-animation.center {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+}
+
+.form-input.border-bottom:hover ~ .border-bottom-animation.center {
+  background: #baffff;
+  width: 100%;
+}
+
+.form-input.border-bottom:focus ~ .border-bottom-animation.center {
+  background: #00c2c2;
+  width: 100%;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--ui-accent-color);
+}
+
+#update-notification {
+  position: fixed;
+  z-index: 10;
+
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+
+  padding: 20px;
+
+  color: var(--text-color-primary);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px 10px rgb(0 0 0 / 10%);
+}
+
+#message {
+  font-family: 'Lato', sans-serif;
+  padding-bottom: 15px;
+}
+
+.notification-button {
+  font-family: 'Lato', sans-serif;
+  margin: 5px;
+  border-radius: 12px;
+  background-color: var(--ui-accent-color);
+  border: none;
+  width: 60px;
+  height: 25px;
+  outline: none;
+}
+
+.notification-button:hover {
+  border-radius: 12px;
+  border: none;
+  width: 60px;
+  height: 25px;
+}
+
+#notification-buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.menu-header-divider {
+  border-top: 2px solid var(--ui-accent-color-dark);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.opaque {
+  opacity: 0 !important;
+}
+
+.ignore-cursor {
+  pointer-events: none;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

@@ -1,0 +1,321 @@
+//Purpose: styles shared elements between the task creation/edit panels.
+@use '../components/icons';
+
+.task-panel {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  text-align: left;
+
+  overflow: hidden;
+
+  p,
+  li {
+    color: var(--text-color-primary);
+  }
+
+  img {
+    @include icons.svg-icon();
+  }
+
+  .task-panel-footer {
+    padding: 16px 16px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+#suggestedTimesInputButton {
+  display: flex;
+  align-items: center;
+
+  padding: 4px;
+  border-radius: 6px;
+
+  &:hover {
+    background: transparent;
+  }
+}
+
+#suggestedTimesInputButton,
+#repeatIntervalInputButton {
+  position: relative;
+}
+
+#timeInputWrapper {
+  display: flex;
+  align-items: center;
+
+  margin-top: 12px;
+
+  color: var(--text-color-primary);
+
+  input {
+    color: var(--text-color-primary);
+  }
+
+  #hour {
+    margin-left: 2px;
+  }
+}
+
+#dateInputButton img:hover,
+#timeInputWrapper img:hover {
+  filter: var(--ui-accent-color-filter);
+
+  cursor: pointer;
+}
+
+#dateInputButton,
+#repeatIntervalInputButton {
+  margin-top: 10px;
+  width: 140px;
+
+  outline: none;
+  border: none;
+
+  color: var(--text-color-primary);
+
+  &,
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+
+    &:hover {
+      img {
+        filter: var(--ui-accent-color-filter);
+      }
+
+      p {
+        color: var(--ui-accent-color);
+      }
+
+      background: transparent;
+      cursor: pointer;
+    }
+  }
+}
+
+#notesHeader img {
+  width: 20px;
+  height: 20px;
+}
+
+#scheduledReminderEditMenuButton img {
+  width: 18px;
+  height: 18px;
+}
+
+#notesHeader,
+#scheduledReminderEditMenuButton {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+
+#scheduledReminderEditMenuButton {
+  outline: none;
+
+  &:hover,
+  &:focus {
+    cursor: pointer;
+
+    background-color: transparent;
+    box-shadow: none;
+
+    h4 {
+      color: var(--ui-accent-color);
+    }
+  }
+}
+
+#subtasksWrapper {
+  margin: -4px 0 -4px -2px;
+
+  #subtasksHeader {
+    display: flex;
+    column-gap: 7px;
+    align-items: center;
+
+    // This is so that its outline looks well-spaced
+    padding-right: 4px;
+
+    background: transparent;
+    position: static;
+    box-shadow: none;
+
+    p {
+      margin-left: 2px;
+      font-size: 14px;
+      color: var(--text-color-secondary);
+
+      &.hidden {
+        display: none;
+      }
+
+      &.accent {
+        color: var(--ui-accent-color);
+      }
+    }
+
+    .collapse-img {
+      margin: 2px 0 0 4px;
+
+      width: 14px;
+      height: 14px;
+    }
+
+    > img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  #subtasksList {
+    padding: 10px 5px 5px 5px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    &.collapsed {
+      height: 0px;
+      padding: 0px;
+      overflow: hidden;
+    }
+
+    div {
+      display: grid;
+      grid-template-columns: 25px 260px;
+      align-items: center;
+
+      column-gap: 5px;
+
+      button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background-color: transparent;
+          box-shadow: none;
+        }
+
+        &,
+        img {
+          width: 18px;
+          height: 18px;
+        }
+
+        img:hover {
+          filter: var(--ui-accent-color-filter);
+        }
+      }
+
+      .subtask-input {
+        height: 100%;
+
+        text-align: left;
+        border-bottom: none;
+
+        color: var(--text-color-secondary);
+
+        background-color: transparent;
+        color: var(--text-color-primary);
+        font-family: 'Lato', sans-serif;
+
+        resize: none;
+        outline: none;
+        overflow: hidden;
+
+        border: none;
+      }
+    }
+  }
+
+  #addSubtaskButton {
+    padding: 10px 5px 5px 5px;
+
+    color: var(--ui-accent-color);
+
+    &:hover {
+      color: var(--ui-accent-color-dark);
+    }
+  }
+}
+
+#repeatIntervalInputLabel {
+  margin-left: 10px;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--ui-accent-color);
+  }
+}
+
+// Put the floating menus in order so that they never overlap in their animations
+#suggestedTimesMenu {
+  left: 0px;
+  z-index: 1;
+}
+
+#repeatIntervalsMenu {
+  z-index: 2;
+}
+
+#suggestedTimesMenu,
+#repeatIntervalsMenu {
+  position: absolute;
+  top: calc(100% + 6px);
+
+  width: 140px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow: 12px 12px 20px 0 rgb(0 0 0 / 20%);
+  color: var(--text-color-primary);
+
+  white-space: nowrap;
+
+  li {
+    height: 30px;
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    box-shadow: none;
+
+    &:hover {
+      background-color: var(--surface-secondary);
+    }
+  }
+
+  &.active {
+    height: 180px;
+  }
+}
+
+#suggestedTimesMenu.active,
+#suggestedDatesMenu.active {
+  height: 150px !important;
+}

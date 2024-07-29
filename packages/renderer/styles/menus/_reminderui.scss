@@ -1,0 +1,407 @@
+@media only screen and (max-width: 900px) {
+  #listWrapper {
+    width: calc(100vw - 50px);
+    position: absolute;
+    right: 0;
+  }
+
+  #taskEditWindow.active {
+    + #taskListContainer {
+      overflow-x: hidden;
+
+      #taskListTopBar,
+      #taskListDisplayContainer {
+        min-width: calc(100vw - 50px);
+      }
+    }
+  }
+}
+
+#listWrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeInput {
+  height: 55px !important;
+  width: 55px !important;
+  font-size: 25px;
+  text-align: center;
+}
+
+.time-input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.inline-element-flex {
+  margin: 2px !important;
+}
+
+.time {
+  width: min-content;
+  white-space: nowrap;
+
+  padding-right: 5px;
+
+  font-size: 14px;
+  color: #727272;
+}
+
+.subtasks-indicator {
+  display: flex;
+  align-items: center;
+  padding-right: 7px;
+
+  img {
+    margin-right: 2px !important;
+  }
+
+  p {
+    white-space: nowrap;
+    font-size: 14px;
+    color: #727272;
+  }
+}
+
+.overdue {
+  color: #ff1313 !important;
+}
+
+.complete {
+  color: var(--ui-accent-color) !important;
+}
+
+#taskListTopBar {
+  #taskListHeaderContainer {
+    height: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    #taskListHeaderLeft {
+      text-align: left;
+      padding-left: 17px;
+
+      display: grid;
+
+      #taskListTitle {
+        font-size: 25px;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    #searchInputWrapper {
+      #searchInput {
+        height: 36px;
+        padding: 10px 32px 10px 10px;
+        text-align: left;
+
+        &.hide-border {
+          border: none !important;
+        }
+      }
+    }
+  }
+
+  width: 100%;
+  height: 65px !important;
+
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+#viewSettingsButton {
+  position: relative;
+}
+
+#taskListViewSettingsMenu {
+  position: absolute;
+  top: 32px + 60px;
+  right: 16px;
+
+  z-index: 6;
+
+  list-style-type: none;
+  white-space: nowrap;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+
+  overflow: hidden;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    height: 30px;
+    padding: 8px;
+  }
+}
+
+#multipleSelectionWrapper {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 17px 0 17px;
+
+  h3 {
+    font-size: 25px;
+  }
+
+  #multipleSelectionActionButtons {
+    display: flex;
+    column-gap: 10px;
+
+    button:hover {
+      cursor: pointer;
+
+      img {
+        filter: var(--ui-accent-color-filter);
+      }
+    }
+  }
+}
+
+#reminderListCounter {
+  color: #909090;
+
+  font-size: 15px;
+}
+
+#reminderListOverdueCounter {
+  padding-right: 15px;
+  white-space: nowrap;
+  align-self: end;
+}
+
+#taskListContainer {
+  width: 100%;
+  height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: var(--text-color-primary);
+
+  position: relative;
+}
+
+nav {
+  height: 100%;
+
+  overflow-y: auto;
+}
+
+nav ul div p {
+  width: 100%;
+  text-align: left;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 7px;
+  /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--text-color-secondary);
+  /* color of the scroll thumb */
+  border-radius: 20px;
+  /* roundness of the scroll thumb */
+}
+
+/*Removes up/down arrows from number inputs*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#taskEditWindow {
+  z-index: 1;
+  flex-shrink: 0;
+
+  box-shadow: 10px 0px 10px -8px rgba(0, 0, 0, 0.5);
+}
+
+#notesWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  height: auto;
+  min-width: calc(330px - 12px);
+}
+
+#taskEditWindow.active {
+  width: 330px;
+}
+
+#undoActionNotification {
+  height: min-content !important;
+
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1;
+
+  padding: 6px 6px 6px 10px;
+
+  color: var(--text-color-primary);
+
+  display: grid;
+  grid-template-columns: auto max-content max-content;
+  gap: 8px;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+  left: 50px;
+  right: 0;
+  margin: auto;
+  width: fit-content;
+  max-width: calc(100vw - 100px);
+
+  bottom: 15px;
+
+  p,
+  button {
+    line-height: 20px;
+  }
+
+  > button {
+    color: var(--ui-accent-color);
+
+    &:hover {
+      box-shadow: none;
+      background-color: transparent;
+      filter: brightness(1.1);
+    }
+  }
+
+  > div,
+  > button {
+    display: flex;
+    align-items: center;
+  }
+
+  .text-wrapper {
+    // 50px from toolbar, 40 px from close button + undo button, 8px from gap between close button & undo button
+    // max-width: calc(100vw - 198px);
+    display: flex;
+
+    span {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    p {
+      flex-shrink: 0;
+    }
+  }
+
+  .action-button-wrapper {
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 12px;
+      border-radius: 6px;
+
+      &,
+      img {
+        width: 20px;
+        height: 20px;
+      }
+
+      img {
+        pointer-events: none;
+
+        filter: var(--img-filter);
+      }
+
+      &:hover {
+        background-color: transparent;
+
+        img {
+          filter: var(--ui-accent-color-filter);
+        }
+      }
+
+      &.view-task-button img {
+        filter: var(--svg-filter);
+      }
+
+      &:active {
+        position: static;
+      }
+    }
+
+    button:last-child img {
+      margin-left: 1px;
+    }
+
+    &,
+    .open-button img {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .open-button img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+#mainToolbar.expanded ~ #undoActionNotification {
+  left: calc(50% + 50px);
+}
+
+/*When the main toolbar is expanded but the window is not wide enough for it to show as expanded, properly re-center the delete notification.*/
+@media only screen and (max-width: 900px) {
+  #mainToolbar.expanded ~ #undoActionNotification {
+    left: calc(50% + 25px) !important;
+  }
+}
+
+#rotatedPinnedIcon {
+  height: 20px;
+
+  transform: rotate(30deg);
+
+  margin-top: 1px;
+}
+
+#taskListDisplayContainer {
+  width: 100%;
+  height: calc(100% - 65px);
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding: 5px;
+
+  color: var(--text-color-primary);
+}

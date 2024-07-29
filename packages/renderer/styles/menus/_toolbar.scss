@@ -1,0 +1,267 @@
+.toolbar-button-img-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: 0.3s all ease-in-out;
+
+  img {
+    filter: var(--svg-filter);
+  }
+
+  .profile-picture {
+    transition: none;
+  }
+}
+
+#mainToolbar.expanded #expandToolbarButton .toolbar-button-img-container {
+  transform: rotateY(180deg);
+}
+
+// Task Create Button
+#taskCreateButton img {
+  width: 30px;
+  height: 30px;
+}
+
+#expandToolbarButton img {
+  width: 25px;
+  height: 25px;
+}
+
+#reconnectButton {
+  position: relative;
+
+  padding-bottom: 2px;
+
+  &.reconnecting {
+    top: 0;
+
+    &:hover {
+      box-shadow: none;
+      background-color: transparent;
+      cursor: default;
+    }
+  }
+
+  &:hover {
+    #syncImage {
+      transform: rotate(90deg);
+    }
+  }
+
+  #syncImage {
+    transform: rotate(0deg);
+
+    transition: transform 0.2s ease-in-out;
+  }
+
+  #errorImage {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+
+    opacity: 0.9;
+
+    filter: var(--error-filter);
+
+    top: 4px;
+    right: 4px;
+  }
+}
+
+#syncImage {
+  margin: auto;
+  margin-bottom: 10px;
+
+  width: 25px;
+  height: 25px;
+
+  filter: var(--svg-filter);
+
+  transform: rotateY(180deg);
+
+  &.animate {
+    animation: rotation 1.5s infinite cubic-bezier(0.5, 0.28, 0.48, 0.68);
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  #mainToolbar {
+    grid-template-rows: 50px 50px auto 50px 50px !important;
+  }
+
+  #mainToolbar.expanded {
+    width: 50px !important;
+  }
+
+  #mainToolbar.expanded + #mainContainer #timeframeChoiceWindow,
+  #mainToolbar.expanded + #mainContainer #taskCreationWindow {
+    left: 50px !important;
+  }
+
+  #expandToolbarButton {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 1035px) {
+  #mainToolbar.edit-reminder {
+    width: 50px !important;
+
+    grid-template-rows: 50px 50px auto 50px 50px !important;
+  }
+
+  #mainToolbar.expanded.edit-reminder + #mainContainer #timeframeChoiceWindow,
+  #mainToolbar.expanded.edit-reminder + #mainContainer #taskCreationWindow {
+    left: 50px !important;
+  }
+
+  #mainToolbar.edit-reminder #expandToolbarButton {
+    display: none !important;
+  }
+}
+
+#mainToolbar {
+  height: 100%;
+  width: 50px;
+
+  z-index: 2;
+
+  grid-row: 1;
+  grid-column: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-shadow: 10px 0px 10px -8px rgba(0, 0, 0, 0.5);
+
+  .toolbar-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    outline-offset: -1px;
+
+    width: 100%;
+    height: 50px;
+  }
+}
+
+#mainToolbar.expanded .toolbar-button .toolbar-text {
+  display: block;
+}
+
+.toolbar-text {
+  font-family: 'Lato', sans-serif;
+  font-size: 15px;
+
+  white-space: nowrap;
+}
+
+.toolbar-button img {
+  width: 40px;
+  height: 40px;
+}
+
+.toolbar-button img.small {
+  width: 30px;
+  height: 30px;
+}
+
+.toolbar-button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  color: var(--text-color-primary);
+  padding: 0;
+
+  &:hover {
+    background-color: var(--surface-secondary);
+  }
+}
+
+.toolbar-button-label-container {
+  display: flex;
+  justify-content: start;
+
+  margin-left: 1px;
+}
+
+#taskCreateButton {
+  z-index: 4;
+
+  &.active img {
+    transform: rotateZ(45deg);
+  }
+}
+
+#timeframeChoiceWindow {
+  position: fixed;
+  z-index: 4;
+
+  top: 82px;
+  left: 50px;
+
+  width: 100px;
+  height: 245px;
+
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: repeat(6, 35px);
+
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.281);
+
+  color: var(--text-color-primary);
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  &.active {
+    width: 100px;
+  }
+}
+
+#deleteAccountButton {
+  color: #b72929;
+}
+
+#mainToolbar.expanded + #mainContainer #timeframeChoiceWindow,
+#mainToolbar.expanded + #mainContainer #taskCreationWindow {
+  left: 200px;
+}
+
+.timeframe-choice,
+.account-action-choice {
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.selected,
+  &:hover {
+    background-color: var(--surface-secondary);
+  }
+
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+}
+
+.menu-bottom-border {
+  border-bottom: 1px solid var(--surface-active);
+}
+
+.menu-top-border {
+  border-top: 1px solid var(--surface-active);
+}
+
+#settingsButton:hover img {
+  transform: rotateZ(60deg);
+}

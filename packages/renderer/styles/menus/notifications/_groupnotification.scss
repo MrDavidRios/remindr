@@ -1,0 +1,113 @@
+html,
+body {
+  min-height: 300px;
+  max-height: 300px;
+}
+
+div#groupNotification {
+  display: grid;
+  grid-template-rows: 42px auto;
+
+  #titlebar {
+    grid-template-columns: auto;
+    border-bottom: 1px solid var(--surface-secondary);
+
+    #notificationCloseButton {
+      position: absolute;
+
+      top: 11px !important;
+      right: 15px !important;
+    }
+  }
+
+  #notifsContainer {
+    min-height: calc(100vh - 42px);
+    max-height: calc(100vh - 42px);
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.notif-element {
+  width: 100%;
+  min-height: 56px;
+
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: auto 30px;
+
+  align-items: center;
+
+  padding: 0px 9px 0px 10px;
+
+  border-bottom: 1px solid var(--surface-secondary);
+
+  p {
+    font-family: 'Segoe UI', sans-serif;
+
+    color: var(--text-color-primary);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.title {
+      max-width: calc(100vw - 60px);
+    }
+
+    &.date {
+      font-size: 14px;
+      color: gray;
+    }
+  }
+
+  &:hover {
+    background-color: var(--surface-active);
+  }
+
+  .complete-task-button {
+    width: 24px;
+    height: 24px;
+
+    background-color: transparent;
+
+    border: none;
+    outline: none;
+
+    cursor: pointer;
+
+    img {
+      width: 24px;
+      height: 24px;
+
+      filter: var(--svg-filter);
+
+      &:hover {
+        filter: var(--ui-accent-color-filter);
+      }
+    }
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 7px;
+  /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--text-color-secondary);
+  /* color of the scroll thumb */
+  border-radius: 20px;
+  /* roundness of the scroll thumb */
+}

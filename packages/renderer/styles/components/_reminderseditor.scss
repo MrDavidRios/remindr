@@ -1,0 +1,141 @@
+.reminders-editor {
+  position: relative;
+
+  margin: -4px 38px -4px 0px;
+
+  .reminders-editor-header {
+    height: 28px;
+
+    &,
+    button,
+    button > div {
+      display: flex;
+      align-items: center;
+    }
+
+    button,
+    button > div {
+      gap: 8px;
+    }
+
+    button {
+      border-radius: 6px;
+      padding: 2px;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      &:focus-visible img {
+        visibility: visible !important;
+      }
+    }
+
+    > button {
+      width: 100%;
+
+      border-radius: 0;
+      padding: 0;
+      position: static;
+      box-shadow: none;
+
+      justify-content: space-between;
+
+      div > img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    justify-content: space-between;
+  }
+
+  .reminders-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &.has-items {
+      padding: 6px 0 2px 0;
+    }
+  }
+}
+
+.reminder-tile {
+  width: 100%;
+  padding: 0 8px;
+  overflow: hidden;
+  min-height: 36px;
+
+  position: relative;
+  cursor: pointer;
+
+  display: grid;
+  align-items: center;
+
+  box-shadow: var(--subtle-box-shadow);
+  border-radius: var(--menu-border-radius);
+
+  .action-buttons {
+    &:hover,
+    &:focus-visible {
+      div > img {
+        filter: var(--ui-accent-color-filter);
+      }
+    }
+  }
+
+  > div:not(.action-buttons) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    img {
+      width: 16px;
+      height: 16px;
+
+      &.repeat-indicator {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  p {
+    line-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 2px;
+  }
+
+  .action-buttons {
+    width: min-content;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    button {
+      width: 24px;
+      height: 24px;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  &:hover,
+  &:focus-visible,
+  &:focus-within {
+    background-color: transparent;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+}

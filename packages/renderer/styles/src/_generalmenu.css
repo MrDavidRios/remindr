@@ -1,0 +1,37 @@
+.general-menu {
+  background-color: var(--panel-background-color);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: var(--menu-border-radius);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#debugAccessMenu {
+  width: 300px;
+  height: 150px;
+}
+
+#debugAccessMenuHeader {
+  margin: 15px 0 20px 0;
+  font-size: 20px;
+  color: var(--text-color-primary);
+}
+
+#devCodeInput {
+  margin: auto;
+  display: block;
+  margin-bottom: 20px;
+}
+
+#debugMenuOpenButton {
+  padding: 0px 15px;
+  font-size: 15px;
+  margin: 0;
+  height: 25px;
+}
+
+#debugOpenMenuCloseButton:active {
+  position: fixed;
+}

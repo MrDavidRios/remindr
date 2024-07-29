@@ -1,0 +1,10 @@
+@use '../base/mixins' as *;
+
+.notes-editor {
+  @include task-menu-input();
+
+  min-height: 80px;
+  margin-top: 0;
+
+  resize: none;
+}

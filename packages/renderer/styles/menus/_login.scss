@@ -1,0 +1,304 @@
+#introScreen,
+#loginPage {
+  position: fixed;
+  margin-top: calc(15vh);
+  top: 0;
+  width: 100%;
+}
+
+#loginPageHeader {
+  font-size: 40px;
+  margin-bottom: 50px;
+
+  color: var(--text-color-primary);
+}
+
+#welcomeScreenUIContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+#loadingScreenContainer {
+  position: absolute;
+  top: 32px;
+
+  z-index: 1;
+
+  height: calc(100% - 32px);
+  width: 100%;
+  background-color: var(--surface-primary);
+}
+
+#loadingScreenImg {
+  margin-top: 15vh;
+
+  width: 128px;
+  height: 128px;
+
+  filter: drop-shadow(0 0 1rem #00bae8);
+}
+
+#loadingHeader {
+  color: var(--text-color-primary);
+  font-family: 'Lato', sans-serif;
+  font-weight: 200;
+
+  padding: 0 32px;
+}
+
+#offlinePageButtonWrapper {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  button {
+    margin: 0;
+  }
+}
+
+#retryConnectBtn,
+#offlineBtn,
+#offlineBtnLogin {
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--ui-accent-color-dark);
+    box-shadow: none;
+  }
+}
+
+#retryConnectBtn {
+  background-color: var(--ui-accent-color);
+}
+
+#offlineBtn {
+  background-color: gray;
+}
+
+#offlineBtnLogin {
+  width: 110px;
+  height: 30px;
+
+  margin-bottom: 20px;
+
+  background-color: gray;
+
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#login {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+  justify-content: center;
+
+  button {
+    text-align: center;
+  }
+
+  background-color: var(--surface-primary);
+
+  font-family: 'Inter', sans-serif;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: calc(60vw);
+  max-width: 400px;
+  margin-top: 50px;
+  margin: auto;
+
+  text-align: left;
+}
+
+#spacing {
+  width: 15px;
+}
+
+#emailInput,
+#passwordInput {
+  margin: auto;
+  width: 100%;
+  height: 40px;
+}
+
+.large-input {
+  text-align: center;
+  border: 1px solid #505050;
+  border-radius: 5px;
+  transition: none;
+
+  color: var(--text-color-primary);
+
+  &:focus {
+    border: 2px solid #838383;
+  }
+}
+
+.login-button {
+  outline: none;
+  border: none;
+  width: 100px;
+  height: 40px;
+  border-radius: 20px;
+  transition: all 0.1s ease-in-out;
+  color: black;
+  font-family: 'Lato', sans-serif;
+}
+
+.large-button {
+  font-family: 'Lato', sans-serif;
+  font-size: 18px;
+  width: 150px;
+  height: 45px;
+  border-radius: 7px;
+  border: none;
+  outline: none;
+  margin: auto;
+  transition: all 0.1s ease-in-out;
+}
+
+#localButton {
+  color: white;
+
+  &:hover {
+    color: var(--ui-accent-color);
+  }
+
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+}
+
+.accent-button {
+  width: 100%;
+  margin-bottom: 25px;
+
+  border: none;
+  border-radius: 7px;
+
+  background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%);
+  background-size: 200% auto;
+
+  color: black;
+  font-family: 'Inter', sans-serif;
+
+  cursor: pointer;
+
+  outline: none;
+
+  font-weight: 600;
+  font-size: 14px;
+
+  &:hover {
+    background-position: right center;
+  }
+}
+
+#signInBtn,
+#finalCreateAccountBtn {
+  height: 40px;
+
+  transition: all 0.2s ease-in-out;
+}
+
+#createAccountBtn,
+#forgotPasswordButton {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#noAccountPrompt {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+
+  #createAccountBtn {
+    color: rgb(99 158 206);
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}
+
+#loginPage p {
+  color: var(--text-color-primary);
+}
+
+#backBtn,
+#introScreenBackButton {
+  position: fixed;
+  top: 82px;
+  left: 50px;
+
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+
+  background-color: transparent;
+  padding: 10px;
+  border-radius: var(--menu-border-radius);
+
+  z-index: 1;
+
+  &:active {
+    top: 83px;
+  }
+
+  cursor: pointer;
+
+  img {
+    width: 20px;
+
+    transform: rotate(180deg);
+  }
+
+  p {
+    font-size: 22px;
+    color: var(--text-color-primary);
+  }
+}
+
+#forgotPasswordButton {
+  color: var(--text-color-secondary);
+
+  &:hover {
+    color: var(--ui-accent-color);
+  }
+}
+
+.icon-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  button {
+    position: absolute;
+    right: 10px;
+
+    display: flex;
+
+    background-color: transparent;
+    box-shadow: none;
+    top: inherit;
+
+    &:hover,
+    &:focus {
+      outline: none;
+
+      img {
+        filter: var(--ui-accent-color-filter);
+      }
+    }
+  }
+}

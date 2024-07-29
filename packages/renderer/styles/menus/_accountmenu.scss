@@ -1,0 +1,233 @@
+#accountMenu {
+  height: calc(80vh);
+  width: 90vw;
+  max-height: 300px;
+  max-width: 600px;
+  background-color: var(--surface-primary);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+
+  /* Styling inner elements */
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 70px auto;
+
+  color: var(--text-color-primary);
+}
+
+#accountActionsMenu {
+  position: absolute;
+
+  top: 55px;
+  left: 20px;
+
+  width: 160px;
+
+  display: grid;
+  grid-template-columns: 100%;
+  box-shadow: 12px 12px 20px 0 rgb(0 0 0 / 20%);
+  background-color: var(--surface-primary);
+  color: var(--text-color-primary);
+  white-space: nowrap;
+}
+
+.account-action-choice {
+  height: 30px;
+}
+
+#accountActionsMenu.active {
+  height: 120px;
+}
+
+#accountMenuHeaderWrapper {
+  height: 50px;
+  padding: 10px;
+  padding-top: 20px;
+
+  #accountMenuSettingsButton {
+    width: 40px;
+    left: 25px;
+    top: 20px;
+  }
+}
+
+#accountDetailsWrapper {
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-rows: min-content min-content;
+  row-gap: 40px;
+
+  padding-top: 15px;
+}
+
+#accountDetails {
+  text-align: center;
+  display: grid;
+  justify-content: center;
+}
+
+#resetPasswordInputFields {
+  display: grid;
+  grid-gap: 15px;
+
+  margin-top: 20px;
+  padding: 0 100px;
+}
+
+#accountMenuCloseButton {
+  top: 20px;
+  right: 20px;
+}
+
+#deleteAccountMenuButton {
+  color: #b72929;
+}
+
+#accountDeletedLoadingScreen,
+#emailResetLoadingScreen {
+  height: 50px;
+  width: 200px;
+
+  z-index: 5;
+
+  display: grid;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #191919;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  color: var(--text-color-primary);
+}
+
+.account-panel {
+  padding-bottom: 20px;
+  width: 250px;
+
+  background-color: var(--surface-primary);
+
+  border-radius: 5px;
+  color: var(--text-color-primary);
+
+  .action-button {
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background-color: var(--ui-accent-color);
+  }
+}
+
+#deleteAccountAuthenticationWindow {
+  height: 175px;
+}
+
+.account-panel-header {
+  margin-top: 15px;
+  font-size: 20px;
+}
+
+#oldEmailInput,
+#newEmailInput {
+  margin-top: 20px;
+
+  color: var(--text-color-primary);
+}
+
+#currentPasswordInput {
+  margin-top: 10px;
+}
+
+.account-panel-input {
+  width: 200px;
+}
+
+#profileName {
+  width: min-content;
+
+  max-height: 19px;
+  max-width: 300px;
+
+  margin: auto;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+}
+
+#profileName:focus {
+  outline: none;
+}
+
+#editProfileNameButtonsPanel {
+  width: 160px;
+  height: 40px;
+
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 30px;
+
+  display: grid;
+
+  grid-template-columns: 50px auto;
+
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0%;
+
+  transition: 0.5s opacity;
+
+  background-color: var(--surface-primary);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+
+#profileName:focus + #editProfileNameButtonsPanel {
+  opacity: 100%;
+}
+
+#saveNameChangesButton {
+  width: 100px;
+
+  cursor: pointer;
+}
+
+#saveNameChangesButton:hover {
+  width: 100px;
+}
+
+#ignoreNameChangesButton {
+  width: 30px;
+  height: 30px;
+
+  margin: 0 auto;
+
+  cursor: pointer;
+
+  filter: var(--img-filter);
+}
+
+#ignoreNameChangesButton:active {
+  margin-top: 1px;
+}
+
+#accountDeletionAuthEmailInput {
+  margin-top: 20px;
+
+  color: var(--text-color-primary);
+}
+
+#accountDeletionAuthPasswordInput {
+  margin-top: 10px;
+
+  color: var(--text-color-primary);
+}
+
+#accountDeleteButton {
+  width: 125px;
+  height: 30px;
+}

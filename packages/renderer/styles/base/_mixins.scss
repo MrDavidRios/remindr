@@ -1,0 +1,22 @@
+@mixin task-menu-input() {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+
+  height: 30px;
+  min-height: 30px;
+
+  padding: 5px;
+
+  background-color: transparent;
+  color: var(--text-color-primary);
+  font-family: 'Lato', sans-serif;
+
+  resize: none;
+  outline: none;
+  overflow: hidden;
+
+  &:focus {
+    border: 1px solid #9e9e9e;
+  }
+}

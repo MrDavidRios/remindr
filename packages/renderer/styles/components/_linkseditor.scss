@@ -1,0 +1,193 @@
+#linkMenu {
+  min-width: 320px;
+
+  .contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0 24px;
+
+    width: 100%;
+
+    > div {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 10px;
+
+      &.fold {
+        flex-direction: column;
+        gap: 16px;
+        padding: 0 20px;
+      }
+    }
+  }
+
+  .dynamic-text-area {
+    min-width: 200px;
+    max-width: 200px;
+
+    min-height: inherit;
+  }
+
+  .secondary-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    img {
+      width: 16px;
+      height: 16px;
+
+      filter: var(--svg-filter);
+    }
+
+    p {
+      line-height: 16px;
+      white-space: nowrap;
+    }
+
+    padding: 6px 10px;
+  }
+}
+
+.links-editor {
+  margin: -4px 38px 0 0px;
+
+  .links-editor-header {
+    height: 28px;
+
+    &,
+    button,
+    button > div {
+      display: flex;
+      align-items: center;
+    }
+
+    button,
+    button > div {
+      gap: 10px;
+    }
+
+    button {
+      border-radius: 6px;
+      padding: 2px;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      &:focus-visible img {
+        visibility: visible !important;
+      }
+    }
+
+    > button {
+      width: 100%;
+
+      border-radius: 0;
+      padding: 0;
+      position: static;
+      box-shadow: none;
+
+      justify-content: space-between;
+
+      div > img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    justify-content: space-between;
+  }
+
+  .links-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &.has-items {
+      padding-top: 6px;
+    }
+  }
+}
+
+.link-tile {
+  width: 100%;
+  padding: 0 8px;
+  overflow: hidden;
+  min-height: 36px;
+
+  position: relative;
+  cursor: pointer;
+
+  display: grid;
+  align-items: center;
+
+  box-shadow: var(--subtle-box-shadow);
+  border-radius: var(--menu-border-radius);
+
+  > div:not(.action-buttons) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    img {
+      width: 16px;
+      height: 16px;
+
+      &.favicon {
+        filter: none;
+      }
+    }
+  }
+
+  p {
+    line-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 2px;
+  }
+
+  .action-buttons {
+    width: min-content;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    button {
+      width: 24px;
+      height: 24px;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  &:hover,
+  &:focus-visible {
+    div > img {
+      filter: var(--ui-accent-color-filter);
+    }
+  }
+
+  &:hover,
+  &:focus-visible,
+  &:focus-within {
+    background-color: transparent;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+}

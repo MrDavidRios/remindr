@@ -1,0 +1,158 @@
+.uninteractable {
+  cursor: default !important;
+  pointer-events: none;
+
+  &:hover {
+    background: transparent;
+  }
+
+  &:active {
+    background: transparent;
+  }
+}
+
+.draggable {
+  -webkit-app-region: drag;
+  height: 20px;
+  width: 100%;
+  position: absolute;
+}
+
+.dates {
+  margin: auto;
+
+  overflow: hidden; // Make sure elements outside the border radius are clipped (corners always look smooth no matter what)
+  border-radius: var(--menu-border-radius) 0 0 var(--menu-border-radius);
+
+  .day {
+    font-size: 12px;
+  }
+
+  .calendar-controls {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 35px 35px auto 35px 35px;
+    text-align: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    button {
+      font-size: 14px;
+      box-shadow: none;
+
+      &:hover {
+        background-color: var(--surface-secondary);
+      }
+
+      &:active {
+        top: 0;
+        background-color: var(--surface-active);
+      }
+    }
+
+    .month-year {
+      height: 100%;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+
+      padding: 0 10px;
+    }
+
+    .arrows {
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: transparent;
+
+      font-size: 20px;
+
+      &.left img {
+        transform: rotateY(180deg);
+      }
+
+      img {
+        width: 10px;
+        height: 10px;
+
+        filter: var(--img-filter);
+      }
+    }
+  }
+
+  .weekdays {
+    height: 36px;
+    display: flex;
+    align-items: center;
+
+    text-align: center;
+
+    cursor: default;
+
+    .day {
+      height: min-content;
+      font-size: 14px;
+    }
+
+    div {
+      width: 36px;
+    }
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, min-content);
+    justify-content: center;
+
+    .day {
+      width: 36px;
+      height: 36px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      &.old {
+        color: rgb(148, 148, 148);
+      }
+
+      &.selected:focus-visible {
+        outline: 2px solid var(--ui-accent-color);
+      }
+
+      &.today {
+        border: 1px solid var(--ui-accent-color);
+        color: var(--ui-accent-color);
+      }
+
+      &.selected {
+        background-color: var(--ui-accent-color-dark);
+        color: white;
+      }
+
+      &:hover,
+      &:focus-visible {
+        outline: none;
+        box-shadow: none;
+        background-color: var(--ui-accent-color);
+        color: white;
+      }
+    }
+  }
+
+  &.active {
+    display: block;
+
+    height: auto;
+
+    transition: max-height 0.3s ease-in-out;
+    max-height: 352px;
+
+    box-shadow: 0px 20px 24px 10px rgba(0, 0, 0, 0.2);
+  }
+}
