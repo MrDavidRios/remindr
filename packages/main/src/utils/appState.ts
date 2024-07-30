@@ -1,6 +1,6 @@
+import { AppMode } from '@remindr/shared';
 import { app, ipcMain } from 'electron';
 import Store from 'electron-store';
-import { AppMode } from '../../../shared/src/types/classes/appMode.js';
 
 const store = new Store();
 
