@@ -1,6 +1,6 @@
-import Task from './task.js';
+import type { Task } from './task.js';
 
-export default class TaskCollection {
+export class TaskCollection {
   taskList: Task[];
 
   constructor(taskList?: Task[]) {

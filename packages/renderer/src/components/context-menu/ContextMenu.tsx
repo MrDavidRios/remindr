@@ -1,8 +1,9 @@
-import { FC, HTMLAttributes, useEffect, useState } from 'react';
+import type { FC, HTMLAttributes } from 'react';
+import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useAppSelector } from 'renderer/hooks';
-import { useDetectWheel } from 'renderer/scripts/utils/hooks/usedetectwheel';
-import useClickOutside from 'renderer/scripts/utils/hooks/useoutsideclick';
+import { useAppSelector } from '/@/hooks';
+import { useDetectWheel } from '/@/scripts/utils/hooks/usedetectwheel';
+import useClickOutside from '/@/scripts/utils/hooks/useoutsideclick';
 
 interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
   x: number;
@@ -11,7 +12,7 @@ interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, children, hideMenu }) => {
-  const openMenus = useAppSelector((state) => state.menuState.openMenus);
+  const openMenus = useAppSelector(state => state.menuState.openMenus);
 
   const [position, setPosition] = useState({ x, y });
   const [isVisible, setIsVisible] = useState(false);
@@ -45,7 +46,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, children, hideMenu
   return (
     <div
       id={id}
-      ref={ref as any}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
       className="context-menu menu frosted"
       style={{ left: position.x, top: position.y, visibility: isVisible ? 'visible' : 'hidden' }}
     >

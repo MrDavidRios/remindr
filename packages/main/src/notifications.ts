@@ -1,8 +1,7 @@
+import type { Task, TaskScheduledReminderPair } from '@remindr/shared';
 import { BrowserWindow, app, ipcMain, screen } from 'electron';
 import _ from 'lodash';
 import path from 'path';
-import type Task from '../../shared/src/types/classes/task/task.js';
-import type TaskScheduledReminderPair from '../../shared/src/types/classes/task/taskScheduledReminderPair.js';
 import { createDefaultSettings } from '/@/utils/defaultSettings.js';
 import { resolveHtmlPath } from '/@/utils/resolveHtmlPath.js';
 import { getScreenHeight, getScreenWidth } from '/@/utils/screen.js';

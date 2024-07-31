@@ -1,6 +1,7 @@
-import { Settings, createDefaultSettings } from './settings.js';
+import type { Settings } from './settings.js';
+import { createDefaultSettings } from './settings.js';
 
-export default class User {
+export class User {
   name: string;
 
   email: string;

@@ -1,9 +1,9 @@
-import type Task from './task.js';
+import type { Task } from './task.js';
 
 /**
  * An object containing both a task and a scheduled reminder index. Used for scheduling notifications.
  */
-export default class TaskScheduledReminderPair {
+export class TaskScheduledReminderPair {
   task: Task;
 
   scheduledReminderIndex: number;

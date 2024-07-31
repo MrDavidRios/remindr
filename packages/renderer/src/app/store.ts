@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { AppMode } from 'main/types/classes/appMode';
-import { unsavedTaskDialogMiddleware } from 'renderer/features/menu-state/middleware/unsavedTaskDialogMiddleware';
-import { taskListStoreMiddleware } from 'renderer/features/task-list/middleware/taskListStoreMiddleware';
+import { AppMode } from '@remindr/shared';
+import { unsavedTaskDialogMiddleware } from '../features/menu-state/middleware/unsavedTaskDialogMiddleware';
 import { initialSettingsState } from '../features/settings/settingsSlice';
 import { notificationEventMiddleware } from '../features/task-list/middleware/notificationEventMiddleware';
 import { overdueBadgeMiddleware } from '../features/task-list/middleware/overdueBadgeMiddleware';
+import { taskListStoreMiddleware } from '../features/task-list/middleware/taskListStoreMiddleware';
 import { initialUserState } from '../features/user-state/userSlice';
 import { getEmailVerifiedValue } from '../scripts/systems/authentication';
 import { rootReducer } from './rootReducer';
@@ -13,7 +13,7 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: rootReducer,
     preloadedState,
-    middleware: (getDefaultMiddleware) =>
+    middleware: getDefaultMiddleware =>
       getDefaultMiddleware()
         .prepend(unsavedTaskDialogMiddleware.middleware)
         .concat(taskListStoreMiddleware)

@@ -1,7 +1,8 @@
-import { escEvent } from 'main/utils/escevent';
-import { InputHTMLAttributes, useEffect, useState } from 'react';
+import { escEvent } from '@remindr/shared';
+import type { InputHTMLAttributes } from 'react';
+import { useEffect, useState } from 'react';
 import { ChromePicker } from 'react-color';
-import useClickOutside from 'renderer/scripts/utils/hooks/useoutsideclick';
+import useClickOutside from '/@/scripts/utils/hooks/useoutsideclick';
 
 interface ColorPickerProps extends InputHTMLAttributes<HTMLInputElement> {
   // Add any additional props or overrides here
@@ -37,16 +38,20 @@ export default function ColorPicker(props: ColorPickerProps) {
         onClick={togglePicker}
         id="colorPickerBtn"
         style={{ backgroundColor: finalColor }}
-        onKeyDown={(e) => escEvent(e, () => setPickerVisible(false))}
+        onKeyDown={e => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
       />
       {isPickerVisible && (
         <div
-          ref={ref as any}
+          ref={ref as unknown as React.RefObject<HTMLDivElement>}
           id="colorPickerWrapper"
-          onKeyDown={(e) => escEvent(e, () => setPickerVisible(false))}
+          onKeyDown={e => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
           className="frosted"
         >
-          <ChromePicker color={color} onChange={(e) => setColor(e.hex)} disableAlpha />
+          <ChromePicker
+            color={color}
+            onChange={e => setColor(e.hex)}
+            disableAlpha
+          />
           {color !== initialColor && (
             <div className="action-bar">
               <button onClick={() => setPickerVisible(false)}>Cancel</button>

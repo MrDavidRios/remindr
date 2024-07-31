@@ -1,7 +1,5 @@
 export * from './classes/index.js';
 
-export * from './preload.js';
-
 export * from './appData.js';
 export * from './authPage.js';
 export * from './dateformat.js';

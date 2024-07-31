@@ -1,6 +1,6 @@
 import { generateUniqueID } from '../../../utils/index.js';
 
-export default class Subtask {
+export class Subtask {
   name: string;
 
   complete: boolean;

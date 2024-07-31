@@ -1,8 +1,4 @@
-import {
-  Repeat,
-  type ScheduledReminder,
-} from '../../../shared/src/types/classes/task/scheduledReminder.js';
-import type Task from '../../../shared/src/types/classes/task/task.js';
+import { Repeat, type ScheduledReminder, type Task } from '@remindr/shared';
 import { getReminderDate } from '/@/utils/datefunctions.js';
 
 export function getCalculableDate(

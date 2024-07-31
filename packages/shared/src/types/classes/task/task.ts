@@ -1,6 +1,6 @@
 import type { Link } from '../../link.js';
 import type { ScheduledReminder } from './scheduledReminder.js';
-import type Subtask from './subtask.js';
+import type { Subtask } from './subtask.js';
 
 /**
  * @param name
@@ -9,7 +9,7 @@ import type Subtask from './subtask.js';
  * @param group
  * @param reminderNotes
  */
-export default class Task {
+export class Task {
   name: string;
 
   /** The scheduled reminders for a task ordered by time. Most recent is earliest in array. (E.g. A reminder due in an hour is index 0 while a reminder due in two hours is index 1 if both are attached to the same task.) */
