@@ -18,6 +18,6 @@
       "@utils/*": ["./src/utils/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+  "include": ["./src/**/*.ts"],
+  "exclude": ["./dist/**/*", "./tests/**/*"]
 }

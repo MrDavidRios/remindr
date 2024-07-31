@@ -1,16 +1,21 @@
+import type { ScheduledReminder } from '@remindr/shared';
+import { Repeat } from '@remindr/shared';
 import { AnimatePresence } from 'framer-motion';
-import { Repeat, ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import { FC, useRef, useState } from 'react';
-import { getScheduledReminderClone } from 'renderer/scripts/utils/scheduledreminderfunctions';
+import type { FC } from 'react';
+import { useRef, useState } from 'react';
 import repeatIcon from '../../../../../../assets/icons/repeat.svg';
 import { RepeatIntervalsMenu } from './RepeatIntervalsMenu';
+import { getScheduledReminderClone } from '/@/scripts/utils/scheduledreminderfunctions';
 
 interface RepeatIntervalPickerProps {
   reminder: ScheduledReminder;
   updateReminder: (reminder: ScheduledReminder) => void;
 }
 
-export const RepeatIntervalPicker: FC<RepeatIntervalPickerProps> = ({ reminder, updateReminder }) => {
+export const RepeatIntervalPicker: FC<RepeatIntervalPickerProps> = ({
+  reminder,
+  updateReminder,
+}) => {
   const [showRepeatIntervalsMenu, setShowRepeatIntervalsMenu] = useState(false);
 
   // When dropdown menu closes, restore focus to parent button
@@ -27,19 +32,24 @@ export const RepeatIntervalPicker: FC<RepeatIntervalPickerProps> = ({ reminder, 
       <button
         aria-label="Change repeat interval"
         onClick={() => updateRepeatIntervalsMenuState(!showRepeatIntervalsMenu)}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (e.key === 'Tab') updateRepeatIntervalsMenuState(false);
         }}
         ref={ref}
         type="button"
       >
-        <img src={repeatIcon} className="svg-filter" draggable="false" alt="" />
+        <img
+          src={repeatIcon}
+          className="svg-filter"
+          draggable="false"
+          alt=""
+        />
         <p id="repeatIntervalInputLabel">{Repeat[reminder.repeat]}</p>
         <AnimatePresence>
           {showRepeatIntervalsMenu && (
             <RepeatIntervalsMenu
               setShowRepeatIntervalsMenu={updateRepeatIntervalsMenuState}
-              updateRepeatInterval={(repeatInterval) => {
+              updateRepeatInterval={repeatInterval => {
                 const scheduledReminderClone = getScheduledReminderClone(reminder);
                 scheduledReminderClone.repeat = repeatInterval;
                 updateReminder(scheduledReminderClone);

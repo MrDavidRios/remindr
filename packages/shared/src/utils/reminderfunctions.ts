@@ -1,5 +1,6 @@
-import { Repeat, type ScheduledReminder, type Task } from '@remindr/shared';
-import { getReminderDate } from '/@/utils/datefunctions.js';
+import type { ScheduledReminder, Task } from 'src/types/index.js';
+import { Repeat } from 'src/types/index.js';
+import { getReminderDate } from './datefunctions.js';
 
 export function getCalculableDate(
   comparableDate: Date,

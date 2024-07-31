@@ -1,16 +1,16 @@
-import { Menu } from 'main/types/menu';
+import { Menu } from '@remindr/shared';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import type { AppDispatch } from 'renderer/app/store';
-import store from 'renderer/app/store';
-import CloseMenuButton from 'renderer/components/close-menu-button/CloseMenuButton';
-import { FullScreenMenu } from 'renderer/components/menus/fullscreen-menu/FullScreenMenu';
-import { hideMenu } from 'renderer/features/menu-state/menuSlice';
-import { resetUserState } from 'renderer/features/user-state/userSlice';
-import { useAppDispatch } from 'renderer/hooks';
-import { deleteAccount, reauthenticateUser } from 'renderer/scripts/systems/authentication';
-import showMessageBox from 'renderer/scripts/utils/messagebox';
+import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
+import type { AppDispatch } from '/@/app/store';
+import store from '/@/app/store';
+import { hideMenu } from '/@/features/menu-state/menuSlice';
+import { resetUserState } from '/@/features/user-state/userSlice';
+import { useAppDispatch } from '/@/hooks';
+import { deleteAccount, reauthenticateUser } from '/@/scripts/systems/authentication';
+import showMessageBox from '/@/scripts/utils/messagebox';
 
 interface AccountDeleteMenuProps {
   setShowAccountDeleteMenu: Dispatch<SetStateAction<boolean>>;

@@ -1,6 +1,6 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { AppMode, Menu } from '@remindr/shared';
-import { AnimatePresence, delay, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import expandArrow from '../../../../../assets/icons/expand-arrow.png';
@@ -11,6 +11,7 @@ import { hideMenu, showMenu } from '/@/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '/@/hooks';
 import { rgbaToHex } from '/@/scripts/utils/colorutils';
 import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
+import { delay } from '/@/scripts/utils/timing';
 
 export function HamburgerMenu() {
   const dispatch = useAppDispatch();
@@ -72,7 +73,7 @@ export function HamburgerMenu() {
   return (
     <div
       id="hamburger-menu"
-      ref={ref as any}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
     >
       <button
         type="button"
@@ -131,7 +132,7 @@ export function HamburgerMenu() {
                   />
                   {showFileSubmenu && (
                     <ul
-                      ref={fileSubmenuRef as any}
+                      ref={fileSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
                       className="sub-menu"
                       style={{ top: '32px', maxHeight: maxFileDropdownHeight }}
                     >
@@ -194,7 +195,7 @@ export function HamburgerMenu() {
                   />
                   {showHelpSubmenu && (
                     <ul
-                      ref={helpSubmenuRef as any}
+                      ref={helpSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
                       className="sub-menu"
                       style={{ top: '57px', width: '150px' }}
                     >

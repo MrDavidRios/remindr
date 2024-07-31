@@ -1,11 +1,11 @@
-import { AppMode } from 'main/types/classes/appMode';
+import remindrLoadingIcon from '@assets/icons/logo-full-size.png';
+import { AppMode } from '@remindr/shared';
 import { useEffect, useState } from 'react';
-import { setAppMode } from 'renderer/features/app-mode/appModeSlice';
-import { updateConnectionState } from 'renderer/features/connection-state/connectionState';
-import { useAppDispatch } from 'renderer/hooks';
-import { initializeUser } from 'renderer/scripts/systems/authentication';
-import { delay } from 'renderer/scripts/utils/timing';
-import remindrLoadingIcon from '../../../../assets/icons/logo-full-size.png';
+import { setAppMode } from '/@/features/app-mode/appModeSlice';
+import { updateConnectionState } from '/@/features/connection-state/connectionState';
+import { useAppDispatch } from '/@/hooks';
+import { initializeUser } from '/@/scripts/systems/authentication';
+import { delay } from '/@/scripts/utils/timing';
 
 export function OfflinePage() {
   const dispatch = useAppDispatch();
@@ -36,12 +36,25 @@ export function OfflinePage() {
   }, []);
 
   return (
-    <div id="loadingScreenContainer" className="frosted">
-      <img id="loadingScreenImg" src={remindrLoadingIcon} draggable="false" alt="Loading" />
+    <div
+      id="loadingScreenContainer"
+      className="frosted"
+    >
+      <img
+        id="loadingScreenImg"
+        src={remindrLoadingIcon}
+        draggable="false"
+        alt="Loading"
+      />
       <h1 id="loadingHeader">{`Failed to connect. ${headerContent}`}</h1>
       <div id="offlinePageButtonWrapper">
         {!attemptingConnection && (
-          <button type="button" id="retryConnectBtn" className="large-button" onClick={runAttemptConnection}>
+          <button
+            type="button"
+            id="retryConnectBtn"
+            className="large-button"
+            onClick={runAttemptConnection}
+          >
             Retry
           </button>
         )}

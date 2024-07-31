@@ -1,7 +1,12 @@
 import { AppMode } from '@remindr/shared';
 import showMessageBox from '../utils/messagebox';
 import type { AppDispatch } from '/@/app/store';
-import { updateEmailVerifiedState, updateUserState } from '/@/features/user-state/userSlice';
+import { setAppMode } from '/@/features/app-mode/appModeSlice';
+import {
+  getUserData,
+  updateEmailVerifiedState,
+  updateUserState,
+} from '/@/features/user-state/userSlice';
 
 // Auth hook (sets up auth-state-changed listener)
 let authInitialized = false;

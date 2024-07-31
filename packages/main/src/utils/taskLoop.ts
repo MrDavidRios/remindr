@@ -1,8 +1,13 @@
-import { isCurrentMinute, type Task } from '@remindr/shared';
+import {
+  isBetweenDates,
+  isCurrentMinute,
+  isOverdue,
+  taskHasReminders,
+  type Task,
+} from '@remindr/shared';
 import { BrowserWindow } from 'electron';
 import Store from 'electron-store';
 import { notify } from '/@/notifications.js';
-import { isBetweenDates, isOverdue, taskHasReminders } from '/@/utils/reminderfunctions.js';
 
 const store = new Store();
 

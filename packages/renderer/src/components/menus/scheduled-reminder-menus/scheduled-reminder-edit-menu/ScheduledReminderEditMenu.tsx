@@ -1,77 +1,95 @@
-import { ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import Task from 'main/types/classes/task/task';
-import { Menu } from 'main/types/menu';
-import { getDate, setDate } from 'main/utils/reminderfunctions';
-import React, { FC, useEffect, useState } from 'react';
+import checkIcon from '@assets/icons/check.svg';
+import type { ScheduledReminder, Task } from '@remindr/shared';
+import { getDate, Menu, setDate } from '@remindr/shared';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import store from 'renderer/app/store';
-import { DatePicker } from 'renderer/components/date-picker/DatePicker';
-import { FloatingMenu } from 'renderer/components/floating-menu/FloatingMenu';
-import { hideMenu, showDialog } from 'renderer/features/menu-state/menuSlice';
-import { getEditedTask, setEditedTask } from 'renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import { useDetectWheel } from 'renderer/scripts/utils/hooks/usedetectwheel';
-import { isFullscreenMenuOpen, isPrimaryMenuOpen } from 'renderer/scripts/utils/menuutils';
+import { RepeatIntervalPicker } from './RepeatIntervalPicker';
+import { SuggestedTimePicker } from './SuggestedTimePicker';
+import store from '/@/app/store';
+import { DatePicker } from '/@/components/date-picker/DatePicker';
+import { FloatingMenu } from '/@/components/floating-menu/FloatingMenu';
+import { hideMenu, showDialog } from '/@/features/menu-state/menuSlice';
+import { getEditedTask, setEditedTask } from '/@/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { useDetectWheel } from '/@/scripts/utils/hooks/usedetectwheel';
+import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '/@/scripts/utils/menuutils';
 import {
   getDefaultScheduledReminder,
   getReminderDisplayDate,
   getScheduledReminderClone,
-} from 'renderer/scripts/utils/scheduledreminderfunctions';
+} from '/@/scripts/utils/scheduledreminderfunctions';
 import {
   formatHour,
   formatMinute,
   getFormattedReminderTime,
   militaryToStandardHour,
   standardToMilHour,
-} from 'renderer/scripts/utils/timefunctions';
-import { delay } from 'renderer/scripts/utils/timing';
-import checkIcon from '../../../../../../assets/icons/check.svg';
-import { RepeatIntervalPicker } from './RepeatIntervalPicker';
-import { SuggestedTimePicker } from './SuggestedTimePicker';
+} from '/@/scripts/utils/timefunctions';
+import { delay } from '/@/scripts/utils/timing';
 
 export const ScheduledReminderEditMenu: FC = () => {
   const dispatch = useAppDispatch();
-  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState));
+  const editedTask = useAppSelector(state => getEditedTask(state.taskModificationState));
 
-  const militaryTime = useAppSelector((state) => state.settings.value.militaryTime);
-  const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
+  const militaryTime = useAppSelector(state => state.settings.value.militaryTime);
+  const dateFormat = useAppSelector(state => state.settings.value.dateFormat);
 
-  const { anchor, yOffset, gap } = useAppSelector((state) => state.menuState.scheduledReminderEditorPosition);
+  const { anchor, yOffset, gap } = useAppSelector(
+    state => state.menuState.scheduledReminderEditorPosition,
+  );
 
-  const reminderEditState = useAppSelector((state) => state.taskModificationState.reminderEditState);
+  const reminderEditState = useAppSelector(state => state.taskModificationState.reminderEditState);
 
   const creatingReminder = reminderEditState.state === 'create';
-  const reminder: ScheduledReminder | undefined = editedTask?.scheduledReminders[reminderEditState.idx];
+  const reminder: ScheduledReminder | undefined =
+    editedTask?.scheduledReminders[reminderEditState.idx];
 
-  const [updatedReminder, setUpdatedReminder] = useState<ScheduledReminder>(reminder ?? getDefaultScheduledReminder());
+  const [updatedReminder, setUpdatedReminder] = useState<ScheduledReminder>(
+    reminder ?? getDefaultScheduledReminder(),
+  );
 
   function handleEditCompletion() {
     // Make updatedReminder serializable
-    const updatedScheduledReminder = JSON.parse(JSON.stringify(updatedReminder)) as ScheduledReminder;
+    const updatedScheduledReminder = JSON.parse(
+      JSON.stringify(updatedReminder),
+    ) as ScheduledReminder;
 
     const parsedHour = parseInt(hourInputState === '' ? '12' : hourInputState, 10);
     // If the hour is greater than 12, then it's military time. Otherwise, convert it to military time.
     const hourVal =
-      parsedHour > 12 ? parsedHour : standardToMilHour(parsedHour, updatedScheduledReminder.reminderMeridiem);
+      parsedHour > 12
+        ? parsedHour
+        : standardToMilHour(parsedHour, updatedScheduledReminder.reminderMeridiem);
 
     updatedScheduledReminder.reminderHour = hourVal;
-    updatedScheduledReminder.reminderMinute = parseInt(minuteInputState === '' ? '0' : minuteInputState, 10);
+    updatedScheduledReminder.reminderMinute = parseInt(
+      minuteInputState === '' ? '0' : minuteInputState,
+      10,
+    );
 
     const duplicateReminder = editedTask?.scheduledReminders.find(
       (r: ScheduledReminder) =>
-        getDate(r).getTime() === getDate(updatedScheduledReminder).getTime() && r.id !== updatedScheduledReminder.id,
+        getDate(r).getTime() === getDate(updatedScheduledReminder).getTime() &&
+        r.id !== updatedScheduledReminder.id,
     );
 
     if (duplicateReminder !== undefined) {
       // This will only happen if the user presses save repeatedly when creating. If this happens, just ignore the request.
       if (duplicateReminder.id === updatedScheduledReminder.id) return;
 
-      const formattedTime = `${getReminderDisplayDate(updatedScheduledReminder, dateFormat, false, false, true)} at ${getFormattedReminderTime(
+      const formattedTime = `${getReminderDisplayDate(
         updatedScheduledReminder,
-        militaryTime,
-      )}`;
+        dateFormat,
+        false,
+        false,
+        true,
+      )} at ${getFormattedReminderTime(updatedScheduledReminder, militaryTime)}`;
       dispatch(
-        showDialog({ title: 'Duplicate Reminder', message: `You already have a reminder set for ${formattedTime}.` }),
+        showDialog({
+          title: 'Duplicate Reminder',
+          message: `You already have a reminder set for ${formattedTime}.`,
+        }),
       );
       return;
     }
@@ -96,7 +114,8 @@ export const ScheduledReminderEditMenu: FC = () => {
     'esc',
     () => {
       const competingMenuOpen =
-        isPrimaryMenuOpen(store.getState().menuState) || isFullscreenMenuOpen(store.getState().menuState);
+        isPrimaryMenuOpen(store.getState().menuState) ||
+        isFullscreenMenuOpen(store.getState().menuState);
       if (competingMenuOpen) return;
 
       onMenuClose();
@@ -131,7 +150,7 @@ export const ScheduledReminderEditMenu: FC = () => {
     waitAndFocus();
   }, []);
 
-  const militaryTimeEnabled = useAppSelector((state) => state.settings.value.militaryTime);
+  const militaryTimeEnabled = useAppSelector(state => state.settings.value.militaryTime);
 
   const hour = militaryTimeEnabled
     ? updatedReminder.reminderHour
@@ -141,7 +160,9 @@ export const ScheduledReminderEditMenu: FC = () => {
   const maxHour = militaryTimeEnabled ? 23 : 12;
 
   const [hourInputState, setHourInputState] = useState(formatHour(hour));
-  const [minuteInputState, setMinuteInputState] = useState(formatMinute(updatedReminder.reminderMinute));
+  const [minuteInputState, setMinuteInputState] = useState(
+    formatMinute(updatedReminder.reminderMinute),
+  );
 
   useEffect(() => {
     setHourInputState(formatHour(hour));
@@ -163,7 +184,7 @@ export const ScheduledReminderEditMenu: FC = () => {
         onMenuClose();
         dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu, fromEscKeypress: true }));
       }}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Enter') {
           e.preventDefault();
 
@@ -174,7 +195,7 @@ export const ScheduledReminderEditMenu: FC = () => {
       {/* <!-- Date Picker --> */}
       <DatePicker
         date={getDate(updatedReminder)}
-        onChange={(date) => {
+        onChange={date => {
           let scheduledReminderClone = getScheduledReminderClone(updatedReminder);
           scheduledReminderClone = setDate(scheduledReminderClone, date, false);
           setUpdatedReminder(scheduledReminderClone);
@@ -184,21 +205,23 @@ export const ScheduledReminderEditMenu: FC = () => {
       {/* <!-- Time Input --> */}
       <div id="timeInputContainer">
         <div id="timeInputWrapper">
-          <SuggestedTimePicker reminder={updatedReminder} updateReminder={setUpdatedReminder} />
+          <SuggestedTimePicker
+            reminder={updatedReminder}
+            updateReminder={setUpdatedReminder}
+          />
           <input
             type="number"
             placeholder="12"
             className="time-input"
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             id="hour"
             aria-label="reminder hour"
             value={hourInputState}
             onInput={digitNumberOnInput}
-            onChange={(e) => {
+            onChange={e => {
               inputOnChangeHandler(e, minHour, maxHour, setHourInputState);
             }}
-            onBlur={(e) => {
+            onBlur={e => {
               const value = e.currentTarget.value === '' ? '12' : e.currentTarget.value;
               let hourVal = parseInt(value, 10);
 
@@ -217,10 +240,10 @@ export const ScheduledReminderEditMenu: FC = () => {
             aria-label="reminder minute"
             value={minuteInputState}
             onInput={digitNumberOnInput}
-            onChange={(e) => {
+            onChange={e => {
               inputOnChangeHandler(e, 0, 59, setMinuteInputState);
             }}
-            onBlur={(e) => {
+            onBlur={e => {
               const value = e.currentTarget.value === '' ? '0' : e.currentTarget.value;
               const minuteVal = parseInt(value, 10);
               setMinuteInputState(formatHour(minuteVal));
@@ -230,7 +253,8 @@ export const ScheduledReminderEditMenu: FC = () => {
             id="meridiemInputText"
             onClick={() => {
               const scheduledReminderClone = getScheduledReminderClone(updatedReminder);
-              scheduledReminderClone.reminderMeridiem = scheduledReminderClone.reminderMeridiem === 'AM' ? 'PM' : 'AM';
+              scheduledReminderClone.reminderMeridiem =
+                scheduledReminderClone.reminderMeridiem === 'AM' ? 'PM' : 'AM';
               setUpdatedReminder(scheduledReminderClone);
             }}
             type="button"
@@ -239,7 +263,10 @@ export const ScheduledReminderEditMenu: FC = () => {
           </button>
         </div>
 
-        <RepeatIntervalPicker reminder={updatedReminder} updateReminder={setUpdatedReminder} />
+        <RepeatIntervalPicker
+          reminder={updatedReminder}
+          updateReminder={setUpdatedReminder}
+        />
 
         <button
           id="saveTaskButton"
