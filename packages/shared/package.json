@@ -1,7 +1,9 @@
 {
   "name": "@remindr/shared",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "type": "module",
+  "module": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc"
