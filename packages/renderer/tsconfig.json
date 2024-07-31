@@ -12,7 +12,8 @@
     "baseUrl": ".",
     "paths": {
       "#preload": ["../preload/src/index"],
-      "/@/*": ["./src/*"]
+      "/@/*": ["./src/*"],
+      "@assets/*": ["./assets/*"]
     },
     "lib": ["ESNext", "dom", "dom.iterable"]
   },
