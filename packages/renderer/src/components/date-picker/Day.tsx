@@ -1,4 +1,4 @@
-import { getMonthName } from 'main/utils/datefunctions';
+import { getMonthName } from '@remindr/shared';
 import React from 'react';
 
 interface DayProps extends React.HTMLProps<HTMLButtonElement> {
@@ -18,7 +18,9 @@ export const Day = React.forwardRef<HTMLButtonElement, DayProps>(
     const uninteractable = day === -1;
 
     // selected day in different month
-    const additionalClasses = `${dateInPast ? 'old' : 'new'} ${selected ? 'selected' : ''} ${isToday ? 'today' : ''}
+    const additionalClasses = `${dateInPast ? 'old' : 'new'} ${selected ? 'selected' : ''} ${
+      isToday ? 'today' : ''
+    }
     `;
     const classes = `day ${uninteractable ? 'uninteractable' : additionalClasses}`;
 
@@ -30,10 +32,10 @@ export const Day = React.forwardRef<HTMLButtonElement, DayProps>(
         ref={ref}
         className={classes}
         aria-label={`${getMonthName(dateWithDay, false)} ${day}, ${dateWithDay.getFullYear()}`}
-        onClick={(e) => {
+        onClick={e => {
           if (onClick && !uninteractable) onClick(e);
         }}
-        onKeyDown={(e) => {
+        onKeyDown={e => {
           if (onKeyDown === undefined || uninteractable) return;
 
           // Enter is used as a key to save scheduled reminder changes.

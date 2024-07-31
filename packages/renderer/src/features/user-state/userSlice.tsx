@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { User } from '@remindr/shared';
+import type { Settings, User } from '@remindr/shared';
 import { setSettings, updateSetting } from '../settings/settingsSlice';
 import { setUserData } from '/@/scripts/utils/userData';
 
@@ -46,7 +46,7 @@ export const userStateSlice = createSlice({
   initialState: initialUserState,
   reducers: {
     resetUserState: state => {
-      state = initialUserState;
+      Object.assign(state, initialUserState);
     },
     updateUserData: (state, action: PayloadAction<{ user: User }>) => {
       state.user = action.payload.user;
@@ -93,7 +93,8 @@ export const userStateSlice = createSlice({
     builder.addCase(updateSetting, (state, action) => {
       if (!state.user) return;
 
-      (state.user.settings[action.payload.key] as any) = action.payload.value;
+      const updatedSettings: Settings = { ...state.user.settings };
+      state.user.settings = { ...updatedSettings, [action.payload.key]: action.payload.value };
 
       saveUserData(state);
     });

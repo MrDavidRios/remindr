@@ -1,8 +1,8 @@
+import { useAnimationsEnabled } from '@hooks/useanimationsenabled';
+import { useClickOutside } from '@hooks/useoutsideclick';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useAnimationsEnabled } from 'renderer/scripts/utils/hooks/useanimationsenabled';
-import useClickOutside from 'renderer/scripts/utils/hooks/useoutsideclick';
 import { DropdownOptions } from './DropdownOptions';
 
 export interface DropdownProps<T> {
@@ -38,11 +38,11 @@ export function Dropdown<T>(props: DropdownProps<T>) {
   return (
     <motion.button
       className={`select-box ${isOpen ? ' active' : ''}`}
-      ref={dropdownMenuRef as any}
+      ref={dropdownMenuRef as unknown as React.RefObject<HTMLButtonElement>}
       onClick={toggleOpen}
       {...dropdownWidthAnimationProps}
       layout={animationsEnabled ? 'size' : false}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         if (e.key === 'Tab') setIsOpen(false);
       }}
       type="button"
@@ -57,7 +57,7 @@ export function Dropdown<T>(props: DropdownProps<T>) {
             name={name}
             options={options}
             optionLabels={optionLabels}
-            onSelect={(idx) => {
+            onSelect={idx => {
               setSelectedIdx(idx);
               onSelect(idx);
             }}
@@ -69,7 +69,10 @@ export function Dropdown<T>(props: DropdownProps<T>) {
           />
         )}
       </AnimatePresence>
-      <div className="selected-option dropdown" style={{ width: '100%' }}>
+      <div
+        className="selected-option dropdown"
+        style={{ width: '100%' }}
+      >
         {optionLabels[selectedIdx]}
       </div>
     </motion.button>

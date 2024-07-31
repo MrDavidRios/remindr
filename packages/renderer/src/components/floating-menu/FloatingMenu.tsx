@@ -1,6 +1,7 @@
-import { MenuRect } from 'main/types/menu';
-import { FC, HTMLAttributes, ReactNode, useEffect, useState } from 'react';
-import useClickOutside from 'renderer/scripts/utils/hooks/useoutsideclick';
+import { useClickOutside } from '@hooks/useoutsideclick';
+import type { MenuRect } from '@remindr/shared';
+import type { FC, HTMLAttributes, ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 
 interface FloatingMenuProps extends HTMLAttributes<HTMLDivElement> {
   anchor?: MenuRect;
@@ -44,18 +45,23 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
 
     // If y position will be going off the right edge of the screen, make sure it's positioned 20 pixels left of the right edge
     const borderAdjustedXPos = anchor.x + rect.width > innerWidth ? anchor.x - 20 : anchor.x;
-    const borderAdjustedYPos = posYTopAnchored + rect.height > innerHeight ? posYBottomAnchored : posYTopAnchored;
+    const borderAdjustedYPos =
+      posYTopAnchored + rect.height > innerHeight ? posYBottomAnchored : posYTopAnchored;
 
     setPosition({ x: borderAdjustedXPos, y: borderAdjustedYPos });
   }, [anchor, yOffset, gap, ref]);
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       id={id}
-      ref={ref as any}
+      ref={ref as unknown as React.RefObject<HTMLDivElement>}
       className={className}
-      style={{ visibility: position.x === -1 ? 'hidden' : 'visible', left: position.x, top: position.y, ...style }}
+      style={{
+        visibility: position.x === -1 ? 'hidden' : 'visible',
+        left: position.x,
+        top: position.y,
+        ...style,
+      }}
       onKeyDown={onKeyDown}
     >
       {children}

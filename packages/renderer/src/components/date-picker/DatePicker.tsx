@@ -1,9 +1,9 @@
-import { getDayNameFromIdx, getMonthName } from 'main/utils/datefunctions';
+import { getDayNameFromIdx, getMonthName } from '@remindr/shared';
 import React, { useEffect, useState } from 'react';
-import { useAppSelector } from 'renderer/hooks';
 import doubleExpandArrowIcon from '../../../../assets/icons/double-expand-arrow.png';
 import expandArrowIcon from '../../../../assets/icons/expand-arrow.png';
 import { Day } from './Day';
+import { useAppSelector } from '/@/hooks';
 
 interface DatePickerProps {
   date: Date;
@@ -12,7 +12,7 @@ interface DatePickerProps {
 
 export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
   const [dateView, setDateView] = useState(date);
-  const firstDayOfWeek = useAppSelector((state) => state.settings.value.weekStartDay ?? 0);
+  const firstDayOfWeek = useAppSelector(state => state.settings.value.weekStartDay ?? 0);
 
   const daysArray = getDaysArray(dateView, firstDayOfWeek);
   const cols = 7;
@@ -28,7 +28,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
   }, [date]);
 
   return (
-    <div id="datePicker" className="dates">
+    <div
+      id="datePicker"
+      className="dates"
+    >
       <div className="calendar-controls">
         <button
           className="arrows prev-yr left"
@@ -37,7 +40,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
           type="button"
           aria-label="Previous year"
         >
-          <img src={doubleExpandArrowIcon} draggable="false" alt="" />
+          <img
+            src={doubleExpandArrowIcon}
+            draggable="false"
+            alt=""
+          />
         </button>
         <button
           className="arrows prev-mth left"
@@ -46,7 +53,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
           type="button"
           aria-label="Previous month"
         >
-          <img src={expandArrowIcon} draggable="false" alt="" />
+          <img
+            src={expandArrowIcon}
+            draggable="false"
+            alt=""
+          />
         </button>
         <button
           className="month-year"
@@ -66,7 +77,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
           type="button"
           aria-label="Next month"
         >
-          <img src={expandArrowIcon} draggable="false" alt="" />
+          <img
+            src={expandArrowIcon}
+            draggable="false"
+            alt=""
+          />
         </button>
         <button
           className="arrows next-yr right"
@@ -75,15 +90,22 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
           type="button"
           aria-label="Next year"
         >
-          <img src={doubleExpandArrowIcon} draggable="false" alt="" />
+          <img
+            src={doubleExpandArrowIcon}
+            draggable="false"
+            alt=""
+          />
         </button>
       </div>
       <div className="weekdays">
-        {Array.from({ length: 7 }, (_, i) => i).map((day) => {
+        {Array.from({ length: 7 }, (_, i) => i).map(day => {
           const dayName = getDayNameFromIdx(day, firstDayOfWeek);
 
           return (
-            <div className="day" key={dayName}>
+            <div
+              className="day"
+              key={dayName}
+            >
               {dayName}
             </div>
           );
@@ -108,7 +130,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
 
                   onChange(newDate);
                 }}
-                onKeyDown={(e) => {
+                onKeyDown={e => {
                   let newI = i;
                   let newJ = j;
 
@@ -117,7 +139,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                   const atBottomBorder = i === rows - 1;
                   const atLeftBorder = j === 0;
 
-                  const validDays = daysArray.filter((dayCandidate) => dayCandidate !== -1).length;
+                  const validDays = daysArray.filter(dayCandidate => dayCandidate !== -1).length;
                   const invalidBeginningDays = daysArray.filter(
                     (dayCandidate, idx) => dayCandidate === -1 && idx < cols,
                   ).length;

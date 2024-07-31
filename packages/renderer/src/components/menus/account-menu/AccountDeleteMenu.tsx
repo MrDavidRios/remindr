@@ -1,7 +1,9 @@
 import { Menu } from 'main/types/menu';
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
+import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import store, { AppDispatch } from 'renderer/app/store';
+import type { AppDispatch } from 'renderer/app/store';
+import store from 'renderer/app/store';
 import CloseMenuButton from 'renderer/components/close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from 'renderer/components/menus/fullscreen-menu/FullScreenMenu';
 import { hideMenu } from 'renderer/features/menu-state/menuSlice';
@@ -31,8 +33,8 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
       await showDeleteAccountPrompt(emailValue, passwordValue, setShowAccountDeleteMenu, dispatch);
     } else {
       await showMessageBox(
-        `Login Error - Invalid Email`,
-        `Your inputted email does not match your account email; please try again.`,
+        'Login Error - Invalid Email',
+        'Your inputted email does not match your account email; please try again.',
         'error',
         [],
       );
@@ -54,7 +56,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
         id="accountDeletionAuthEmailInput"
         className="account-panel-input"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={e => setEmail(e.target.value)}
       />
       <input
         type="password"
@@ -62,7 +64,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
         id="accountDeletionAuthPasswordInput"
         className="account-panel-input"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={e => setPassword(e.target.value)}
       />
       <br />
       <br />
@@ -81,7 +83,10 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
         Delete Account
       </button>
       {showLoadingScreen && (
-        <div id="accountDeletedLoadingScreenContainer" className="full-window-container">
+        <div
+          id="accountDeletedLoadingScreenContainer"
+          className="full-window-container"
+        >
           <div className="backdrop low-opacity" />
           <div id="accountDeletedLoadingScreen">
             <h3>Deleting account...</h3>
@@ -109,7 +114,7 @@ async function showDeleteAccountPrompt(
 
     const { response } = await showMessageBox(
       'Account Deletion Confirmation',
-      `Are you sure you want to delete your account? It is irreversible and you won't be able to recover any of your data.`,
+      "Are you sure you want to delete your account? It is irreversible and you won't be able to recover any of your data.",
       'info',
       ['Cancel', 'Delete Account'],
     );
@@ -118,13 +123,13 @@ async function showDeleteAccountPrompt(
       // Success
       await deleteAccount();
 
-      showMessageBox('Account Deleted', `Your account has been deleted.`, 'info', []);
+      showMessageBox('Account Deleted', 'Your account has been deleted.', 'info', []);
 
       setShowAccountDeleteMenu(false);
       dispatch(hideMenu({ menu: Menu.AccountMenu }));
       dispatch(resetUserState());
     }
   } catch (err) {
-    await showMessageBox(`Login Error`, `${err}`, 'error', []);
+    await showMessageBox('Login Error', `${err}`, 'error', []);
   }
 }

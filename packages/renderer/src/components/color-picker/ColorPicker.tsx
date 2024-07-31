@@ -1,8 +1,8 @@
+import { useClickOutside } from '@hooks/useoutsideclick';
 import { escEvent } from '@remindr/shared';
 import type { InputHTMLAttributes } from 'react';
 import { useEffect, useState } from 'react';
 import { ChromePicker } from 'react-color';
-import useClickOutside from '/@/scripts/utils/hooks/useoutsideclick';
 
 interface ColorPickerProps extends InputHTMLAttributes<HTMLInputElement> {
   // Add any additional props or overrides here

@@ -1,9 +1,9 @@
+import { useClickOutside } from '@hooks/useoutsideclick';
 import type { FC, HTMLAttributes } from 'react';
 import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useAppSelector } from '/@/hooks';
 import { useDetectWheel } from '/@/scripts/utils/hooks/usedetectwheel';
-import useClickOutside from '/@/scripts/utils/hooks/useoutsideclick';
 
 interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
   x: number;
