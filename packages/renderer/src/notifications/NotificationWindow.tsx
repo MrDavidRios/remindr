@@ -1,22 +1,25 @@
-import { Settings, createDefaultSettings } from 'main/types/classes/settings';
-import TaskScheduledReminderPair from 'main/types/classes/task/taskScheduledReminderPair';
-import { FC, useEffect, useState } from 'react';
-import { updateTheme } from 'renderer/scripts/systems/notifications/notificationutils';
-import { getIpcRendererOutput } from 'renderer/scripts/utils/ipcRendererOutput';
-import { getFormattedReminderTime } from 'renderer/scripts/utils/timefunctions';
-import angelRightIcon from '../../../assets/icons/angel-right.svg';
-import closeButtonIcon from '../../../assets/icons/close-button.svg';
-import openIcon from '../../../assets/icons/open.svg';
+import angelRightIcon from '@assets/icons/angel-right.svg';
+import closeButtonIcon from '@assets/icons/close-button.svg';
+import openIcon from '@assets/icons/open.svg';
+import type { Settings, TaskScheduledReminderPair } from '@remindr/shared';
+import { createDefaultSettings } from '@remindr/shared';
+import type { FC } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/css/notification.css';
+import { updateTheme } from '../scripts/systems/notifications/notificationutils';
+import { getIpcRendererOutput } from '../scripts/utils/ipcRendererOutput';
+import { getFormattedReminderTime } from '../scripts/utils/timefunctions';
 
-window.electron.ipcRenderer.on('update-theme-in-notification', (_e) => updateTheme(_e as string));
+window.electron.ipcRenderer.on('update-theme-in-notification', (_e: string) => updateTheme(_e));
 
 export const NotificationWindowContents: FC = () => {
-  const [taskReminderPair, updateTaskReminderPair] = useState<TaskScheduledReminderPair | undefined>(undefined);
+  const [taskReminderPair, updateTaskReminderPair] = useState<
+    TaskScheduledReminderPair | undefined
+  >(undefined);
   const [settings, updateSettings] = useState<Settings>(createDefaultSettings());
 
   useEffect(() => {
-    const initializeNotification = (_e: any) => {
+    const initializeNotification = (_e: string) => {
       const data = getIpcRendererOutput(_e) as {
         taskReminderPair: TaskScheduledReminderPair;
         stringifiedThemeData: string;
@@ -29,7 +32,10 @@ export const NotificationWindowContents: FC = () => {
       updateTheme(data.stringifiedThemeData);
     };
 
-    const notifInitDataListener = window.electron.ipcRenderer.on('initialize-notification', initializeNotification);
+    const notifInitDataListener = window.electron.ipcRenderer.on(
+      'initialize-notification',
+      initializeNotification,
+    );
 
     return () => {
       notifInitDataListener();
@@ -40,7 +46,8 @@ export const NotificationWindowContents: FC = () => {
     window.electron.ipcRenderer.sendMessage('close-notification', JSON.stringify(taskReminderPair));
 
   const openTaskInEditPanel = () => {
-    if (taskReminderPair?.task === undefined) throw new Error('[open-task-in-edit-panel]: task is undefined');
+    if (taskReminderPair?.task === undefined)
+      throw new Error('[open-task-in-edit-panel]: task is undefined');
 
     window.electron.ipcRenderer.sendMessage('open-task-in-edit-panel', taskReminderPair?.task);
     closeNotification();
@@ -63,7 +70,8 @@ export const NotificationWindowContents: FC = () => {
    * @returns
    */
   const snoozeReminder = (time: number) => {
-    if (taskReminderPair?.task === undefined) throw new Error('[snooze-reminder]: task is undefined');
+    if (taskReminderPair?.task === undefined)
+      throw new Error('[snooze-reminder]: task is undefined');
 
     if (time === -1) {
       // Custom amount of time to snooze
@@ -92,15 +100,37 @@ export const NotificationWindowContents: FC = () => {
     <>
       <div id="titlebar">
         <p id="notificationTitle">{taskReminderPair?.task.name ?? 'Default Task'}</p>
-        <button type="button" id="notificationReminderOpenButton" title="View Reminder" onClick={openTaskInEditPanel}>
-          <img src={openIcon} alt="View reminder details" className="ignore-cursor" draggable="false" />
+        <button
+          type="button"
+          id="notificationReminderOpenButton"
+          title="View Reminder"
+          onClick={openTaskInEditPanel}
+        >
+          <img
+            src={openIcon}
+            alt="View reminder details"
+            className="ignore-cursor"
+            draggable="false"
+          />
         </button>
-        <button type="button" id="notificationCloseButton" title="Close Notification" onClick={closeNotification}>
-          <img alt="Close Notification" src={closeButtonIcon} className="ignore-cursor" draggable="false" />
+        <button
+          type="button"
+          id="notificationCloseButton"
+          title="Close Notification"
+          onClick={closeNotification}
+        >
+          <img
+            alt="Close Notification"
+            src={closeButtonIcon}
+            className="ignore-cursor"
+            draggable="false"
+          />
         </button>
       </div>
       <div id="reminderDetailsContainer">
-        <p id="time">{reminder ? getFormattedReminderTime(reminder, settings.militaryTime) : `0:00`}</p>
+        <p id="time">
+          {reminder ? getFormattedReminderTime(reminder, settings.militaryTime) : '0:00'}
+        </p>
       </div>
       <div id="actionBar">
         <div id="snoozeButtonWrapper">
@@ -112,21 +142,35 @@ export const NotificationWindowContents: FC = () => {
             onClick={() => snoozeReminder(15)}
           >
             <p>Snooze</p>
-            <img alt="" src={angelRightIcon} />
+            <img
+              alt=""
+              src={angelRightIcon}
+            />
           </button>
-          <div id="snoozeMenu" className="context-menu menu">
+          <div
+            id="snoozeMenu"
+            className="context-menu menu"
+          >
             <ul>
               <li onClick={() => snoozeReminder(30)}>30 Minutes</li>
               <li onClick={() => snoozeReminder(60)}>1 Hour</li>
               <li onClick={() => snoozeReminder(180)}>3 Hours</li>
-              <li id="snoozeCustom" onClick={() => snoozeReminder(-1)}>
+              <li
+                id="snoozeCustom"
+                onClick={() => snoozeReminder(-1)}
+              >
                 Custom
               </li>
             </ul>
           </div>
         </div>
         <div id="buttonSpacer" />
-        <button type="button" className="notification-button" id="completeButton" onClick={completeTask}>
+        <button
+          type="button"
+          className="notification-button"
+          id="completeButton"
+          onClick={completeTask}
+        >
           Complete
         </button>
       </div>

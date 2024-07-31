@@ -1,6 +1,5 @@
-import User from 'main/types/classes/user';
+import { User } from '@remindr/shared';
 
-// eslint-disable-next-line import/no-mutable-exports
 window.userState.setUserProfile(JSON.stringify(new User().getDefault()));
 
 export function setUserData(user: User): void {

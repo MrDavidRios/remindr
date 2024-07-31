@@ -1,31 +1,32 @@
+import reminderIcon from '@assets/icons/bell.svg';
+import plusIcon from '@assets/icons/plus.svg';
+import type { MenuRect, Task } from '@remindr/shared';
+import { generateUniqueID, Menu, sortReminders } from '@remindr/shared';
 import { motion } from 'framer-motion';
-import Task from 'main/types/classes/task/task';
-import { Menu, MenuRect } from 'main/types/menu';
-import { generateUniqueID } from 'main/utils/idutils';
-import { sortReminders } from 'main/utils/reminderfunctions';
-import { FC, useRef, useState } from 'react';
-import { ArrowNavigable } from 'renderer/components/accessibility/ArrowNavigable';
-import { hideMenu, setFloatingMenuPosition, showMenu } from 'renderer/features/menu-state/menuSlice';
+import type { FC } from 'react';
+import { useRef, useState } from 'react';
+import { ReminderTile } from './ReminderTile';
+import { ArrowNavigable } from '/@/components/accessibility/ArrowNavigable';
+import { hideMenu, setFloatingMenuPosition, showMenu } from '/@/features/menu-state/menuSlice';
 import {
   getEditedTask,
   setEditedTask,
   setReminderEditState,
-} from 'renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector, useAppStore } from 'renderer/hooks';
-import { convertDOMRectToMenuRect, isMenuOpen } from 'renderer/scripts/utils/menuutils';
-import { getDefaultScheduledReminder } from 'renderer/scripts/utils/scheduledreminderfunctions';
-import reminderIcon from '../../../../../../assets/icons/bell.svg';
-import plusIcon from '../../../../../../assets/icons/plus.svg';
-import { ReminderTile } from './ReminderTile';
+} from '/@/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppSelector, useAppStore } from '/@/hooks';
+import { convertDOMRectToMenuRect, isMenuOpen } from '/@/scripts/utils/menuutils';
+import { getDefaultScheduledReminder } from '/@/scripts/utils/scheduledreminderfunctions';
 
 interface RemindersEditorProps {}
 
 export const RemindersEditor: FC<RemindersEditorProps> = () => {
   const dispatch = useAppDispatch();
-  const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
-  const militaryTime = useAppSelector((state) => state.settings.value.militaryTime);
+  const dateFormat = useAppSelector(state => state.settings.value.dateFormat);
+  const militaryTime = useAppSelector(state => state.settings.value.militaryTime);
 
-  const currentlyEditedReminderIdx = useAppSelector((state) => state.taskModificationState.reminderEditState.idx);
+  const currentlyEditedReminderIdx = useAppSelector(
+    state => state.taskModificationState.reminderEditState.idx,
+  );
 
   const [hoveringOverEditor, setHoveringOverEditorHeader] = useState(false);
 
@@ -36,12 +37,20 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
   // Gap (px) between reminder tiles
   const gap = 6;
 
-  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState));
+  const editedTask = useAppSelector(state => getEditedTask(state.taskModificationState));
   if (!editedTask) return null;
 
-  const openReminderEditMenu = (anchor?: MenuRect, idx = -1, additionalOffset = 0, creatingReminder = false) => {
+  const openReminderEditMenu = (
+    anchor?: MenuRect,
+    idx = -1,
+    additionalOffset = 0,
+    creatingReminder = false,
+  ) => {
     // If the scheduled reminder edit menu is already open with the same reminder, close it.
-    if (isMenuOpen(store.getState().menuState, Menu.ScheduledReminderEditMenu) && currentlyEditedReminderIdx === idx) {
+    if (
+      isMenuOpen(store.getState().menuState, Menu.ScheduledReminderEditMenu) &&
+      currentlyEditedReminderIdx === idx
+    ) {
       dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu }));
       return;
     }
@@ -66,7 +75,9 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
 
     // If creating a new reminder, scroll to the nearest reminder tile (if one exists) to make sure that it's in view
     if (creatingReminder) {
-      const remindersContainer = editorRef.current?.querySelector('.reminders-container') as HTMLElement | null;
+      const remindersContainer = editorRef.current?.querySelector(
+        '.reminders-container',
+      ) as HTMLElement | null;
       const nearestReminderTile = remindersContainer?.querySelector(
         `.reminder-tile:nth-child(${idx})`,
       ) as HTMLElement | null;
@@ -108,7 +119,11 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
   };
 
   return (
-    <div className="reminders-editor" title="Add/remove reminders here." ref={editorRef}>
+    <div
+      className="reminders-editor"
+      title="Add/remove reminders here."
+      ref={editorRef}
+    >
       <div
         className="reminders-editor-header"
         onMouseEnter={() => setHoveringOverEditorHeader(true)}
@@ -123,11 +138,13 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
             const newReminderId = newReminder.id;
             editedTaskClone.scheduledReminders.push(JSON.parse(JSON.stringify(newReminder)));
             const sortedReminders = sortReminders(editedTaskClone.scheduledReminders);
-            const newReminderIdx = sortedReminders.findIndex((r) => r.id === newReminderId);
+            const newReminderIdx = sortedReminders.findIndex(r => r.id === newReminderId);
 
             dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
 
-            const remindersContainer = editorRef.current?.querySelector('.reminders-container') as HTMLElement | null;
+            const remindersContainer = editorRef.current?.querySelector(
+              '.reminders-container',
+            ) as HTMLElement | null;
             const lastReminderTile = remindersContainer?.querySelector(
               `.reminder-tile:nth-child(${newReminderIdx})`,
             ) as HTMLElement | null;
@@ -137,7 +154,11 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
           }}
         >
           <div>
-            <img src={reminderIcon} draggable="false" alt="" />
+            <img
+              src={reminderIcon}
+              draggable="false"
+              alt=""
+            />
             <h4>Reminders</h4>
           </div>
           <motion.img
@@ -151,7 +172,9 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
         </button>
       </div>
       <ArrowNavigable
-        className={`reminders-container ${editedTaskClone.scheduledReminders.length > 0 ? 'has-items' : ''}`}
+        className={`reminders-container ${
+          editedTaskClone.scheduledReminders.length > 0 ? 'has-items' : ''
+        }`}
         disableKeyboardClick
         asUl
         style={{ height: 'auto', width: 'auto' }}

@@ -1,5 +1,6 @@
-import React, { RefObject, createRef, useEffect, useMemo } from 'react';
-import { useAppSelector } from 'renderer/hooks';
+import type { RefObject } from 'react';
+import React, { createRef, useEffect, useMemo } from 'react';
+import { useAppSelector } from '/@/hooks';
 
 interface DynamicInputProps extends React.HTMLProps<HTMLTextAreaElement> {
   value: string;
@@ -28,10 +29,13 @@ export default React.forwardRef<HTMLTextAreaElement, DynamicInputProps>((props, 
     autoFocus,
   } = props;
 
-  const spellCheckEnabled = useAppSelector((state) => state.settings.value.spellcheck);
+  const spellCheckEnabled = useAppSelector(state => state.settings.value.spellcheck);
 
   // If no ref is passed in, create one
-  const inputRef: RefObject<HTMLTextAreaElement> = useMemo(() => (ref as any) || createRef(), [ref]);
+  const inputRef: RefObject<HTMLTextAreaElement> = useMemo(
+    () => (ref as unknown as RefObject<HTMLTextAreaElement>) || createRef(),
+    [ref],
+  );
 
   useEffect(() => {
     if (!inputRef.current) return;
@@ -53,7 +57,7 @@ export default React.forwardRef<HTMLTextAreaElement, DynamicInputProps>((props, 
       spellCheck={spellCheckEnabled}
       value={value}
       autoFocus={autoFocus}
-      onChange={(e) => {
+      onChange={e => {
         if (!onChange) return;
 
         // Filter out newlines
@@ -61,7 +65,7 @@ export default React.forwardRef<HTMLTextAreaElement, DynamicInputProps>((props, 
 
         onChange(e);
       }}
-      onBlur={(e) => {
+      onBlur={e => {
         if (!onChange || !inputRef.current) return;
 
         inputRef.current.value = cleanupText(e.currentTarget.value);
@@ -69,7 +73,7 @@ export default React.forwardRef<HTMLTextAreaElement, DynamicInputProps>((props, 
 
         if (onBlur) onBlur(e);
       }}
-      onKeyDown={(e) => {
+      onKeyDown={e => {
         const caretAtBeginning = e.currentTarget.selectionStart === 0;
         if (e.key === 'ArrowUp' && caretAtBeginning && onNavigateUp) onNavigateUp();
 

@@ -1,5 +1,5 @@
-import { HTMLProps } from 'react';
-import closeButtonIcon from '../../../../assets/icons/close-button.png';
+import closeButtonIcon from '@assets/icons/close-button.png';
+import type { HTMLProps } from 'react';
 
 interface CloseMenuButtonProps extends HTMLProps<HTMLButtonElement> {}
 
@@ -15,7 +15,11 @@ export default function CloseMenuButton(props: CloseMenuButtonProps) {
       title="Close Menu (Esc)"
       onClick={onClick}
     >
-      <img src={closeButtonIcon} draggable="false" alt="" />
+      <img
+        src={closeButtonIcon}
+        draggable="false"
+        alt=""
+      />
     </button>
   );
 }

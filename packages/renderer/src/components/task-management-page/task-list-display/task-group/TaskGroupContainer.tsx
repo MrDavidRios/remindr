@@ -1,30 +1,31 @@
-import Task from 'main/types/classes/task/task';
-
+import pinIcon from '@assets/icons/pin.svg';
+import type { Task } from '@remindr/shared';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { memo, useEffect, useState } from 'react';
 import { shallowEqual } from 'react-redux';
-import { GeneralContextMenu } from 'renderer/components/context-menu/GeneralContextMenu';
-import { updateTaskGroupOrder } from 'renderer/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import { getTaskListWithinTimeframe } from 'renderer/scripts/utils/getReminderListWithinTimeframe';
-import { useAnimationsEnabled } from 'renderer/scripts/utils/hooks/useanimationsenabled';
-import { getIpcRendererOutput } from 'renderer/scripts/utils/ipcRendererOutput';
-import { tasksInSameOrder } from 'renderer/scripts/utils/tasklistutils';
-import pinIcon from '../../../../../../assets/icons/pin.svg';
 import { TaskGroup } from './TaskGroup';
 import { getTasksInGroup } from './taskgroups';
+import { GeneralContextMenu } from '/@/components/context-menu/GeneralContextMenu';
+import { updateTaskGroupOrder } from '/@/features/task-list/taskListSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { getTaskListWithinTimeframe } from '/@/scripts/utils/getReminderListWithinTimeframe';
+import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
+import { getIpcRendererOutput } from '/@/scripts/utils/ipcRendererOutput';
+import { tasksInSameOrder } from '/@/scripts/utils/tasklistutils';
 
 interface TaskGroupContainerProps {
   name: string;
 }
 
-export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: TaskGroupContainerProps) {
+export const TaskGroupContainer = memo(function TaskGroupContainer({
+  name,
+}: TaskGroupContainerProps) {
   const dispatch = useAppDispatch();
 
   const animationsEnabled = useAnimationsEnabled();
 
-  const tasks = useAppSelector((state) => {
+  const tasks = useAppSelector(state => {
     const timeframe = state.taskList.timeframe;
     const taskListWithinTimeframe = getTaskListWithinTimeframe(state.taskList.value, timeframe);
 
@@ -41,7 +42,7 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
   const groupTasks = reorderable ? orderedTasks : tasks;
 
   useEffect(() => {
-    const expandGroup = (e: any) => setExpanded(getIpcRendererOutput(e));
+    const expandGroup = (e: unknown) => setExpanded(getIpcRendererOutput(e));
     const expandListener = window.electron.ipcRenderer.on('expand-all-groups', expandGroup);
 
     return () => {
@@ -86,12 +87,22 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
         layout={animationsEnabled ? 'position' : false}
       >
         <button
-          className={`task-group-header frosted ${pinned ? 'icon' : ''} ${animationsEnabled ? 'animate' : ''}`}
+          className={`task-group-header frosted ${pinned ? 'icon' : ''} ${
+            animationsEnabled ? 'animate' : ''
+          }`}
           onClick={() => setExpanded(!expanded)}
-          onContextMenu={(e) => setShowContextMenu({ show: true, x: e.clientX, y: e.clientY })}
+          onContextMenu={e => setShowContextMenu({ show: true, x: e.clientX, y: e.clientY })}
           type="button"
         >
-          {pinned && <img id="rotatedPinnedIcon" src={pinIcon} className="svg-filter" draggable="false" alt="" />}
+          {pinned && (
+            <img
+              id="rotatedPinnedIcon"
+              src={pinIcon}
+              className="svg-filter"
+              draggable="false"
+              alt=""
+            />
+          )}
           <span>{name}</span>
           <span className="task-group-counter">{groupTasks.length}</span>
         </button>

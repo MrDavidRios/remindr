@@ -1,9 +1,9 @@
+import visibilityOffIcon from '@assets/icons/visibility-off.svg';
+import visibilityOnIcon from '@assets/icons/visibility-on.svg';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import showMessageBox from 'renderer/scripts/utils/messagebox';
 import isEmail from 'validator/lib/isEmail';
-import visibilityOffIcon from '../../../../assets/icons/visibility-off.svg';
-import visibilityOnIcon from '../../../../assets/icons/visibility-on.svg';
+import showMessageBox from '/@/scripts/utils/messagebox';
 
 interface AuthInputProps {
   onEmailChange?: (email: string) => void;
@@ -25,14 +25,17 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
     formState: { isValid, errors },
   } = useForm();
   return (
-    <form className="login-form" onSubmit={handleSubmit(() => {})}>
+    <form
+      className="login-form"
+      onSubmit={handleSubmit(() => {})}
+    >
       <input
         type="text"
         placeholder="Email"
-        {...register('email', { required: true, validate: (value) => isEmail(value) })}
+        {...register('email', { required: true, validate: value => isEmail(value) })}
         id="emailInput"
         className="large-input"
-        onChange={(e) => {
+        onChange={e => {
           setEmail(e.target.value.trim());
           if (onEmailChange) onEmailChange(e.target.value.trim());
           e.target.value = e.target.value.trim();
@@ -42,17 +45,26 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
         aria-invalid={errors.email ? 'true' : 'false'}
       />
       {errors.email?.type === 'validate' && (
-        <p role="alert" className="error">
+        <p
+          role="alert"
+          className="error"
+        >
           Invalid email. Make sure your email is properly formatted (e.g. johndoe@email.com)
         </p>
       )}
       {errors.email?.type === 'required' && (
-        <p role="alert" className="error">
+        <p
+          role="alert"
+          className="error"
+        >
           Email required.
         </p>
       )}
       {errors.email?.type === 'manual' && (
-        <p role="alert" className="error">
+        <p
+          role="alert"
+          className="error"
+        >
           {errors.email.message?.toString()}
         </p>
       )}
@@ -64,11 +76,11 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
           placeholder="Password"
           id="passwordInput"
           className="large-input"
-          onChange={(e) => {
+          onChange={e => {
             setPassword(e.target.value);
             clearErrors('password');
           }}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === 'Enter') onComplete(email, password);
           }}
           aria-invalid={errors.password ? 'true' : 'false'}
@@ -87,12 +99,18 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
         </button>
       </div>
       {errors.password?.type === 'required' && (
-        <p role="alert" className="error">
+        <p
+          role="alert"
+          className="error"
+        >
           Password required.
         </p>
       )}
       {errors.password?.type === 'manual' && (
-        <p role="alert" className="error">
+        <p
+          role="alert"
+          className="error"
+        >
           {errors.password.message?.toString()}
         </p>
       )}
@@ -115,7 +133,10 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
               setError('email', { type: 'manual', message: 'No user found with that email.' });
               break;
             case 'auth/too-many-requests':
-              setError('email', { type: 'manual', message: 'Too many requests. Please try again later.' });
+              setError('email', {
+                type: 'manual',
+                message: 'Too many requests. Please try again later.',
+              });
               break;
             case 'auth/email-already-in-use':
               setError('email', { type: 'manual', message: 'Email already in use.' });
@@ -124,7 +145,10 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
               setError('password', { type: 'manual', message: 'Incorrect password.' });
               break;
             case 'auth/weak-password':
-              setError('password', { type: 'manual', message: 'Password must be at least 6 characters long.' });
+              setError('password', {
+                type: 'manual',
+                message: 'Password must be at least 6 characters long.',
+              });
               break;
             default:
               showMessageBox('Sign-In Error', authResult, 'error');

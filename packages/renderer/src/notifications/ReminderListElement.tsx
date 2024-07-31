@@ -1,9 +1,8 @@
-import { Settings } from 'main/types/classes/settings';
-import Task from 'main/types/classes/task/task';
-import { FC } from 'react';
-import { getReminderDisplayDate } from 'renderer/scripts/utils/scheduledreminderfunctions';
-import { getFormattedReminderTime } from 'renderer/scripts/utils/timefunctions';
-import checkImg from '../../../assets/icons/check.png';
+import checkImg from '@assets/icons/check.png';
+import type { Settings, Task } from '@remindr/shared';
+import type { FC } from 'react';
+import { getReminderDisplayDate } from '../scripts/utils/scheduledreminderfunctions';
+import { getFormattedReminderTime } from '../scripts/utils/timefunctions';
 
 interface ReminderListElementProps {
   task: Task;
@@ -12,9 +11,13 @@ interface ReminderListElementProps {
   onComplete: () => void;
 }
 
-export const ReminderListElement: FC<ReminderListElementProps> = ({ task, reminderIdx, settings, onComplete }) => {
+export const ReminderListElement: FC<ReminderListElementProps> = ({
+  task,
+  reminderIdx,
+  settings,
+  onComplete,
+}) => {
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className="notif-element"
       onClick={() => {
@@ -24,10 +27,10 @@ export const ReminderListElement: FC<ReminderListElementProps> = ({ task, remind
       <div>
         <p className="title">{task.name}</p>
         <p className="date">
-          {`${getReminderDisplayDate(task.scheduledReminders[reminderIdx], settings.dateFormat)} at ${getFormattedReminderTime(
-            task.scheduledReminders[0],
-            settings.militaryTime,
-          )}`}
+          {`${getReminderDisplayDate(
+            task.scheduledReminders[reminderIdx],
+            settings.dateFormat,
+          )} at ${getFormattedReminderTime(task.scheduledReminders[0], settings.militaryTime)}`}
         </p>
       </div>
       <button
@@ -37,7 +40,11 @@ export const ReminderListElement: FC<ReminderListElementProps> = ({ task, remind
         aria-label="Complete Task"
         onClick={onComplete}
       >
-        <img src={checkImg} draggable={false} alt="" />
+        <img
+          src={checkImg}
+          draggable={false}
+          alt=""
+        />
       </button>
     </div>
   );

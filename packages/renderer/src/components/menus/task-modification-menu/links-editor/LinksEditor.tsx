@@ -1,18 +1,18 @@
-import Task from 'main/types/classes/task/task';
-import { Menu } from 'main/types/menu';
-import { generateUniqueID } from 'main/utils/idutils';
-import { FC, useState } from 'react';
-import { ArrowNavigable } from 'renderer/components/accessibility/ArrowNavigable';
-import { showMenu } from 'renderer/features/menu-state/menuSlice';
+import linkIcon from '@assets/icons/link.svg';
+import plusIcon from '@assets/icons/plus.svg';
+import type { Link, Task } from '@remindr/shared';
+import { Menu, generateUniqueID } from '@remindr/shared';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { LinkTile } from './LinkTile';
+import { ArrowNavigable } from '/@/components/accessibility/ArrowNavigable';
+import { showMenu } from '/@/features/menu-state/menuSlice';
 import {
   getEditedTask,
   setEditedTask,
   setLinkEditState,
-} from 'renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import linkIcon from '../../../../../../assets/icons/link.svg';
-import plusIcon from '../../../../../../assets/icons/plus.svg';
-import { LinkTile } from './LinkTile';
+} from '/@/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 interface LinksEditorProps {}
 
@@ -26,7 +26,7 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
     dispatch(showMenu(Menu.LinkMenu));
   };
 
-  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState));
+  const editedTask = useAppSelector(state => getEditedTask(state.taskModificationState));
   const links = editedTask?.links ?? [];
 
   const onDeleteLink = (idx: number) => {
@@ -50,9 +50,16 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
         onMouseEnter={() => setHoveringOverEditorHeader(true)}
         onMouseLeave={() => setHoveringOverEditorHeader(false)}
       >
-        <button type="button" onClick={() => openLinkMenu()}>
+        <button
+          type="button"
+          onClick={() => openLinkMenu()}
+        >
           <div>
-            <img src={linkIcon} draggable={false} alt="" />
+            <img
+              src={linkIcon}
+              draggable={false}
+              alt=""
+            />
             <h4>Links</h4>
           </div>
           <img
@@ -64,7 +71,7 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
         </button>
       </div>
       <ArrowNavigable className={`links-container ${links.length > 0 ? 'has-items' : ''}`}>
-        {links.map((link, idx) => {
+        {links.map((link: Link, idx: number) => {
           return (
             <LinkTile
               link={link}

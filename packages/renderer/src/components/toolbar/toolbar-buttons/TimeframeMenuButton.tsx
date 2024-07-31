@@ -1,8 +1,8 @@
-import { Menu } from 'main/types/menu';
-import { FC } from 'react';
-import { toggleMenu } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch } from 'renderer/hooks';
-import calendarTimeframeIcon from '../../../../../assets/icons/calendar-timeframe.svg';
+import calendarTimeframeIcon from '@assets/icons/calendar-timeframe.svg';
+import { Menu } from '@remindr/shared';
+import type { FC } from 'react';
+import { toggleMenu } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch } from '/@/hooks';
 
 export const TimeframeMenuButton: FC = () => {
   const dispatch = useAppDispatch();
@@ -17,7 +17,12 @@ export const TimeframeMenuButton: FC = () => {
       aria-label="Choose Timeframe"
     >
       <div className="toolbar-button-img-container">
-        <img src={calendarTimeframeIcon} className="small" draggable="false" alt="" />
+        <img
+          src={calendarTimeframeIcon}
+          className="small"
+          draggable="false"
+          alt=""
+        />
       </div>
     </button>
   );

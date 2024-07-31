@@ -1,18 +1,18 @@
-import { Theme, themeLabels } from 'main/types/theme';
-import { AppDispatch } from 'renderer/app/store';
-import ColorPicker from 'renderer/components/color-picker/ColorPicker';
-import { Dropdown } from 'renderer/components/dropdown/Dropdown';
-import { updateSetting } from 'renderer/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import { applyTheme } from 'renderer/scripts/systems/stylemanager';
+import imageIcon from '@assets/icons/image.svg';
+import { Theme, themeLabels } from '@remindr/shared';
 import isHexColor from 'validator/lib/isHexColor';
-import imageIcon from '../../../../../../../assets/icons/image.svg';
 import { BackgroundOpacitySlider } from './BackgroundOpacitySlider';
+import type { AppDispatch } from '/@/app/store';
+import ColorPicker from '/@/components/color-picker/ColorPicker';
+import { Dropdown } from '/@/components/dropdown/Dropdown';
+import { updateSetting } from '/@/features/settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { applyTheme } from '/@/scripts/systems/stylemanager';
 
 export function AppearanceSettingsPage() {
   const dispatch = useAppDispatch();
 
-  const settings = useAppSelector((state) => state.settings.value);
+  const settings = useAppSelector(state => state.settings.value);
   const isBackgroundColor = isHexColor(settings.background);
 
   return (
@@ -24,7 +24,7 @@ export function AppearanceSettingsPage() {
           <ColorPicker
             setting="background"
             initialColor={isBackgroundColor ? settings.background : '#00BD97'}
-            onUpdate={(color) => {
+            onUpdate={color => {
               dispatch(
                 updateSetting({
                   key: 'background',
@@ -34,7 +34,6 @@ export function AppearanceSettingsPage() {
             }}
             title="Pick a background color"
           />
-          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
           <button
             type="button"
             id="customImageSelectButton"
@@ -42,7 +41,11 @@ export function AppearanceSettingsPage() {
             title="Pick a background image"
             onClick={() => openCustomImageDialog(settings.background, dispatch)}
           >
-            <img src={imageIcon} draggable="false" alt="" />
+            <img
+              src={imageIcon}
+              draggable="false"
+              alt=""
+            />
           </button>
         </div>
       </div>
@@ -53,7 +56,7 @@ export function AppearanceSettingsPage() {
             tabIndex={0}
             className="settings-checkbox"
             checked={settings.stretchBackground}
-            onChange={(e) => {
+            onChange={e => {
               dispatch(
                 updateSetting({
                   key: 'stretchBackground',
@@ -68,7 +71,7 @@ export function AppearanceSettingsPage() {
       <p style={{ marginTop: '10px' }}>Background brightness:</p>
       <BackgroundOpacitySlider
         initialOpacity={1 - settings.backgroundOpacity}
-        onChange={(opacity) => {
+        onChange={opacity => {
           dispatch(
             updateSetting({
               key: 'backgroundOpacity',
@@ -84,7 +87,7 @@ export function AppearanceSettingsPage() {
           tabIndex={0}
           id="enableAnimationsCheckbox"
           checked={settings.enableAnimations}
-          onChange={(e) => {
+          onChange={e => {
             dispatch(
               updateSetting({
                 key: 'enableAnimations',
@@ -101,7 +104,7 @@ export function AppearanceSettingsPage() {
           tabIndex={0}
           id="enableTransparencyCheckbox"
           checked={settings.enableTransparency}
-          onChange={(e) => {
+          onChange={e => {
             dispatch(
               updateSetting({
                 key: 'enableTransparency',
@@ -115,7 +118,10 @@ export function AppearanceSettingsPage() {
         <p className="input-label">Enable transparency</p>
       </div>
       <div id="themeSettingDropdownWrapper">
-        <p className="subheading" style={{ marginBottom: 10 }}>
+        <p
+          className="subheading"
+          style={{ marginBottom: 10 }}
+        >
           Theme
         </p>
         <Dropdown

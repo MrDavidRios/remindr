@@ -1,10 +1,10 @@
+import expandArrow from '@assets/icons/expand-arrow.png';
+import hamburgerIcon from '@assets/icons/hamburger.svg';
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { AppMode, Menu } from '@remindr/shared';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import expandArrow from '../../../../../assets/icons/expand-arrow.png';
-import hamburgerIcon from '../../../../../assets/icons/hamburger.svg';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 import { menuHeightAnimationProps } from '/@/animation';
 import { hideMenu, showMenu } from '/@/features/menu-state/menuSlice';

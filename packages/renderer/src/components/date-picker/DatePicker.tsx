@@ -1,7 +1,7 @@
+import doubleExpandArrowIcon from '@assets/icons/double-expand-arrow.png';
+import expandArrowIcon from '@assets/icons/expand-arrow.png';
 import { getDayNameFromIdx, getMonthName } from '@remindr/shared';
 import React, { useEffect, useState } from 'react';
-import doubleExpandArrowIcon from '../../../../assets/icons/double-expand-arrow.png';
-import expandArrowIcon from '../../../../assets/icons/expand-arrow.png';
 import { Day } from './Day';
 import { useAppSelector } from '/@/hooks';
 

@@ -1,21 +1,22 @@
-import Task from 'main/types/classes/task/task';
-import { Menu } from 'main/types/menu';
-import { FC } from 'react';
+import checkIcon from '@assets/icons/check.svg';
+import duplicateIcon from '@assets/icons/duplicate.svg';
+import pinIcon from '@assets/icons/pin.svg';
+import trashcanIcon from '@assets/icons/trashcan.svg';
+import unpinIcon from '@assets/icons/unpin.svg';
+import type { Task } from '@remindr/shared';
+import { Menu } from '@remindr/shared';
+import type { FC } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import store, { AppDispatch } from 'renderer/app/store';
+import type { AppDispatch } from '/@/app/store';
+import store from '/@/app/store';
 import {
   clearSelectedTasks,
   duplicateTask,
   removeTask,
   togglePinTask,
-} from 'renderer/features/task-list/taskListSlice';
-import { useAppDispatch } from 'renderer/hooks';
-import { isFullscreenMenuOpen, isMenuOpen } from 'renderer/scripts/utils/menuutils';
-import checkIcon from '../../../../../assets/icons/check.svg';
-import duplicateIcon from '../../../../../assets/icons/duplicate.svg';
-import pinIcon from '../../../../../assets/icons/pin.svg';
-import trashcanIcon from '../../../../../assets/icons/trashcan.svg';
-import unpinIcon from '../../../../../assets/icons/unpin.svg';
+} from '/@/features/task-list/taskListSlice';
+import { useAppDispatch } from '/@/hooks';
+import { isFullscreenMenuOpen, isMenuOpen } from '/@/scripts/utils/menuutils';
 
 interface ActionBarProps {
   task: Task;
@@ -29,10 +30,17 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
   useSetupHotkeys(task, showActionButtons, onSave, dispatch);
 
   return (
-    <div id="taskActionsBar" className={!showActionButtons ? `action-buttons-hidden` : ''}>
+    <div
+      id="taskActionsBar"
+      className={!showActionButtons ? 'action-buttons-hidden' : ''}
+    >
       {showActionButtons && (
         <div>
-          <button className="action-button accessible-button" onClick={() => deleteTask(task, dispatch)} type="button">
+          <button
+            className="action-button accessible-button"
+            onClick={() => deleteTask(task, dispatch)}
+            type="button"
+          >
             <img
               src={trashcanIcon}
               className="action-button svg-filter"
@@ -104,10 +112,15 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
   );
 };
 
-function useSetupHotkeys(task: Task, showActionButtons: boolean, onSave: (task: Task) => void, dispatch: AppDispatch) {
+function useSetupHotkeys(
+  task: Task,
+  showActionButtons: boolean,
+  onSave: (task: Task) => void,
+  dispatch: AppDispatch,
+) {
   useHotkeys(
     'mod+s',
-    (e) => {
+    e => {
       if (
         isFullscreenMenuOpen(store.getState().menuState) ||
         isMenuOpen(store.getState().menuState, Menu.ScheduledReminderEditMenu) ||

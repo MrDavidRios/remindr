@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { useAppSelector } from 'renderer/hooks';
+import { useAppSelector } from '/@/hooks';
 
 interface DynamicTextAreaProps extends React.HTMLProps<HTMLTextAreaElement> {
   value: string;
   allowNewLine?: boolean;
 }
 
-export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
+export const DynamicTextArea: React.FC<DynamicTextAreaProps> = props => {
   const {
     id,
     'aria-label': ariaLabel,
@@ -18,7 +18,7 @@ export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
     allowNewLine = true,
   } = props;
 
-  const spellCheckEnabled = useAppSelector((state) => state.settings.value.spellcheck);
+  const spellCheckEnabled = useAppSelector(state => state.settings.value.spellcheck);
 
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -44,7 +44,7 @@ export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
       spellCheck={spellCheckEnabled}
       value={value}
       className="dynamic-text-area"
-      onChange={(e) => {
+      onChange={e => {
         if (!onChange) return;
 
         if (!allowNewLine) {
@@ -53,9 +53,8 @@ export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
 
         onChange(e);
       }}
-      // eslint-disable-next-line jsx-a11y/no-autofocus
       autoFocus={autoFocus}
-      onBlur={(e) => {
+      onBlur={e => {
         if (!onChange || !textareaRef.current) return;
 
         textareaRef.current.value = cleanupText(e.currentTarget.value);

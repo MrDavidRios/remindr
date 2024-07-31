@@ -1,13 +1,11 @@
-import { Menu } from 'main/types/menu';
-import { Timeframe, getTimeframeDisplayName } from 'main/types/timeframe';
-import { toggleMenu } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-
-import { shallowEqual } from 'react-redux';
-import { isValidSearchString } from 'renderer/scripts/utils/searchutils';
-import settingsPanelIcon from '../../../../../assets/icons/settings-panel.svg';
+import settingsPanelIcon from '@assets/icons/settings-panel.svg';
 import { SearchBar } from './SearchBar';
 import { TaskSelectionBar } from './TaskSelectionBar';
+import { Timeframe, getTimeframeDisplayName, Menu } from '@remindr/shared';
+import { shallowEqual } from 'react-redux';
+import { toggleMenu } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { isValidSearchString } from '/@/scripts/utils/searchutils';
 
 interface TaskListHeaderProps {
   timeframe: Timeframe;
@@ -18,8 +16,8 @@ export function TaskListHeader(props: TaskListHeaderProps) {
 
   const dispatch = useAppDispatch();
 
-  const selectedTasks = useAppSelector((state) => state.taskList.selectedTasks, shallowEqual);
-  const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
+  const selectedTasks = useAppSelector(state => state.taskList.selectedTasks, shallowEqual);
+  const searchQuery = useAppSelector(state => state.taskList.searchQuery);
 
   const timeframeDisplayName = getTimeframeDisplayName(timeframe);
   const headerText = isValidSearchString(searchQuery)
@@ -27,13 +25,22 @@ export function TaskListHeader(props: TaskListHeaderProps) {
     : `${timeframeDisplayName}`;
 
   return (
-    <div id="taskListTopBar" style={{ height: getHeaderWrapperHeight(timeframe) }}>
+    <div
+      id="taskListTopBar"
+      style={{ height: getHeaderWrapperHeight(timeframe) }}
+    >
       {selectedTasks.length > 1 ? (
         <TaskSelectionBar selectedTasks={selectedTasks} />
       ) : (
-        <div id="taskListHeaderContainer" className="frosted">
+        <div
+          id="taskListHeaderContainer"
+          className="frosted"
+        >
           <div id="taskListHeaderLeft">
-            <h3 id="taskListTitle" title={isValidSearchString(searchQuery) ? headerText : ''}>
+            <h3
+              id="taskListTitle"
+              title={isValidSearchString(searchQuery) ? headerText : ''}
+            >
               {headerText}
             </h3>
           </div>

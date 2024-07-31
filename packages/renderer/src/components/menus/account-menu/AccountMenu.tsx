@@ -1,20 +1,20 @@
+import extraMenuIcon from '@assets/icons/extra-menu.png';
+import { Menu } from '@remindr/shared';
 import { AnimatePresence } from 'framer-motion';
-import { Menu } from 'main/types/menu';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import CloseMenuButton from 'renderer/components/close-menu-button/CloseMenuButton';
-import { FullScreenMenu } from 'renderer/components/menus/fullscreen-menu/FullScreenMenu';
-import { hideMenu } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import extraMenuIcon from '../../../../../assets/icons/extra-menu.png';
+import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 import { AccountActionsMenu } from './AccountActionsMenu';
 import { AccountDeleteMenu } from './AccountDeleteMenu';
 import { AccountDetails } from './AccountDetails';
 import { EmailResetMenu } from './EmailResetMenu';
+import { hideMenu } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export const AccountMenu = () => {
   const dispatch = useAppDispatch();
-  const userData = useAppSelector((state) => state.userState.user);
+  const userData = useAppSelector(state => state.userState.user);
 
   const [showAccountActionsMenu, setShowAccountActionsMenu] = useState(false);
 
@@ -43,9 +43,17 @@ export const AccountMenu = () => {
           onClick={() => setShowAccountActionsMenu(!showAccountActionsMenu)}
           aria-label="Account Options"
         >
-          <img src={extraMenuIcon} className="ignore-cursor" draggable="false" alt="" />
+          <img
+            src={extraMenuIcon}
+            className="ignore-cursor"
+            draggable="false"
+            alt=""
+          />
         </button>
-        <CloseMenuButton id="accountMenuCloseButton" onClick={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))} />
+        <CloseMenuButton
+          id="accountMenuCloseButton"
+          onClick={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))}
+        />
       </div>
       <AccountDetails userData={userData} />
       <AnimatePresence>
@@ -61,7 +69,9 @@ export const AccountMenu = () => {
         {showEmailResetMenu && <EmailResetMenu setShowEmailResetMenu={setShowEmailResetMenu} />}
       </AnimatePresence>
       <AnimatePresence>
-        {showAccountDeleteMenu && <AccountDeleteMenu setShowAccountDeleteMenu={setShowAccountDeleteMenu} />}
+        {showAccountDeleteMenu && (
+          <AccountDeleteMenu setShowAccountDeleteMenu={setShowAccountDeleteMenu} />
+        )}
       </AnimatePresence>
     </FullScreenMenu>
   );

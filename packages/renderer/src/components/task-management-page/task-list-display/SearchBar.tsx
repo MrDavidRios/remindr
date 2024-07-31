@@ -1,13 +1,13 @@
+import cancelIcon from '@assets/icons/close-button.svg';
+import searchIcon from '@assets/icons/search.svg';
 import { AnimatePresence, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { updateSearchQuery } from 'renderer/features/task-list/taskListSlice';
-import { useAppDispatch, useAppStore } from 'renderer/hooks';
-import { useAnimationsEnabled } from 'renderer/scripts/utils/hooks/useanimationsenabled';
-import { isValidSearchString } from 'renderer/scripts/utils/searchutils';
-import { waitUntil } from 'renderer/scripts/utils/timing';
-import cancelIcon from '../../../../../assets/icons/close-button.svg';
-import searchIcon from '../../../../../assets/icons/search.svg';
+import { updateSearchQuery } from '/@/features/task-list/taskListSlice';
+import { useAppDispatch, useAppStore } from '/@/hooks';
+import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
+import { isValidSearchString } from '/@/scripts/utils/searchutils';
+import { waitUntil } from '/@/scripts/utils/timing';
 
 export const SearchBar = memo(function SearchBar() {
   const dispatch = useAppDispatch();
@@ -33,7 +33,10 @@ export const SearchBar = memo(function SearchBar() {
     }
   });
   useMotionValueEvent(width, 'animationComplete', () => {
-    if ((width.get() as unknown as string) === '0px' || (width.get() as unknown as string) === '190px') {
+    if (
+      (width.get() as unknown as string) === '0px' ||
+      (width.get() as unknown as string) === '190px'
+    ) {
       opening.current = false;
     }
   });
@@ -129,16 +132,15 @@ export const SearchBar = memo(function SearchBar() {
               id="searchInput"
               type="text"
               placeholder="Search"
-              // eslint-disable-next-line jsx-a11y/no-autofocus
               autoFocus
               ref={searchBarRef}
               className="large-input"
-              onChange={(e) => {
+              onChange={e => {
                 if (e.currentTarget.value === '') {
                   dispatch(updateSearchQuery(''));
                 }
               }}
-              onKeyDown={(e) => {
+              onKeyDown={e => {
                 if (e.key === 'Enter') {
                   dispatch(updateSearchQuery(e.currentTarget.value));
                 }

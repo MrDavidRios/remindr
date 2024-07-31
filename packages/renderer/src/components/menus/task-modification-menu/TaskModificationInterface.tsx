@@ -1,17 +1,16 @@
-import Subtask from 'main/types/classes/task/subtask';
-import Task from 'main/types/classes/task/task';
-import { formatDateAndTime } from 'main/utils/datefunctions';
-import { FC } from 'react';
-import { DynamicTextArea } from 'renderer/components/dynamic-text-area/DynamicTextArea';
-import { NotesEditor } from 'renderer/components/menus/task-modification-menu/notes-editor/NotesEditor';
-import { showDialog } from 'renderer/features/menu-state/menuSlice';
-import { getEditedTask, setEditedTask } from 'renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import pencilIcon from '../../../../../assets/icons/pencil.svg';
+import pencilIcon from '@assets/icons/pencil.svg';
+import type { Subtask } from '@remindr/shared';
+import { Task, formatDateAndTime } from '@remindr/shared';
+import type { FC } from 'react';
+import { DynamicTextArea } from '../../dynamic-text-area/DynamicTextArea';
 import { ActionBar } from './ActionBar';
 import { SubtaskEditor } from './SubtaskEditor';
 import { LinksEditor } from './links-editor/LinksEditor';
+import { NotesEditor } from './notes-editor/NotesEditor';
 import { RemindersEditor } from './reminders-editor/RemindersEditor';
+import { showDialog } from '/@/features/menu-state/menuSlice';
+import { getEditedTask, setEditedTask } from '/@/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 interface TaskModificationInterfaceProps {
   animationComplete: boolean;
@@ -29,9 +28,10 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
   const dispatch = useAppDispatch();
 
   const fallbackTask = JSON.parse(JSON.stringify(new Task(''))) as Task;
-  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState, creating)) ?? fallbackTask;
+  const editedTask =
+    useAppSelector(state => getEditedTask(state.taskModificationState, creating)) ?? fallbackTask;
 
-  const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
+  const dateFormat = useAppSelector(state => state.settings.value.dateFormat);
 
   async function save() {
     if (editedTask.name.trim() === '') {
@@ -56,7 +56,7 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
             value={editedTask?.name ?? ''}
             autoFocus={animationComplete}
             allowNewLine={false}
-            onChange={(e) => {
+            onChange={e => {
               // If there's no change, don't re-render (for some reason, this event was fired when clicking away from the title input opening the task modification interface)
               if (editedTask.name === e.currentTarget.value) return;
 
@@ -81,14 +81,18 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
 
           <div id="notesWrapper">
             <div id="notesHeader">
-              <img src={pencilIcon} draggable="false" alt="" />
+              <img
+                src={pencilIcon}
+                draggable="false"
+                alt=""
+              />
               <h4>Notes</h4>
             </div>
             <NotesEditor
               className="notes-editor"
               placeholder="Enter notes here..."
               value={editedTask?.notes ?? ''}
-              onChange={(e) => {
+              onChange={e => {
                 const editedTaskClone = JSON.parse(JSON.stringify(editedTask));
                 editedTaskClone.notes = e.currentTarget.value;
                 dispatch(setEditedTask({ creating, task: editedTaskClone }));
@@ -100,13 +104,18 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
         {/* Footer of the Task Modification Interface */}
         {editedTask.completed && editedTask.completionTime && (
           <div className="task-panel-footer">
-            <p
-              style={{ fontSize: 14 }}
-            >{`Completed on ${formatDateAndTime(new Date(editedTask.completionTime), dateFormat)}`}</p>
+            <p style={{ fontSize: 14 }}>{`Completed on ${formatDateAndTime(
+              new Date(editedTask.completionTime),
+              dateFormat,
+            )}`}</p>
           </div>
         )}
       </div>
-      <ActionBar task={editedTask} onSave={save} showActionButtons={showActionButtons} />
+      <ActionBar
+        task={editedTask}
+        onSave={save}
+        showActionButtons={showActionButtons}
+      />
     </div>
   );
 };
