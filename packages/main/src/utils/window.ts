@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { ipcMain, type BrowserWindow } from 'electron';
 
 let globalMainWindow: BrowserWindow | null = null;
 /**

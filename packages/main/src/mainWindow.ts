@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron';
 import Store from 'electron-store';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { callSetupFunctions } from './index.js';
 import initializeNotificationScreenListeners from '/@/notifications.js';
 import { isHideOnStartupEnabled } from '/@/utils/storeUserData.js';
 import { initializeTaskLoop } from '/@/utils/taskLoop.js';
@@ -33,6 +34,8 @@ async function createWindow() {
   });
 
   browserWindow.removeMenu();
+
+  callSetupFunctions(browserWindow);
 
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,
@@ -81,6 +84,8 @@ async function createWindow() {
      * Load from the Vite dev server for development.
      */
     await browserWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL);
+
+    console.log('FILE #1 LOADED');
   } else {
     /**
      * Load from the local file system for production and test.
@@ -91,9 +96,9 @@ async function createWindow() {
      * @see https://github.com/nodejs/node/issues/12682
      * @see https://github.com/electron/electron/issues/6869
      */
-    await browserWindow.loadFile(
-      fileURLToPath(new URL('./../../renderer/dist/index.html', import.meta.url)),
-    );
+    await browserWindow.loadFile(fileURLToPath(new URL('./../../renderer/dist/index.html', import.meta.url)));
+
+    console.log('FILE #2 LOADED');
   }
 
   return browserWindow;
@@ -103,7 +108,7 @@ async function createWindow() {
  * Restore an existing BrowserWindow or Create a new BrowserWindow.
  */
 export async function restoreOrCreateWindow() {
-  let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
+  let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
 
   if (window === undefined) {
     window = await createWindow();

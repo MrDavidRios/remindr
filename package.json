@@ -45,6 +45,7 @@
     "cross-env": "7.0.3",
     "electron": "31.3.0",
     "electron-builder": "24.13.3",
+    "electron-devtools-installer": "github:MarshallOfSound/electron-devtools-installer",
     "eslint": "8.57.0",
     "happy-dom": "14.12.3",
     "lodash": "^4.17.21",

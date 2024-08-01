@@ -1,6 +1,6 @@
 import type { BadgeInfo, Task } from '@remindr/shared';
 import type { MessageBoxOptions } from 'electron';
-import { BrowserWindow, app, dialog, ipcMain, nativeTheme, shell } from 'electron';
+import { BrowserWindow, app, dialog, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
 import log from 'electron-log';
 import Store from 'electron-store';
 import type { UpdateDownloadedEvent } from 'electron-updater';
@@ -9,7 +9,7 @@ import type { EncodingOption } from 'fs';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { platform } from 'node:process';
-import path from 'path';
+import path, { join } from 'path';
 import { deleteAccountData, isSaving, loadData, saveData, setMainWindowForDataFunctions } from './dataFunctions.js';
 import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
@@ -98,15 +98,17 @@ class AppUpdater {
   }
 }
 
-const callSetupFunctions = (window: BrowserWindow) => {
+initFirebase();
+
+export const callSetupFunctions = (window: BrowserWindow) => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
 
-  console.log('calling setup functions...');
-
   initWindowEventListeners(window);
   initNotificationEventListeners(window);
+
+  // Listeners that aren't dependent on renderer to work
   initAppStateListeners();
   initUserDataListeners();
 
@@ -115,8 +117,6 @@ const callSetupFunctions = (window: BrowserWindow) => {
 
   setMainWindowForDataFunctions(window);
 };
-
-initFirebase();
 
 /**
  * Create the application window when the background process is ready.
@@ -127,11 +127,6 @@ app
     console.log('creating window...');
 
     await restoreOrCreateWindow();
-    const window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
-
-    console.log('window created!');
-
-    if (window) callSetupFunctions(window);
   })
   .catch((e) => console.error('Failed create window:', e));
 
@@ -139,23 +134,24 @@ app
  * Install Vue.js or any other extension in development mode only.
  * Note: You must install `electron-devtools-installer` manually
  */
-// if (import.meta.env.DEV) {
-//   app
-//     .whenReady()
-//     .then(() => import('electron-devtools-installer'))
-//     .then(module => {
-//       const {default: installExtension, VUEJS_DEVTOOLS} =
-//         //@ts-expect-error Hotfix for https://github.com/cawa-93/vite-electron-builder/issues/915
-//         typeof module.default === 'function' ? module : (module.default as typeof module);
-//
-//       return installExtension(VUEJS_DEVTOOLS, {
-//         loadExtensionOptions: {
-//           allowFileAccess: true,
-//         },
-//       });
-//     })
-//     .catch(e => console.error('Failed install extension:', e));
-// }
+if (import.meta.env.DEV) {
+  app
+    .whenReady()
+    .then(() => import('electron-devtools-installer'))
+    .then((module) => {
+      const { default: installExtension, REDUX_DEVTOOLS } =
+        //@ts-expect-error Hotfix for https://github.com/cawa-93/vite-electron-builder/issues/915
+        typeof module.default === 'function' ? module : (module.default as typeof module);
+
+      //@ts-expect-error installExtension typing isn't working
+      return installExtension([REDUX_DEVTOOLS], {
+        loadExtensionOptions: {
+          allowFileAccess: true,
+        },
+      });
+    })
+    .catch((e) => console.error('Failed install extension:', e));
+}
 
 /**
  * Check for app updates, install it in background and notify user that new version was installed.
@@ -265,10 +261,10 @@ ipcMain.on('update-badge', (_event, badgeInfo: number | BadgeInfo | null) => {
     return;
   }
 
-  throw new Error('implement badge path!');
-
-  // const badgeImage = nativeImage.createFromPath(getAssetPath((badgeInfo as BadgeInfo).badgePath));
-  // mainWindow?.setOverlayIcon(badgeImage, (badgeInfo as BadgeInfo).description);
+  //TODO: migrate this into separate assets folder in main
+  const badgeImagePath = join(app.getAppPath(), `packages/renderer/assets/${(badgeInfo as BadgeInfo).badgePath}`);
+  const badgeImage = nativeImage.createFromPath(badgeImagePath);
+  mainWindow?.setOverlayIcon(badgeImage, (badgeInfo as BadgeInfo).description);
 });
 // #endregion
 
