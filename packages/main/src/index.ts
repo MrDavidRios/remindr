@@ -1,9 +1,32 @@
-import {app} from 'electron';
+import type { BadgeInfo, Task } from '@remindr/shared';
+import type { MessageBoxOptions } from 'electron';
+import { BrowserWindow, app, dialog, ipcMain, nativeTheme, shell } from 'electron';
+import log from 'electron-log';
+import Store from 'electron-store';
+import type { UpdateDownloadedEvent } from 'electron-updater';
 import updater from 'electron-updater';
-import {platform} from 'node:process';
+import type { EncodingOption } from 'fs';
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+import { readFile } from 'fs/promises';
+import { platform } from 'node:process';
+import path from 'path';
+import { deleteAccountData, isSaving, loadData, saveData, setMainWindowForDataFunctions } from './dataFunctions.js';
+import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
-import {restoreOrCreateWindow} from '/@/mainWindow.js';
-import {isAutoStartupEnabled, isHideOnStartupEnabled} from '/@/utils/storeUserData.js';
+import { initAppStateListeners } from './utils/appState.js';
+import initAuthEventListeners from './utils/auth.js';
+import { initFirebase } from './utils/firebase.js';
+import { getPageTitle } from './utils/getPageTitle.js';
+import hasNetworkConnection from './utils/hasNetworkConnection.js';
+import initWindowEventListeners from './utils/window.js';
+import { restoreOrCreateWindow } from '/@/mainWindow.js';
+import initUserDataListeners, {
+  isAutoStartupEnabled,
+  isAutoUpdateEnabled,
+  isHideOnStartupEnabled,
+} from '/@/utils/storeUserData.js';
+
+const store = new Store();
 
 /**
  * Prevent electron from running multiple instances.
@@ -37,13 +60,80 @@ app.on('window-all-closed', () => {
  */
 app.on('activate', restoreOrCreateWindow);
 
+const getMainWindow = () => BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
+
+const { autoUpdater } = updater;
+class AppUpdater {
+  constructor() {
+    log.transports.file.level = 'info';
+    autoUpdater.logger = log;
+
+    // If auto update is not defined in settings, treat it as enabled by default
+    if (isAutoUpdateEnabled() ?? true) autoUpdater.checkForUpdates();
+
+    autoUpdater.addListener('checking-for-update', () => {
+      getMainWindow()?.webContents.send('checking-for-update');
+    });
+
+    autoUpdater.addListener('update-available', () => {
+      getMainWindow()?.webContents.send('update-available');
+    });
+
+    autoUpdater.addListener('update-not-available', () => {
+      getMainWindow()?.webContents.send('update-not-available');
+    });
+
+    // Once downloaded, the program will update.
+    autoUpdater.addListener('update-downloaded', (info: UpdateDownloadedEvent) => {
+      getMainWindow()?.webContents.send('update-downloaded', info.releaseName);
+      autoUpdater.logger!.info('update-downloaded');
+      autoUpdater.logger!.info(info);
+    });
+
+    ipcMain.on('check-for-updates', () => {
+      log.info('checking for updates...');
+
+      autoUpdater.checkForUpdates();
+    });
+  }
+}
+
+const callSetupFunctions = (window: BrowserWindow) => {
+  // Remove this if your app does not use auto updates
+  // eslint-disable-next-line
+  new AppUpdater();
+
+  console.log('calling setup functions...');
+
+  initWindowEventListeners(window);
+  initNotificationEventListeners(window);
+  initAppStateListeners();
+  initUserDataListeners();
+
+  // Dependent on Firebase
+  initAuthEventListeners(window);
+
+  setMainWindowForDataFunctions(window);
+};
+
+initFirebase();
+
 /**
  * Create the application window when the background process is ready.
  */
 app
   .whenReady()
-  .then(restoreOrCreateWindow)
-  .catch(e => console.error('Failed create window:', e));
+  .then(async () => {
+    console.log('creating window...');
+
+    await restoreOrCreateWindow();
+    const window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
+
+    console.log('window created!');
+
+    if (window) callSetupFunctions(window);
+  })
+  .catch((e) => console.error('Failed create window:', e));
 
 /**
  * Install Vue.js or any other extension in development mode only.
@@ -80,11 +170,233 @@ if (import.meta.env.PROD) {
   app
     .whenReady()
     .then(() => updater.autoUpdater.checkForUpdatesAndNotify())
-    .catch(e => console.error('Failed check and install updates:', e));
+    .catch((e) => console.error('Failed check and install updates:', e));
 }
 
 // TODO: REFACTOR THESE INTO THEIR OWN SEPARATE SCRIPTS
 app.setLoginItemSettings({
   openAtLogin: isAutoStartupEnabled(),
   args: isHideOnStartupEnabled() ? ['--hidden'] : [],
+});
+
+export function quitApp() {
+  app.quit();
+}
+
+export function restartApp() {
+  app.relaunch({ args: process.argv.slice(1).concat(['--relaunch']) });
+  app.exit();
+}
+
+export function restartAndUpdateApp() {
+  autoUpdater.quitAndInstall();
+}
+
+/** Events / Functionality */
+
+// #region Electron
+ipcMain.on('open-external', (_event, url) => {
+  shell.openExternal(url);
+});
+
+ipcMain.on('show-in-folder', (_event, url) => {
+  shell.showItemInFolder(url);
+});
+
+ipcMain.on('is-packaged', (event) => {
+  event.returnValue = app.isPackaged;
+});
+
+ipcMain.on('is-debug', (event) => {
+  event.returnValue = !import.meta.env.PROD;
+});
+
+ipcMain.on('open-dev-tools', () => {
+  getMainWindow()?.webContents.openDevTools();
+});
+
+ipcMain.on('get-system-theme', (event) => {
+  event.returnValue = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+});
+
+// Event listener for nativeTheme change
+nativeTheme.on('updated', () => {
+  const theme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+  getMainWindow()?.webContents.send('system-theme-changed', theme);
+});
+// #endregion
+
+// #region Dialog
+ipcMain.handle('show-open-dialog', async (_event, options) => {
+  const mainWindow = getMainWindow();
+  if (mainWindow) return dialog.showOpenDialog(mainWindow, options);
+
+  return undefined;
+});
+// #endregion
+
+// #region Store
+ipcMain.on('store-get', (event, value) => {
+  event.returnValue = store.get(value);
+});
+
+ipcMain.on('store-set', (_event, key, value) => {
+  store.set(key, value);
+});
+
+ipcMain.on('store-delete', (_event, key) => {
+  store.delete(key);
+});
+// #endregion
+
+// #region Badge
+ipcMain.on('update-badge', (_event, badgeInfo: number | BadgeInfo | null) => {
+  const mainWindow = getMainWindow();
+
+  if (process.platform === 'darwin' || process.platform === 'linux') {
+    app.setBadgeCount(badgeInfo as number);
+
+    if (badgeInfo === 0 || badgeInfo === null) app.setBadgeCount(0);
+    return;
+  }
+
+  if (badgeInfo === null) {
+    mainWindow?.setOverlayIcon(null, '');
+    return;
+  }
+
+  throw new Error('implement badge path!');
+
+  // const badgeImage = nativeImage.createFromPath(getAssetPath((badgeInfo as BadgeInfo).badgePath));
+  // mainWindow?.setOverlayIcon(badgeImage, (badgeInfo as BadgeInfo).description);
+});
+// #endregion
+
+// #region fs
+ipcMain.on('fs-write-file-sync', async (_event, filePath: string, data: string) => {
+  writeFileSync(filePath, data);
+});
+
+ipcMain.on('fs-read-file-sync', async (event, filePath: string, encoding?: EncodingOption) => {
+  event.returnValue = readFileSync(filePath, encoding);
+});
+
+ipcMain.on('fs-exists-sync', async (event, filePath: string) => {
+  event.returnValue = existsSync(filePath);
+});
+
+ipcMain.on('fs-unlink-sync', async (_event, filePath: string) => {
+  unlinkSync(filePath);
+});
+// #endregion
+
+// #region Message Box
+ipcMain.handle('show-message-box', (_event, options: MessageBoxOptions) => {
+  return dialog.showMessageBox(options);
+});
+// #endregion
+
+// #region Data
+ipcMain.handle('save-data', (_event, scope: string, stringifiedData: string) => {
+  saveData(scope, stringifiedData);
+});
+
+ipcMain.handle('load-data', (_event, scope: 'user' | 'tasks' | 'all') => {
+  return loadData(scope);
+});
+
+ipcMain.handle('delete-account-data', () => {
+  return deleteAccountData();
+});
+// #endregion
+
+// #region Paths
+ipcMain.on('get-user-path', (event) => {
+  event.returnValue = app.getPath('userData');
+});
+
+ipcMain.on('path-basename', (event, pathString: string) => {
+  event.returnValue = path.basename(pathString);
+});
+// #endregion
+
+// #region Notification Operations
+ipcMain.on('open-task-in-edit-panel', (_event, task) => {
+  const mainWindow = getMainWindow();
+
+  mainWindow?.show();
+  mainWindow?.webContents.send('open-task-in-edit-panel', task);
+});
+
+ipcMain.on('close-notification', (_event, notifId: number) => {
+  getMainWindow()?.webContents.send('close-notification', notifId);
+});
+
+ipcMain.on('open-reminder', (_event, taskData: { task: Task; index: number }) => {
+  const mainWindow = getMainWindow();
+
+  mainWindow?.show();
+  mainWindow?.webContents.send('open-reminder-in-edit-menu', taskData);
+});
+
+ipcMain.on('complete-task', (_event, taskData: { task: Task; index: number }) => {
+  getMainWindow()?.webContents.send('complete-task', taskData);
+});
+
+ipcMain.on('snooze-reminder', (_event, taskData: { task: Task; index: number; time: number; add?: boolean }) => {
+  getMainWindow()?.webContents.send('snooze-reminder', taskData);
+});
+
+ipcMain.on('initialize-group-notification', () => {
+  getMainWindow()?.webContents.send('initialize-group-notification');
+});
+// #endregion
+
+// #region Network
+
+ipcMain.handle('has-network-connection', () => {
+  return hasNetworkConnection();
+});
+
+ipcMain.on('is-saving', (event) => {
+  event.returnValue = isSaving();
+});
+
+// #endregion
+
+ipcMain.handle('get-background-image', async () => {
+  const backgroundFilePath = `${app.getPath('userData')}\\background.jpg`;
+
+  // check if file exists. if not, return undefined
+  if (!existsSync(backgroundFilePath)) return undefined;
+
+  const buffer = await readFile(backgroundFilePath);
+  const buffString = Buffer.from(buffer).toString('base64');
+
+  return buffString;
+});
+
+ipcMain.on('is-platform-windows-or-mac', (event) => {
+  event.returnValue = process.platform === 'win32' || process.platform === 'darwin';
+});
+
+ipcMain.on('is-platform-windows', (event) => {
+  event.returnValue = process.platform === 'win32';
+});
+
+ipcMain.on('is-platform-mac', (event) => {
+  event.returnValue = process.platform === 'darwin';
+});
+
+ipcMain.on('is-platform-linux', (event) => {
+  event.returnValue = process.platform === 'linux';
+});
+
+ipcMain.on('open-dev-tools', () => {
+  getMainWindow()?.webContents.openDevTools();
+});
+
+ipcMain.handle('get-page-title', async (_event, url) => {
+  const pageTitle = await getPageTitle(url);
+  return pageTitle;
 });

@@ -1,6 +1,4 @@
-/* eslint import/prefer-default-export: off */
-import { URL } from 'url';
-import path from 'path';
+import { fileURLToPath, URL } from 'url';
 
 export function resolveHtmlPath(htmlFileName: string) {
   if (process.env.NODE_ENV === 'development') {
@@ -9,5 +7,6 @@ export function resolveHtmlPath(htmlFileName: string) {
     url.pathname = htmlFileName;
     return url.href;
   }
-  return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
+
+  return fileURLToPath(new URL(`./../renderer/dist/${htmlFileName}.html`, import.meta.url));
 }

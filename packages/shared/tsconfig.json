@@ -13,10 +13,7 @@
     "isolatedModules": true,
     "types": ["node"],
     "baseUrl": ".",
-    "outDir": "dist",
-    "paths": {
-      "@utils/*": ["./src/utils/*"]
-    }
+    "outDir": "dist"
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./dist/**/*", "./tests/**/*"]

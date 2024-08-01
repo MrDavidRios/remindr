@@ -10,8 +10,7 @@ import {
   signInWithEmailAndPassword,
   updateEmail,
 } from 'firebase/auth';
-
-const fs = require('fs');
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 export function initFirebase() {
   // TODO: Put apiKey in a .env file
@@ -34,15 +33,11 @@ export function createUser(auth: Auth, email: string, password: string): Promise
       // User successfully created
       return JSON.stringify(userCredential);
     })
-    .catch(err => err.code);
+    .catch((err) => err.code);
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
-export function reauthenticateUser(
-  user: User,
-  email: string,
-  password: string,
-): Promise<boolean | string> {
+export function reauthenticateUser(user: User, email: string, password: string): Promise<boolean | string> {
   const credential = EmailAuthProvider.credential(email, password);
 
   return reauthenticateWithCredential(user, credential)
@@ -50,7 +45,7 @@ export function reauthenticateUser(
       // User re-authenticated
       return true;
     })
-    .catch(err => err);
+    .catch((err) => err);
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
@@ -59,7 +54,7 @@ export function sendVerificationEmail(user: User): Promise<boolean | string> {
     .then(() => {
       return true;
     })
-    .catch(err => err);
+    .catch((err) => err);
 }
 
 export function sendPassResetEmail(auth: Auth, email: string): Promise<boolean | string> {
@@ -67,7 +62,7 @@ export function sendPassResetEmail(auth: Auth, email: string): Promise<boolean |
     .then(() => {
       return true;
     })
-    .catch(err => err);
+    .catch((err) => err);
 }
 
 export function signInUser(auth: Auth, email: string, password: string): Promise<boolean | string> {
@@ -77,7 +72,7 @@ export function signInUser(auth: Auth, email: string, password: string): Promise
       storeAuthCredential(email, password);
       return true;
     })
-    .catch(err => err);
+    .catch((err) => err);
 }
 
 // https://firebase.google.com/docs/reference/node/firebase.auth.EmailAuthProvider
@@ -85,16 +80,16 @@ function storeAuthCredential(email: string, password: string) {
   const authCredential = EmailAuthProvider.credential(email, password);
   const authCredentialJSON = authCredential.toJSON();
 
-  fs.writeFileSync(getAuthCredentialPath(), JSON.stringify(authCredentialJSON));
+  writeFileSync(getAuthCredentialPath(), JSON.stringify(authCredentialJSON));
 }
 
 export function getAuthCredential(): string | undefined {
   // If the userObj.json file is still on the user's computer, autommatically remove it (strictly for migration purposes).
-  if (fs.existsSync(getUserObjPath())) fs.unlinkSync(getUserObjPath());
+  if (existsSync(getUserObjPath())) unlinkSync(getUserObjPath());
 
-  if (!fs.existsSync(getAuthCredentialPath())) return undefined;
+  if (!existsSync(getAuthCredentialPath())) return undefined;
 
-  return fs.readFileSync(getAuthCredentialPath(), 'utf8');
+  return readFileSync(getAuthCredentialPath(), 'utf8');
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
@@ -104,7 +99,7 @@ export function updateUserEmail(user: User, newEmail: string): Promise<boolean |
       // User re-authenticated
       return true;
     })
-    .catch(err => err);
+    .catch((err) => err);
 }
 
 export function getUserObjPath(): string {
@@ -118,9 +113,9 @@ export function getAuthCredentialPath(): string {
 }
 
 export function getUserObj(): string | undefined {
-  if (!fs.existsSync(getUserObjPath())) return undefined;
+  if (!existsSync(getUserObjPath())) return undefined;
 
-  return fs.readFileSync(getUserObjPath(), 'utf8');
+  return readFileSync(getUserObjPath(), 'utf8');
 }
 
 export function getCurrentUser(auth: Auth): string | undefined {

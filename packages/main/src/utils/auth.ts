@@ -1,11 +1,7 @@
 import { ipcMain, type BrowserWindow } from 'electron';
 import type { Auth } from 'firebase/auth';
-import {
-  EmailAuthCredential,
-  getAuth,
-  onAuthStateChanged,
-  signInWithCredential,
-} from 'firebase/auth';
+import { EmailAuthCredential, getAuth, onAuthStateChanged, signInWithCredential } from 'firebase/auth';
+import { existsSync, unlinkSync } from 'fs';
 import {
   createUser,
   getAuthCredential,
@@ -17,8 +13,6 @@ import {
   signInUser,
   updateUserEmail,
 } from './firebase.js';
-
-const fs = require('fs');
 
 let auth: Auth | undefined;
 /**
@@ -89,31 +83,31 @@ export default function initAuthEventListeners(mainWindow: BrowserWindow | null)
     return updateUserEmail(user, newEmail);
   });
 
-  ipcMain.on('auth-credential-exists', event => {
-    event.returnValue = fs.existsSync(getAuthCredentialPath());
+  ipcMain.on('auth-credential-exists', (event) => {
+    event.returnValue = existsSync(getAuthCredentialPath());
   });
 
   ipcMain.handle('delete-auth-credential', () => {
     deleteAuthCredential();
   });
 
-  ipcMain.on('check-if-user-signed-in', event => {
+  ipcMain.on('check-if-user-signed-in', (event) => {
     event.returnValue = auth!.currentUser !== null;
   });
 
-  ipcMain.on('check-if-user-email-verified', event => {
+  ipcMain.on('check-if-user-email-verified', (event) => {
     event.returnValue = auth!.currentUser?.emailVerified ?? 'User not found.';
   });
 
-  ipcMain.on('get-user-email', event => {
+  ipcMain.on('get-user-email', (event) => {
     event.returnValue = auth!.currentUser?.email ?? undefined;
   });
 
-  ipcMain.on('get-user-uid', event => {
+  ipcMain.on('get-user-uid', (event) => {
     event.returnValue = getUserUID();
   });
 
-  ipcMain.on('get-current-user', event => {
+  ipcMain.on('get-current-user', (event) => {
     if (!auth) {
       event.returnValue = undefined;
       return;
@@ -134,7 +128,7 @@ export async function deleteFirebaseUser() {
 function deleteAuthCredential() {
   const authCredentialPath = getAuthCredentialPath();
 
-  if (fs.existsSync(authCredentialPath)) fs.unlinkSync(authCredentialPath);
+  if (existsSync(authCredentialPath)) unlinkSync(authCredentialPath);
 }
 
 export async function signOutUser() {

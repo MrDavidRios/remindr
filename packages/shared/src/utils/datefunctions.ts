@@ -1,5 +1,5 @@
-import type { ScheduledReminder } from '../../../shared/src/types/classes/task/scheduledReminder.js';
-import { DateFormat } from '../../../shared/src/types/dateformat.js';
+import type { ScheduledReminder } from '../types/index.js';
+import { DateFormat } from '../types/index.js';
 
 export function getWeekNumber(date: Date): number {
   // Copy date so don't modify original
@@ -50,11 +50,7 @@ export function getDayNameFromIdx(
   return unclippedDayName.slice(0, 2);
 }
 
-export function getMonthName(
-  date: Date,
-  shorten = true,
-  locale: string | undefined = undefined,
-): string {
+export function getMonthName(date: Date, shorten = true, locale: string | undefined = undefined): string {
   return date.toLocaleDateString(locale, { month: shorten ? 'short' : 'long' });
 }
 
@@ -191,11 +187,7 @@ function formatTime(date: Date): string {
   });
 }
 
-export function formatDateAndTime(
-  date: Date,
-  dateFormat: DateFormat,
-  removeYearIfSame = true,
-): string {
+export function formatDateAndTime(date: Date, dateFormat: DateFormat, removeYearIfSame = true): string {
   let formattedDate = formatDate(date, dateFormat);
   const time = formatTime(date);
 

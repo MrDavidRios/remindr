@@ -1,11 +1,7 @@
-import type { ScheduledReminder, Task } from 'src/types/index.js';
-import { Repeat } from 'src/types/index.js';
+import { Repeat, type ScheduledReminder, type Task } from '../types/index.js';
 import { getReminderDate } from './datefunctions.js';
 
-export function getCalculableDate(
-  comparableDate: Date,
-  scheduledReminderTime: ScheduledReminder,
-): Date {
+export function getCalculableDate(comparableDate: Date, scheduledReminderTime: ScheduledReminder): Date {
   comparableDate.setHours(scheduledReminderTime.reminderHour);
   comparableDate.setMinutes(scheduledReminderTime.reminderMinute);
   comparableDate.setSeconds(0);
@@ -88,11 +84,7 @@ export function isOverdue(reminderTime: ScheduledReminder): boolean {
   return false;
 }
 
-export function setDate(
-  scheduledReminder: ScheduledReminder,
-  date: Date,
-  setTime = true,
-): ScheduledReminder {
+export function setDate(scheduledReminder: ScheduledReminder, date: Date, setTime = true): ScheduledReminder {
   scheduledReminder.reminderYear = date.getFullYear();
   scheduledReminder.reminderMonth = date.getMonth() + 1;
   scheduledReminder.reminderDay = date.getDate();
@@ -127,16 +119,10 @@ export function reminderRepeats(scheduledReminder: ScheduledReminder): boolean {
 export function sortReminders(reminderList: ScheduledReminder[]): ScheduledReminder[] {
   const reminderListClone = JSON.parse(JSON.stringify(reminderList)) as ScheduledReminder[];
 
-  return reminderListClone.sort(
-    (a, b) => getReminderDate(a).getTime() - getReminderDate(b).getTime(),
-  );
+  return reminderListClone.sort((a, b) => getReminderDate(a).getTime() - getReminderDate(b).getTime());
 }
 
-export function isBetweenDates(
-  reminder: ScheduledReminder,
-  startDate: Date,
-  endDate: Date,
-): boolean {
+export function isBetweenDates(reminder: ScheduledReminder, startDate: Date, endDate: Date): boolean {
   const reminderDate = getDate(reminder);
 
   return reminderDate.getTime() > startDate.getTime() && reminderDate.getTime() < endDate.getTime();
