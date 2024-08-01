@@ -1,7 +1,4 @@
-import { ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import { DateFormat } from 'main/types/dateformat';
-import { formatDate, getReminderDate } from '../../../main/utils/datefunctions';
-import { isReminderToday, setDate } from '../../../main/utils/reminderfunctions';
+import { DateFormat, formatDate, getReminderDate, isReminderToday, ScheduledReminder, setDate } from '@remindr/shared';
 
 export function getScheduledReminderClone(scheduledReminder: ScheduledReminder): ScheduledReminder {
   return JSON.parse(JSON.stringify(scheduledReminder));

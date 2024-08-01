@@ -1,14 +1,12 @@
-import { Settings } from 'main/types/classes/settings';
-import Task from 'main/types/classes/task/task';
-import store, { AppDispatch } from 'renderer/app/store';
-import { setSettings } from 'renderer/features/settings/settingsSlice';
-import { setTaskList } from 'renderer/features/task-list/taskListSlice';
+import { Settings, Task } from '@remindr/shared';
+import store, { AppDispatch } from '/@/app/store';
+import { setSettings } from '/@/features/settings/settingsSlice';
+import { setTaskList } from '/@/features/task-list/taskListSlice';
 
 export function backupTaskData() {
   const taskList = store.getState().taskList.value;
 
   window.store.set('backup.tasks', taskList);
-
   window.store.set('last-backup-date.tasks', new Date());
 }
 

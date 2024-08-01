@@ -1,8 +1,13 @@
-import { Repeat, ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import Task from 'main/types/classes/task/task';
-import { generateUniqueID } from 'main/utils/idutils';
-import { getReminderDate } from '../../../main/utils/datefunctions';
-import { getDate, setDate, sortReminders } from '../../../main/utils/reminderfunctions';
+import {
+  Task,
+  Repeat,
+  getReminderDate,
+  setDate,
+  sortReminders,
+  ScheduledReminder,
+  generateUniqueID,
+  getDate,
+} from '@remindr/shared';
 import getNextRepeatDate from './repeatHelper';
 
 export function taskHasNotes(task: Task): boolean {

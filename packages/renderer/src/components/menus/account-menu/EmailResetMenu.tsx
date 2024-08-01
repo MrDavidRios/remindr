@@ -1,14 +1,15 @@
-import { Menu } from 'main/types/menu';
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { Menu } from '@remindr/shared';
+import type { Dispatch, FC, SetStateAction } from 'react';
+import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import store from 'renderer/app/store';
-import CloseMenuButton from 'renderer/components/close-menu-button/CloseMenuButton';
-import { FullScreenMenu } from 'renderer/components/menus/fullscreen-menu/FullScreenMenu';
-import { hideMenu } from 'renderer/features/menu-state/menuSlice';
-import { updateEmail } from 'renderer/features/user-state/userSlice';
-import { useAppDispatch } from 'renderer/hooks';
-import { isEmailValid, resetEmail, signOut } from 'renderer/scripts/systems/authentication';
-import showMessageBox from 'renderer/scripts/utils/messagebox';
+import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
+import store from '/@/app/store';
+import { hideMenu } from '/@/features/menu-state/menuSlice';
+import { updateEmail } from '/@/features/user-state/userSlice';
+import { useAppDispatch } from '/@/hooks';
+import { isEmailValid, resetEmail, signOut } from '/@/scripts/systems/authentication';
+import showMessageBox from '/@/scripts/utils/messagebox';
 
 interface EmailResetMenuProps {
   setShowEmailResetMenu: Dispatch<SetStateAction<boolean>>;
@@ -38,7 +39,7 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
     if (currentEmail !== store.getState().userState.user?.email) {
       showMessageBox(
         'Error: Invalid current email',
-        `Invalid current email entered: please make sure that you spelled your current email correctly.`,
+        'Invalid current email entered: please make sure that you spelled your current email correctly.',
         'error',
         [],
       );
@@ -48,7 +49,7 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
     if (!validEmail) {
       showMessageBox(
         'Error: Invalid new email',
-        `Invalid new email entered: please make sure that you spelled your new email correctly.`,
+        'Invalid new email entered: please make sure that you spelled your new email correctly.',
         'error',
         [],
       );
@@ -67,7 +68,7 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
 
     const { response } = await showMessageBox(
       'Email Reset Confirmation',
-      `Are you sure you want to reset your email?`,
+      'Are you sure you want to reset your email?',
       'info',
       ['Cancel', 'Reset Email'],
     );
@@ -104,7 +105,7 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
 
     showMessageBox(
       'Invalid email',
-      `Invalid email entered: please make sure that you spelled your new email correctly.`,
+      'Invalid email entered: please make sure that you spelled your new email correctly.',
       'error',
       [],
     );

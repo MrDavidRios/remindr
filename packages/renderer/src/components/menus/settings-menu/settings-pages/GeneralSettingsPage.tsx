@@ -1,9 +1,7 @@
-import { AppMode, appModeLabels } from 'main/types/classes/appMode';
-import { DateFormat, dateFormatDisplayNames } from 'main/types/dateformat';
-import { getDayNameFromIdx } from 'main/utils/datefunctions';
-import { Dropdown } from 'renderer/components/dropdown/Dropdown';
-import { updateSetting } from 'renderer/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
+import { AppMode, appModeLabels, DateFormat, dateFormatDisplayNames, getDayNameFromIdx } from '@remindr/shared';
+import { Dropdown } from '/@/components/dropdown/Dropdown';
+import { updateSetting } from '/@/features/settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export function GeneralSettingsPage() {
   const dispatch = useAppDispatch();

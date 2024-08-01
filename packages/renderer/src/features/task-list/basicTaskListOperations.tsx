@@ -1,13 +1,10 @@
 import { PayloadAction } from '@reduxjs/toolkit';
+import { generateUniqueID, Repeat, ScheduledReminder, setDate, sortReminders, Task } from '@remindr/shared';
 import _ from 'lodash';
-import { Repeat, ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import Task from 'main/types/classes/task/task';
-import { generateUniqueID } from 'main/utils/idutils';
-import { setDate, sortReminders } from 'main/utils/reminderfunctions';
-import getNextRepeatDate from 'renderer/scripts/utils/repeatHelper';
-import { taskHasRecurringReminders } from 'renderer/scripts/utils/taskfunctions';
-import { getTaskIdx } from 'renderer/scripts/utils/tasklistutils';
 import { TaskListState } from './taskListSlice';
+import getNextRepeatDate from '/@/scripts/utils/repeatHelper';
+import { taskHasRecurringReminders } from '/@/scripts/utils/taskfunctions';
+import { getTaskIdx } from '/@/scripts/utils/tasklistutils';
 
 export const addTaskReducer = (
   state: TaskListState,

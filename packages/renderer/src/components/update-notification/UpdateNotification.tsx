@@ -1,10 +1,9 @@
+import { Menu, UpdateStatus } from '@remindr/shared';
 import { motion } from 'framer-motion';
-import { Menu } from 'main/types/menu';
-import { UpdateStatus } from 'main/types/updateStatus';
 import { FC } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { hideMenu } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
+import { hideMenu } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export const UpdateNotification: FC = () => {
   const dispatch = useAppDispatch();

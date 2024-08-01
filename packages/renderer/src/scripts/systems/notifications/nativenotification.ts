@@ -1,10 +1,10 @@
-import Task from 'main/types/classes/task/task';
-import store from 'renderer/app/store';
-import { getIpcRendererOutput } from 'renderer/scripts/utils/ipcRendererOutput';
-import { formatMinute, milToStandardHour } from 'renderer/scripts/utils/timefunctions';
+import { Task } from '@remindr/shared';
+import { getIpcRendererOutput } from '../../utils/ipcRendererOutput';
+import { formatMinute, milToStandardHour } from '../../utils/timefunctions';
+import store from '/@/app/store';
 
 export function initNativeNotificationListener() {
-  window.electron.ipcRenderer.on('deploy-native-notification', (e) => {
+  window.electron.ipcRenderer.on('deploy-native-notification', (e: unknown) => {
     const militaryTime = store.getState().settings.value.militaryTime ?? false;
 
     const { task, index } = getIpcRendererOutput(e) as { task: Task; index: number };

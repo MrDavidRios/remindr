@@ -1,9 +1,9 @@
-import { Menu } from 'main/types/menu';
+import { Menu } from '@remindr/shared';
 import { FC } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { hideMenu, setDialogResult } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
 import { FullScreenMenu } from '../menus/fullscreen-menu/FullScreenMenu';
+import { hideMenu, setDialogResult } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export const MessageModal: FC = () => {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ export const MessageModal: FC = () => {
       </div>
       {(options ?? []).length > 0 ? (
         <div className="action-buttons">
-          {options!.map((option) => {
+          {options?.map((option) => {
             const lowercasedOption = option.toLowerCase();
             const buttonClasses = `${lowercasedOption !== 'discard' ? 'primary-button' : 'secondary'}`;
 

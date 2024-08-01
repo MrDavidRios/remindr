@@ -1,4 +1,4 @@
-import { AuthPageType } from 'main/types/authPage';
+import type { AuthPageType } from '@remindr/shared';
 import { useState } from 'react';
 import { LoginPage } from './LoginPage';
 import { RegisterPage } from './RegisterPage';

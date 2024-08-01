@@ -1,8 +1,6 @@
-import CompleteAppData from 'main/types/appData';
-import TaskCollection from 'main/types/classes/task/taskCollection';
-import User from 'main/types/classes/user';
-import store, { AppDispatch } from 'renderer/app/store';
-import { setAttemptingToRegainConnection, setConnectionError } from 'renderer/features/database/databaseSlice';
+import { CompleteAppData, TaskCollection, User } from '@remindr/shared';
+import store, { AppDispatch } from '../app/store';
+import { setAttemptingToRegainConnection, setConnectionError } from '../features/database/databaseSlice';
 
 /**
  * Possible issue: this event needs to go from main -> renderer -> back to main to work. Will this still work even when the renderer process isn't running? Does it need to?

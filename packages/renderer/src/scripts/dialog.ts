@@ -1,7 +1,7 @@
-import { DialogProps, MenuState } from 'main/types/menu';
-import { waitUntil } from 'main/utils/timing';
-import { AppDispatch } from 'renderer/app/store';
-import { showDialog } from 'renderer/features/menu-state/menuSlice';
+import { DialogProps, MenuState } from '@remindr/shared';
+import { AppDispatch } from '../app/store';
+import { showDialog } from '../features/menu-state/menuSlice';
+import { waitUntil } from './utils/timing';
 
 interface FeedbackDialogProps extends DialogProps {
   dispatch: AppDispatch;

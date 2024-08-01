@@ -1,6 +1,5 @@
+import { Task, isOverdue } from '@remindr/shared';
 import _ from 'lodash';
-import Task from 'main/types/classes/task/task';
-import { isOverdue } from '../../../main/utils/reminderfunctions';
 
 export function getOverdueAmount(taskList: Task[]) {
   return _.filter(taskList, (task: Task) => {

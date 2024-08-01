@@ -1,7 +1,5 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { AppMode } from 'main/types/classes/appMode';
-import { Settings, createDefaultSettings } from 'main/types/classes/settings';
-import User from 'main/types/classes/user';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppMode, createDefaultSettings, Settings, User } from '@remindr/shared';
 import { setAppMode } from '../app-mode/appModeSlice';
 import { getUserData } from '../user-state/userSlice';
 

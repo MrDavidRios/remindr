@@ -1,11 +1,9 @@
 // #region Variable Initialization
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
+import { Settings, Theme } from '@remindr/shared';
 import { FastAverageColorResult } from 'fast-average-color';
-import { Settings } from 'main/types/classes/settings';
-import { Theme } from 'main/types/theme';
 import { Dispatch, SetStateAction } from 'react';
-import store from 'renderer/app/store';
 import { BackgroundProps, getDefaultBackgroundProps, isBackgroundAnImage } from '../utils/backgroundprops';
 import {
   darkenColor,
@@ -16,6 +14,7 @@ import {
   rgbaToHex,
 } from '../utils/colorutils';
 import { getDominantColor, getImgUrlFromData } from '../utils/imgutils';
+import store from '/@/app/store';
 
 const root = document.documentElement;
 

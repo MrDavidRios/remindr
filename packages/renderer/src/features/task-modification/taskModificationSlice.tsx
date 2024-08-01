@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import Task from 'main/types/classes/task/task';
-import { sortReminders } from 'main/utils/reminderfunctions';
+import { Task, sortReminders } from '@remindr/shared';
 
 type EditState = {
   originalTask?: Task;

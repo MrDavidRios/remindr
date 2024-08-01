@@ -1,4 +1,4 @@
-import { useAppStore } from 'renderer/hooks';
+import { useAppStore } from '/@/hooks';
 
 /**
  * Returns whether or not animations are enabled (from user state). This does not trigger a re-render on animation

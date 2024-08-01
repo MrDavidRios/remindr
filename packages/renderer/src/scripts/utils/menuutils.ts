@@ -1,4 +1,4 @@
-import { Menu, MenuRect, MenuState, floatingMenus, fullscreenMenus, primaryMenus } from 'main/types/menu';
+import { Menu, MenuRect, MenuState, floatingMenus, fullscreenMenus, primaryMenus } from '@remindr/shared';
 
 /**
  * Carries out the given callback only if both the task creation and edit menus are closed.

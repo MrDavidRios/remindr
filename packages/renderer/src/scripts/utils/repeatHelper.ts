@@ -1,5 +1,4 @@
-import { Repeat, ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import { addMonths, getReminderDate } from '../../../main/utils/datefunctions';
+import { Repeat, ScheduledReminder, addMonths, getReminderDate } from '@remindr/shared';
 
 /**
  * Gets the next date for a reminder based on its repeat interval.

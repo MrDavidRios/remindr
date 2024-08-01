@@ -1,11 +1,10 @@
+import { AppMode } from '@remindr/shared';
 import { motion } from 'framer-motion';
-import { AppMode } from 'main/types/classes/appMode';
 import { FC, HTMLAttributes, ReactNode } from 'react';
 import ReactFocusLock from 'react-focus-lock';
-import { backdropAnimationProps, menuAnimationProps } from 'renderer/animation';
-import { useAppSelector } from 'renderer/hooks';
-import { useAnimationsEnabled } from 'renderer/scripts/utils/hooks/useanimationsenabled';
-
+import { backdropAnimationProps, menuAnimationProps } from '/@/animation';
+import { useAppSelector } from '/@/hooks';
+import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 interface FullScreenMenuProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }

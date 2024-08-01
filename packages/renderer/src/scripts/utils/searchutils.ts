@@ -1,6 +1,5 @@
+import { Task, getReminderDate } from '@remindr/shared';
 import _ from 'lodash';
-import Task from 'main/types/classes/task/task';
-import { getReminderDate } from 'main/utils/datefunctions';
 
 export function isValidSearchString(str: string) {
   return str.length > 0;

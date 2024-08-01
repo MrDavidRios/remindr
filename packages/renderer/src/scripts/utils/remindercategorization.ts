@@ -1,6 +1,4 @@
-import Task from 'main/types/classes/task/task';
-import { getDayName, getReminderDate, getWeekNumber } from 'main/utils/datefunctions';
-import { isOverdue, isReminderToday } from '../../../main/utils/reminderfunctions';
+import { Task, getDayName, getReminderDate, getWeekNumber, isOverdue, isReminderToday } from '@remindr/shared';
 
 const months = [
   'January',

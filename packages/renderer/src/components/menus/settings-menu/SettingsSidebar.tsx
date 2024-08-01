@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { ArrowNavigable } from 'renderer/components/accessibility/ArrowNavigable';
+import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 
 export enum SettingsPage {
   General,

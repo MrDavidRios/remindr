@@ -1,7 +1,7 @@
-import { addMinutes } from 'main/utils/datefunctions';
+import { addMinutes } from '@remindr/shared';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { DropdownMenu } from 'renderer/components/menus/dropdown-menu/DropdownMenu';
+import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
 interface SuggestedTimesMenuProps {
   setShowSuggestedTimesMenu: (show: boolean) => void;

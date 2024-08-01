@@ -1,13 +1,11 @@
-import { AppMode } from 'main/types/classes/appMode';
-import { Menu } from 'main/types/menu';
-import { formatDateAndTime } from 'main/utils/datefunctions';
+import { AppMode, Menu, formatDateAndTime } from '@remindr/shared';
 import { FC, useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import CloseMenuButton from 'renderer/components/close-menu-button/CloseMenuButton';
-import { hideMenu, showDialog } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from 'renderer/hooks';
-import { backupSettingsData, backupTaskData, getLastBackupDate } from 'renderer/scripts/systems/backup';
 import { FullScreenMenu } from '../../fullscreen-menu/FullScreenMenu';
+import CloseMenuButton from '/@/components/close-menu-button/CloseMenuButton';
+import { hideMenu, showDialog } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { backupSettingsData, backupTaskData, getLastBackupDate } from '/@/scripts/systems/backup';
 
 export const BackupDataMenu: FC = () => {
   const dispatch = useAppDispatch();

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { AppMode } from 'main/types/classes/appMode';
+import { AppMode } from '@remindr/shared';
 
 interface AppModeState {
   value: AppMode;

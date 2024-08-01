@@ -1,6 +1,5 @@
+import { AppMode, Menu } from '@remindr/shared';
 import { AnimatePresence } from 'framer-motion';
-import { AppMode } from 'main/types/classes/appMode';
-import { Menu } from 'main/types/menu';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AppDispatch } from './app/store';
 import { AccountMenu } from './components/menus/account-menu/AccountMenu';

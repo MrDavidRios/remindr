@@ -1,6 +1,6 @@
-import Task from 'main/types/classes/task/task';
-import { AppDispatch } from 'renderer/app/store';
-import { advanceRecurringReminder, setTaskDisplayOutdated } from 'renderer/features/task-list/taskListSlice';
+import { Task } from '@remindr/shared';
+import { AppDispatch } from '../app/store';
+import { advanceRecurringReminder, setTaskDisplayOutdated } from '../features/task-list/taskListSlice';
 import { getIpcRendererOutput } from './utils/ipcRendererOutput';
 
 let listenersInitialized = false;
@@ -12,7 +12,7 @@ export function useTaskLoopEvents(dispatch: AppDispatch) {
     dispatch(setTaskDisplayOutdated(true));
   });
 
-  window.electron.ipcRenderer.on('advance-recurring-reminder', async (_e) => {
+  window.electron.ipcRenderer.on('advance-recurring-reminder', async (_e: unknown) => {
     const { task, index } = getIpcRendererOutput(_e) as {
       task: Task;
       index: number;

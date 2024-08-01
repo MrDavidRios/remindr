@@ -27,7 +27,7 @@ export default function showMessageBox(title: string, message: string, type = 'i
   }
 }
 
-window.electron.ipcRenderer.on('show-message-box', async (stringifiedOptions, id) => {
+window.electron.ipcRenderer.on('show-message-box', async (stringifiedOptions: string, id: any) => {
   const { title, message, type, buttons } = JSON.parse(stringifiedOptions as string);
 
   const response = await showMessageBox(title, message, type, buttons);

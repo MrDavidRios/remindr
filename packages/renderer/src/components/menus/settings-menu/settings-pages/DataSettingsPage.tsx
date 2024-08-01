@@ -1,6 +1,6 @@
-import { Menu } from 'main/types/menu';
-import { showMenu } from 'renderer/features/menu-state/menuSlice';
-import { useAppDispatch } from 'renderer/hooks';
+import { Menu } from '@remindr/shared';
+import { showMenu } from '/@/features/menu-state/menuSlice';
+import { useAppDispatch } from '/@/hooks';
 
 export function DataSettingsPage() {
   const dispatch = useAppDispatch();

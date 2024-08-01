@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { UpdateStatus } from 'main/types/updateStatus';
+import { UpdateStatus } from '@remindr/shared';
 
 interface UpdateState {
   status: UpdateStatus;

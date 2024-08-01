@@ -1,5 +1,4 @@
-import { Color } from 'main/types/classes/color';
-import { Solver } from 'main/types/classes/solver';
+import { Color, Solver } from '@remindr/shared';
 import isHexColor from 'validator/lib/isHexColor';
 
 export function rgbStringToArr(rgbString: string): number[] {

@@ -1,4 +1,4 @@
-import User from 'main/types/classes/user';
+import type { User } from '@remindr/shared';
 
 export function AccountDetails(props: { userData?: User }) {
   const { userData } = props;

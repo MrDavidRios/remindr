@@ -1,8 +1,7 @@
-import { Menu } from 'main/types/menu';
-import { UpdateStatus } from 'main/types/updateStatus';
-import { AppDispatch } from 'renderer/app/store';
-import { showMenu } from 'renderer/features/menu-state/menuSlice';
-import { setUpdateState } from 'renderer/features/update-state/updateState';
+import { Menu, UpdateStatus } from '@remindr/shared';
+import { AppDispatch } from '../app/store';
+import { showMenu } from '../features/menu-state/menuSlice';
+import { setUpdateState } from '../features/update-state/updateState';
 
 export function useUpdateNotificationListeners(dispatch: AppDispatch) {
   // Update available

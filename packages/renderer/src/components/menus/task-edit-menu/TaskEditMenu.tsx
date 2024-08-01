@@ -1,12 +1,12 @@
+import { Task } from '@remindr/shared';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
-import Task from 'main/types/classes/task/task';
 import { FC, HTMLProps, useEffect, useState } from 'react';
-import { menuWidthAnimationProps } from 'renderer/animation';
-import { clearSelectedTasks, updateTask } from 'renderer/features/task-list/taskListSlice';
-import { setEditedTask, setOriginalTask } from 'renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch } from 'renderer/hooks';
-import { useAnimationsEnabled } from 'renderer/scripts/utils/hooks/useanimationsenabled';
 import { TaskModificationInterface } from '../task-modification-menu/TaskModificationInterface';
+import { menuWidthAnimationProps } from '/@/animation';
+import { clearSelectedTasks, updateTask } from '/@/features/task-list/taskListSlice';
+import { setEditedTask, setOriginalTask } from '/@/features/task-modification/taskModificationSlice';
+import { useAppDispatch } from '/@/hooks';
+import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 
 interface TaskEditMenuProps extends HTMLProps<HTMLDivElement> {
   selectedTask: Task;

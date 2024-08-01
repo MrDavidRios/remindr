@@ -1,10 +1,14 @@
+import {
+  createDefaultSettings,
+  getCalculableDate,
+  getWeekNumber,
+  isOverdue,
+  isReminderToday,
+  Task,
+  Timeframe,
+} from '@remindr/shared';
 import _ from 'lodash';
-import { createDefaultSettings } from 'main/types/classes/settings';
-import Task from 'main/types/classes/task/task';
-import { Timeframe } from 'main/types/timeframe';
-import store from 'renderer/app/store';
-import { getWeekNumber } from '../../../main/utils/datefunctions';
-import { getCalculableDate, isOverdue, isReminderToday } from '../../../main/utils/reminderfunctions';
+import store from '/@/app/store';
 
 /**
  * Returns a list of reminders that are within the inputted timeframe.

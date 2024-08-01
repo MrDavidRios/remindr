@@ -1,7 +1,7 @@
-import { Repeat } from 'main/types/classes/task/scheduledReminder';
+import { Repeat } from '@remindr/shared';
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { DropdownMenu } from 'renderer/components/menus/dropdown-menu/DropdownMenu';
+import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
 interface RepeatIntervalsMenuProps {
   updateRepeatInterval: (interval: Repeat) => void;

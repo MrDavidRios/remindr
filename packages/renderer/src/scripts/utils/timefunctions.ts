@@ -1,4 +1,4 @@
-import { ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
+import { ScheduledReminder } from '@remindr/shared';
 
 /**
  * Formats an hour value to be displayed.
