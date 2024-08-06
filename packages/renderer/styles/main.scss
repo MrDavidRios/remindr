@@ -1,55 +1,55 @@
 // Import all unmigrated css files
-@use './src/_generalmenu.css';
-@use './src/_master.css';
-@use './src/_timepicker.css';
+@use "./src/_generalmenu.css";
+@use "./src/_master.css";
+@use "./src/_timepicker.css";
 
 // Import all migrated css (now scss) files
-@use './menus/_toolbar';
-@use './menus/_titlebar';
+@use "./menus/_toolbar";
+@use "./menus/_titlebar";
 
 // Menus
-@use './menus/_taskcreationmenu';
-@use './menus/_taskmenus';
-@use './menus/_accountmenu';
-@use './menus/_settingsmenu';
-@use './menus/_reminderui';
-@use './menus/scheduledremindereditmenu';
-@use './menus/_backupmenu';
+@use "./menus/_taskcreationmenu";
+@use "./menus/_taskmenus";
+@use "./menus/_accountmenu";
+@use "./menus/_settingsmenu";
+@use "./menus/_reminderui";
+@use "./menus/scheduledremindereditmenu";
+@use "./menus/_backupmenu";
 
-@use './menus/contextmenus';
+@use "./menus/contextmenus";
 
-@use './components/messageModal';
+@use "./components/messageModal";
 
 // Components
-@use './components/colorpicker';
-@use './components/datepicker';
-@use './components/slider';
-@use './components/dropdown';
+@use "./components/colorpicker";
+@use "./components/datepicker";
+@use "./components/slider";
+@use "./components/dropdown";
 
-@use './components/tasktile';
-@use './components/taskgroup';
+@use "./components/tasktile";
+@use "./components/taskgroup";
 
-@use './components/reminderseditor';
-@use './components/noteseditor';
-@use './components/linkseditor';
+@use "./components/reminderseditor";
+@use "./components/noteseditor";
+@use "./components/linkseditor";
 
 // Pages
-@use './menus/_login';
-@use './menus/_intropage';
+@use "./menus/_login";
+@use "./menus/_intropage";
 
 // Base
-@use './base/svg';
-@use './base/frosted_background';
-@use './base/mixins';
+@use "./base/svg";
+@use "./base/frosted_background";
+@use "./base/mixins";
 
 @font-face {
-  font-family: 'Lato';
-  src: url('../../../assets/fonts/Lato-Regular.ttf');
+  font-family: "Lato";
+  src: url("@assets/fonts/Lato-Regular.ttf");
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: url('../../../assets/fonts/Inter-Regular.ttf');
+  font-family: "Inter";
+  src: url("@assets/fonts/Inter-Regular.ttf");
 }
 
 // Variables
@@ -96,7 +96,7 @@ body,
 
 input,
 textarea {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 .responsive {
@@ -127,11 +127,11 @@ button {
   }
 }
 
-input[type='checkbox']:focus {
+input[type="checkbox"]:focus {
   outline: 2px solid var(--ui-accent-color);
 }
 
-input[aria-invalid='true'] {
+input[aria-invalid="true"] {
   border: 1px solid var(--error-color);
 
   &:focus-visible {
@@ -198,7 +198,7 @@ label.required {
     position: absolute;
     left: -10px;
 
-    content: ' *';
+    content: " *";
     color: red;
   }
 }

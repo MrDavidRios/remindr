@@ -55,8 +55,8 @@
   }
 
   &::after {
-    content: '';
-    background-image: url('../../../assets/icons/expand-arrow.png');
+    content: "";
+    background-image: url("@assets/icons/expand-arrow.png");
     background-size: contain;
     background-repeat: no-repeat;
 
