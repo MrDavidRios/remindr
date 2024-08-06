@@ -71,7 +71,7 @@
   }
 
   &::before {
-    background-image: url('../../../assets/icons/expand-arrow.png');
+    background-image: url("../../../assets/icons/expand-arrow.png");
 
     background-repeat: no-repeat;
     background-size: 15px 15px;
@@ -83,6 +83,6 @@
     filter: var(--img-filter);
     opacity: 0.5;
 
-    content: '';
+    content: "";
   }
 }

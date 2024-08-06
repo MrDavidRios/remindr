@@ -18,6 +18,8 @@
     "build:preload": "cd ./packages/preload && vite build",
     "build:renderer": "cd ./packages/renderer && vite build",
     "compile": "cross-env MODE=production npm run build && electron-builder build --config electron-builder.yml --dir --config.asar=false",
+    "compile:sass": "sass packages/renderer/styles/main.scss:packages/renderer/styles/css/main.css packages/renderer/styles/notification.scss:packages/renderer/styles/css/notification.css",
+    "watch:sass": "sass packages/renderer/styles/main.scss:packages/renderer/styles/css/main.css packages/renderer/styles/notification.scss:packages/renderer/styles/css/notification.css --watch",
     "test": "npm run test:main && npm run test:preload && npm run test:renderer && npm run test:e2e",
     "test:e2e": "npm run build && vitest run",
     "test:main": "vitest run -r packages/main --passWithNoTests",

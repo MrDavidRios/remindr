@@ -9,3 +9,4 @@ thumbs.db
 .electron-vendors.cache.json
 
 packages/shared/dist
+packages/renderer/styles/css
