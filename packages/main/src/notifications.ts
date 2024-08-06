@@ -1,9 +1,9 @@
 import type { Task, TaskScheduledReminderPair } from '@remindr/shared';
 import { BrowserWindow, app, ipcMain, screen } from 'electron';
 import _ from 'lodash';
-import path from 'path';
+import { join } from 'node:path';
+import { getMainWindow } from './index.js';
 import { createDefaultSettings } from '/@/utils/defaultSettings.js';
-import { resolveHtmlPath } from '/@/utils/resolveHtmlPath.js';
 import { getScreenHeight, getScreenWidth } from '/@/utils/screen.js';
 import { getSettingsProfile } from '/@/utils/storeUserData.js';
 
@@ -44,18 +44,12 @@ ipcMain.on('update-notification-style-values', (_e, styleData) => {
   }
 
   if (isGroupNotifOpen) {
-    groupNotifWindow?.webContents.send(
-      'update-theme-in-notification',
-      JSON.stringify(Object.fromEntries(styleValues)),
-    );
+    groupNotifWindow?.webContents.send('update-theme-in-notification', JSON.stringify(Object.fromEntries(styleValues)));
     return;
   }
 
-  ongoingNotifications.forEach(async notifWindow => {
-    notifWindow.webContents.send(
-      'update-theme-in-notification',
-      JSON.stringify(Object.fromEntries(styleValues)),
-    );
+  ongoingNotifications.forEach(async (notifWindow) => {
+    notifWindow.webContents.send('update-theme-in-notification', JSON.stringify(Object.fromEntries(styleValues)));
     notifWindow.webContents.send('update-settings-in-notification', getSettingsProfile());
   });
 });
@@ -90,10 +84,7 @@ export function notify(stringifiedTask: string, scheduledReminderIndex: number):
 
   // Don't fire another notification if existing notification already has the same task/scheduled reminder pair
   for (const key of ongoingNotifications.keys()) {
-    if (
-      key.task.creationTime === task.creationTime &&
-      key.scheduledReminderIndex === scheduledReminderIndex
-    ) {
+    if (key.task.creationTime === task.creationTime && key.scheduledReminderIndex === scheduledReminderIndex) {
       // Task/reminder pair already exists in ongoingNotifications
       return;
     }
@@ -115,8 +106,7 @@ export function notify(stringifiedTask: string, scheduledReminderIndex: number):
 
   if (isGroupNotifCreated) {
     // Send event to group notification
-    if (isGroupNotifOpen)
-      groupNotifWindow?.webContents.send('add-reminder-to-group-notif', notifDetails);
+    if (isGroupNotifOpen) groupNotifWindow?.webContents.send('add-reminder-to-group-notif', notifDetails);
     else queuedGroupNotifReminders.push(notifDetails);
   } else if (doNotificationsOverflow(ongoingNotifications.size + 1)) {
     convertToGroupNotif(notifDetails);
@@ -137,7 +127,7 @@ export function notify(stringifiedTask: string, scheduledReminderIndex: number):
       win.show();
     });
 
-    win.loadURL(resolveHtmlPath('./notification.html'));
+    win.loadURL(join(app.getAppPath(), 'packages/renderer/dist/src/notifications/notification.html'));
   }
 
   win.once('closed', () => {
@@ -163,13 +153,12 @@ function createNotificationWindow() {
     minimizable: false,
     alwaysOnTop: true,
     backgroundColor: '#121212',
+    parent: getMainWindow(),
     skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true,
-      devTools: false,
-      preload: app.isPackaged
-        ? path.join(__dirname, 'preload.js')
-        : path.join(__dirname, '../../.erb/dll/preload.js'),
+      devTools: true,
+      preload: join(app.getAppPath(), 'packages/preload/dist/index.mjs'),
     },
   });
 
@@ -210,14 +199,13 @@ function closeAllNotifications(clearData: boolean) {
 // #region Position
 function updateNotificationPositions() {
   let i = 1;
-  ongoingNotifications.forEach(notifWindow => {
+  ongoingNotifications.forEach((notifWindow) => {
     // Value is the window, key is the task/scheduled reminder pair
     if (notifWindow.isDestroyed()) return;
 
     const goalPosition = [
       getScreenWidth() - getTotalNotifWidth(),
-      getScreenHeight() -
-        (notifWindow === groupNotifWindow ? getTotalGroupNotifHeight() : getTotalNotifHeight()) * i,
+      getScreenHeight() - (notifWindow === groupNotifWindow ? getTotalGroupNotifHeight() : getTotalNotifHeight()) * i,
     ];
 
     notifWindow.setPosition(goalPosition[0], goalPosition[1], false);
@@ -239,13 +227,10 @@ export default function initializeNotificationScreenListeners() {
   screen.addListener('display-added', () => {
     // Workaround to properly display notifications on new (primary) screen (waiting a second to make sure the primary display properly updates)
     setTimeout(() => {
-      ongoingNotifications.forEach(notifWindow => {
+      ongoingNotifications.forEach((notifWindow) => {
         if (notifWindow.isDestroyed()) return;
 
-        notifWindow.setPosition(
-          screen.getPrimaryDisplay().bounds.x,
-          screen.getPrimaryDisplay().bounds.y,
-        );
+        notifWindow.setPosition(screen.getPrimaryDisplay().bounds.x, screen.getPrimaryDisplay().bounds.y);
       });
 
       updateNotificationPositions();
@@ -258,13 +243,10 @@ export default function initializeNotificationScreenListeners() {
   screen.addListener('display-removed', () => {
     // Workaround to properly display notifications on other (primary) screen (waiting a second to make sure the primary display properly updates)
     setTimeout(() => {
-      ongoingNotifications.forEach(notifWindow => {
+      ongoingNotifications.forEach((notifWindow) => {
         if (notifWindow.isDestroyed()) return;
 
-        notifWindow.setPosition(
-          screen.getPrimaryDisplay().bounds.x,
-          screen.getPrimaryDisplay().bounds.y,
-        );
+        notifWindow.setPosition(screen.getPrimaryDisplay().bounds.x, screen.getPrimaryDisplay().bounds.y);
       });
 
       updateNotificationPositions();
@@ -301,9 +283,7 @@ ipcMain.on('scheduled-reminders-modified', (_event, data) => {
     // Value is the window, key is the task/scheduled reminder pair
     if (key.task.creationTime === task.creationTime) {
       // If the reminder the notification is based on is no longer in the scheduled reminders list, close the notification as it no longer applies
-      if (
-        !_.some(task.scheduledReminders, key.task.scheduledReminders[key.scheduledReminderIndex])
-      ) {
+      if (!_.some(task.scheduledReminders, key.task.scheduledReminders[key.scheduledReminderIndex])) {
         notifWindow.close();
         ongoingNotifications.delete(key);
       }
@@ -327,14 +307,14 @@ function convertToGroupNotif(notifDetails?: TaskScheduledReminderPair) {
   win.setPosition(win.getPosition()[0], getScreenHeight() - getTotalGroupNotifHeight());
 
   // Open one notification saying how many notifications that are in queue
-  win.loadURL(resolveHtmlPath('./groupnotification.html'));
+  win.loadURL(join(app.getAppPath(), 'packages/renderer/dist/src/notifications/groupnotification.html'));
 
   groupNotifWindow = win;
   isGroupNotifCreated = true;
 
   win.webContents.once('did-finish-load', () => {
     const allTaskReminderPairs = Array.from(ongoingNotifications.keys());
-    queuedGroupNotifReminders.forEach(element => {
+    queuedGroupNotifReminders.forEach((element) => {
       allTaskReminderPairs.push(element);
     });
 
@@ -362,9 +342,7 @@ function convertToGroupNotif(notifDetails?: TaskScheduledReminderPair) {
   });
 }
 
-function getTaskReminderPair(
-  stringifiedTaskReminderPair: string,
-): TaskScheduledReminderPair | undefined {
+function getTaskReminderPair(stringifiedTaskReminderPair: string): TaskScheduledReminderPair | undefined {
   const taskReminderPair = JSON.parse(stringifiedTaskReminderPair);
 
   // eslint-disable-next-line no-restricted-syntax

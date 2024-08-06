@@ -35,7 +35,11 @@ const config = {
     outDir: 'dist',
     assetsDir: '.',
     rollupOptions: {
-      input: join(PACKAGE_ROOT, 'index.html'),
+      input: {
+        main: join(PACKAGE_ROOT, 'index.html'),
+        notification: join(PACKAGE_ROOT, 'src/notifications/notification.html'),
+        groupNotification: join(PACKAGE_ROOT, 'src/notifications/groupNotification.html'),
+      },
     },
     emptyOutDir: true,
     reportCompressedSize: false,

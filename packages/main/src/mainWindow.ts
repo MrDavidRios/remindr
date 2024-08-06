@@ -84,8 +84,6 @@ async function createWindow() {
      * Load from the Vite dev server for development.
      */
     await browserWindow.loadURL(import.meta.env.VITE_DEV_SERVER_URL);
-
-    console.log('FILE #1 LOADED');
   } else {
     /**
      * Load from the local file system for production and test.
@@ -97,8 +95,6 @@ async function createWindow() {
      * @see https://github.com/electron/electron/issues/6869
      */
     await browserWindow.loadFile(fileURLToPath(new URL('./../../renderer/dist/index.html', import.meta.url)));
-
-    console.log('FILE #2 LOADED');
   }
 
   return browserWindow;

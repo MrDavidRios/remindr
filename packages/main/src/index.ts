@@ -60,7 +60,8 @@ app.on('window-all-closed', () => {
  */
 app.on('activate', restoreOrCreateWindow);
 
-const getMainWindow = () => BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
+export const getMainWindow = () =>
+  BrowserWindow.getAllWindows().find((w) => !w.isDestroyed() && w.getParentWindow() === null);
 
 const { autoUpdater } = updater;
 class AppUpdater {
@@ -340,6 +341,8 @@ ipcMain.on('complete-task', (_event, taskData: { task: Task; index: number }) =>
 });
 
 ipcMain.on('snooze-reminder', (_event, taskData: { task: Task; index: number; time: number; add?: boolean }) => {
+  console.log('snooze reminder!!!');
+
   getMainWindow()?.webContents.send('snooze-reminder', taskData);
 });
 
