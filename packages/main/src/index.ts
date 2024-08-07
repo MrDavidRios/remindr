@@ -1,30 +1,28 @@
 import type { BadgeInfo, Task } from '@remindr/shared';
-import type { MessageBoxOptions } from 'electron';
-import { BrowserWindow, app, dialog, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
-import log from 'electron-log';
+import type { BrowserWindow, MessageBoxOptions } from 'electron';
+import { app, dialog, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
 import Store from 'electron-store';
-import type { UpdateDownloadedEvent } from 'electron-updater';
 import updater from 'electron-updater';
 import type { EncodingOption } from 'fs';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { platform } from 'node:process';
 import path, { join } from 'path';
+import { AppUpdater } from './appUpdater.js';
 import { deleteAccountData, isSaving, loadData, saveData, setMainWindowForDataFunctions } from './dataFunctions.js';
 import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
 import { initAppStateListeners } from './utils/appState.js';
 import initAuthEventListeners from './utils/auth.js';
 import { initFirebase } from './utils/firebase.js';
+import { getMainWindow } from './utils/getMainWindow.js';
 import { getPageTitle } from './utils/getPageTitle.js';
 import hasNetworkConnection from './utils/hasNetworkConnection.js';
 import initWindowEventListeners from './utils/window.js';
 import { restoreOrCreateWindow } from '/@/mainWindow.js';
-import initUserDataListeners, {
-  isAutoStartupEnabled,
-  isAutoUpdateEnabled,
-  isHideOnStartupEnabled,
-} from '/@/utils/storeUserData.js';
+import initUserDataListeners, { isAutoStartupEnabled, isHideOnStartupEnabled } from '/@/utils/storeUserData.js';
+
+const { autoUpdater } = updater;
 
 const store = new Store();
 
@@ -59,45 +57,6 @@ app.on('window-all-closed', () => {
  * @see https://www.electronjs.org/docs/latest/api/app#event-activate-macos Event: 'activate'.
  */
 app.on('activate', restoreOrCreateWindow);
-
-export const getMainWindow = () =>
-  BrowserWindow.getAllWindows().find((w) => !w.isDestroyed() && w.getParentWindow() === null);
-
-const { autoUpdater } = updater;
-class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-
-    // If auto update is not defined in settings, treat it as enabled by default
-    if (isAutoUpdateEnabled() ?? true) autoUpdater.checkForUpdates();
-
-    autoUpdater.addListener('checking-for-update', () => {
-      getMainWindow()?.webContents.send('checking-for-update');
-    });
-
-    autoUpdater.addListener('update-available', () => {
-      getMainWindow()?.webContents.send('update-available');
-    });
-
-    autoUpdater.addListener('update-not-available', () => {
-      getMainWindow()?.webContents.send('update-not-available');
-    });
-
-    // Once downloaded, the program will update.
-    autoUpdater.addListener('update-downloaded', (info: UpdateDownloadedEvent) => {
-      getMainWindow()?.webContents.send('update-downloaded', info.releaseName);
-      autoUpdater.logger!.info('update-downloaded');
-      autoUpdater.logger!.info(info);
-    });
-
-    ipcMain.on('check-for-updates', () => {
-      log.info('checking for updates...');
-
-      autoUpdater.checkForUpdates();
-    });
-  }
-}
 
 initFirebase();
 
@@ -166,7 +125,7 @@ if (import.meta.env.DEV) {
 if (import.meta.env.PROD) {
   app
     .whenReady()
-    .then(() => updater.autoUpdater.checkForUpdatesAndNotify())
+    .then(() => autoUpdater.checkForUpdatesAndNotify())
     .catch((e) => console.error('Failed check and install updates:', e));
 }
 

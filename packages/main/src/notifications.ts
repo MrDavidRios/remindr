@@ -2,7 +2,7 @@ import type { Task, TaskScheduledReminderPair } from '@remindr/shared';
 import { BrowserWindow, app, ipcMain, screen } from 'electron';
 import _ from 'lodash';
 import { join } from 'node:path';
-import { getMainWindow } from './index.js';
+import { getMainWindow } from './utils/getMainWindow.js';
 import { createDefaultSettings } from '/@/utils/defaultSettings.js';
 import { getScreenHeight, getScreenWidth } from '/@/utils/screen.js';
 import { getSettingsProfile } from '/@/utils/storeUserData.js';

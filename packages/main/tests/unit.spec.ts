@@ -1,8 +1,7 @@
+import { BrowserWindow } from 'electron';
 import type { MockedClass, MockedObject } from 'vitest';
 import { expect, test, vi } from 'vitest';
 import { restoreOrCreateWindow } from '../src/mainWindow';
-
-import { BrowserWindow } from 'electron';
 
 /**
  * Mock real electron BrowserWindow API
@@ -24,20 +23,34 @@ vi.mock('electron', () => {
   bw.prototype.removeMenu = vi.fn();
 
   Object.defineProperty(bw.prototype, 'webContents', {
-    value: { once: vi.fn() },
+    value: { once: vi.fn(), send: vi.fn() },
   });
 
-  const app: Pick<Electron.App, 'getAppPath'> = {
-    getAppPath(): string {
-      return '';
-    },
-  };
+  const app = vi.fn() as unknown as Electron.App;
+  app.on = vi.fn();
+  app.quit = vi.fn();
+  app.getAppPath = vi.fn(() => '');
+  // Keeping this true helps us avoid dealing with mocking process.exit
+  app.requestSingleInstanceLock = vi.fn(() => true);
+  app.disableHardwareAcceleration = vi.fn();
+  app.whenReady = vi.fn(() => Promise.resolve());
+  app.setLoginItemSettings = vi.fn();
 
-  const ipcMain: Pick<Electron.IpcMain, 'on'> = {
+  const nativeTheme = vi.fn() as unknown as Electron.NativeTheme;
+  nativeTheme.on = vi.fn();
+
+  const ipcMain: Pick<Electron.IpcMain, 'on' | 'handle'> = {
     on: vi.fn(),
+    handle: vi.fn(),
   };
 
-  return { BrowserWindow: bw, app, ipcMain };
+  return { BrowserWindow: bw, app, ipcMain, nativeTheme };
+});
+
+vi.mock('/@/appUpdater', () => {
+  return {
+    AppUpdater: vi.fn(() => {}),
+  };
 });
 
 vi.mock('electron-store', () => {
@@ -49,6 +62,20 @@ vi.mock('electron-store', () => {
         delete: vi.fn(() => {}),
       };
     }),
+  };
+});
+
+vi.mock('electron-updater', () => {
+  return {
+    default: {
+      checkForUpdatesAndNotify: vi.fn(),
+      logger: {
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        debug: vi.fn(),
+      },
+    },
   };
 });
 
