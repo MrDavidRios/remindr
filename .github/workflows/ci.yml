@@ -2,33 +2,33 @@
 # It is from here that all other workflows are launched.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - 'renovate/**'
-    paths-ignore:
-      - '.github/**'
-      - '!.github/workflows/ci.yml'
-      - '!.github/workflows/typechecking.yml'
-      - '!.github/workflows/tests.yml'
-      - '!.github/workflows/release.yml'
-      - '**.md'
-      - .editorconfig
-      - .gitignore
-      - '.idea/**'
-      - '.vscode/**'
-  pull_request:
-    paths-ignore:
-      - '.github/**'
-      - '!.github/workflows/ci.yml'
-      - '!.github/workflows/typechecking.yml'
-      - '!.github/workflows/tests.yml'
-      - '!.github/workflows/release.yml'
-      - '**.md'
-      - .editorconfig
-      - .gitignore
-      - '.idea/**'
-      - '.vscode/**'
+  # push:
+  #   branches:
+  #     - main
+  #     - 'renovate/**'
+  #   paths-ignore:
+  #     - '.github/**'
+  #     - '!.github/workflows/ci.yml'
+  #     - '!.github/workflows/typechecking.yml'
+  #     - '!.github/workflows/tests.yml'
+  #     - '!.github/workflows/release.yml'
+  #     - '**.md'
+  #     - .editorconfig
+  #     - .gitignore
+  #     - '.idea/**'
+  #     - '.vscode/**'
+  # pull_request:
+  #   paths-ignore:
+  #     - '.github/**'
+  #     - '!.github/workflows/ci.yml'
+  #     - '!.github/workflows/typechecking.yml'
+  #     - '!.github/workflows/tests.yml'
+  #     - '!.github/workflows/release.yml'
+  #     - '**.md'
+  #     - .editorconfig
+  #     - .gitignore
+  #     - '.idea/**'
+  #     - '.vscode/**'
 
 concurrency:
   group: ci-${{ github.ref }}
