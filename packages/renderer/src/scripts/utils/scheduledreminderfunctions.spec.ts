@@ -1,5 +1,5 @@
-import { ScheduledReminder } from 'main/types/classes/task/scheduledReminder';
-import { setDate } from 'main/utils/reminderfunctions';
+import { ScheduledReminder, setDate } from '@remindr/shared';
+import { describe, expect, test } from 'vitest';
 import { getDefaultScheduledReminder } from './scheduledreminderfunctions';
 
 describe('Scheduled Reminder Functions', () => {
