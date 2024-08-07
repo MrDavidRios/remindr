@@ -4,8 +4,6 @@ dist
 *.local
 thumbs.db
 
-.env
-
 .eslintcache
 .browserslistrc
 .electron-vendors.cache.json
