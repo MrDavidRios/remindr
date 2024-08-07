@@ -1,13 +1,13 @@
 {
-  "name": "vite-electron-builder",
-  "description": "Secure boilerplate for Electron app based on Vite",
-  "version": "2.0.0",
+  "name": "remindr",
+  "description": "General purpose and customizable to-do/reminder app",
+  "version": "2.1.13",
   "private": true,
   "type": "module",
   "author": {
-    "email": "kozackunisoft@gmail.com",
-    "name": "Alex Kozack",
-    "url": "https://kozack.me"
+    "email": "mr.daverios@gmail.com",
+    "name": "David Rios",
+    "url": "https://mrdavidrios.github.io"
   },
   "main": "packages/main/dist/index.js",
   "packageManager": "npm@10.8.2",
