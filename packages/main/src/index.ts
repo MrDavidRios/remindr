@@ -132,7 +132,7 @@ app
   .catch((e) => console.error('Failed create window:', e));
 
 /**
- * Install Vue.js or any other extension in development mode only.
+ * Install extensions in development mode only.
  * Note: You must install `electron-devtools-installer` manually
  */
 if (import.meta.env.DEV) {
