@@ -6,13 +6,14 @@ import pencilIcon from '@assets/icons/pencil.svg';
 import deleteIcon from '@assets/icons/plus-thin.svg';
 import webpageIcon from '@assets/icons/webpage.svg';
 import type { Link, Task } from '@remindr/shared';
-import { LinkType, getDisplayURL, getOpenableURL, openLink } from '@remindr/shared';
+import { getOpenableURL, LinkType } from '@remindr/shared';
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import isURL from 'validator/lib/isURL';
 import store from '/@/app/store';
 import { setEditedTask } from '/@/features/task-modification/taskModificationSlice';
 import { useAppDispatch } from '/@/hooks';
+import { getDisplayURL, openLink } from '/@/scripts/utils/linkutils';
 import { delay } from '/@/scripts/utils/timing';
 
 interface LinkTileProps {
@@ -22,12 +23,7 @@ interface LinkTileProps {
   onDeleteLink: () => void;
 }
 
-export const LinkTile: FC<LinkTileProps> = ({
-  link,
-  onEditLink,
-  onDuplicateLink,
-  onDeleteLink,
-}) => {
+export const LinkTile: FC<LinkTileProps> = ({ link, onEditLink, onDuplicateLink, onDeleteLink }) => {
   const dispatch = useAppDispatch();
 
   const linkIsFile = link.type === LinkType.File;
@@ -62,14 +58,9 @@ export const LinkTile: FC<LinkTileProps> = ({
 
           const editedTaskClone = JSON.parse(JSON.stringify(taskState.editedTask)) as Task;
 
-          const linkIdx = editedTaskClone?.links?.findIndex(l => l.id === link.id);
+          const linkIdx = editedTaskClone?.links?.findIndex((l) => l.id === link.id);
 
-          if (
-            !editedTaskClone ||
-            linkIdx === undefined ||
-            editedTaskClone?.links[linkIdx] === undefined
-          )
-            return;
+          if (!editedTaskClone || linkIdx === undefined || editedTaskClone?.links[linkIdx] === undefined) return;
 
           const linkClone = JSON.parse(JSON.stringify(editedTaskClone?.links[linkIdx])) as Link;
           linkClone.title = pageTitle;
@@ -100,7 +91,7 @@ export const LinkTile: FC<LinkTileProps> = ({
     <li
       className="link-tile"
       onClick={handleLinkTileClick}
-      onKeyDown={e => {
+      onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') handleLinkTileClick();
       }}
       onMouseEnter={() => setShowActionButtons(true)}
@@ -139,8 +130,8 @@ export const LinkTile: FC<LinkTileProps> = ({
           {linkIsFile && fileExists && (
             <button
               className="action-button accessible-button"
-              onKeyDown={e => e.stopPropagation()}
-              onClick={e => {
+              onKeyDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
                 e.stopPropagation();
                 window.electron.shell.showInFolder(link.url);
               }}
@@ -158,8 +149,8 @@ export const LinkTile: FC<LinkTileProps> = ({
           )}
           <button
             className="action-button accessible-button"
-            onKeyDown={e => e.stopPropagation()}
-            onClick={e => {
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
               e.stopPropagation();
               onEditLink();
             }}
@@ -176,8 +167,8 @@ export const LinkTile: FC<LinkTileProps> = ({
 
           <button
             className="action-button accessible-button"
-            onKeyDown={e => e.stopPropagation()}
-            onClick={e => {
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
               e.stopPropagation();
               onDuplicateLink();
             }}
@@ -193,8 +184,8 @@ export const LinkTile: FC<LinkTileProps> = ({
           </button>
           <button
             className="action-button accessible-button"
-            onKeyDown={e => e.stopPropagation()}
-            onClick={e => {
+            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
               e.stopPropagation();
               onDeleteLink();
             }}

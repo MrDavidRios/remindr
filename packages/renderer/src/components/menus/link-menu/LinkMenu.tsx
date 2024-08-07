@@ -1,13 +1,6 @@
 import attachmentIcon from '@assets/icons/attachment.svg';
 import type { Link, Task } from '@remindr/shared';
-import {
-  getDefaultLink,
-  getDisplayURL,
-  getOpenableURL,
-  LinkType,
-  linkTypeLabels,
-  Menu,
-} from '@remindr/shared';
+import { getOpenableURL, LinkType, linkTypeLabels, Menu } from '@remindr/shared';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -20,6 +13,7 @@ import store from '/@/app/store';
 import { hideMenu, showDialog } from '/@/features/menu-state/menuSlice';
 import { getEditedTask, setEditedTask } from '/@/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { getDefaultLink, getDisplayURL } from '/@/scripts/utils/linkutils';
 import { isPrimaryMenuOpen } from '/@/scripts/utils/menuutils';
 import { getFaviconURL, getObsidianNoteName, isObsidianURL } from '/@/scripts/utils/urlfunctions';
 
@@ -29,9 +23,9 @@ const isFilePath = (url: string) => url !== window.electron.path.basename(url);
 export const LinkMenu: FC = () => {
   const dispatch = useAppDispatch();
 
-  const editedTask = useAppSelector(state => getEditedTask(state.taskModificationState));
+  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState));
   // Is a link being created or edited?
-  const linkEditState = useAppSelector(state => state.taskModificationState.linkEditState);
+  const linkEditState = useAppSelector((state) => state.taskModificationState.linkEditState);
   const creatingLink = linkEditState.state === 'create';
 
   const link: Link | undefined = creatingLink ? undefined : editedTask?.links[linkEditState.idx];
@@ -76,7 +70,7 @@ export const LinkMenu: FC = () => {
       if (editedTaskClone.links === undefined) editedTaskClone.links = [];
 
       // Avoid adding duplicate links (handles case where ctrl/cmd+s is pressed multiple times in quick succession)
-      if (editedTaskClone.links.find(l => l.id === updatedLinkClone.id)) return;
+      if (editedTaskClone.links.find((l) => l.id === updatedLinkClone.id)) return;
 
       editedTaskClone.links.push(updatedLinkClone);
     } else {
@@ -100,10 +94,7 @@ export const LinkMenu: FC = () => {
   useHotkeys('mod+s', handleLinkCompleteButton, { enableOnFormTags: true });
 
   return (
-    <FullScreenMenu
-      className="modal-menu menu"
-      id="linkMenu"
-    >
+    <FullScreenMenu className="modal-menu menu" id="linkMenu">
       <div className="titlebar">
         <div>
           <h3>{`${creatingLink ? 'Add' : 'Edit'} Link`}</h3>
@@ -119,7 +110,7 @@ export const LinkMenu: FC = () => {
             selectedIdx={Object.values(LinkType).indexOf(updatedLink.type)}
             options={Object.keys(LinkType)}
             optionLabels={linkTypeLabels}
-            onSelect={idx => {
+            onSelect={(idx) => {
               const selectedLinkType = Object.values(LinkType)[idx];
               const updatedLinkClone = JSON.parse(JSON.stringify(updatedLink)) as Link;
               updatedLinkClone.type = selectedLinkType;
@@ -135,11 +126,7 @@ export const LinkMenu: FC = () => {
             }}
           />
         </div>
-        <button
-          className="primary-button"
-          onClick={handleLinkCompleteButton}
-          type="button"
-        >
+        <button className="primary-button" onClick={handleLinkCompleteButton} type="button">
           {creatingLink
             ? `Add Link to ${linkTypeLabels[Object.values(LinkType).indexOf(updatedLink.type)]}`
             : 'Save Changes'}
@@ -162,7 +149,7 @@ const getLinkEditor = (type: LinkType, updatedLink: Link, setUpdatedLink: (link:
               maxLength={255}
               value={updatedLink.title}
               allowNewLine={false}
-              onChange={e => {
+              onChange={(e) => {
                 const updatedLinkClone = JSON.parse(JSON.stringify(updatedLink)) as Link;
                 updatedLinkClone.title = e.currentTarget.value;
                 setUpdatedLink(updatedLinkClone);
@@ -170,10 +157,7 @@ const getLinkEditor = (type: LinkType, updatedLink: Link, setUpdatedLink: (link:
             />
           </div>
           <div>
-            <label
-              className="required"
-              htmlFor="linkUrlInput"
-            >
+            <label className="required" htmlFor="linkUrlInput">
               URL:
             </label>
             <DynamicTextArea
@@ -183,7 +167,7 @@ const getLinkEditor = (type: LinkType, updatedLink: Link, setUpdatedLink: (link:
               value={updatedLink.url}
               autoFocus
               allowNewLine={false}
-              onChange={e => {
+              onChange={(e) => {
                 const updatedLinkClone = JSON.parse(JSON.stringify(updatedLink)) as Link;
                 updatedLinkClone.url = e.currentTarget.value;
                 setUpdatedLink(updatedLinkClone);
@@ -207,26 +191,16 @@ const getLinkEditor = (type: LinkType, updatedLink: Link, setUpdatedLink: (link:
             }}
             type="button"
           >
-            <img
-              src={attachmentIcon}
-              alt=""
-            />
+            <img src={attachmentIcon} alt="" />
             <p>Attach File</p>
           </button>
-          {isFilePath(updatedLink.url) ? (
-            <p>{getDisplayURL(updatedLink)}</p>
-          ) : (
-            <p>No file selected.</p>
-          )}
+          {isFilePath(updatedLink.url) ? <p>{getDisplayURL(updatedLink)}</p> : <p>No file selected.</p>}
         </div>
       );
     case LinkType.Obsidian:
       return (
         <div>
-          <label
-            className="required"
-            htmlFor="obsidianUrlInput"
-          >
+          <label className="required" htmlFor="obsidianUrlInput">
             Obsidian URL:
           </label>
           <DynamicTextArea
@@ -236,7 +210,7 @@ const getLinkEditor = (type: LinkType, updatedLink: Link, setUpdatedLink: (link:
             value={updatedLink.url}
             autoFocus
             allowNewLine={false}
-            onChange={e => {
+            onChange={(e) => {
               const updatedLinkClone = JSON.parse(JSON.stringify(updatedLink)) as Link;
               updatedLinkClone.url = e.currentTarget.value;
               updatedLinkClone.title = '';
