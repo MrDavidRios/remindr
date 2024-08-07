@@ -84,8 +84,6 @@ export const callSetupFunctions = (window: BrowserWindow) => {
 app
   .whenReady()
   .then(async () => {
-    console.log('creating window...');
-
     await restoreOrCreateWindow();
   })
   .catch((e) => console.error('Failed create window:', e));
@@ -100,10 +98,10 @@ if (import.meta.env.DEV) {
     .then(() => import('electron-devtools-installer'))
     .then((module) => {
       const { default: installExtension, REDUX_DEVTOOLS } =
-        //@ts-expect-error Hotfix for https://github.com/cawa-93/vite-electron-builder/issues/915
+        // @ts-expect-error Hotfix for https://github.com/cawa-93/vite-electron-builder/issues/915
         typeof module.default === 'function' ? module : (module.default as typeof module);
 
-      //@ts-expect-error installExtension typing isn't working
+      // @ts-expect-error installExtension typing isn't working
       return installExtension([REDUX_DEVTOOLS], {
         loadExtensionOptions: {
           allowFileAccess: true,
