@@ -89,29 +89,6 @@ app
   .catch((e) => console.error('Failed create window:', e));
 
 /**
- * Install extensions in development mode only.
- * Note: You must install `electron-devtools-installer` manually
- */
-if (import.meta.env.DEV) {
-  app
-    .whenReady()
-    .then(() => import('electron-devtools-installer'))
-    .then((module) => {
-      const { default: installExtension, REDUX_DEVTOOLS } =
-        // @ts-expect-error Hotfix for https://github.com/cawa-93/vite-electron-builder/issues/915
-        typeof module.default === 'function' ? module : (module.default as typeof module);
-
-      // @ts-expect-error installExtension typing isn't working
-      return installExtension([REDUX_DEVTOOLS], {
-        loadExtensionOptions: {
-          allowFileAccess: true,
-        },
-      });
-    })
-    .catch((e) => console.error('Failed install extension:', e));
-}
-
-/**
  * Check for app updates, install it in background and notify user that new version was installed.
  * No reason run this in non-production build.
  * @see https://www.electron.build/auto-update.html#quick-setup-guide
