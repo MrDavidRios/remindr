@@ -57,6 +57,7 @@
     "nano-staged": "0.8.0",
     "playwright": "1.46.0",
     "rollup-plugin-typescript-paths": "^1.5.0",
+    "sass": "^1.77.8",
     "typescript": "5.5.4",
     "typescript-eslint": "^8.0.1",
     "unplugin-auto-expose": "0.3.0",
