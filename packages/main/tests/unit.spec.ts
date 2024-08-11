@@ -12,8 +12,7 @@ vi.mock('electron', () => {
   bw.getAllWindows = vi.fn(() => bw.mock.instances);
   bw.prototype.loadURL = vi.fn((_: string, __?: Electron.LoadURLOptions) => Promise.resolve());
   bw.prototype.loadFile = vi.fn((_: string, __?: Electron.LoadFileOptions) => Promise.resolve());
-  // @ts-expect-error The on function is overloaded
-  bw.prototype.on = vi.fn();
+  bw.prototype.on = vi.fn<never>();
   bw.prototype.destroy = vi.fn();
   bw.prototype.isDestroyed = vi.fn();
   bw.prototype.isMinimized = vi.fn();
