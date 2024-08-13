@@ -201,7 +201,7 @@ function sendAction(action: string, _hideMenu: () => void) {
 }
 
 function handleReportBugButton(_hideMenu: () => void) {
-  window.electron.shell.openExternal('https://github.com/MrDavidRios/remindr_releases/issues');
+  window.electron.shell.openExternal('https://github.com/MrDavidRios/remindr/issues/new/choose');
 
   _hideMenu();
 }

@@ -11,7 +11,7 @@ export function GeneralSettingsPage() {
   const appVersion = window.appState.getVersion();
 
   const openReleasePage = () => {
-    window.electron.shell.openExternal(`https://github.com/MrDavidRios/remindr_releases/releases/tag/v${appVersion}`);
+    window.electron.shell.openExternal(`https://github.com/MrDavidRios/remindr/releases/tag/v${appVersion}`);
   };
 
   return (
