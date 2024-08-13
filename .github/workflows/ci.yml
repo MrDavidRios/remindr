@@ -30,6 +30,9 @@ on:
       - '.idea/**'
       - '.vscode/**'
 
+env:
+  VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
