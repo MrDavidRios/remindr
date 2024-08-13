@@ -16,3 +16,5 @@ Remindr is currently available on Windows and Linux.
 - Multiple reminders per task
 - Subtasks
 - Links (files/webpages)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MrDavidRios_remindr&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MrDavidRios_remindr)
