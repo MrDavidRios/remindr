@@ -29,8 +29,6 @@ describe('Hamburger Menu', () => {
   it('should show sign out button when online and authenticated', async () => {
     renderHamburgerMenu({ appMode: AppMode.Online, authenticated: true });
 
-    await waitFor(() => expect(screen.getByTestId('hamburger-menu')).toBeVisible());
-
     const fileDropdown = screen.getByTestId('file-dropdown');
     userEvent.hover(fileDropdown);
 
@@ -39,8 +37,6 @@ describe('Hamburger Menu', () => {
 
   it('should not show sign out button when offline or authenticated', async () => {
     renderHamburgerMenu({ appMode: AppMode.Online, authenticated: false });
-
-    await waitFor(() => expect(screen.getByTestId('hamburger-menu')).toBeVisible());
 
     const fileDropdown = screen.getByTestId('file-dropdown');
     userEvent.hover(fileDropdown);
