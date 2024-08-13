@@ -36,7 +36,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-
       - uses: ./.github/workflows/setup.yml
 
       - name: Compile artifacts ${{ inputs.dry-run && '' || 'and upload them to github release' }}
