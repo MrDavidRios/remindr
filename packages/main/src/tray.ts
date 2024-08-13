@@ -1,5 +1,6 @@
 import { BrowserWindow, Menu, MenuItemConstructorOptions, Tray, ipcMain } from 'electron';
 import { actionOnSave } from './dataFunctions.js';
+import { getMainAssetPath } from './utils/getMainAssetPath.js';
 
 function buildDefaultTemplate(): MenuItemConstructorOptions[] {
   const trayTemplate = [
@@ -25,15 +26,13 @@ function buildDefaultTemplate(): MenuItemConstructorOptions[] {
 export default class TrayBuilder {
   mainWindow: BrowserWindow;
 
-  rendererAssetsPath: string;
-
-  constructor(mainWindow: BrowserWindow, rendererAssetsPath: string) {
+  constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
-    this.rendererAssetsPath = rendererAssetsPath;
   }
 
   buildTray() {
-    const tray = new Tray(`${this.rendererAssetsPath}/tray-icon.png`);
+    const defaultTrayIconPath = getMainAssetPath('tray-icon.png');
+    const tray = new Tray(defaultTrayIconPath);
 
     const template = buildDefaultTemplate();
     const contextMenu = Menu.buildFromTemplate(template);
@@ -45,8 +44,8 @@ export default class TrayBuilder {
     tray.on('click', () => this.mainWindow.show());
 
     ipcMain.on('update-tray-icon', (_event, badgeNumber) => {
-      if (badgeNumber === 0) tray?.setImage(`${this.rendererAssetsPath}/tray-icon.png`);
-      else tray.setImage(`${this.rendererAssetsPath}/icons/alert-overlays/tray-icon-alert.png`);
+      if (badgeNumber === 0) tray?.setImage(defaultTrayIconPath);
+      else tray.setImage(getMainAssetPath('alert-overlays/tray-icon-alert.png'));
     });
 
     ipcMain.on('update-tray-tooltip', (_e, tooltip) => {

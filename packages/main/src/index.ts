@@ -9,7 +9,7 @@ import type { EncodingOption } from 'fs';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { platform } from 'node:process';
-import path, { join } from 'path';
+import path from 'path';
 import { initAutoUpdaterEventHandlers } from './appUpdater.js';
 import { deleteAccountData, isSaving, loadData, saveData, setMainWindowForDataFunctions } from './dataFunctions.js';
 import { initNotificationEventListeners } from './notifications.js';
@@ -17,6 +17,7 @@ import './security-restrictions';
 import { initAppStateListeners } from './utils/appState.js';
 import initAuthEventListeners from './utils/auth.js';
 import { initFirebase } from './utils/firebase.js';
+import { getMainAssetPath } from './utils/getMainAssetPath.js';
 import { getMainWindow } from './utils/getMainWindow.js';
 import { getPageTitle } from './utils/getPageTitle.js';
 import hasNetworkConnection from './utils/hasNetworkConnection.js';
@@ -197,8 +198,7 @@ ipcMain.on('update-badge', (_event, badgeInfo: number | BadgeInfo | null) => {
     return;
   }
 
-  //TODO: migrate this into separate assets folder in main
-  const badgeImagePath = join(app.getAppPath(), `packages/renderer/assets/${(badgeInfo as BadgeInfo).badgePath}`);
+  const badgeImagePath = getMainAssetPath((badgeInfo as BadgeInfo).badgePath);
   const badgeImage = nativeImage.createFromPath(badgeImagePath);
   mainWindow?.setOverlayIcon(badgeImage, (badgeInfo as BadgeInfo).description);
 });

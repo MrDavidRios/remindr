@@ -36,8 +36,7 @@ async function createWindow() {
 
   browserWindow.removeMenu();
 
-  const trayIconPath = join(app.getAppPath(), 'packages/renderer/assets');
-  const trayBuilder = new TrayBuilder(browserWindow, trayIconPath);
+  const trayBuilder = new TrayBuilder(browserWindow);
   trayBuilder.buildTray();
 
   callSetupFunctions(browserWindow);

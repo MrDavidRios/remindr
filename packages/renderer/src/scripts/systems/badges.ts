@@ -23,9 +23,9 @@ export function updateOverlayIcons(taskList?: Task[]): void {
       : `${overdueTaskAmount} overdue task`;
 
   if (overdueTaskAmount < 10)
-    badgeInfo = new BadgeInfo(`/icons/alert-overlays/alert-${overdueTaskAmount}.png`, accessibilityDescription);
+    badgeInfo = new BadgeInfo(`/alert-overlays/alert-${overdueTaskAmount}.png`, accessibilityDescription);
   else {
-    badgeInfo = new BadgeInfo('/icons/alert-overlays/alert-9+.png', accessibilityDescription);
+    badgeInfo = new BadgeInfo('/alert-overlays/alert-9+.png', accessibilityDescription);
 
     window.electron.ipcRenderer.sendMessage('update-tray-icon', '9+');
   }
