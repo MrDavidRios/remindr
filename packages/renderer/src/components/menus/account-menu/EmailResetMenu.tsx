@@ -2,13 +2,14 @@ import { Menu } from '@remindr/shared';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+import isEmail from 'validator/lib/isEmail';
 import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 import store from '/@/app/store';
 import { hideMenu } from '/@/features/menu-state/menuSlice';
 import { updateEmail } from '/@/features/user-state/userSlice';
 import { useAppDispatch } from '/@/hooks';
-import { isEmailValid, resetEmail, signOut } from '/@/scripts/systems/authentication';
+import { resetEmail, signOut } from '/@/scripts/systems/authentication';
 import showMessageBox from '/@/scripts/utils/messagebox';
 
 interface EmailResetMenuProps {
@@ -34,8 +35,6 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
   }
 
   async function showEmailResetDialog() {
-    const validEmail = isEmailValid(newEmail);
-
     if (currentEmail !== store.getState().userState.user?.email) {
       showMessageBox(
         'Error: Invalid current email',
@@ -46,7 +45,7 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
       return;
     }
 
-    if (!validEmail) {
+    if (!isEmail(newEmail)) {
       showMessageBox(
         'Error: Invalid new email',
         'Invalid new email entered: please make sure that you spelled your new email correctly.',

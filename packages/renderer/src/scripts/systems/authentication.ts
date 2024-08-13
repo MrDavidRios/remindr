@@ -1,12 +1,9 @@
 import { AppMode } from '@remindr/shared';
+import isEmail from 'validator/lib/isEmail';
 import showMessageBox from '../utils/messagebox';
 import type { AppDispatch } from '/@/app/store';
 import { setAppMode } from '/@/features/app-mode/appModeSlice';
-import {
-  getUserData,
-  updateEmailVerifiedState,
-  updateUserState,
-} from '/@/features/user-state/userSlice';
+import { getUserData, updateEmailVerifiedState, updateUserState } from '/@/features/user-state/userSlice';
 
 // Auth hook (sets up auth-state-changed listener)
 let authInitialized = false;
@@ -168,13 +165,9 @@ export async function signOut(dispatch: AppDispatch) {
 
 // #region Account Reset Actions
 export async function reauthenticateUser(email: string, password: string): Promise<string | void> {
-  const reauthenticationResult = await window.firebase.auth.reauthenticateWithCredential(
-    email,
-    password,
-  );
+  const reauthenticationResult = await window.firebase.auth.reauthenticateWithCredential(email, password);
 
-  if (typeof reauthenticationResult === 'string')
-    throw new Error(`Reauthentication Error: ${reauthenticationResult}`);
+  if (typeof reauthenticationResult === 'string') throw new Error(`Reauthentication Error: ${reauthenticationResult}`);
 }
 
 export async function resetEmail(
@@ -220,9 +213,7 @@ async function accountExists(email: string): Promise<boolean> {
       break;
 
     case 'auth/weak-password':
-      console.log(
-        'Password is not strong enough. Add additional characters including special characters and numbers.',
-      );
+      console.log('Password is not strong enough. Add additional characters including special characters and numbers.');
       break;
 
     default:
@@ -241,7 +232,7 @@ async function accountExists(email: string): Promise<boolean> {
  * Opens a prompt for the user to reset their password.
  */
 export async function showResetPasswordPrompt(email: string): Promise<void> {
-  if (!isEmailValid(email)) {
+  if (!isEmail(email)) {
     showMessageBox(
       'Provide account email',
       "Please put a correctly typed account email in the 'Email' field so that we can send you a password reset email.",
@@ -277,8 +268,7 @@ async function showConfirmResetPasswordPrompt(email?: string) {
 
   const destinationEmail = email ?? window.firebase.auth.getEmail();
 
-  if (!destinationEmail)
-    throw new Error('confirmResetPasswordPrompt: No email provided for password reset.');
+  if (!destinationEmail) throw new Error('confirmResetPasswordPrompt: No email provided for password reset.');
 
   resetPassword(destinationEmail);
 
@@ -295,10 +285,6 @@ export async function deleteAccount(): Promise<void> {
   await window.firebase.auth.deleteAuthCredential();
   await window.data.deleteAccountData();
 }
-
-export const isEmailValid = (email: string): boolean => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
 
 let manuallySignedOutUser = false;
 
