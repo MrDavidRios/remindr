@@ -10,3 +10,5 @@ thumbs.db
 
 packages/shared/dist
 packages/renderer/styles/css
+
+**/coverage/

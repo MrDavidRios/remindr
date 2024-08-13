@@ -30,6 +30,7 @@ jobs:
       - run: npm run compile:sass --if-present
       - run: npm run build:shared --if-present
       - run: npm i @remindr/shared
+      - run: npm run test-shared --if-present
       - run: npm run test:main --if-present
       - run: npm run test:preload --if-present
       - run: npm run test:renderer --if-present
