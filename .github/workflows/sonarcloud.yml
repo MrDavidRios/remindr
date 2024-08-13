@@ -1,9 +1,34 @@
 name: SonarCloud
 on:
-  workflow_call:
-    secrets:
-      SONAR_TOKEN:
-        required: true
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+      - '!.github/workflows/ci.yml'
+      - '!.github/workflows/typechecking.yml'
+      - '!.github/workflows/tests.yml'
+      - '!.github/workflows/release.yml'
+      - '!.github/workflows/sonarcloud.yml'
+      - '**.md'
+      - .editorconfig
+      - .gitignore
+      - '.idea/**'
+      - '.vscode/**'
+  pull_request:
+    paths-ignore:
+      - '.github/**'
+      - '!.github/workflows/ci.yml'
+      - '!.github/workflows/typechecking.yml'
+      - '!.github/workflows/tests.yml'
+      - '!.github/workflows/release.yml'
+      - '!.github/workflows/sonarcloud.yml'
+      - '**.md'
+      - .editorconfig
+      - .gitignore
+      - '.idea/**'
+      - '.vscode/**'
 
 concurrency:
   group: sonarcloud-${{ github.ref }}
