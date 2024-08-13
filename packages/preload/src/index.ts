@@ -7,9 +7,6 @@ import type { IpcRendererEvent, MessageBoxOptions, OpenDialogOptions } from 'ele
 import { contextBridge, ipcRenderer } from 'electron';
 import type { AppMode } from '../../shared/src/types/classes/appMode.js';
 import type { Channels } from './channels.js';
-import { sha256sum } from './nodeCrypto.js';
-import { versions } from './versions.js';
-export { sha256sum, versions };
 
 const DEBUG_IPC_RENDERER = true;
 const devHandler = {
