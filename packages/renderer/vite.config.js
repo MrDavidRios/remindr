@@ -38,7 +38,7 @@ const config = {
       input: {
         main: join(PACKAGE_ROOT, 'index.html'),
         notification: join(PACKAGE_ROOT, 'src/notifications/notification.html'),
-        groupNotification: join(PACKAGE_ROOT, 'src/notifications/groupNotification.html'),
+        groupNotification: join(PACKAGE_ROOT, 'src/notifications/groupnotification.html'),
       },
     },
     emptyOutDir: true,
