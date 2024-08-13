@@ -9,6 +9,9 @@ concurrency:
   group: sonarcloud-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest

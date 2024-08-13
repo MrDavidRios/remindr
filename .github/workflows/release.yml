@@ -19,7 +19,6 @@ defaults:
   run:
     shell: 'bash'
 
-
 jobs:
   draft_release:
 
