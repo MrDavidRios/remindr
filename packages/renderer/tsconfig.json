@@ -8,13 +8,14 @@
     "strict": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "types": ["node"],
+    "types": ["node", "@testing-library/jest-dom", "@testing-library/user-event"],
     "baseUrl": ".",
     "paths": {
       "#preload": ["../preload/src/index"],
       "@renderer/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
-      "@hooks/*": ["./src/scripts/utils/hooks/*"]
+      "@hooks/*": ["./src/scripts/utils/hooks/*"],
+      "@mocks/*": ["./tests/mocks/*"]
     },
     "lib": ["ESNext", "dom", "dom.iterable"]
   },

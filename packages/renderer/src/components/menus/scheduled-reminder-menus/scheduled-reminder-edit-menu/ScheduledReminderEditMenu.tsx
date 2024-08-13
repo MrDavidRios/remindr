@@ -187,7 +187,7 @@ export const ScheduledReminderEditMenu: FC = () => {
       />
 
       {/* <!-- Time Input --> */}
-      <div id="timeInputContainer">
+      <div id="timeInputContainer" data-testid="time-input-container">
         <div id="timeInputWrapper">
           <SuggestedTimePicker reminder={updatedReminder} updateReminder={setUpdatedReminder} />
           <input
@@ -250,6 +250,7 @@ export const ScheduledReminderEditMenu: FC = () => {
           className="action-button accessible-button"
           onClick={handleEditCompletion}
           type="button"
+          aria-label="Save Changes"
         >
           <img
             src={checkIcon}

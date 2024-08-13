@@ -21,6 +21,7 @@ const config = {
       '@renderer/': join(PACKAGE_ROOT, 'src') + '/',
       '@assets/': join(PACKAGE_ROOT, 'assets') + '/',
       '@hooks/': join(PACKAGE_ROOT, 'src/scripts/utils/hooks') + '/',
+      '@mocks/': join(PACKAGE_ROOT, 'tests/mocks') + '/',
     },
   },
   base: '',
@@ -49,6 +50,7 @@ const config = {
     coverage: {
       reporter: ['text', 'lcov'],
     },
+    setupFiles: ['/tests/mocks/setup.ts', '/tests/mocks/store-utils.tsx'],
   },
   plugins: [
     react(),
