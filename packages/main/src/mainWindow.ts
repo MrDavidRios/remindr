@@ -6,6 +6,7 @@ import Store from 'electron-store';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { callSetupFunctions } from './index.js';
+import TrayBuilder from './tray.js';
 
 const store = new Store();
 
@@ -34,6 +35,10 @@ async function createWindow() {
   });
 
   browserWindow.removeMenu();
+
+  const trayIconPath = join(app.getAppPath(), 'packages/renderer/assets');
+  const trayBuilder = new TrayBuilder(browserWindow, trayIconPath);
+  trayBuilder.buildTray();
 
   callSetupFunctions(browserWindow);
 

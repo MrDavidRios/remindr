@@ -1,3 +1,5 @@
+productName: Remindr
+
 directories:
   output: dist
   buildResources: buildResources
