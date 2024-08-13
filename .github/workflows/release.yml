@@ -44,6 +44,7 @@ jobs:
       - run: npm run compile:sass --if-present
       - run: npm run build:shared --if-present
       - run: npm i @remindr/shared
+      - run: npm run build
 
       - name: Compile artifacts ${{ inputs.dry-run && '' || 'and upload them to github release' }}
         # I use this action because it is capable of retrying multiple times if there are any issues with the distribution server
