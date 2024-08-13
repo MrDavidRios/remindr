@@ -1,9 +1,9 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for Remindr
 title: ''
-labels: enhancement
-assignees: cawa-93
+labels: ["enhancement"]
+assignees: ''
 
 ---
 
