@@ -157,7 +157,7 @@ ipcMain.handle('restart-firestore', async (_event, stringifiedAppData: string) =
   log.info('[restart-firestore]: firestore instance stopped.');
   log.info('[restart-firestore]: restarting firestore instance...');
 
-  await removeDataListeners();
+  removeDataListeners();
 
   try {
     await initializeDataListeners();
