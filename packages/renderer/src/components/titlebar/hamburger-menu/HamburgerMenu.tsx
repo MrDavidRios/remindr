@@ -63,7 +63,7 @@ export function HamburgerMenu() {
   };
 
   return (
-    <div id="hamburger-menu" ref={ref as unknown as React.RefObject<HTMLDivElement>}>
+    <div id="hamburger-menu" data-testid="hamburger-menu" ref={ref as unknown as React.RefObject<HTMLDivElement>}>
       <button type="button" id="hamburger-button" title="Menu" onClick={toggleMenu}>
         <img src={hamburgerIcon} alt="Open general menu" draggable="false" />
       </button>
@@ -93,6 +93,7 @@ export function HamburgerMenu() {
               <ArrowNavigable waitForChildAnimation disableNavigation={focusInSubmenu}>
                 <li
                   id="fileDropdown"
+                  data-testid="file-dropdown"
                   style={{ backgroundColor }}
                   onFocus={() => {
                     setShowFileSubmenu(true);

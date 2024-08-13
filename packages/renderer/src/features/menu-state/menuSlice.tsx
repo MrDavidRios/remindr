@@ -3,7 +3,7 @@ import { DialogProps, FloatingMenuPosition, Menu, MenuState, floatingMenus } fro
 import { isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
 
-const initialState: MenuState = {
+export const initialMenuState: MenuState = {
   openMenus: [],
   dialogInfo: { title: undefined, message: '', options: [], result: undefined },
   scheduledReminderEditorPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
@@ -11,7 +11,7 @@ const initialState: MenuState = {
 
 export const menuStateSlice = createSlice({
   name: 'menuState',
-  initialState,
+  initialState: initialMenuState,
   reducers: {
     showMenu: (state, action: PayloadAction<Menu>) => {
       const menu = action.payload;
