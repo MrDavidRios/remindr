@@ -12,6 +12,7 @@ on:
       - '!.github/workflows/typechecking.yml'
       - '!.github/workflows/tests.yml'
       - '!.github/workflows/release.yml'
+      - '!.github/workflows/sonarcloud.yml'
       - '**.md'
       - .editorconfig
       - .gitignore
@@ -24,6 +25,7 @@ on:
       - '!.github/workflows/typechecking.yml'
       - '!.github/workflows/tests.yml'
       - '!.github/workflows/release.yml'
+      - '!.github/workflows/sonarcloud.yml'
       - '**.md'
       - .editorconfig
       - .gitignore
