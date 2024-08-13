@@ -43,6 +43,9 @@ jobs:
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
+      - run: npm run compile:sass --if-present
+      - run: npm run build:shared --if-present
+      - run: npm i @remindr/shared
       - run: npm run build
 
       - name: Compile artifacts ${{ inputs.dry-run && '' || 'and upload them to github release' }}
