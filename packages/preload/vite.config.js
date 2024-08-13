@@ -34,7 +34,11 @@ const config = {
     emptyOutDir: true,
     reportCompressedSize: false,
   },
-
+  test: {
+    coverage: {
+      reporter: ['text', 'lcov'],
+    },
+  },
   plugins: [preload.vite()],
 };
 

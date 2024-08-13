@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 import type { MockedClass, MockedObject } from 'vitest';
 import { expect, test, vi } from 'vitest';
-import { restoreOrCreateWindow } from '../src/mainWindow';
+import { restoreOrCreateWindow } from '../src/mainWindow.js';
 
 /**
  * Mock real electron BrowserWindow API

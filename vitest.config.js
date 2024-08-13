@@ -14,6 +14,7 @@ const config = {
 
     coverage: {
       reporter: ['text', 'lcov'],
+      provider: 'istanbul',
     },
 
     /**
