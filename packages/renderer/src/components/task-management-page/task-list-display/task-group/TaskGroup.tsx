@@ -1,11 +1,11 @@
 import { Task } from '@remindr/shared';
+import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
+import { useAppSelector } from '@renderer/hooks';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { AnimatePresence, Reorder, motion } from 'framer-motion';
 import { FC } from 'react';
 import { AnimateChangeInHeight } from '../../AnimateChangeInHeight';
 import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
-import { ArrowNavigable } from '/@/components/accessibility/ArrowNavigable';
-import { useAppSelector } from '/@/hooks';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 
 interface TaskGroupProps {
   tasks: Task[];

@@ -1,13 +1,7 @@
-import {
-  isBetweenDates,
-  isCurrentMinute,
-  isOverdue,
-  taskHasReminders,
-  type Task,
-} from '@remindr/shared';
+import { notify } from '@main/notifications.js';
+import { isBetweenDates, isCurrentMinute, isOverdue, taskHasReminders, type Task } from '@remindr/shared';
 import { BrowserWindow } from 'electron';
 import Store from 'electron-store';
-import { notify } from '/@/notifications.js';
 
 const store = new Store();
 
@@ -72,13 +66,10 @@ function checkForReminders(mainWindow: BrowserWindow): void {
 
       if (isCurrentMinute(scheduledReminder)) {
         if (scheduledReminder.repeat) {
-          (mainWindow ?? BrowserWindow.getFocusedWindow())?.webContents.send(
-            'advance-recurring-reminder',
-            {
-              task,
-              index: j,
-            },
-          );
+          (mainWindow ?? BrowserWindow.getFocusedWindow())?.webContents.send('advance-recurring-reminder', {
+            task,
+            index: j,
+          });
         }
 
         notify(JSON.stringify(task), j);

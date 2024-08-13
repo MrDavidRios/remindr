@@ -1,6 +1,13 @@
 import attachmentIcon from '@assets/icons/attachment.svg';
 import type { Link, Task } from '@remindr/shared';
 import { getOpenableURL, LinkType, linkTypeLabels, Menu } from '@remindr/shared';
+import store from '@renderer/app/store';
+import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
+import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { getDefaultLink, getDisplayURL } from '@renderer/scripts/utils/linkutils';
+import { isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
+import { getFaviconURL, getObsidianNoteName, isObsidianURL } from '@renderer/scripts/utils/urlfunctions';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -9,13 +16,6 @@ import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
 import { Dropdown } from '../../dropdown/Dropdown';
 import { DynamicTextArea } from '../../dynamic-text-area/DynamicTextArea';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
-import store from '/@/app/store';
-import { hideMenu, showDialog } from '/@/features/menu-state/menuSlice';
-import { getEditedTask, setEditedTask } from '/@/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { getDefaultLink, getDisplayURL } from '/@/scripts/utils/linkutils';
-import { isPrimaryMenuOpen } from '/@/scripts/utils/menuutils';
-import { getFaviconURL, getObsidianNoteName, isObsidianURL } from '/@/scripts/utils/urlfunctions';
 
 // https://stackoverflow.com/a/38974272/5750490
 const isFilePath = (url: string) => url !== window.electron.path.basename(url);

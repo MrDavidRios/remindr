@@ -1,6 +1,6 @@
+import { waitUntil } from '@renderer/scripts/utils/timing';
 import type { LegacyRef } from 'react';
 import React, { useEffect, useRef } from 'react';
-import { waitUntil } from '/@/scripts/utils/timing';
 
 interface ArrowNavigableProps {
   children: React.ReactNode;
@@ -38,8 +38,7 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
   const { signal } = controller;
 
   const lastFocusedIdx = useRef(initialFocusIdx);
-  const [waitingForChildAnimation, setWaitingForChildAnimation] =
-    React.useState(waitForChildAnimation);
+  const [waitingForChildAnimation, setWaitingForChildAnimation] = React.useState(waitForChildAnimation);
 
   function setFocusOnMenuItem(idx: number) {
     const itemsToNavigate = getItemsToNavigate(ref.current, query);
@@ -82,14 +81,7 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
         menuItem.addEventListener(
           'keydown',
           (e: KeyboardEvent) =>
-            keydownEventListener(
-              e,
-              i,
-              itemsToNavigate,
-              setFocusOnMenuItem,
-              disableNavigation,
-              disableKeyboardClick,
-            ),
+            keydownEventListener(e, i, itemsToNavigate, setFocusOnMenuItem, disableNavigation, disableKeyboardClick),
           { signal },
         );
       }
@@ -211,10 +203,7 @@ const waitForNavigableItems = async (element: HTMLSpanElement | null, query?: st
   });
 };
 
-function getItemsToNavigate(
-  parent: HTMLSpanElement | null,
-  query?: string,
-): HTMLCollection | NodeList | undefined {
+function getItemsToNavigate(parent: HTMLSpanElement | null, query?: string): HTMLCollection | NodeList | undefined {
   if (!query) return parent?.children;
 
   return parent?.querySelectorAll(query);

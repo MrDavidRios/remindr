@@ -2,35 +2,29 @@ import expandArrow from '@assets/icons/expand-arrow.png';
 import hamburgerIcon from '@assets/icons/hamburger.svg';
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { AppMode, Menu } from '@remindr/shared';
+import { menuHeightAnimationProps } from '@renderer/animation';
+import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { delay } from '@renderer/scripts/utils/timing';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
-import { menuHeightAnimationProps } from '/@/animation';
-import { hideMenu, showMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { rgbaToHex } from '/@/scripts/utils/colorutils';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
-import { delay } from '/@/scripts/utils/timing';
 
 export function HamburgerMenu() {
   const dispatch = useAppDispatch();
-  const displayMenu = useAppSelector(state =>
-    state.menuState.openMenus.includes(Menu.HamburgerMenu),
-  );
+  const displayMenu = useAppSelector((state) => state.menuState.openMenus.includes(Menu.HamburgerMenu));
 
-  const appMode = useAppSelector(state => state.appMode.value);
-  const { authenticated } = useAppSelector(state => state.userState);
+  const appMode = useAppSelector((state) => state.appMode.value);
+  const { authenticated } = useAppSelector((state) => state.userState);
   const animationsEnabled = useAnimationsEnabled();
 
   const [showFileSubmenu, setShowFileSubmenu] = useState(false);
   const [showHelpSubmenu, setShowHelpSubmenu] = useState(false);
 
-  const ref = useClickOutside(
-    () => dispatch(hideMenu({ menu: Menu.HamburgerMenu })),
-    undefined,
-    true,
-  );
+  const ref = useClickOutside(() => dispatch(hideMenu({ menu: Menu.HamburgerMenu })), undefined, true);
   useHotkeys('esc', () => dispatch(hideMenu({ menu: Menu.HamburgerMenu })), {
     enableOnFormTags: true,
   });
@@ -40,9 +34,7 @@ export function HamburgerMenu() {
   const showSignOutButton = appMode !== AppMode.Offline && authenticated;
 
   // Get CSS variable
-  const backgroundColor = rgbaToHex(
-    getComputedStyle(document.documentElement).getPropertyValue('--surface-primary'),
-  );
+  const backgroundColor = rgbaToHex(getComputedStyle(document.documentElement).getPropertyValue('--surface-primary'));
 
   const ulRef = useRef<HTMLElement>();
   const [focusInSubmenu, setFocusInSubmenu] = useState(false);
@@ -71,21 +63,9 @@ export function HamburgerMenu() {
   };
 
   return (
-    <div
-      id="hamburger-menu"
-      ref={ref as unknown as React.RefObject<HTMLDivElement>}
-    >
-      <button
-        type="button"
-        id="hamburger-button"
-        title="Menu"
-        onClick={toggleMenu}
-      >
-        <img
-          src={hamburgerIcon}
-          alt="Open general menu"
-          draggable="false"
-        />
+    <div id="hamburger-menu" ref={ref as unknown as React.RefObject<HTMLDivElement>}>
+      <button type="button" id="hamburger-button" title="Menu" onClick={toggleMenu}>
+        <img src={hamburgerIcon} alt="Open general menu" draggable="false" />
       </button>
       <AnimatePresence>
         {displayMenu && (
@@ -110,10 +90,7 @@ export function HamburgerMenu() {
                   setFocusInSubmenu(true);
               }}
             >
-              <ArrowNavigable
-                waitForChildAnimation
-                disableNavigation={focusInSubmenu}
-              >
+              <ArrowNavigable waitForChildAnimation disableNavigation={focusInSubmenu}>
                 <li
                   id="fileDropdown"
                   style={{ backgroundColor }}
@@ -124,12 +101,7 @@ export function HamburgerMenu() {
                   onMouseEnter={() => setShowFileSubmenu(true)}
                   onMouseLeave={() => setShowFileSubmenu(false)}
                 >
-                  File{' '}
-                  <img
-                    src={expandArrow}
-                    alt="Open file submenu"
-                    draggable="false"
-                  />
+                  File <img src={expandArrow} alt="Open file submenu" draggable="false" />
                   {showFileSubmenu && (
                     <ul
                       ref={fileSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
@@ -140,9 +112,8 @@ export function HamburgerMenu() {
                         <li
                           id="restartButton"
                           title="Restart (Ctrl + R)"
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === '')
-                              sendAction('restart', () => closeMenu());
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === '') sendAction('restart', () => closeMenu());
                           }}
                           onClick={() => sendAction('restart', () => closeMenu())}
                         >
@@ -151,9 +122,8 @@ export function HamburgerMenu() {
                         <li
                           id="signOutButton"
                           title="Sign Out"
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === '')
-                              sendAction('sign-out', () => closeMenu());
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === '') sendAction('sign-out', () => closeMenu());
                           }}
                           style={{
                             display: showSignOutButton ? '' : 'none',
@@ -165,9 +135,8 @@ export function HamburgerMenu() {
                         <li
                           id="quitButton"
                           title="Quit (Ctrl + Q)"
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === '')
-                              sendAction('quit', () => closeMenu());
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === '') sendAction('quit', () => closeMenu());
                           }}
                           onClick={() => sendAction('quit', () => closeMenu())}
                         >
@@ -187,12 +156,7 @@ export function HamburgerMenu() {
                   onMouseEnter={() => setShowHelpSubmenu(true)}
                   onMouseLeave={() => setShowHelpSubmenu(false)}
                 >
-                  Help{' '}
-                  <img
-                    src={expandArrow}
-                    alt="Open help submenu"
-                    draggable="false"
-                  />
+                  Help <img src={expandArrow} alt="Open help submenu" draggable="false" />
                   {showHelpSubmenu && (
                     <ul
                       ref={helpSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
@@ -202,9 +166,8 @@ export function HamburgerMenu() {
                       <ArrowNavigable>
                         <li
                           id="checkForUpdatesButton"
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === '')
-                              handleUpdateCheckButton(() => closeMenu());
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === '') handleUpdateCheckButton(() => closeMenu());
                           }}
                           onClick={() => handleUpdateCheckButton(() => closeMenu())}
                         >
@@ -212,9 +175,8 @@ export function HamburgerMenu() {
                         </li>
                         <li
                           id="reportBugButton"
-                          onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === '')
-                              handleReportBugButton(() => closeMenu());
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === '') handleReportBugButton(() => closeMenu());
                           }}
                           onClick={() => handleReportBugButton(() => closeMenu())}
                         >

@@ -1,16 +1,16 @@
 import { Menu } from '@remindr/shared';
+import store from '@renderer/app/store';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { updateEmail } from '@renderer/features/user-state/userSlice';
+import { useAppDispatch } from '@renderer/hooks';
+import { resetEmail, signOut } from '@renderer/scripts/systems/authentication';
+import showMessageBox from '@renderer/scripts/utils/messagebox';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import isEmail from 'validator/lib/isEmail';
 import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
-import store from '/@/app/store';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { updateEmail } from '/@/features/user-state/userSlice';
-import { useAppDispatch } from '/@/hooks';
-import { resetEmail, signOut } from '/@/scripts/systems/authentication';
-import showMessageBox from '/@/scripts/utils/messagebox';
 
 interface EmailResetMenuProps {
   setShowEmailResetMenu: Dispatch<SetStateAction<boolean>>;

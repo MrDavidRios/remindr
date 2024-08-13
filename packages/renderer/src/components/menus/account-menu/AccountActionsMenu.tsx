@@ -1,10 +1,10 @@
 import { Menu } from '@remindr/shared';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { showResetPasswordPrompt } from '@renderer/scripts/systems/authentication';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { DropdownMenu } from '../dropdown-menu/DropdownMenu';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { showResetPasswordPrompt } from '/@/scripts/systems/authentication';
 
 interface AccountActionsMenuProps {
   setShowAccountActionsMenu: Dispatch<SetStateAction<boolean>>;

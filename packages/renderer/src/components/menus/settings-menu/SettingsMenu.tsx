@@ -1,4 +1,7 @@
 import { Menu } from '@remindr/shared';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch, useAppStore } from '@renderer/hooks';
+import { isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
@@ -10,9 +13,6 @@ import { GeneralSettingsPage } from './settings-pages/GeneralSettingsPage';
 import { NotificationsSettingsPage } from './settings-pages/NotificationsSettingsPage';
 import { TasksSettingsPage } from './settings-pages/TasksSettingsPage';
 import { AppearanceSettingsPage } from './settings-pages/appearance-settings-page/AppearanceSettingsPage';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch, useAppStore } from '/@/hooks';
-import { isMenuOpen } from '/@/scripts/utils/menuutils';
 
 export default function SettingsMenu() {
   const dispatch = useAppDispatch();

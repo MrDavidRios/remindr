@@ -12,7 +12,7 @@
     "baseUrl": ".",
     "paths": {
       "#preload": ["../preload/src/index"],
-      "/@/*": ["./src/*"],
+      "@renderer/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
       "@hooks/*": ["./src/scripts/utils/hooks/*"]
     },

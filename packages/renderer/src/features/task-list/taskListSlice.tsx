@@ -10,6 +10,12 @@ import {
   getTimeframeDisplayName,
   setDate,
 } from '@remindr/shared';
+import { sortForDisplay } from '@renderer/components/task-management-page/task-list-display/task-group/taskgroups';
+import { updateOverlayIcons } from '@renderer/scripts/systems/badges';
+import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
+import getNextRepeatDate from '@renderer/scripts/utils/repeatHelper';
+import { saveTaskData } from '@renderer/scripts/utils/taskfunctions';
+import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import _ from 'lodash';
 import { setAppMode } from '../app-mode/appModeSlice';
 import { updateUserState } from '../user-state/userSlice';
@@ -26,12 +32,6 @@ import {
   updateTaskReducer,
 } from './basicTaskListOperations';
 import { initializeTaskListSyncListener } from './taskListSync';
-import { sortForDisplay } from '/@/components/task-management-page/task-list-display/task-group/taskgroups';
-import { updateOverlayIcons } from '/@/scripts/systems/badges';
-import { getTaskListWithinTimeframe } from '/@/scripts/utils/getReminderListWithinTimeframe';
-import getNextRepeatDate from '/@/scripts/utils/repeatHelper';
-import { saveTaskData } from '/@/scripts/utils/taskfunctions';
-import { getTaskIdx } from '/@/scripts/utils/tasklistutils';
 
 export interface TaskListState {
   value: InstanceType<typeof Task>[];

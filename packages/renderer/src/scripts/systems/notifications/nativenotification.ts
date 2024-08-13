@@ -1,7 +1,7 @@
 import { Task } from '@remindr/shared';
+import store from '@renderer/app/store';
 import { getIpcRendererOutput } from '../../utils/ipcRendererOutput';
 import { formatMinute, milToStandardHour } from '../../utils/timefunctions';
-import store from '/@/app/store';
 
 export function initNativeNotificationListener() {
   window.electron.ipcRenderer.on('deploy-native-notification', (e: unknown) => {

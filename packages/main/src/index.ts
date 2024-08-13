@@ -1,3 +1,5 @@
+import { restoreOrCreateWindow } from '@main/mainWindow.js';
+import initUserDataListeners, { isAutoStartupEnabled, isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
 import type { BadgeInfo, Task } from '@remindr/shared';
 import type { BrowserWindow, MessageBoxOptions } from 'electron';
 import { app, dialog, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
@@ -19,8 +21,6 @@ import { getMainWindow } from './utils/getMainWindow.js';
 import { getPageTitle } from './utils/getPageTitle.js';
 import hasNetworkConnection from './utils/hasNetworkConnection.js';
 import initWindowEventListeners from './utils/window.js';
-import { restoreOrCreateWindow } from '/@/mainWindow.js';
-import initUserDataListeners, { isAutoStartupEnabled, isHideOnStartupEnabled } from '/@/utils/storeUserData.js';
 
 const { autoUpdater } = updater;
 

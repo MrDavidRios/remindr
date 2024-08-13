@@ -1,10 +1,10 @@
 import settingsGearIcon from '@assets/icons/settings-gear.svg';
 import { Menu } from '@remindr/shared';
+import { showMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { showMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch } from '/@/hooks';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 
 export const SettingsButton: React.FC = () => {
   const dispatch = useAppDispatch();

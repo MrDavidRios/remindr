@@ -1,13 +1,13 @@
 import angelRightIcon from '@assets/icons/angel-right.svg';
 import { TaskCollection, User } from '@remindr/shared';
+import type { AppDispatch } from '@renderer/app/store';
+import { updateUserData, updateUserState } from '@renderer/features/user-state/userSlice';
+import { useAppDispatch } from '@renderer/hooks';
+import { signOut } from '@renderer/scripts/systems/authentication';
+import showMessageBox from '@renderer/scripts/utils/messagebox';
+import { setUserData } from '@renderer/scripts/utils/userData';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';
-import type { AppDispatch } from '/@/app/store';
-import { updateUserData, updateUserState } from '/@/features/user-state/userSlice';
-import { useAppDispatch } from '/@/hooks';
-import { signOut } from '/@/scripts/systems/authentication';
-import showMessageBox from '/@/scripts/utils/messagebox';
-import { setUserData } from '/@/scripts/utils/userData';
 
 export function IntroPage() {
   const dispatch = useAppDispatch();
@@ -24,22 +24,10 @@ export function IntroPage() {
   };
 
   return (
-    <section
-      id="login"
-      className="frosted"
-    >
+    <section id="login" className="frosted">
       <div id="introScreen">
-        <button
-          id="introScreenBackButton"
-          onClick={() => signOut(dispatch)}
-          type="button"
-        >
-          <img
-            src={angelRightIcon}
-            className="svg-filter"
-            draggable="false"
-            alt=""
-          />
+        <button id="introScreenBackButton" onClick={() => signOut(dispatch)} type="button">
+          <img src={angelRightIcon} className="svg-filter" draggable="false" alt="" />
           <p>Sign Out</p>
         </button>
         <h1 style={{ fontSize: '32px' }}>Let&apos;s get you set up.</h1>
@@ -74,11 +62,7 @@ export function IntroPage() {
 async function continueButtonHandler(name: string, dispatch: AppDispatch) {
   // Check if input is okay. If so, add input to userData. If not, then fire an alert.
   if (name.trim().length < 2) {
-    showMessageBox(
-      'Name too short',
-      'Your inputted name cannot be less than two characters.',
-      'error',
-    );
+    showMessageBox('Name too short', 'Your inputted name cannot be less than two characters.', 'error');
     return;
   }
 

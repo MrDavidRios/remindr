@@ -1,8 +1,8 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { Settings, User } from '@remindr/shared';
+import { setUserData } from '@renderer/scripts/utils/userData';
 import { setSettings, updateSetting } from '../settings/settingsSlice';
-import { setUserData } from '/@/scripts/utils/userData';
 
 interface UserState {
   user?: InstanceType<typeof User>;
@@ -45,7 +45,7 @@ export const userStateSlice = createSlice({
   name: 'userState',
   initialState: initialUserState,
   reducers: {
-    resetUserState: state => {
+    resetUserState: (state) => {
       Object.assign(state, initialUserState);
     },
     updateUserData: (state, action: PayloadAction<{ user: User }>) => {
@@ -56,10 +56,7 @@ export const userStateSlice = createSlice({
       saveUserData(state);
     },
     /** Update the auth state of the user (auth, initialized) */
-    updateUserState: (
-      state,
-      action: PayloadAction<{ authenticated: boolean; initialized: boolean }>,
-    ) => {
+    updateUserState: (state, action: PayloadAction<{ authenticated: boolean; initialized: boolean }>) => {
       // If user signed out, clear their data from global state
       if (state.authenticated && !action.payload.authenticated) state.user = initialUserState.user;
 
@@ -75,8 +72,8 @@ export const userStateSlice = createSlice({
       saveUserData(state);
     },
   },
-  extraReducers: builder => {
-    builder.addCase(getUserData.pending, state => {
+  extraReducers: (builder) => {
+    builder.addCase(getUserData.pending, (state) => {
       if (state.userDataGetStatus === 'idle') {
         state.userDataGetStatus = 'pending';
       }
@@ -85,7 +82,7 @@ export const userStateSlice = createSlice({
       state.user = action.payload;
       state.userDataGetStatus = 'succeeded';
     });
-    builder.addCase(getUserData.rejected, state => {
+    builder.addCase(getUserData.rejected, (state) => {
       if (state.userDataGetStatus === 'pending') {
         state.userDataGetStatus = 'failed';
       }
@@ -109,10 +106,5 @@ export const userStateSlice = createSlice({
 });
 
 export default userStateSlice.reducer;
-export const {
-  resetUserState,
-  updateUserData,
-  updateUserState,
-  updateEmail,
-  updateEmailVerifiedState,
-} = userStateSlice.actions;
+export const { resetUserState, updateUserData, updateUserState, updateEmail, updateEmailVerifiedState } =
+  userStateSlice.actions;

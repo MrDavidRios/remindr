@@ -1,9 +1,9 @@
+import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
 import type { DropdownProps } from './Dropdown';
-import { dynamicMenuHeightAnimationProps } from '/@/animation';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 
 interface DropdownOptionsProps<T> extends DropdownProps<T> {
   setWidestWidth: (width: number) => void;
@@ -17,7 +17,7 @@ export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
 
   useEffect(() => {
     let maxWidth = 0;
-    optionRefs.forEach(ref => {
+    optionRefs.forEach((ref) => {
       if (ref.current && (ref.current as HTMLElement).offsetWidth > maxWidth) {
         maxWidth = (ref.current as HTMLElement).offsetWidth;
       }
@@ -55,17 +55,14 @@ export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
               ref={optionRefs[idx]}
               style={{ width: '100%' }}
               className={`option ${bottomOption && 'bottom-option'}`}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
 
                 onSelect(idx);
                 closeDropdown();
               }}
             >
-              <input
-                type="radio"
-                className="radio"
-              />
+              <input type="radio" className="radio" />
               <label>{optionLabels[idx]}</label>
             </div>
           );

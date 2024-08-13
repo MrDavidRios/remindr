@@ -1,10 +1,10 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { Menu, Task } from '@remindr/shared';
+import { AppDispatch, RootState } from '@renderer/app/store';
+import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
+import { waitUntil } from '@renderer/scripts/utils/timing';
 import _ from 'lodash';
 import { hideMenu, showDialog, showMenu } from '../menuSlice';
-import { AppDispatch, RootState } from '/@/app/store';
-import { isFullscreenMenuOpen } from '/@/scripts/utils/menuutils';
-import { waitUntil } from '/@/scripts/utils/timing';
 
 export const unsavedTaskDialogMiddleware = createListenerMiddleware();
 export const startListeningForHideMenu = unsavedTaskDialogMiddleware.startListening.withTypes<RootState, AppDispatch>();

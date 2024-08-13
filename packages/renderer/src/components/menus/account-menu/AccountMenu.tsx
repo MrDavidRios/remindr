@@ -1,5 +1,7 @@
 import extraMenuIcon from '@assets/icons/extra-menu.png';
 import { Menu } from '@remindr/shared';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -9,12 +11,10 @@ import { AccountActionsMenu } from './AccountActionsMenu';
 import { AccountDeleteMenu } from './AccountDeleteMenu';
 import { AccountDetails } from './AccountDetails';
 import { EmailResetMenu } from './EmailResetMenu';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export const AccountMenu = () => {
   const dispatch = useAppDispatch();
-  const userData = useAppSelector(state => state.userState.user);
+  const userData = useAppSelector((state) => state.userState.user);
 
   const [showAccountActionsMenu, setShowAccountActionsMenu] = useState(false);
 
@@ -43,17 +43,9 @@ export const AccountMenu = () => {
           onClick={() => setShowAccountActionsMenu(!showAccountActionsMenu)}
           aria-label="Account Options"
         >
-          <img
-            src={extraMenuIcon}
-            className="ignore-cursor"
-            draggable="false"
-            alt=""
-          />
+          <img src={extraMenuIcon} className="ignore-cursor" draggable="false" alt="" />
         </button>
-        <CloseMenuButton
-          id="accountMenuCloseButton"
-          onClick={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))}
-        />
+        <CloseMenuButton id="accountMenuCloseButton" onClick={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))} />
       </div>
       <AccountDetails userData={userData} />
       <AnimatePresence>
@@ -69,9 +61,7 @@ export const AccountMenu = () => {
         {showEmailResetMenu && <EmailResetMenu setShowEmailResetMenu={setShowEmailResetMenu} />}
       </AnimatePresence>
       <AnimatePresence>
-        {showAccountDeleteMenu && (
-          <AccountDeleteMenu setShowAccountDeleteMenu={setShowAccountDeleteMenu} />
-        )}
+        {showAccountDeleteMenu && <AccountDeleteMenu setShowAccountDeleteMenu={setShowAccountDeleteMenu} />}
       </AnimatePresence>
     </FullScreenMenu>
   );

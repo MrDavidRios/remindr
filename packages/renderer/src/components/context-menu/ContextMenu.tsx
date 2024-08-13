@@ -1,9 +1,9 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
+import { useAppSelector } from '@renderer/hooks';
+import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import type { FC, HTMLAttributes } from 'react';
 import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { useAppSelector } from '/@/hooks';
-import { useDetectWheel } from '/@/scripts/utils/hooks/usedetectwheel';
 
 interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
   x: number;
@@ -12,7 +12,7 @@ interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, children, hideMenu }) => {
-  const openMenus = useAppSelector(state => state.menuState.openMenus);
+  const openMenus = useAppSelector((state) => state.menuState.openMenus);
 
   const [position, setPosition] = useState({ x, y });
   const [isVisible, setIsVisible] = useState(false);

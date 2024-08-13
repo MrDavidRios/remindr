@@ -1,7 +1,7 @@
 import profilePlaceholderIcon from '@assets/icons/profile-placeholder.svg';
 import { Menu } from '@remindr/shared';
-import { showMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch } from '/@/hooks';
+import { showMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
 
 export const AccountMenuButton: React.FC = () => {
   const dispatch = useAppDispatch();

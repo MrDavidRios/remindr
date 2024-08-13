@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { DialogProps, FloatingMenuPosition, Menu, MenuState, floatingMenus } from '@remindr/shared';
+import { isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
-import { isPrimaryMenu } from '/@/scripts/utils/menuutils';
 
 const initialState: MenuState = {
   openMenus: [],

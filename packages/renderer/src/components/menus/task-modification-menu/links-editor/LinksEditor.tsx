@@ -2,17 +2,17 @@ import linkIcon from '@assets/icons/link.svg';
 import plusIcon from '@assets/icons/plus.svg';
 import type { Link, Task } from '@remindr/shared';
 import { Menu, generateUniqueID } from '@remindr/shared';
-import type { FC } from 'react';
-import { useState } from 'react';
-import { LinkTile } from './LinkTile';
-import { ArrowNavigable } from '/@/components/accessibility/ArrowNavigable';
-import { showMenu } from '/@/features/menu-state/menuSlice';
+import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
+import { showMenu } from '@renderer/features/menu-state/menuSlice';
 import {
   getEditedTask,
   setEditedTask,
   setLinkEditState,
-} from '/@/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
+} from '@renderer/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import type { FC } from 'react';
+import { useState } from 'react';
+import { LinkTile } from './LinkTile';
 
 interface LinksEditorProps {}
 
@@ -26,7 +26,7 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
     dispatch(showMenu(Menu.LinkMenu));
   };
 
-  const editedTask = useAppSelector(state => getEditedTask(state.taskModificationState));
+  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState));
   const links = editedTask?.links ?? [];
 
   const onDeleteLink = (idx: number) => {
@@ -50,16 +50,9 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
         onMouseEnter={() => setHoveringOverEditorHeader(true)}
         onMouseLeave={() => setHoveringOverEditorHeader(false)}
       >
-        <button
-          type="button"
-          onClick={() => openLinkMenu()}
-        >
+        <button type="button" onClick={() => openLinkMenu()}>
           <div>
-            <img
-              src={linkIcon}
-              draggable={false}
-              alt=""
-            />
+            <img src={linkIcon} draggable={false} alt="" />
             <h4>Links</h4>
           </div>
           <img

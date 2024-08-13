@@ -7,12 +7,12 @@ import repeatIcon from '@assets/icons/repeat.svg';
 import subtasksIcon from '@assets/icons/subtasks.svg';
 import type { Task } from '@remindr/shared';
 import { isOverdue, reminderRepeats, Repeat } from '@remindr/shared';
+import { completeTask, markTaskIncomplete } from '@renderer/features/task-list/taskListSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { getReminderDisplayDate } from '@renderer/scripts/utils/scheduledreminderfunctions';
+import { taskHasNotes } from '@renderer/scripts/utils/taskfunctions';
+import { getFormattedReminderTime } from '@renderer/scripts/utils/timefunctions';
 import type { FC } from 'react';
-import { completeTask, markTaskIncomplete } from '/@/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { getReminderDisplayDate } from '/@/scripts/utils/scheduledreminderfunctions';
-import { taskHasNotes } from '/@/scripts/utils/taskfunctions';
-import { getFormattedReminderTime } from '/@/scripts/utils/timefunctions';
 
 interface TaskTileContentsProps {
   task: Task;
@@ -21,8 +21,8 @@ interface TaskTileContentsProps {
 export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
   const dispatch = useAppDispatch();
 
-  const militaryTime = useAppSelector(state => state.settings.value.militaryTime);
-  const dateFormat = useAppSelector(state => state.settings.value.dateFormat);
+  const militaryTime = useAppSelector((state) => state.settings.value.militaryTime);
+  const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
 
   const hasReminders = task.scheduledReminders.length > 0;
 
@@ -39,7 +39,7 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
   const hasIndicators = hasReminders || hasNotes || repeats || multipleReminders || hasSubtasks;
   const indicatorClasses = 'reminder-indicator task-tile-image';
 
-  const completedSubtasks = task.subtasks?.filter(s => s.complete).length;
+  const completedSubtasks = task.subtasks?.filter((s) => s.complete).length;
   const subtasks = task.subtasks?.length;
 
   const toggleComplete = () => {
@@ -57,14 +57,14 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
     <>
       <button
         className={`task-complete-button-container ${task.completed ? 'complete' : ''}`}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.stopPropagation();
 
             toggleComplete();
           }
         }}
-        onClick={e => {
+        onClick={(e) => {
           // Stops the parent from taking credit for the click
           e.stopPropagation();
 
@@ -75,28 +75,18 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
         aria-label={toggleCompleteButtonTitle}
         title={toggleCompleteButtonTitle}
       >
-        <img
-          className="task-complete-button svg-filter"
-          src={circle}
-          draggable="false"
-          alt=""
-        />
-        <img
-          className="task-complete-button-checkmark"
-          src={checkImg}
-          draggable="false"
-          alt=""
-        />
+        <img className="task-complete-button svg-filter" src={circle} draggable="false" alt="" />
+        <img className="task-complete-button-checkmark" src={checkImg} draggable="false" alt="" />
       </button>
       <div>
         <p className="task-title">{task.name}</p>
         <div className={`reminder-time-container ${hasIndicators && 'contains-images'}`}>
           {hasReminders && (
             <div className={timeDisplayClasses}>
-              {`${getReminderDisplayDate(
+              {`${getReminderDisplayDate(task.scheduledReminders[0], dateFormat)} at ${getFormattedReminderTime(
                 task.scheduledReminders[0],
-                dateFormat,
-              )} at ${getFormattedReminderTime(task.scheduledReminders[0], militaryTime)}`}
+                militaryTime,
+              )}`}
             </div>
           )}
 
@@ -145,13 +135,7 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
           )}
           {hasLinks && (
             <div className="reminder-indicator-container">
-              <img
-                className={indicatorClasses}
-                src={linkIcon}
-                draggable={false}
-                title="This task has links"
-                alt=""
-              />
+              <img className={indicatorClasses} src={linkIcon} draggable={false} title="This task has links" alt="" />
             </div>
           )}
         </div>

@@ -1,9 +1,9 @@
 import { Menu } from '@remindr/shared';
+import { hideMenu, setDialogResult } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { FC } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { FullScreenMenu } from '../menus/fullscreen-menu/FullScreenMenu';
-import { hideMenu, setDialogResult } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export const MessageModal: FC = () => {
   const dispatch = useAppDispatch();

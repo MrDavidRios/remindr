@@ -1,19 +1,19 @@
 import { Task, reminderRepeats } from '@remindr/shared';
-import { Reorder, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
-import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
-import { TaskTileContents } from './TaskTileContents';
-import { AppDispatch } from '/@/app/store';
-import { TaskContextMenu } from '/@/components/context-menu/task-context-menu/TaskContextMenu';
+import { AppDispatch } from '@renderer/app/store';
+import { TaskContextMenu } from '@renderer/components/context-menu/task-context-menu/TaskContextMenu';
 import {
   addSelectedTask,
   removeSelectedTask,
   selectTasksBetween,
   setSelectedTask,
-} from '/@/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
-import { taskHasNotes } from '/@/scripts/utils/taskfunctions';
+} from '@renderer/features/task-list/taskListSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { taskHasNotes } from '@renderer/scripts/utils/taskfunctions';
+import { Reorder, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
+import _ from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { TaskTileContents } from './TaskTileContents';
 
 interface TaskTileWrapperProps {
   task: Task;

@@ -1,13 +1,13 @@
 import { Timeframe } from '@remindr/shared';
+import { useAppSelector } from '@renderer/hooks';
+import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
+import { isValidSearchString, searchTasks } from '@renderer/scripts/utils/searchutils';
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
 import { memo } from 'react';
 import { shallowEqual } from 'react-redux';
 import { TaskGroupContainer } from './task-group/TaskGroupContainer';
 import { groupTasks } from './task-group/taskgroups';
 import { TaskTileWrapper } from './task-tile/TaskTileWrapper';
-import { useAppSelector } from '/@/hooks';
-import { getTaskListWithinTimeframe } from '/@/scripts/utils/getReminderListWithinTimeframe';
-import { isValidSearchString, searchTasks } from '/@/scripts/utils/searchutils';
 
 interface TaskListProps {
   timeframe: Timeframe;

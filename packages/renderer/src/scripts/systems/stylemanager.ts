@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 import { Settings, Theme } from '@remindr/shared';
+import store from '@renderer/app/store';
 import { FastAverageColorResult } from 'fast-average-color';
 import { Dispatch, SetStateAction } from 'react';
 import { BackgroundProps, getDefaultBackgroundProps, isBackgroundAnImage } from '../utils/backgroundprops';
@@ -14,7 +15,6 @@ import {
   rgbaToHex,
 } from '../utils/colorutils';
 import { getDominantColor, getImgUrlFromData } from '../utils/imgutils';
-import store from '/@/app/store';
 
 const root = document.documentElement;
 

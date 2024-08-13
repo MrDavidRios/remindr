@@ -1,16 +1,16 @@
 import { Menu } from '@remindr/shared';
+import type { AppDispatch } from '@renderer/app/store';
+import store from '@renderer/app/store';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { resetUserState } from '@renderer/features/user-state/userSlice';
+import { useAppDispatch } from '@renderer/hooks';
+import { deleteAccount, reauthenticateUser } from '@renderer/scripts/systems/authentication';
+import showMessageBox from '@renderer/scripts/utils/messagebox';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
-import type { AppDispatch } from '/@/app/store';
-import store from '/@/app/store';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { resetUserState } from '/@/features/user-state/userSlice';
-import { useAppDispatch } from '/@/hooks';
-import { deleteAccount, reauthenticateUser } from '/@/scripts/systems/authentication';
-import showMessageBox from '/@/scripts/utils/messagebox';
 
 interface AccountDeleteMenuProps {
   setShowAccountDeleteMenu: Dispatch<SetStateAction<boolean>>;
@@ -56,7 +56,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
         id="accountDeletionAuthEmailInput"
         className="account-panel-input"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
@@ -64,7 +64,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
         id="accountDeletionAuthPasswordInput"
         className="account-panel-input"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <br />
       <br />
@@ -83,10 +83,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
         Delete Account
       </button>
       {showLoadingScreen && (
-        <div
-          id="accountDeletedLoadingScreenContainer"
-          className="full-window-container"
-        >
+        <div id="accountDeletedLoadingScreenContainer" className="full-window-container">
           <div className="backdrop low-opacity" />
           <div id="accountDeletedLoadingScreen">
             <h3>Deleting account...</h3>

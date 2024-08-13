@@ -1,5 +1,5 @@
+import { useAppSelector } from '@renderer/hooks';
 import React, { FC, useEffect } from 'react';
-import { useAppSelector } from '/@/hooks';
 
 interface NotesEditorProps extends React.HTMLProps<HTMLTextAreaElement> {}
 

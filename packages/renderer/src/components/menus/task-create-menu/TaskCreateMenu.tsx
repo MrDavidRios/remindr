@@ -1,16 +1,16 @@
 import { Menu, Task } from '@remindr/shared';
+import { menuHeightAnimationProps } from '@renderer/animation';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { addTask } from '@renderer/features/task-list/taskListSlice';
+import { setEditedTask, setOriginalTask } from '@renderer/features/task-modification/taskModificationSlice';
+import { useAppDispatch, useAppStore } from '@renderer/hooks';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
+import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { FC, HTMLProps, useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { TaskModificationInterface } from '../task-modification-menu/TaskModificationInterface';
-import { menuHeightAnimationProps } from '/@/animation';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { addTask } from '/@/features/task-list/taskListSlice';
-import { setEditedTask, setOriginalTask } from '/@/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppStore } from '/@/hooks';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
-import { useClickOutside } from '/@/scripts/utils/hooks/useoutsideclick';
-import { isFullscreenMenuOpen } from '/@/scripts/utils/menuutils';
 
 interface TaskCreateMenuProps extends HTMLProps<HTMLDivElement> {}
 

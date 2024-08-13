@@ -1,15 +1,15 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
 import openIcon from '@assets/icons/open.svg';
 import { getTaskListActionVerb } from '@remindr/shared';
+import store from '@renderer/app/store';
+import { setSelectedTask, undoTaskListChange } from '@renderer/features/task-list/taskListSlice';
+import { useAppSelector } from '@renderer/hooks';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useDispatch } from 'react-redux';
-import store from '/@/app/store';
-import { setSelectedTask, undoTaskListChange } from '/@/features/task-list/taskListSlice';
-import { useAppSelector } from '/@/hooks';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
-import { isFullscreenMenuOpen } from '/@/scripts/utils/menuutils';
 
 let hideNotificationTimeout: NodeJS.Timeout;
 export function UndoNotification() {
@@ -20,9 +20,9 @@ export function UndoNotification() {
     undoTaskAction();
   });
 
-  const undoState = useAppSelector(state => state.taskList.lastTaskListAction);
+  const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const updatedTask = useAppSelector(
-    state => state.taskList.value.filter(t => t.creationTime === undoState?.task.creationTime)[0],
+    (state) => state.taskList.value.filter((t) => t.creationTime === undoState?.task.creationTime)[0],
   );
   const [showUndoNotification, setShowUndoNotification] = useState(false);
 
@@ -73,11 +73,7 @@ export function UndoNotification() {
   return (
     <AnimatePresence>
       {showUndoNotification && (
-        <motion.div
-          id="undoActionNotification"
-          className="frosted"
-          {...animationProps}
-        >
+        <motion.div id="undoActionNotification" className="frosted" {...animationProps}>
           <div
             className="text-wrapper"
             title={`Task "${undoState?.task.name}" ${actionVerb}`}
@@ -86,11 +82,7 @@ export function UndoNotification() {
             <p>Task &quot;</p> <span>{`${undoState?.task.name}`}</span>
             <p>{`" ${actionVerb}`}</p>
           </div>
-          <button
-            title="Undo Action (Ctrl + Z)"
-            onClick={undoTaskAction}
-            type="button"
-          >
+          <button title="Undo Action (Ctrl + Z)" onClick={undoTaskAction} type="button">
             Undo
           </button>
           <div className="action-button-wrapper">
@@ -101,12 +93,7 @@ export function UndoNotification() {
                 title="Open task (Ctrl + O)"
                 onClick={openTask}
               >
-                <img
-                  src={openIcon}
-                  alt="Open task"
-                  className="ignore-cursor svg-filter"
-                  draggable="false"
-                />
+                <img src={openIcon} alt="Open task" className="ignore-cursor svg-filter" draggable="false" />
               </button>
             )}
             <button
@@ -115,12 +102,7 @@ export function UndoNotification() {
               aria-label="Close Undo Notification"
               onClick={() => setShowUndoNotification(false)}
             >
-              <img
-                src={closeButtonIcon}
-                draggable="false"
-                alt=""
-                style={{ marginRight: 2 }}
-              />
+              <img src={closeButtonIcon} draggable="false" alt="" style={{ marginRight: 2 }} />
             </button>
           </div>
         </motion.div>

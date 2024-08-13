@@ -1,10 +1,10 @@
 import alarmIcon from '@assets/icons/alarm.svg';
 import { setDate, type ScheduledReminder } from '@remindr/shared';
+import { getScheduledReminderClone } from '@renderer/scripts/utils/scheduledreminderfunctions';
 import { AnimatePresence } from 'framer-motion';
 import type { FC } from 'react';
 import { useRef, useState } from 'react';
 import { SuggestedTimesMenu } from './SuggestedTimesMenu';
-import { getScheduledReminderClone } from '/@/scripts/utils/scheduledreminderfunctions';
 
 interface SuggestedTimePickerProps {
   reminder: ScheduledReminder;
@@ -28,23 +28,18 @@ export const SuggestedTimePicker: FC<SuggestedTimePickerProps> = ({ reminder, up
       id="suggestedTimesInputButton"
       aria-label="Pick a suggested time"
       onClick={() => updateSuggestedTimesMenuState(!showSuggestedTimesMenu)}
-      onKeyDown={e => {
+      onKeyDown={(e) => {
         if (e.key === 'Tab') updateSuggestedTimesMenuState(false);
       }}
       ref={ref}
       type="button"
     >
-      <img
-        src={alarmIcon}
-        className="svg-filter"
-        draggable="false"
-        alt=""
-      />
+      <img src={alarmIcon} className="svg-filter" draggable="false" alt="" />
       <AnimatePresence>
         {showSuggestedTimesMenu && (
           <SuggestedTimesMenu
             setShowSuggestedTimesMenu={updateSuggestedTimesMenuState}
-            updateSuggestedTime={date => {
+            updateSuggestedTime={(date) => {
               let scheduledReminderClone = getScheduledReminderClone(reminder);
               scheduledReminderClone = setDate(scheduledReminderClone, date);
               updateReminder(scheduledReminderClone);

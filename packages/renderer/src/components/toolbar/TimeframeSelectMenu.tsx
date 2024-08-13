@@ -1,17 +1,17 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { Menu, Timeframe } from '@remindr/shared';
+import { menuWidthAnimationProps } from '@renderer/animation';
+import type { AppDispatch } from '@renderer/app/store';
+import store from '@renderer/app/store';
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { clearSelectedTasks, setTimeframe } from '@renderer/features/task-list/taskListSlice';
+import { useAppDispatch } from '@renderer/hooks';
+import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
-import { menuWidthAnimationProps } from '/@/animation';
-import type { AppDispatch } from '/@/app/store';
-import store from '/@/app/store';
-import { hideMenu } from '/@/features/menu-state/menuSlice';
-import { clearSelectedTasks, setTimeframe } from '/@/features/task-list/taskListSlice';
-import { useAppDispatch } from '/@/hooks';
-import { getTaskListWithinTimeframe } from '/@/scripts/utils/getReminderListWithinTimeframe';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 
 export function TimeframeSelectMenu() {
   const dispatch = useAppDispatch();
@@ -32,10 +32,7 @@ export function TimeframeSelectMenu() {
       {...menuWidthAnimationProps(animationsEnabled)}
       animate={{ width: '100px' }}
     >
-      <ArrowNavigable
-        autoFocus
-        disableCleanup
-      >
+      <ArrowNavigable autoFocus disableCleanup>
         <div
           id="timeframeAll"
           className="timeframe-choice menu-bottom-border"

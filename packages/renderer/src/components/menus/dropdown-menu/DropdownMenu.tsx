@@ -1,9 +1,9 @@
+import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import type { FC, FocusEvent, HTMLAttributes, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { dynamicMenuHeightAnimationProps } from '/@/animation';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
-import { useClickOutside } from '/@/scripts/utils/hooks/useoutsideclick';
 
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/
 interface DropdownMenuProps extends HTMLAttributes<HTMLUListElement> {

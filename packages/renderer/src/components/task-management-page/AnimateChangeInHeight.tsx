@@ -1,6 +1,6 @@
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { FC, ReactNode, useEffect, useRef, useState } from 'react';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
 
 interface AnimateChangeInHeightProps {
   show: boolean;

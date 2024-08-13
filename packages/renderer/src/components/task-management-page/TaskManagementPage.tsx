@@ -1,4 +1,6 @@
 import { Menu } from '@remindr/shared';
+import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -8,8 +10,6 @@ import { TaskEditMenu } from '../menus/task-edit-menu/TaskEditMenu';
 import { Toolbar } from '../toolbar/Toolbar';
 import { UndoNotification } from '../undo-notification/UndoNotification';
 import { TaskListDisplay } from './task-list-display/TaskListContainer';
-import { hideMenu, showMenu } from '/@/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
 
 export function TaskManagementPage() {
   const dispatch = useAppDispatch();

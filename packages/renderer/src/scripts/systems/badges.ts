@@ -1,6 +1,6 @@
 import { BadgeInfo, type Task } from '@remindr/shared';
+import store from '@renderer/app/store';
 import { getOverdueAmount } from '../utils/tasklistutils';
-import store from '/@/app/store';
 
 export function updateOverlayIcons(taskList?: Task[]): void {
   const overdueTaskAmount = getOverdueAmount(taskList ?? store.getState().taskList.value);
@@ -23,10 +23,7 @@ export function updateOverlayIcons(taskList?: Task[]): void {
       : `${overdueTaskAmount} overdue task`;
 
   if (overdueTaskAmount < 10)
-    badgeInfo = new BadgeInfo(
-      `/icons/alert-overlays/alert-${overdueTaskAmount}.png`,
-      accessibilityDescription,
-    );
+    badgeInfo = new BadgeInfo(`/icons/alert-overlays/alert-${overdueTaskAmount}.png`, accessibilityDescription);
   else {
     badgeInfo = new BadgeInfo('/icons/alert-overlays/alert-9+.png', accessibilityDescription);
 
@@ -35,16 +32,10 @@ export function updateOverlayIcons(taskList?: Task[]): void {
 
   const formattedMissedReminderAmount = overdueTaskAmount > 9 ? '9+' : `${overdueTaskAmount}`;
 
-  window.electron.ipcRenderer.sendMessage(
-    'update-tray-icon',
-    enableTrayBadge ? formattedMissedReminderAmount : 0,
-  );
+  window.electron.ipcRenderer.sendMessage('update-tray-icon', enableTrayBadge ? formattedMissedReminderAmount : 0);
 
   if (window.electron.process.isMac() || window.electron.process.isLinux()) {
-    window.electron.ipcRenderer.sendMessage(
-      'update-badge',
-      enableTaskbarBadge ? overdueTaskAmount : 0,
-    );
+    window.electron.ipcRenderer.sendMessage('update-badge', enableTaskbarBadge ? overdueTaskAmount : 0);
     return;
   }
 

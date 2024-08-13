@@ -1,7 +1,7 @@
-import { Dropdown } from '/@/components/dropdown/Dropdown';
-import { updateSetting } from '/@/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { updateOverlayIcons } from '/@/scripts/systems/badges';
+import { Dropdown } from '@renderer/components/dropdown/Dropdown';
+import { updateSetting } from '@renderer/features/settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { updateOverlayIcons } from '@renderer/scripts/systems/badges';
 
 export function NotificationsSettingsPage() {
   const dispatch = useAppDispatch();

@@ -1,6 +1,6 @@
 import { Task } from '@remindr/shared';
+import store from '@renderer/app/store';
 import { setTaskList } from './taskListSlice';
-import store from '/@/app/store';
 
 export function initializeTaskListSyncListener() {
   window.electron.ipcRenderer.on('server-task-list-update', (taskListObj: { reminderList: Task[] }) => {

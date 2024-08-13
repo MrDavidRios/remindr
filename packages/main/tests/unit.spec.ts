@@ -45,7 +45,7 @@ vi.mock('electron', () => {
   return { BrowserWindow: bw, app, ipcMain, nativeTheme };
 });
 
-vi.mock('/@/appUpdater', () => {
+vi.mock('@main/appUpdater', () => {
   return {
     AppUpdater: vi.fn(() => {}),
   };

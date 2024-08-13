@@ -1,11 +1,11 @@
+import initializeNotificationScreenListeners from '@main/notifications.js';
+import { isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
+import { initializeTaskLoop } from '@main/utils/taskLoop.js';
 import { app, BrowserWindow } from 'electron';
 import Store from 'electron-store';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { callSetupFunctions } from './index.js';
-import initializeNotificationScreenListeners from '/@/notifications.js';
-import { isHideOnStartupEnabled } from '/@/utils/storeUserData.js';
-import { initializeTaskLoop } from '/@/utils/taskLoop.js';
 
 const store = new Store();
 

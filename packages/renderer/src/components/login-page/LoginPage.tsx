@@ -1,12 +1,12 @@
 import type { AuthPageType } from '@remindr/shared';
 import { AppMode } from '@remindr/shared';
+import type { AppDispatch } from '@renderer/app/store';
+import { setAppMode } from '@renderer/features/app-mode/appModeSlice';
+import { useAppDispatch } from '@renderer/hooks';
+import { showResetPasswordPrompt, signOut } from '@renderer/scripts/systems/authentication';
 import type { Dispatch, SetStateAction } from 'react';
 import { useState } from 'react';
 import { AuthInput } from './AuthInput';
-import type { AppDispatch } from '/@/app/store';
-import { setAppMode } from '/@/features/app-mode/appModeSlice';
-import { useAppDispatch } from '/@/hooks';
-import { showResetPasswordPrompt, signOut } from '/@/scripts/systems/authentication';
 
 interface LoginPageProps {
   setPage: Dispatch<SetStateAction<AuthPageType>>;

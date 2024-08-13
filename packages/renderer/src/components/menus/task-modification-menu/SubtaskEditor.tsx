@@ -3,13 +3,13 @@ import checkboxCheckedIcon from '@assets/icons/checkbox-checked.svg';
 import checkboxEmptyIcon from '@assets/icons/checkbox-empty.svg';
 import subtasksIcon from '@assets/icons/subtasks.svg';
 import { Subtask } from '@remindr/shared';
+import { collapseButtonAnimationProps } from '@renderer/animation';
+import { useAppSelector } from '@renderer/hooks';
+import { isCmdorCtrlPressed } from '@renderer/scripts/systems/hotkeys';
 import { motion } from 'framer-motion';
 import type { FC, RefObject } from 'react';
 import { createRef, useEffect, useRef, useState } from 'react';
 import DynamicInput from '../../dynamic-text-area/DynamicInput';
-import { collapseButtonAnimationProps } from '/@/animation';
-import { useAppSelector } from '/@/hooks';
-import { isCmdorCtrlPressed } from '/@/scripts/systems/hotkeys';
 
 interface SubtaskEditorProps {
   subtasks: Subtask[];
@@ -20,7 +20,7 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
   const modifiedSubtasks = JSON.parse(JSON.stringify(subtasks)) as Subtask[];
   const finalInputRef = useRef<HTMLInputElement>(null);
 
-  const animationsEnabled = useAppSelector(state => state.settings.value.enableAnimations);
+  const animationsEnabled = useAppSelector((state) => state.settings.value.enableAnimations);
 
   const [updateFocus, setUpdateFocus] = useState(false);
   const [focusIdx, setFocusIdx] = useState(-1);
@@ -31,7 +31,7 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
   const [hoveringOverHeader, setHoveringOverHeader] = useState(false);
   const [collapsed, setCollapsed] = useState(window.store.get('subtasksCollapsed') ?? false);
 
-  const completedSubtasks = modifiedSubtasks.filter(subtask => subtask.complete).length;
+  const completedSubtasks = modifiedSubtasks.filter((subtask) => subtask.complete).length;
   const subtaskProgressClasses = `${subtasks.length === 0 ? 'hidden' : ''} ${
     completedSubtasks === subtasks.length ? 'complete' : ''
   }`;
@@ -69,7 +69,7 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
   };
 
   // If subtasks are collapsed, make sure no inputs/checkboxes are tabbable
-  inputRefs.current.forEach(ref => {
+  inputRefs.current.forEach((ref) => {
     if (!ref.current) return;
 
     ref.current.tabIndex = collapsed ? -1 : 0;
@@ -89,16 +89,9 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
           setCollapsed(!collapsed);
         }}
       >
-        <img
-          src={subtasksIcon}
-          draggable="false"
-          alt=""
-        />
+        <img src={subtasksIcon} draggable="false" alt="" />
         <h4>Subtasks</h4>
-        <p
-          className={subtaskProgressClasses}
-          title={`${subtaskProgressText} subtasks completed`}
-        >
+        <p className={subtaskProgressClasses} title={`${subtaskProgressText} subtasks completed`}>
           {subtaskProgressText}
         </p>
         {/* Show collapsed button if hovering over header or if collapsed */}
@@ -112,10 +105,7 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
           />
         )}
       </button>
-      <div
-        id="subtasksList"
-        className={collapsed ? 'collapsed' : ''}
-      >
+      <div id="subtasksList" className={collapsed ? 'collapsed' : ''}>
         {subtasks.map((subtask, idx) => (
           <div key={subtask.id}>
             <button
@@ -137,11 +127,11 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
               ref={inputRefs.current[idx]}
               {...subtaskInputProps()}
               value={subtask.name}
-              onChange={e => {
+              onChange={(e) => {
                 modifiedSubtasks[idx].name = e.currentTarget.value;
                 onChange(modifiedSubtasks);
               }}
-              onKeyDown={e => {
+              onKeyDown={(e) => {
                 if (e.key === 'ArrowUp' && e.altKey && idx > 0) {
                   // move subtask up in array
                   const updatedSubtasks = [...modifiedSubtasks];
@@ -202,7 +192,7 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
                   removeSubtask(idx);
                 }
               }}
-              onBlur={e => {
+              onBlur={(e) => {
                 if (e.currentTarget.value.trim() === '') {
                   removeSubtask(idx);
                 }
@@ -223,22 +213,15 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
           </div>
         ))}
         <div>
-          <button
-            type="button"
-            tabIndex={-1}
-          >
-            <img
-              src={checkboxEmptyIcon}
-              draggable="false"
-              alt="Placeholder subtask checkbox"
-            />
+          <button type="button" tabIndex={-1}>
+            <img src={checkboxEmptyIcon} draggable="false" alt="Placeholder subtask checkbox" />
           </button>
           <input
             {...subtaskInputProps()}
             tabIndex={collapsed ? -1 : 0}
             placeholder="Add a subtask..."
             ref={finalInputRef}
-            onChange={e => {
+            onChange={(e) => {
               if (e.currentTarget.value.trim() === '') {
                 return;
               }
@@ -251,7 +234,7 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
 
               focusOnSubtask(modifiedSubtasks.length - 1);
             }}
-            onKeyDown={e => {
+            onKeyDown={(e) => {
               if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 focusOnSubtask(modifiedSubtasks.length - 1);

@@ -7,8 +7,8 @@ import {
   Task,
   Timeframe,
 } from '@remindr/shared';
+import store from '@renderer/app/store';
 import _ from 'lodash';
-import store from '/@/app/store';
 
 /**
  * Returns a list of reminders that are within the inputted timeframe.

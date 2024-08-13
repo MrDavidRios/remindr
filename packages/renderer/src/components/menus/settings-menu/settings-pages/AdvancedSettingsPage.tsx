@@ -1,5 +1,5 @@
-import { updateSetting } from '/@/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
+import { updateSetting } from '@renderer/features/settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 
 export function AdvancedSettingsPage() {
   const dispatch = useAppDispatch();

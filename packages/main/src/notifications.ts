@@ -1,11 +1,11 @@
+import { createDefaultSettings } from '@main/utils/defaultSettings.js';
+import { getScreenHeight, getScreenWidth } from '@main/utils/screen.js';
+import { getSettingsProfile } from '@main/utils/storeUserData.js';
 import type { Task, TaskScheduledReminderPair } from '@remindr/shared';
 import { BrowserWindow, app, ipcMain, screen } from 'electron';
 import _ from 'lodash';
 import { join } from 'node:path';
 import { getMainWindow } from './utils/getMainWindow.js';
-import { createDefaultSettings } from '/@/utils/defaultSettings.js';
-import { getScreenHeight, getScreenWidth } from '/@/utils/screen.js';
-import { getSettingsProfile } from '/@/utils/storeUserData.js';
 
 /** Spacing from the right edge of the screen */
 const HORIZONTAL_NOTIF_SPACING = 20;

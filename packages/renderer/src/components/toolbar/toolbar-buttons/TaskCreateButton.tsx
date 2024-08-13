@@ -1,20 +1,20 @@
 import plusThinIcon from '@assets/icons/plus-thin.svg';
 import type { MenuState } from '@remindr/shared';
 import { Menu } from '@remindr/shared';
+import type { AppDispatch } from '@renderer/app/store';
+import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
+import { clearSelectedTasks } from '@renderer/features/task-list/taskListSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { isFullscreenMenuOpen, isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import type { AppDispatch } from '/@/app/store';
-import { hideMenu, showMenu } from '/@/features/menu-state/menuSlice';
-import { clearSelectedTasks } from '/@/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector } from '/@/hooks';
-import { useAnimationsEnabled } from '/@/scripts/utils/hooks/useanimationsenabled';
-import { isFullscreenMenuOpen, isMenuOpen } from '/@/scripts/utils/menuutils';
 
 export const TaskCreateButton: FC = () => {
   const dispatch = useAppDispatch();
 
-  const menuState = useAppSelector(state => state.menuState);
+  const menuState = useAppSelector((state) => state.menuState);
   const animate = useAnimationsEnabled();
 
   const taskModificationMenuOpen =
@@ -45,11 +45,7 @@ export const TaskCreateButton: FC = () => {
       onClick={() => handleButtonClick(menuState, taskModificationMenuOpen, dispatch)}
     >
       <div className="toolbar-button-img-container">
-        <motion.img
-          src={plusThinIcon}
-          draggable="false"
-          {...getImgAnimationProps(taskModificationMenuOpen, animate)}
-        />
+        <motion.img src={plusThinIcon} draggable="false" {...getImgAnimationProps(taskModificationMenuOpen, animate)} />
       </div>
     </button>
   );
@@ -68,11 +64,7 @@ function getImgAnimationProps(taskModificationMenuOpen: boolean, animate: boolea
   };
 }
 
-function handleButtonClick(
-  menuState: MenuState,
-  taskModificationMenuOpen: boolean,
-  dispatch: AppDispatch,
-) {
+function handleButtonClick(menuState: MenuState, taskModificationMenuOpen: boolean, dispatch: AppDispatch) {
   if (taskModificationMenuOpen) {
     closeTaskModificationMenu(menuState, dispatch);
     return;

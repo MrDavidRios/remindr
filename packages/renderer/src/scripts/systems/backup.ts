@@ -1,7 +1,7 @@
 import { Settings, Task } from '@remindr/shared';
-import store, { AppDispatch } from '/@/app/store';
-import { setSettings } from '/@/features/settings/settingsSlice';
-import { setTaskList } from '/@/features/task-list/taskListSlice';
+import store, { AppDispatch } from '@renderer/app/store';
+import { setSettings } from '@renderer/features/settings/settingsSlice';
+import { setTaskList } from '@renderer/features/task-list/taskListSlice';
 
 export function backupTaskData() {
   const taskList = store.getState().taskList.value;

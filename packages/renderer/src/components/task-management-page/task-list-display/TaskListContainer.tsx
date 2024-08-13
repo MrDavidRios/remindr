@@ -1,15 +1,15 @@
 import { Timeframe } from '@remindr/shared';
+import { AppDispatch } from '@renderer/app/store';
+import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '@renderer/features/task-list/taskListSlice';
+import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
+import { getAccentColor } from '@renderer/scripts/systems/stylemanager';
+import { isFloatingMenuOpen, isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import HashLoader from 'react-spinners/HashLoader';
 import { TaskList } from './TaskList';
 import { TaskListHeader } from './TaskListHeader';
-import { AppDispatch } from '/@/app/store';
-import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '/@/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector, useAppStore } from '/@/hooks';
-import { getAccentColor } from '/@/scripts/systems/stylemanager';
-import { isFloatingMenuOpen, isFullscreenMenuOpen } from '/@/scripts/utils/menuutils';
 
 interface TaskListDisplayProps {
   timeframe: Timeframe;
