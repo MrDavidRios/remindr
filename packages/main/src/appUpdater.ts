@@ -8,8 +8,6 @@ import { isAutoUpdateEnabled } from './utils/storeUserData.js';
 const { autoUpdater } = updater;
 
 export const initAutoUpdaterEventHandlers = () => {
-  console.log('initializing auto updater event handlers...');
-
   log.transports.file.level = 'info';
   autoUpdater.logger = log;
 

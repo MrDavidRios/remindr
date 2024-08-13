@@ -1,5 +1,5 @@
 //Purpose: styles shared elements between the task creation/edit panels.
-@use '../components/icons';
+@use "../components/icons";
 
 .task-panel {
   height: 100%;
@@ -231,11 +231,9 @@
         text-align: left;
         border-bottom: none;
 
-        color: var(--text-color-secondary);
-
         background-color: transparent;
         color: var(--text-color-primary);
-        font-family: 'Lato', sans-serif;
+        font-family: "Lato", sans-serif;
 
         resize: none;
         outline: none;
