@@ -1,4 +1,5 @@
 # Remindr
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MrDavidRios_remindr&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MrDavidRios_remindr)
 
 Remindr is a desktop app to help you keep track of what you need to get done.
 
@@ -17,4 +18,3 @@ Remindr is currently available on Windows and Linux.
 - Subtasks
 - Links (files/webpages)
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MrDavidRios_remindr&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MrDavidRios_remindr)
