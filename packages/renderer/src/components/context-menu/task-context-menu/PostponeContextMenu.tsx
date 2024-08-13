@@ -30,8 +30,8 @@ export const PostponeContextMenu: FC<PostponeContextMenuProps> = ({ dropdownActi
       const rect = menu.getBoundingClientRect();
 
       const parentRect = menu.parentElement?.getBoundingClientRect();
-      const parentWidth = parentRect?.width || 0;
-      const parentHeight = parentRect?.height || 0;
+      const parentWidth = parentRect?.width ?? 0;
+      const parentHeight = parentRect?.height ?? 0;
 
       const posX = rect.right > innerWidth ? position.x - rect.width - parentWidth : position.x;
       const posY = rect.bottom > innerHeight ? position.y - rect.height + parentHeight : position.y;

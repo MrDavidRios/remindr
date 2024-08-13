@@ -106,8 +106,8 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
     const updateOnChildAnimationStateChange = async () => {
       if (!ref.current || !waitForChildAnimation || !query) return;
 
-      const queryWithOnlyAnimating = query!.replace(':not(.animating)', '.animating');
-      const animatingElements = ref.current!.querySelectorAll(queryWithOnlyAnimating);
+      const queryWithOnlyAnimating = query.replace(':not(.animating)', '.animating');
+      const animatingElements = ref.current.querySelectorAll(queryWithOnlyAnimating);
 
       if (animatingElements?.length === 0)
         await waitUntil(() => {

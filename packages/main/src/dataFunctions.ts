@@ -577,7 +577,7 @@ export async function loadData(
 
       taskDataExists = true;
 
-      const loadedTaskList = docData.docSnapshot!.data()!.reminderList;
+      const loadedTaskList = docData.docSnapshot.data()!.reminderList;
 
       const instantiatedReminderList: Task[] = [];
 

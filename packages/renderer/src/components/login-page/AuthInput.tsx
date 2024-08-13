@@ -108,8 +108,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
           if (!authResult) return;
 
           // Ex: Firebase: Error (auth/wrong-password) - get what's inside the parentheses
-          const errorCode = authResult.match(/auth\/[^)\s]+/)?.[0];
-
+          const errorCode = /auth\/[^)\s]+/.exec(authResult)?.[0];
           switch (errorCode) {
             case 'auth/user-not-found':
               setError('email', { type: 'manual', message: 'No user found with that email.' });
