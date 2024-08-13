@@ -10,7 +10,7 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { platform } from 'node:process';
 import path, { join } from 'path';
-import { AppUpdater } from './appUpdater.js';
+import { initAutoUpdaterEventHandlers } from './appUpdater.js';
 import { deleteAccountData, isSaving, loadData, saveData, setMainWindowForDataFunctions } from './dataFunctions.js';
 import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
@@ -63,12 +63,13 @@ initFirebase();
 export const callSetupFunctions = (window: BrowserWindow) => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
 
   initWindowEventListeners(window);
   initNotificationEventListeners(window);
 
   // Listeners that aren't dependent on renderer to work
+  initAutoUpdaterEventHandlers();
+
   initAppStateListeners();
   initUserDataListeners();
 
@@ -275,8 +276,6 @@ ipcMain.on('complete-task', (_event, taskData: { task: Task; index: number }) =>
 });
 
 ipcMain.on('snooze-reminder', (_event, taskData: { task: Task; index: number; time: number; add?: boolean }) => {
-  console.log('snooze reminder!!!');
-
   getMainWindow()?.webContents.send('snooze-reminder', taskData);
 });
 

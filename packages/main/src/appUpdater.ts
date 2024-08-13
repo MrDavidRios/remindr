@@ -7,37 +7,37 @@ import { isAutoUpdateEnabled } from './utils/storeUserData.js';
 
 const { autoUpdater } = updater;
 
-export class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
+export const initAutoUpdaterEventHandlers = () => {
+  console.log('initializing auto updater event handlers...');
 
-    // If auto update is not defined in settings, treat it as enabled by default
-    if (isAutoUpdateEnabled() ?? true) autoUpdater.checkForUpdates();
+  log.transports.file.level = 'info';
+  autoUpdater.logger = log;
 
-    autoUpdater.addListener('checking-for-update', () => {
-      getMainWindow()?.webContents.send('checking-for-update');
-    });
+  // If auto update is not defined in settings, treat it as enabled by default
+  if (isAutoUpdateEnabled() ?? true) autoUpdater.checkForUpdates();
 
-    autoUpdater.addListener('update-available', () => {
-      getMainWindow()?.webContents.send('update-available');
-    });
+  autoUpdater.addListener('checking-for-update', () => {
+    getMainWindow()?.webContents.send('checking-for-update');
+  });
 
-    autoUpdater.addListener('update-not-available', () => {
-      getMainWindow()?.webContents.send('update-not-available');
-    });
+  autoUpdater.addListener('update-available', () => {
+    getMainWindow()?.webContents.send('update-available');
+  });
 
-    // Once downloaded, the program will update.
-    autoUpdater.addListener('update-downloaded', (info: UpdateDownloadedEvent) => {
-      getMainWindow()?.webContents.send('update-downloaded', info.releaseName);
-      autoUpdater.logger!.info('update-downloaded');
-      autoUpdater.logger!.info(info);
-    });
+  autoUpdater.addListener('update-not-available', () => {
+    getMainWindow()?.webContents.send('update-not-available');
+  });
 
-    ipcMain.on('check-for-updates', () => {
-      log.info('checking for updates...');
+  // Once downloaded, the program will update.
+  autoUpdater.addListener('update-downloaded', (info: UpdateDownloadedEvent) => {
+    getMainWindow()?.webContents.send('update-downloaded', info.releaseName);
+    autoUpdater.logger!.info('update-downloaded');
+    autoUpdater.logger!.info(info);
+  });
 
-      autoUpdater.checkForUpdates();
-    });
-  }
-}
+  ipcMain.on('check-for-updates', () => {
+    log.info('checking for updates...');
+
+    autoUpdater.checkForUpdates();
+  });
+};
