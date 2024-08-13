@@ -36,7 +36,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - uses: ./.github/workflows/setup.yml
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      - run: npm run compile:sass --if-present
+      - run: npm run build:shared --if-present
+      - run: npm i @remindr/shared
 
       - name: Compile artifacts ${{ inputs.dry-run && '' || 'and upload them to github release' }}
         # I use this action because it is capable of retrying multiple times if there are any issues with the distribution server
