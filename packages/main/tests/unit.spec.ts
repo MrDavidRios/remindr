@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, Menu, Tray } from 'electron';
 import type { MockedClass, MockedObject } from 'vitest';
 import { expect, test, vi } from 'vitest';
 import { restoreOrCreateWindow } from '../src/mainWindow.js';
@@ -42,12 +42,21 @@ vi.mock('electron', () => {
     handle: vi.fn(),
   };
 
-  return { BrowserWindow: bw, app, ipcMain, nativeTheme };
+  const menu = vi.fn() as unknown as MockedClass<typeof Menu>;
+  menu.buildFromTemplate = vi.fn();
+
+  const tray = vi.fn() as unknown as MockedClass<typeof Tray>;
+  tray.prototype.setToolTip = vi.fn();
+  tray.prototype.setContextMenu = vi.fn();
+  tray.prototype.setIgnoreDoubleClickEvents = vi.fn();
+  tray.prototype.on = vi.fn<never>();
+
+  return { BrowserWindow: bw, Menu: menu, Tray: tray, app, ipcMain, nativeTheme };
 });
 
 vi.mock('@main/appUpdater', () => {
   return {
-    AppUpdater: vi.fn(() => {}),
+    initAutoUpdaterEventHandlers: vi.fn(),
   };
 });
 
