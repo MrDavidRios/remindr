@@ -42,6 +42,8 @@ jobs:
     uses: ./.github/workflows/typechecking.yml
   tests:
     uses: ./.github/workflows/tests.yml
+  sonarcloud:
+    uses: ./.github/workflows/sonarcloud.yml
   draft_release:
     permissions:
       contents: write # Allows this job to create releases
