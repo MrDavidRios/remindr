@@ -1,0 +1,17 @@
+name: Setup
+on: [ workflow_call ]
+
+jobs:
+  setup:
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      - run: npm run compile:sass --if-present
+      - run: npm run build:shared --if-present
+      - run: npm i @remindr/shared
