@@ -38,28 +38,22 @@ export default function ColorPicker(props: ColorPickerProps) {
         onClick={togglePicker}
         id="colorPickerBtn"
         style={{ backgroundColor: finalColor }}
-        onKeyDown={e => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
+        onKeyDown={(e) => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
       />
       {isPickerVisible && (
         <div
           ref={ref as unknown as React.RefObject<HTMLDivElement>}
           id="colorPickerWrapper"
-          onKeyDown={e => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
+          onKeyDown={(e) => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
           className="frosted"
         >
-          <ChromePicker
-            color={color}
-            onChange={e => setColor(e.hex)}
-            disableAlpha
-          />
+          <ChromePicker color={color} onChange={(e) => setColor(e.hex)} disableAlpha />
           {color !== initialColor && (
             <div className="action-bar">
               <button onClick={() => setPickerVisible(false)}>Cancel</button>
               <button
                 onClick={() => {
                   setFinalColor(color);
-
-                  setColor(color);
 
                   onUpdate(color);
                   setPickerVisible(false);
