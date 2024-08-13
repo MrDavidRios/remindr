@@ -13,9 +13,8 @@ import {
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 
 export function initFirebase() {
-  // TODO: Put apiKey in a .env file
   initializeApp({
-    apiKey: 'AIzaSyAZZXrkrjYALTXCfdv6xybrtkg-mkTB28M',
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: 'remindr-8d249.firebaseapp.com',
     databaseURL: 'https://remindr-8d249.firebaseio.com',
     projectId: 'remindr-8d249',

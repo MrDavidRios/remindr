@@ -18,6 +18,9 @@ interface ImportMetaEnv {
 
   /** Current app version */
   readonly VITE_APP_VERSION: string;
+
+  /** Firebase API key */
+  readonly VITE_FIREBASE_API_KEY: string;
 }
 
 interface ImportMeta {
