@@ -46,6 +46,9 @@ const config = {
   },
   test: {
     environment: 'happy-dom',
+    coverage: {
+      reporter: ['text', 'lcov'],
+    },
   },
   plugins: [
     react(),

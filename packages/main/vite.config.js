@@ -36,6 +36,11 @@ const config = {
     emptyOutDir: true,
     reportCompressedSize: false,
   },
+  test: {
+    coverage: {
+      reporter: ['text', 'lcov'],
+    },
+  },
 };
 
 export default config;

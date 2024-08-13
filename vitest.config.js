@@ -12,6 +12,11 @@ const config = {
      */
     include: ['./tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
 
+    coverage: {
+      reporter: ['text', 'lcov'],
+      provider: 'istanbul',
+    },
+
     /**
      * The default timeout of 5000ms is sometimes not enough for playwright.
      */
