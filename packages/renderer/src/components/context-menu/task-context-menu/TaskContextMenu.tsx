@@ -44,7 +44,9 @@ export const TaskContextMenu: React.FC<TaskContextMenuProps> = ({ x, y, task, di
       return;
     }
 
-    for (let i = 0; i < selectedTasks.length; i++) action(selectedTasks[i]);
+    for (let selectedTask of selectedTasks) {
+      action(selectedTask);
+    }
 
     dispatch(clearSelectedTasks());
     hideTaskContextMenu();

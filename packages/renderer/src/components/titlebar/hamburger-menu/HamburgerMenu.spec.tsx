@@ -13,8 +13,8 @@ describe('Hamburger Menu', () => {
       <HamburgerMenu />,
       {},
       {
-        userState: Object.assign({ ...initialUserState }, { authenticated }),
-        menuState: Object.assign({ ...initialMenuState }, { openMenus: [Menu.HamburgerMenu] }),
+        userState: { ...initialUserState, authenticated },
+        menuState: { ...initialMenuState, ...{ openMenus: [Menu.HamburgerMenu] } },
         appMode: {
           value: appMode,
         },
