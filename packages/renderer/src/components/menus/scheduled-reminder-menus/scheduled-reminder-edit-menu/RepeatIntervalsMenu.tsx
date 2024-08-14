@@ -1,6 +1,5 @@
 import { Repeat } from '@remindr/shared';
 import React from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
 interface RepeatIntervalsMenuProps {
@@ -12,10 +11,6 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
   updateRepeatInterval,
   setShowRepeatIntervalsMenu,
 }) => {
-  useHotkeys('esc', () => {
-    setShowRepeatIntervalsMenu(false);
-  });
-
   function handleRepeatIntervalClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>, interval: Repeat) {
     // Make sure click events don't propogate to the dropdown open button
     e.stopPropagation();
@@ -27,7 +22,7 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
   return (
     <DropdownMenu
       id="repeatIntervalsMenu"
-      onClickOutside={() => setShowRepeatIntervalsMenu(false)}
+      onClose={() => setShowRepeatIntervalsMenu(false)}
       clickOutsideExceptions={['#repeatIntervalInputButton']}
       aria-label="Repeat Interval Menu"
     >

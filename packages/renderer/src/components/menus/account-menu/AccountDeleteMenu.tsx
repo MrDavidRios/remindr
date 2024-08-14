@@ -8,8 +8,7 @@ import { deleteAccount, reauthenticateUser } from '@renderer/scripts/systems/aut
 import showMessageBox from '@renderer/scripts/utils/messagebox';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
-import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 
 interface AccountDeleteMenuProps {
@@ -18,10 +17,8 @@ interface AccountDeleteMenuProps {
 
 export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDeleteMenu }) => {
   const dispatch = useAppDispatch();
-  useHotkeys('esc', () => setShowAccountDeleteMenu(false));
 
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -42,13 +39,14 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
   }
 
   return (
-    <FullScreenMenu className="account-panel">
+    <FullScreenMenu
+      menuType={Menu.AccountDeleteMenu}
+      className="account-panel"
+      onClose={() => setShowAccountDeleteMenu(false)}
+    >
       <div id="accountPasswordResetMenuHeader">
         <h3 className="account-panel-header">Delete Account</h3>
-        <CloseMenuButton
-          id="accountDeletionAuthenticationWindowCloseButton"
-          onClick={() => setShowAccountDeleteMenu(false)}
-        />
+        <CloseMenuButton id="accountDeletionAuthenticationWindowCloseButton" />
       </div>
       <input
         type="text"

@@ -1,6 +1,5 @@
 import { addMinutes } from '@remindr/shared';
 import React from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
 interface SuggestedTimesMenuProps {
@@ -12,8 +11,6 @@ export const SuggestedTimesMenu: React.FC<SuggestedTimesMenuProps> = ({
   updateSuggestedTime,
   setShowSuggestedTimesMenu,
 }) => {
-  useHotkeys('esc', () => setShowSuggestedTimesMenu(false));
-
   function handleSuggestedTimeClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>, minuteAmount: number) {
     // Make sure click events don't propogate to the dropdown open button
     e.stopPropagation();
@@ -26,7 +23,7 @@ export const SuggestedTimesMenu: React.FC<SuggestedTimesMenuProps> = ({
   return (
     <DropdownMenu
       id="suggestedTimesMenu"
-      onClickOutside={() => setShowSuggestedTimesMenu(false)}
+      onClose={() => setShowSuggestedTimesMenu(false)}
       clickOutsideExceptions={['#suggestedTimesInputButton']}
     >
       <li onClick={(e) => handleSuggestedTimeClick(e, 15)} title="Set reminder 15 minutes from now">

@@ -1,6 +1,8 @@
 export enum Menu {
   TimeframeMenu,
   AccountMenu,
+  AccountDeleteMenu,
+  EmailResetMenu,
   SettingsMenu,
   TaskEditMenu,
   TaskCreateMenu,

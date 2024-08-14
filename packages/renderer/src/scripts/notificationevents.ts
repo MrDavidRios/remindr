@@ -11,8 +11,6 @@ export function useNotificationEvents(dispatch: AppDispatch) {
   if (listenersInitialized) return;
   listenersInitialized = true;
 
-  console.log('use notification events');
-
   window.electron.ipcRenderer.on('open-task-in-edit-panel', (task: Task) => {
     const selectedTasks = store.getState().taskList.selectedTasks;
     if (isTaskSelected(task, selectedTasks)) return;
@@ -49,8 +47,6 @@ export function useNotificationEvents(dispatch: AppDispatch) {
   });
 
   window.electron.ipcRenderer.on('snooze-reminder', (_e: unknown) => {
-    console.log('snoozing reminder...');
-
     const { task, index, time } = getIpcRendererOutput(_e) as {
       task: Task;
       index: number;

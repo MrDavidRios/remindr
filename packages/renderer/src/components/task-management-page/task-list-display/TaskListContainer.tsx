@@ -1,4 +1,5 @@
 import { Timeframe } from '@remindr/shared';
+import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { AppDispatch } from '@renderer/app/store';
 import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
@@ -32,6 +33,7 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
     },
     {
       enableOnFormTags: true,
+      scopes: [HotkeyScope.Menu],
     },
   );
 

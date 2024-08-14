@@ -1,18 +1,16 @@
 import attachmentIcon from '@assets/icons/attachment.svg';
 import type { Link, Task } from '@remindr/shared';
 import { getOpenableURL, LinkType, linkTypeLabels, Menu } from '@remindr/shared';
-import store from '@renderer/app/store';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { getDefaultLink, getDisplayURL } from '@renderer/scripts/utils/linkutils';
-import { isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { getFaviconURL, getObsidianNoteName, isObsidianURL } from '@renderer/scripts/utils/urlfunctions';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { isURL } from 'validator';
-import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { Dropdown } from '../../dropdown/Dropdown';
 import { DynamicTextArea } from '../../dynamic-text-area/DynamicTextArea';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
@@ -81,25 +79,21 @@ export const LinkMenu: FC = () => {
     dispatch(hideMenu({ menu: Menu.LinkMenu }));
   };
 
-  useHotkeys(
-    'esc',
-    () => {
-      const competingMenuOpen = isPrimaryMenuOpen(store.getState().menuState);
-      if (competingMenuOpen) return;
-
-      dispatch(hideMenu({ menu: Menu.LinkMenu, fromEscKeypress: true }));
-    },
-    { enableOnFormTags: true },
-  );
   useHotkeys('mod+s', handleLinkCompleteButton, { enableOnFormTags: true });
 
   return (
-    <FullScreenMenu className="modal-menu menu" id="linkMenu">
+    <FullScreenMenu
+      modal
+      menuType={Menu.LinkMenu}
+      className="menu"
+      id="linkMenu"
+      onClose={() => dispatch(hideMenu({ menu: Menu.LinkMenu }))}
+    >
       <div className="titlebar">
         <div>
           <h3>{`${creatingLink ? 'Add' : 'Edit'} Link`}</h3>
         </div>
-        <CloseMenuButton onClick={() => dispatch(hideMenu({ menu: Menu.LinkMenu }))} />
+        <CloseMenuButton />
       </div>
       <form className="contents">
         {getLinkEditor(updatedLink.type, updatedLink, setUpdatedLink)}

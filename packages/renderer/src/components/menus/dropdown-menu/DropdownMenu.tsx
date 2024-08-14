@@ -1,17 +1,21 @@
+import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import type { FC, FocusEvent, HTMLAttributes, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
+import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/
 interface DropdownMenuProps extends HTMLAttributes<HTMLUListElement> {
   children: ReactNode;
-  onClickOutside?: () => void;
+  onClose?: () => void;
   onBlur?: (e: FocusEvent<HTMLUListElement>) => void;
   clickOutsideExceptions?: string[];
   ignoreGlobalClickOutsideExceptions?: boolean;
+  closeOnScroll?: boolean;
   animate?: boolean;
 }
 
@@ -21,13 +25,22 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   children,
   className,
   style,
-  onClickOutside,
+  onClose,
   clickOutsideExceptions,
   ignoreGlobalClickOutsideExceptions,
+  closeOnScroll,
   animate,
 }) => {
   const [hideOverflow, setHideOverflow] = useState(true);
   const animationsEnabled = useAnimationsEnabled();
+
+  const onCloseDropdown = () => {
+    disableScope(HotkeyScope.Dropdown);
+    onClose?.();
+  };
+
+  const { enableScope, disableScope, enabledScopes } = useHotkeysContext();
+  useHotkeys('esc', () => onCloseDropdown(), { scopes: [HotkeyScope.Dropdown] });
 
   const height = useMotionValue(0);
   let lastFocusedIdx = -1;
@@ -35,13 +48,17 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   useMotionValueEvent(height, 'animationCancel', () => setHideOverflow(true));
   useMotionValueEvent(height, 'animationStart', () => setHideOverflow(true));
   useMotionValueEvent(height, 'animationComplete', () => {
-    if (height.get() === 0) return;
+    if (height.get() === 0) {
+      return;
+    }
 
     setHideOverflow(false);
   });
 
   useEffect(() => {
     if (!ref.current || ref.current.children.length === 0) return;
+
+    enableScope(HotkeyScope.Dropdown);
 
     // Focus on first element in menu
     setFocusOnMenuItem(0);
@@ -90,13 +107,15 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
     menuItem.focus();
   }
 
-  const ref = useClickOutside(
-    () => {
-      if (onClickOutside !== undefined) onClickOutside();
+  const ref = useClickOutside(() => onCloseDropdown(), clickOutsideExceptions, ignoreGlobalClickOutsideExceptions);
+  useDetectWheel({
+    element: document.body,
+    callback: () => {
+      if (!closeOnScroll) return;
+
+      onCloseDropdown();
     },
-    clickOutsideExceptions,
-    ignoreGlobalClickOutsideExceptions,
-  );
+  });
 
   return (
     <motion.ul

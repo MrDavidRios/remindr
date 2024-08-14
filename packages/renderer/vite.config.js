@@ -22,6 +22,7 @@ const config = {
       '@assets/': join(PACKAGE_ROOT, 'assets') + '/',
       '@hooks/': join(PACKAGE_ROOT, 'src/scripts/utils/hooks') + '/',
       '@mocks/': join(PACKAGE_ROOT, 'tests/mocks') + '/',
+      '@renderer-types/': join(PACKAGE_ROOT, 'types') + '/',
     },
   },
   base: '',

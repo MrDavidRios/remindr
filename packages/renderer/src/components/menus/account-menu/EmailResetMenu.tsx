@@ -7,9 +7,8 @@ import { resetEmail, signOut } from '@renderer/scripts/systems/authentication';
 import showMessageBox from '@renderer/scripts/utils/messagebox';
 import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import isEmail from 'validator/lib/isEmail';
-import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 
 interface EmailResetMenuProps {
@@ -18,10 +17,8 @@ interface EmailResetMenuProps {
 
 export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu }) => {
   const dispatch = useAppDispatch();
-  useHotkeys('esc', () => setShowEmailResetMenu(false));
 
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
-
   const [currentEmail, setCurrentEmail] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -113,15 +110,15 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
   }
 
   return (
-    <FullScreenMenu className="account-panel">
+    <FullScreenMenu
+      menuType={Menu.EmailResetMenu}
+      modal
+      className="account-panel"
+      onClose={() => setShowEmailResetMenu(false)}
+    >
       <div id="accountPasswordResetMenuHeader">
         <h3 className="account-panel-header">Reset Email</h3>
-        <CloseMenuButton
-          id="emailResetMenuCloseButton"
-          onClick={() => {
-            setShowEmailResetMenu(false);
-          }}
-        />
+        <CloseMenuButton id="emailResetMenuCloseButton" />
       </div>
       <input
         type="text"

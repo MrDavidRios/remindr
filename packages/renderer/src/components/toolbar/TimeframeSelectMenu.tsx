@@ -1,5 +1,6 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { Menu, Timeframe } from '@remindr/shared';
+import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { menuWidthAnimationProps } from '@renderer/animation';
 import type { AppDispatch } from '@renderer/app/store';
 import store from '@renderer/app/store';
@@ -10,19 +11,38 @@ import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderL
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useEffect } from 'react';
+import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
+
+const closeMenu = (dispatch: AppDispatch, disableScope: (scope: string) => void, fromEscKeypress: boolean) => {
+  disableScope(HotkeyScope.Modal);
+  dispatch(hideMenu({ menu: Menu.TimeframeMenu, fromEscKeypress }));
+};
 
 export function TimeframeSelectMenu() {
   const dispatch = useAppDispatch();
-
-  const timeframeMenuBtnRef = useClickOutside(
-    () => dispatch(hideMenu({ menu: Menu.TimeframeMenu })),
-    ['#timeframeMenuButton'],
-  );
+  const timeframeMenuBtnRef = useClickOutside(() => closeMenu(dispatch, disableScope, false), ['#timeframeMenuButton']);
   const animationsEnabled = useAnimationsEnabled();
+  const { enableScope, disableScope } = useHotkeysContext();
 
-  useHotkeys('esc', () => dispatch(hideMenu({ menu: Menu.TimeframeMenu, fromEscKeypress: true })));
+  useHotkeys('esc', () => closeMenu(dispatch, disableScope, true), { scopes: HotkeyScope.Modal });
+
+  useEffect(() => {
+    enableScope(HotkeyScope.Modal);
+  }, []);
+
+  const selectTimeframe = (timeframe: Timeframe) => {
+    closeMenu(dispatch, disableScope, false);
+    dispatch(setTimeframe(timeframe));
+
+    const selectedTasks = store.getState().taskList.selectedTasks;
+    if (selectedTasks.length !== 1) return;
+
+    const taskListOnScreen = getTaskListWithinTimeframe(store.getState().taskList.value, timeframe);
+    const taskIdx = _.findIndex(taskListOnScreen, selectedTasks[0]);
+    if (taskIdx === -1) dispatch(clearSelectedTasks());
+  };
 
   return (
     <motion.div
@@ -36,66 +56,38 @@ export function TimeframeSelectMenu() {
         <div
           id="timeframeAll"
           className="timeframe-choice menu-bottom-border"
-          onClick={() => selectTimeframe(Timeframe.All, dispatch)}
+          onClick={() => selectTimeframe(Timeframe.All)}
         >
           All
         </div>
         <div
           id="timeframeTodo"
           className="timeframe-choice menu-bottom-border"
-          onClick={() => selectTimeframe(Timeframe.Todo, dispatch)}
+          onClick={() => selectTimeframe(Timeframe.Todo)}
         >
           To-Do
         </div>
 
-        <div
-          id="timeframeToday"
-          className="timeframe-choice"
-          onClick={() => selectTimeframe(Timeframe.Today, dispatch)}
-        >
+        <div id="timeframeToday" className="timeframe-choice" onClick={() => selectTimeframe(Timeframe.Today)}>
           Today
         </div>
-        <div
-          id="timeframeTomorrow"
-          className="timeframe-choice"
-          onClick={() => selectTimeframe(Timeframe.Tomorrow, dispatch)}
-        >
+        <div id="timeframeTomorrow" className="timeframe-choice" onClick={() => selectTimeframe(Timeframe.Tomorrow)}>
           Tomorrow
         </div>
-        <div
-          id="timeframeThisWeek"
-          className="timeframe-choice"
-          onClick={() => selectTimeframe(Timeframe.ThisWeek, dispatch)}
-        >
+        <div id="timeframeThisWeek" className="timeframe-choice" onClick={() => selectTimeframe(Timeframe.ThisWeek)}>
           This Week
         </div>
-        <div
-          id="timeframeNextWeek"
-          className="timeframe-choice"
-          onClick={() => selectTimeframe(Timeframe.NextWeek, dispatch)}
-        >
+        <div id="timeframeNextWeek" className="timeframe-choice" onClick={() => selectTimeframe(Timeframe.NextWeek)}>
           Next Week
         </div>
         <div
           id="timeframeOverdue"
           className="timeframe-choice menu-top-border overdue"
-          onClick={() => selectTimeframe(Timeframe.Overdue, dispatch)}
+          onClick={() => selectTimeframe(Timeframe.Overdue)}
         >
           Overdue
         </div>
       </ArrowNavigable>
     </motion.div>
   );
-}
-
-function selectTimeframe(timeframe: Timeframe, dispatch: AppDispatch) {
-  dispatch(hideMenu({ menu: Menu.TimeframeMenu }));
-  dispatch(setTimeframe(timeframe));
-
-  const selectedTasks = store.getState().taskList.selectedTasks;
-  if (selectedTasks.length !== 1) return;
-
-  const taskListOnScreen = getTaskListWithinTimeframe(store.getState().taskList.value, timeframe);
-  const taskIdx = _.findIndex(taskListOnScreen, selectedTasks[0]);
-  if (taskIdx === -1) dispatch(clearSelectedTasks());
 }

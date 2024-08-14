@@ -1,11 +1,10 @@
 import { Menu, formatDateAndTime } from '@remindr/shared';
-import CloseMenuButton from '@renderer/components/close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '@renderer/components/close-menu-button/CloseMenuButton';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { getLastBackupDate, restoreSettingsData, restoreTaskData } from '@renderer/scripts/systems/backup';
 import { applyTheme } from '@renderer/scripts/systems/stylemanager';
 import { FC, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { FullScreenMenu } from '../../fullscreen-menu/FullScreenMenu';
 
 export const RestoreDataMenu: FC = () => {
@@ -22,17 +21,19 @@ export const RestoreDataMenu: FC = () => {
   const restoringSettings = restoreSettings && lastSettingsBackupDate !== undefined;
   const disableRestore = !restoringTasks && !restoringSettings;
 
-  useHotkeys('esc', () => dispatch(hideMenu({ menu: Menu.RestoreDataMenu, fromEscKeypress: true })), {
-    enableOnFormTags: true,
-  });
-
   return (
-    <FullScreenMenu className="menu modal-menu" id="restoreDataMenu">
+    <FullScreenMenu
+      modal
+      menuType={Menu.RestoreDataMenu}
+      className="menu"
+      id="restoreDataMenu"
+      onClose={() => dispatch(hideMenu({ menu: Menu.RestoreDataMenu }))}
+    >
       <div className="titlebar">
         <div>
           <h3>Restore Data</h3>
         </div>
-        <CloseMenuButton onClick={() => dispatch(hideMenu({ menu: Menu.RestoreDataMenu }))} />
+        <CloseMenuButton />
       </div>
       <div id="checkboxContainer">
         <div>

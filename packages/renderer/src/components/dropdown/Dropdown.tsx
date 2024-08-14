@@ -1,8 +1,9 @@
 import { useAnimationsEnabled } from '@hooks/useanimationsenabled';
 import { useClickOutside } from '@hooks/useoutsideclick';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { HotkeyScope } from '@renderer-types/hotkeyScope';
+import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { useHotkeysContext } from 'react-hotkeys-hook';
 import { DropdownOptions } from './DropdownOptions';
 
 export interface DropdownProps<T> {
@@ -21,11 +22,34 @@ export function Dropdown<T>(props: DropdownProps<T>) {
   const [selectedIdx, setSelectedIdx] = useState(initialSelectedIdx);
 
   const [isOpen, setIsOpen] = useState(false);
-  const toggleOpen = () => setIsOpen(!isOpen);
+  const toggleOpen = () => (isOpen ? closeDropdown() : openDropdown());
+  const { enableScope, disableScope, enabledScopes } = useHotkeysContext();
 
-  const dropdownMenuRef = useClickOutside(() => setIsOpen(false));
+  const previouslyEnabledScopes = useRef<string[]>(enabledScopes);
 
-  useHotkeys('esc', () => setIsOpen(false));
+  const openDropdown = () => {
+    setIsOpen(true);
+
+    previouslyEnabledScopes.current = enabledScopes;
+
+    for (const scope of previouslyEnabledScopes.current) {
+      disableScope(scope);
+    }
+
+    enableScope(HotkeyScope.Dropdown);
+  };
+
+  const closeDropdown = () => {
+    setIsOpen(false);
+
+    for (const scope of previouslyEnabledScopes.current) {
+      enableScope(scope);
+    }
+
+    disableScope(HotkeyScope.Dropdown);
+  };
+
+  const dropdownMenuRef = useClickOutside(() => closeDropdown());
 
   const dropdownWidthAnimationProps = animationsEnabled
     ? {
@@ -42,8 +66,8 @@ export function Dropdown<T>(props: DropdownProps<T>) {
       onClick={toggleOpen}
       {...dropdownWidthAnimationProps}
       layout={animationsEnabled ? 'size' : false}
-      onKeyDown={e => {
-        if (e.key === 'Tab') setIsOpen(false);
+      onKeyDown={(e) => {
+        if (e.key === 'Tab') closeDropdown();
       }}
       type="button"
       aria-controls={`${name}Listbox`}
@@ -51,28 +75,23 @@ export function Dropdown<T>(props: DropdownProps<T>) {
       role="combobox"
       aria-expanded={isOpen}
     >
-      <AnimatePresence>
-        {isOpen && (
-          <DropdownOptions
-            name={name}
-            options={options}
-            optionLabels={optionLabels}
-            onSelect={idx => {
-              setSelectedIdx(idx);
-              onSelect(idx);
-            }}
-            setWidestWidth={setWidestWidth}
-            closeDropdown={() => {
-              setIsOpen(false);
-              dropdownMenuRef.current?.focus();
-            }}
-          />
-        )}
-      </AnimatePresence>
-      <div
-        className="selected-option dropdown"
-        style={{ width: '100%' }}
-      >
+      {isOpen && (
+        <DropdownOptions
+          name={name}
+          options={options}
+          optionLabels={optionLabels}
+          onSelect={(idx) => {
+            setSelectedIdx(idx);
+            onSelect(idx);
+          }}
+          setWidestWidth={setWidestWidth}
+          closeDropdown={() => {
+            closeDropdown();
+            dropdownMenuRef.current?.focus();
+          }}
+        />
+      )}
+      <div className="selected-option dropdown" style={{ width: '100%' }}>
         {optionLabels[selectedIdx]}
       </div>
     </motion.button>

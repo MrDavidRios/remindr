@@ -1,16 +1,12 @@
 import visibilityOffIcon from '@assets/icons/visibility-off.svg';
 import visibilityOnIcon from '@assets/icons/visibility-on.svg';
 import { Menu } from '@remindr/shared';
-import store from '@renderer/app/store';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
-import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
-import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
 import type { FC } from 'react';
 import ReactFocusLock from 'react-focus-lock';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 import { DropdownMenu } from '../../menus/dropdown-menu/DropdownMenu';
 
@@ -21,25 +17,6 @@ export const TaskViewSettingsDropdown: FC = () => {
 
   const backgroundColor = rgbaToHex(getComputedStyle(document.documentElement).getPropertyValue('--surface-primary'));
 
-  useHotkeys(
-    'esc',
-    () => {
-      const competingMenuOpen =
-        isPrimaryMenuOpen(store.getState().menuState) || isFullscreenMenuOpen(store.getState().menuState);
-      if (competingMenuOpen) return;
-
-      dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu, fromEscKeypress: true }));
-    },
-    { enableOnFormTags: true },
-  );
-
-  useDetectWheel({
-    element: document.body,
-    callback: () => {
-      dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu, fromEscKeypress: true }));
-    },
-  });
-
   const setCompletedTasksSetting = (value: boolean) => {
     dispatch(updateSetting({ key: 'showCompletedTasks', value }));
     dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu, fromEscKeypress: false }));
@@ -49,10 +26,11 @@ export const TaskViewSettingsDropdown: FC = () => {
     <DropdownMenu
       className="menu context-menu"
       id="taskListViewSettingsMenu"
-      onClickOutside={() => dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu }))}
+      onClose={() => dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu }))}
       clickOutsideExceptions={['#viewSettingsButton']}
       style={{ backgroundColor }}
       animate={false}
+      closeOnScroll
     >
       <ReactFocusLock>
         <ArrowNavigable className="menu frosted" query=":scope > li:not(.hidden)" asUl autoFocus>

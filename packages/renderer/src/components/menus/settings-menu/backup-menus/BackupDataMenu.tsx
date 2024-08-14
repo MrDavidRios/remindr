@@ -1,10 +1,9 @@
 import { AppMode, Menu, formatDateAndTime } from '@remindr/shared';
-import CloseMenuButton from '@renderer/components/close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '@renderer/components/close-menu-button/CloseMenuButton';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { backupSettingsData, backupTaskData, getLastBackupDate } from '@renderer/scripts/systems/backup';
 import { FC, useEffect, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { FullScreenMenu } from '../../fullscreen-menu/FullScreenMenu';
 
 export const BackupDataMenu: FC = () => {
@@ -23,10 +22,6 @@ export const BackupDataMenu: FC = () => {
 
   const disableButton = !backupTasks && (appMode !== AppMode.Online || !backupSettings);
 
-  useHotkeys('esc', () => dispatch(hideMenu({ menu: Menu.BackupDataMenu, fromEscKeypress: true })), {
-    enableOnFormTags: true,
-  });
-
   function handleBackupClick() {
     if (backupTasks) backupTaskData();
     if (backupSettings) backupSettingsData();
@@ -43,12 +38,18 @@ export const BackupDataMenu: FC = () => {
   }, [dataBackedUp]);
 
   return (
-    <FullScreenMenu className="menu modal-menu" id="backupDataMenu">
+    <FullScreenMenu
+      modal
+      menuType={Menu.BackupDataMenu}
+      className="menu"
+      id="backupDataMenu"
+      onClose={() => dispatch(hideMenu({ menu: Menu.BackupDataMenu }))}
+    >
       <div className="titlebar">
         <div>
           <h3>Backup Data</h3>
         </div>
-        <CloseMenuButton onClick={() => dispatch(hideMenu({ menu: Menu.BackupDataMenu }))} />
+        <CloseMenuButton />
       </div>
       <div id="checkboxContainer">
         <div>

@@ -15,7 +15,8 @@
       "@renderer/*": ["./src/*"],
       "@assets/*": ["./assets/*"],
       "@hooks/*": ["./src/scripts/utils/hooks/*"],
-      "@mocks/*": ["./tests/mocks/*"]
+      "@mocks/*": ["./tests/mocks/*"],
+      "@renderer-types/*": ["./types/*"]
     },
     "lib": ["ESNext", "dom", "dom.iterable"]
   },

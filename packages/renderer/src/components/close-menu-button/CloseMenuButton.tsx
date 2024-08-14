@@ -1,10 +1,11 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
-import type { HTMLProps } from 'react';
+import React, { useContext, type HTMLProps } from 'react';
+import { FullScreenMenuContext } from '../menus/fullscreen-menu/FullScreenMenu';
 
 interface CloseMenuButtonProps extends HTMLProps<HTMLButtonElement> {}
 
-export default function CloseMenuButton(props: CloseMenuButtonProps) {
-  const { id, onClick } = props;
+export const CloseMenuButton: React.FC<CloseMenuButtonProps> = ({ id }) => {
+  const { onClose } = useContext(FullScreenMenuContext);
 
   return (
     <button
@@ -13,13 +14,9 @@ export default function CloseMenuButton(props: CloseMenuButtonProps) {
       className="menu-close-button"
       aria-label="Close Menu"
       title="Close Menu (Esc)"
-      onClick={onClick}
+      onClick={onClose}
     >
-      <img
-        src={closeButtonIcon}
-        draggable="false"
-        alt=""
-      />
+      <img src={closeButtonIcon} draggable="false" alt="" />
     </button>
   );
-}
+};

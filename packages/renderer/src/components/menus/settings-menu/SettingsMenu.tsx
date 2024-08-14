@@ -1,10 +1,8 @@
 import { Menu } from '@remindr/shared';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppStore } from '@renderer/hooks';
-import { isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
-import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 import { SettingsPage, SettingsSidebar } from './SettingsSidebar';
 import { AdvancedSettingsPage } from './settings-pages/AdvancedSettingsPage';
@@ -19,32 +17,15 @@ export default function SettingsMenu() {
   const [page, setPage] = useState<SettingsPage>(SettingsPage.General);
   const store = useAppStore();
 
-  useHotkeys(
-    'esc',
-    () => {
-      const { menuState } = store.getState();
-      if (isMenuOpen(menuState, Menu.BackupDataMenu) || isMenuOpen(menuState, Menu.RestoreDataMenu)) return;
-
-      // If the user is currently focused on an open dropdown, don't close the menu.
-      if (
-        document.activeElement?.classList.contains('select-box') &&
-        (document.activeElement?.children.length ?? 0) > 1
-      )
-        return;
-
-      dispatch(hideMenu({ menu: Menu.SettingsMenu, fromEscKeypress: true }));
-    },
-    {
-      preventDefault: true,
-      enableOnFormTags: true,
-    },
-  );
-
   return (
-    <FullScreenMenu id="settingsMenu">
+    <FullScreenMenu
+      menuType={Menu.SettingsMenu}
+      id="settingsMenu"
+      onClose={() => dispatch(hideMenu({ menu: Menu.SettingsMenu }))}
+    >
       <div id="settingsHeaderWrapper">
         <h2 id="settingsMenuHeader">Settings</h2>
-        <CloseMenuButton id="settingsMenuCloseButton" onClick={() => dispatch(hideMenu({ menu: Menu.SettingsMenu }))} />
+        <CloseMenuButton id="settingsMenuCloseButton" />
       </div>
       <hr className="menu-header-divider" />
       <div id="settingsWrapper">

@@ -1,4 +1,5 @@
 import { Menu, Task } from '@remindr/shared';
+import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { menuHeightAnimationProps } from '@renderer/animation';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { addTask } from '@renderer/features/task-list/taskListSlice';
@@ -59,6 +60,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
     },
     {
       enableOnFormTags: true,
+      scopes: [HotkeyScope.Menu]
     },
   );
 

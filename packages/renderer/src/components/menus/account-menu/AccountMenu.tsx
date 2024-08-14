@@ -4,8 +4,7 @@ import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
-import CloseMenuButton from '../../close-menu-button/CloseMenuButton';
+import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 import { AccountActionsMenu } from './AccountActionsMenu';
 import { AccountDeleteMenu } from './AccountDeleteMenu';
@@ -17,22 +16,15 @@ export const AccountMenu = () => {
   const userData = useAppSelector((state) => state.userState.user);
 
   const [showAccountActionsMenu, setShowAccountActionsMenu] = useState(false);
-
   const [showEmailResetMenu, setShowEmailResetMenu] = useState(false);
   const [showAccountDeleteMenu, setShowAccountDeleteMenu] = useState(false);
 
-  useHotkeys(
-    'esc',
-    () => {
-      const submenuOpen = showAccountActionsMenu || showEmailResetMenu || showAccountDeleteMenu;
-
-      if (!submenuOpen) dispatch(hideMenu({ menu: Menu.AccountMenu, fromEscKeypress: true }));
-    },
-    { enableOnFormTags: true },
-  );
-
   return (
-    <FullScreenMenu id="accountMenu">
+    <FullScreenMenu
+      menuType={Menu.AccountMenu}
+      id="accountMenu"
+      onClose={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))}
+    >
       <div id="accountMenuHeaderWrapper">
         <h2 id="accountMenuHeader">Account</h2>
         <button
@@ -45,7 +37,7 @@ export const AccountMenu = () => {
         >
           <img src={extraMenuIcon} className="ignore-cursor" draggable="false" alt="" />
         </button>
-        <CloseMenuButton id="accountMenuCloseButton" onClick={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))} />
+        <CloseMenuButton id="accountMenuCloseButton" />
       </div>
       <AccountDetails userData={userData} />
       <AnimatePresence>

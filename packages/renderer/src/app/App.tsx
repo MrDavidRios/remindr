@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { HotkeysProvider, useHotkeys } from 'react-hotkeys-hook';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
 import '../../styles/css/main.css';
 import { Background } from '../components/background/Background';
@@ -34,17 +34,19 @@ function Root() {
 
   return (
     <div id="appWrapper">
-      <Background />
+      <HotkeysProvider>
+        <Background />
 
-      {/* div is put before Titlebar in DOM so that Titlebar is higher in the stacking order */}
-      <div style={{ gridRow: 2 }}>
-        {/* Chooses page to display */}
-        <ChosenPage />
+        {/* div is put before Titlebar in DOM so that Titlebar is higher in the stacking order */}
+        <div style={{ gridRow: 2 }}>
+          {/* Chooses page to display */}
+          <ChosenPage />
 
-        {/* Contains floating menus */}
-        <DisplayMenus />
-      </div>
-      <Titlebar />
+          {/* Contains floating menus */}
+          <DisplayMenus />
+        </div>
+        <Titlebar />
+      </HotkeysProvider>
     </div>
   );
 }
