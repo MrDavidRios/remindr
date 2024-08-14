@@ -30,9 +30,9 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
   useSetupHotkeys(task, showActionButtons, onSave, dispatch);
 
   return (
-    <div id="taskActionsBar" className={!showActionButtons ? 'action-buttons-hidden' : ''}>
+    <div id="taskActionsBar" className={showActionButtons ? '' : 'action-buttons-hidden'}>
       {showActionButtons && (
-        <div>
+        <div data-testid="action-buttons-wrapper">
           <button className="action-button accessible-button" onClick={() => deleteTask(task, dispatch)} type="button">
             <img
               src={trashcanIcon}
@@ -61,6 +61,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
               id="unpinBtn"
               onClick={() => togglePinOnTask(task, dispatch)}
               type="button"
+              aria-label="Unpin Task"
             >
               <img
                 src={unpinIcon}
@@ -75,6 +76,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
               className="action-button accessible-button"
               onClick={() => togglePinOnTask(task, dispatch)}
               type="button"
+              aria-label="Pin Task"
             >
               <img
                 src={pinIcon}
@@ -92,6 +94,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
         className="action-button accessible-button"
         onClick={() => onSave(task)}
         type="button"
+        aria-label="Save Changes"
       >
         <img
           src={checkIcon}

@@ -1,5 +1,6 @@
 import { renderWithProviders } from '@mocks/store-utils';
-import { DateFormat, Menu, Repeat, ScheduledReminder, setDate, Task } from '@remindr/shared';
+import { testTask } from '@mocks/testObjs';
+import { DateFormat, Menu, Repeat, ScheduledReminder, setDate } from '@remindr/shared';
 import { cleanup, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
@@ -17,8 +18,7 @@ const mockMenuState = {
 
 describe('Scheduled Reminder Edit Menu', () => {
   const testScheduledReminder = setDate(new ScheduledReminder(), new Date());
-  const testTask = JSON.parse(JSON.stringify(new Task('Test Task')));
-  const editedTask = JSON.parse(JSON.stringify(new Task('Edited Task')));
+  const editedTask = { ...testTask, name: 'Edited Task' };
   editedTask.scheduledReminders = [JSON.parse(JSON.stringify(testScheduledReminder))];
 
   beforeEach(async () => {
