@@ -74,7 +74,6 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
   const y = useMotionValue(0);
   const taskTileProps = {
     className: taskTileClasses(task.completed, hasIndicators, selected, animating),
-    key: task.creationTime,
     ...animationProps,
     // Fixes bug where task tiles would be invisible if list was expanded and animations were suddenly disabled
     style: { opacity, y },
@@ -142,6 +141,7 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
       {reorderable ? (
         <Reorder.Item
           {...taskTileProps}
+          key={task.creationTime}
           value={task}
           onPointerUp={onReorderComplete}
           ref={reorderableComponentRef}
@@ -151,7 +151,12 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
           <TaskTileContents task={task} />
         </Reorder.Item>
       ) : (
-        <motion.li ref={defaultWrapperRef} {...taskTileProps} layout={animationsEnabled ? 'position' : false}>
+        <motion.li
+          ref={defaultWrapperRef}
+          {...taskTileProps}
+          key={task.creationTime}
+          layout={animationsEnabled ? 'position' : false}
+        >
           <TaskTileContents task={task} />
         </motion.li>
       )}
