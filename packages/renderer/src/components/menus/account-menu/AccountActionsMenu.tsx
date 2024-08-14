@@ -31,7 +31,7 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
   return (
     <DropdownMenu
       id="accountActionsMenu"
-      onClickOutside={() => setShowAccountActionsMenu(false)}
+      onClose={() => setShowAccountActionsMenu(false)}
       clickOutsideExceptions={['#accountMenuSettingsButton']}
       ignoreGlobalClickOutsideExceptions
     >
