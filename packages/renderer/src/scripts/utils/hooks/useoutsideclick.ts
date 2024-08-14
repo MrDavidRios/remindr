@@ -5,7 +5,7 @@ import type { RefType } from 'react-hotkeys-hook/dist/types';
 const globalExceptions = ['.backdrop', '.full-window-container'];
 
 const elementsContainTarget = (elements: Element[], target: EventTarget | null) => {
-  return elements.some(element => element.contains(target as Node));
+  return elements.some((element) => element.contains(target as Node));
 };
 
 // Click outside hook
@@ -17,7 +17,7 @@ const elementsContainTarget = (elements: Element[], target: EventTarget | null) 
  */
 export function useClickOutside(
   callback: () => void,
-  exceptions?: string[],
+  exceptions: string[] = [],
   ignoreGlobalExceptions?: boolean,
 ): MutableRefObject<RefType<HTMLElement>> {
   const domNodeRef = useRef() as RefObject<HTMLElement>;
@@ -28,12 +28,10 @@ export function useClickOutside(
       if (domNodeRef.current?.contains(event.target as Node)) return;
 
       // If the clicked element is an exception, ignore the click event
-      const allExceptions = ignoreGlobalExceptions
-        ? exceptions ?? []
-        : [...globalExceptions, ...(exceptions ?? [])];
+      const allExceptions = ignoreGlobalExceptions ? exceptions : [...globalExceptions, ...exceptions];
 
       if (
-        allExceptions?.some(query =>
+        allExceptions?.some((query) =>
           elementsContainTarget(Array.from(document.querySelectorAll(query)), event.target),
         )
       )

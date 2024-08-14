@@ -1,25 +1,23 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { escEvent } from '@remindr/shared';
 import type { InputHTMLAttributes } from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChromePicker } from 'react-color';
+import { ModalWrapper } from '../ModalWrapper';
 
 interface ColorPickerProps extends InputHTMLAttributes<HTMLInputElement> {
-  // Add any additional props or overrides here
   initialColor: string;
   onUpdate: (color: string) => void;
 }
 
-export default function ColorPicker(props: ColorPickerProps) {
-  const { initialColor, onUpdate } = props;
-
+export const ColorPicker: React.FC<ColorPickerProps> = ({ initialColor, onUpdate }) => {
   const [color, setColor] = useState(initialColor);
   const [finalColor, setFinalColor] = useState(initialColor);
 
   const [isPickerVisible, setPickerVisible] = useState(false);
 
   const togglePicker = () => (isPickerVisible ? setPickerVisible(false) : openTogglePicker());
-  const ref = useClickOutside(() => setPickerVisible(false), ['#colorPickerBtn']);
+  const ref = useClickOutside(() => setPickerVisible(false));
 
   function openTogglePicker() {
     setColor(finalColor);
@@ -41,11 +39,13 @@ export default function ColorPicker(props: ColorPickerProps) {
         onKeyDown={(e) => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
       />
       {isPickerVisible && (
-        <div
-          ref={ref as unknown as React.RefObject<HTMLDivElement>}
+        <ModalWrapper
           id="colorPickerWrapper"
-          onKeyDown={(e) => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
           className="frosted"
+          onClose={() => setPickerVisible(false)}
+          closeOnClickOutside
+          ignoreGlobalClickOutsideExceptions
+          clickOutsideExceptions={['#colorPickerBtn']}
         >
           <ChromePicker color={color} onChange={(e) => setColor(e.hex)} disableAlpha />
           {color !== initialColor && (
@@ -63,12 +63,8 @@ export default function ColorPicker(props: ColorPickerProps) {
               </button>
             </div>
           )}
-        </div>
+        </ModalWrapper>
       )}
     </>
   );
-}
-
-ColorPicker.defaultProps = {
-  setting: '',
 };

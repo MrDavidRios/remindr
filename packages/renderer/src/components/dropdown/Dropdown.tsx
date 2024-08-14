@@ -1,7 +1,5 @@
-import { useAnimationsEnabled } from '@hooks/useanimationsenabled';
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { HotkeyScope } from '@renderer-types/hotkeyScope';
-import { motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useHotkeysContext } from 'react-hotkeys-hook';
 import { DropdownOptions } from './DropdownOptions';
@@ -17,8 +15,6 @@ export interface DropdownProps<T> {
 export function Dropdown<T>(props: DropdownProps<T>) {
   const { name, options, optionLabels, selectedIdx: initialSelectedIdx = 0, onSelect } = props;
 
-  const animationsEnabled = useAnimationsEnabled();
-  const [widestWidth, setWidestWidth] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState(initialSelectedIdx);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +27,6 @@ export function Dropdown<T>(props: DropdownProps<T>) {
     setIsOpen(true);
 
     previouslyEnabledScopes.current = enabledScopes;
-
     for (const scope of previouslyEnabledScopes.current) {
       disableScope(scope);
     }
@@ -49,23 +44,13 @@ export function Dropdown<T>(props: DropdownProps<T>) {
     disableScope(HotkeyScope.Dropdown);
   };
 
-  const dropdownMenuRef = useClickOutside(() => closeDropdown());
-
-  const dropdownWidthAnimationProps = animationsEnabled
-    ? {
-        animate: { width: widestWidth === 0 ? 'min-content' : widestWidth },
-      }
-    : {
-        style: { width: widestWidth === 0 ? 'min-content' : widestWidth },
-      };
+  const dropdownMenuRef = useClickOutside(() => closeDropdown(), [], true);
 
   return (
-    <motion.button
+    <button
       className={`select-box ${isOpen ? ' active' : ''}`}
       ref={dropdownMenuRef as unknown as React.RefObject<HTMLButtonElement>}
       onClick={toggleOpen}
-      {...dropdownWidthAnimationProps}
-      layout={animationsEnabled ? 'size' : false}
       onKeyDown={(e) => {
         if (e.key === 'Tab') closeDropdown();
       }}
@@ -84,7 +69,6 @@ export function Dropdown<T>(props: DropdownProps<T>) {
             setSelectedIdx(idx);
             onSelect(idx);
           }}
-          setWidestWidth={setWidestWidth}
           closeDropdown={() => {
             closeDropdown();
             dropdownMenuRef.current?.focus();
@@ -94,6 +78,6 @@ export function Dropdown<T>(props: DropdownProps<T>) {
       <div className="selected-option dropdown" style={{ width: '100%' }}>
         {optionLabels[selectedIdx]}
       </div>
-    </motion.button>
+    </button>
   );
 }

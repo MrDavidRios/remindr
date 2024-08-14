@@ -5,7 +5,7 @@ import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import type { FC, FocusEvent, HTMLAttributes, ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/
@@ -35,6 +35,10 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   const animationsEnabled = useAnimationsEnabled();
 
   const onCloseDropdown = () => {
+    for (const scope of previouslyEnabledScopes.current) {
+      enableScope(scope);
+    }
+
     disableScope(HotkeyScope.Dropdown);
     onClose?.();
   };
@@ -57,6 +61,11 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
 
   useEffect(() => {
     if (!ref.current || ref.current.children.length === 0) return;
+
+    previouslyEnabledScopes.current = enabledScopes;
+    for (const scope of previouslyEnabledScopes.current) {
+      disableScope(scope);
+    }
 
     enableScope(HotkeyScope.Dropdown);
 
@@ -116,6 +125,8 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
       onCloseDropdown();
     },
   });
+
+  const previouslyEnabledScopes = useRef<string[]>(enabledScopes);
 
   return (
     <motion.ul

@@ -1,7 +1,7 @@
 import imageIcon from '@assets/icons/image.svg';
 import { Theme, themeLabels } from '@remindr/shared';
 import type { AppDispatch } from '@renderer/app/store';
-import ColorPicker from '@renderer/components/color-picker/ColorPicker';
+import { ColorPicker } from '@renderer/components/color-picker/ColorPicker';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
@@ -22,7 +22,6 @@ export function AppearanceSettingsPage() {
       <div id="reminderPageThemeSettingWrapper">
         <div id="reminderPageThemeSettings">
           <ColorPicker
-            setting="background"
             initialColor={isBackgroundColor ? settings.background : '#00BD97'}
             onUpdate={(color) => {
               dispatch(
