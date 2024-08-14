@@ -20,6 +20,7 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
       ref={textareaRef}
       spellCheck={spellCheckEnabled}
       value={value}
+      style={{ minHeight: '100px' }}
       onChange={onChange}
       onBlur={(e) => {
         if (!onChange || !textareaRef.current) return;
