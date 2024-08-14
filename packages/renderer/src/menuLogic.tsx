@@ -48,9 +48,9 @@ export const DisplayMenus = () => {
 function useMenuHotkeys(dispatch: AppDispatch, appMode: AppMode, authenticated: boolean) {
   const onLoginScreen = appMode === AppMode.LoginScreen || (appMode === AppMode.Online && !authenticated);
 
-  // mod corresponds to the command key on Mac and the control key on Windows and Linux.
   useHotkeys('mod+a', () => {
-    if (onLoginScreen || !authenticated) return;
+    const isOffline = appMode === AppMode.Offline;
+    if (onLoginScreen || isOffline || !authenticated) return;
 
     dispatch(showMenu(Menu.AccountMenu));
   });
