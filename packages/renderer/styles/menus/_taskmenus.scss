@@ -95,6 +95,9 @@
     border-radius: 6px;
 
     &:hover {
+      background: transparent;
+      cursor: pointer;
+
       img {
         filter: var(--ui-accent-color-filter);
       }
@@ -102,9 +105,6 @@
       p {
         color: var(--ui-accent-color);
       }
-
-      background: transparent;
-      cursor: pointer;
     }
   }
 }

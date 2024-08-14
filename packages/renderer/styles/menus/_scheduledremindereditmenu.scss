@@ -3,6 +3,8 @@
   border-radius: var(--menu-border-radius);
   display: flex;
 
+  z-index: 3;
+
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
   /* Styling inner elements */
@@ -11,8 +13,6 @@
   @media (max-width: 500px) {
     left: calc(100vw - 400px - 40px) !important;
   }
-
-  z-index: 3;
 
   #timeInputContainer {
     display: flex;

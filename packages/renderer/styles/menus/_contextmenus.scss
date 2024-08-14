@@ -15,6 +15,15 @@
     align-items: center;
 
     li {
+      min-height: 30px;
+      height: 30px;
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      column-gap: 5px;
+
       &:first-child {
         border-radius: 5px 5px 0 0;
       }
@@ -22,14 +31,6 @@
       &:last-child {
         border-radius: 0 0 5px 5px;
       }
-
-      min-height: 30px;
-      height: 30px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      column-gap: 5px;
 
       img {
         left: 5px;

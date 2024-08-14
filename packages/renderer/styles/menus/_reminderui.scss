@@ -75,6 +75,11 @@
 }
 
 #taskListTopBar {
+  width: 100%;
+  height: 65px !important;
+
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+
   #taskListHeaderContainer {
     height: 100%;
 
@@ -109,11 +114,6 @@
       }
     }
   }
-
-  width: 100%;
-  height: 65px !important;
-
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
 }
 
 #viewSettingsButton {

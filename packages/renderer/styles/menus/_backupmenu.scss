@@ -4,8 +4,12 @@
 }
 
 .modal-menu {
+  height: min-content;
+
   flex-direction: column;
+
   margin: 36px;
+  padding-bottom: 16px;
 
   &,
   .titlebar,
@@ -40,7 +44,4 @@
     color: var(--text-color-secondary);
     margin-left: 20px;
   }
-
-  height: min-content;
-  padding-bottom: 16px;
 }

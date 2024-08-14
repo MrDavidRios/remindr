@@ -1,4 +1,4 @@
-@use '../base/mixins' as *;
+@use "../base/mixins" as *;
 
 #taskCreationWindow {
   position: absolute;
@@ -82,9 +82,9 @@
 }
 
 .dynamic-text-area {
-  @include task-menu-input();
-
   max-height: 180px;
+
+  @include task-menu-input();
 }
 
 #taskTitleInput {
@@ -152,6 +152,9 @@
 
   display: flex;
   justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0px -2px 21px -6px rgba(0, 0, 0, 0.75);
 
   > div {
     display: flex;
@@ -161,8 +164,4 @@
   &.action-buttons-hidden {
     justify-content: end;
   }
-
-  align-items: center;
-
-  box-shadow: 0px -2px 21px -6px rgba(0, 0, 0, 0.75);
 }

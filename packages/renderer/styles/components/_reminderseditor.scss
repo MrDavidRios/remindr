@@ -5,6 +5,7 @@
 
   .reminders-editor-header {
     height: 28px;
+    justify-content: space-between;
 
     &,
     button,
@@ -51,8 +52,6 @@
         height: 20px;
       }
     }
-
-    justify-content: space-between;
   }
 
   .reminders-container {
