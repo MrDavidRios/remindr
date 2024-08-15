@@ -131,6 +131,7 @@ export function AppearanceSettingsPage() {
 
             applyTheme();
           }}
+          scrollParentId="settings"
         />
       </div>
     </div>

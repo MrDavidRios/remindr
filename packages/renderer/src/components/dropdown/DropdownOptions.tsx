@@ -8,11 +8,12 @@ import { ArrowNavigable } from '../accessibility/ArrowNavigable';
 import type { DropdownProps } from './Dropdown';
 
 interface DropdownOptionsProps<T> extends DropdownProps<T> {
+  topAnchorY: number;
   closeDropdown: () => void;
 }
 
 export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
-  const { name, options, optionLabels, onSelect, closeDropdown } = props;
+  const { name, options, optionLabels, topAnchorY, onSelect, closeDropdown } = props;
   const optionRefs = options.map(() => useRef(null));
   const animationsEnabled = useAnimationsEnabled();
 
@@ -22,6 +23,7 @@ export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
     <RemoveScroll>
       <ul
         className="options-container frosted"
+        style={{ top: topAnchorY }}
         role="listbox"
         id={`${name}Listbox`}
         {...dynamicMenuHeightAnimationProps(animationsEnabled)}

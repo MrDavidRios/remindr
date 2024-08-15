@@ -26,6 +26,7 @@ export function TasksSettingsPage() {
               }),
             );
           }}
+          scrollParentId="settings"
         />
       </div>
       <div className="settings-checkbox" style={{ marginTop: 10 }}>

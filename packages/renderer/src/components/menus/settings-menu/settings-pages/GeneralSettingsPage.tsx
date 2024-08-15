@@ -94,6 +94,7 @@ export function GeneralSettingsPage() {
               }),
             );
           }}
+          scrollParentId="settings"
         />
       </div>
       <p className="subheading" style={{ marginTop: 16 }}>
@@ -114,6 +115,7 @@ export function GeneralSettingsPage() {
               }),
             );
           }}
+          scrollParentId="settings"
         />
       </div>
       <div id="dateFormatSettingDropdownWrapper">
@@ -131,6 +133,7 @@ export function GeneralSettingsPage() {
               }),
             );
           }}
+          scrollParentId="settings"
         />
       </div>
       <p className="subheading" style={{ marginTop: 16 }}>

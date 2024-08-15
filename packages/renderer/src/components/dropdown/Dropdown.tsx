@@ -10,10 +10,11 @@ export interface DropdownProps<T> {
   optionLabels: string[];
   selectedIdx?: number;
   onSelect: (idx: number) => void;
+  scrollParentId?: string;
 }
 
 export function Dropdown<T>(props: DropdownProps<T>) {
-  const { name, options, optionLabels, selectedIdx: initialSelectedIdx = 0, onSelect } = props;
+  const { name, options, optionLabels, selectedIdx: initialSelectedIdx = 0, onSelect, scrollParentId } = props;
 
   const [selectedIdx, setSelectedIdx] = useState(initialSelectedIdx);
 
@@ -46,6 +47,12 @@ export function Dropdown<T>(props: DropdownProps<T>) {
 
   const dropdownMenuRef = useClickOutside(() => closeDropdown(), [], true);
 
+  const scrollParentElement =
+    scrollParentId !== undefined ? document.getElementById(scrollParentId) : dropdownMenuRef.current?.parentElement;
+  const parentScrollTop = scrollParentElement?.scrollTop ?? 0;
+  const offsetTop = dropdownMenuRef.current?.offsetTop ?? 0;
+  const yAnchor = offsetTop - parentScrollTop;
+
   return (
     <button
       className={`select-box ${isOpen ? ' active' : ''}`}
@@ -65,6 +72,7 @@ export function Dropdown<T>(props: DropdownProps<T>) {
           name={name}
           options={options}
           optionLabels={optionLabels}
+          topAnchorY={yAnchor}
           onSelect={(idx) => {
             setSelectedIdx(idx);
             onSelect(idx);

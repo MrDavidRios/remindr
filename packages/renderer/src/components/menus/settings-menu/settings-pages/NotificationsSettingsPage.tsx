@@ -61,6 +61,7 @@ export function NotificationsSettingsPage() {
             }),
           );
         }}
+        scrollParentId="settings"
       />
     </div>
   );
