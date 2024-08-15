@@ -12,13 +12,13 @@ import { useAppDispatch, useAppSelector } from './hooks';
 export const ChosenPage = () => {
   const dispatch = useAppDispatch();
 
-  const appMode = useAppSelector(state => state.appMode.value);
+  const appMode = useAppSelector((state) => state.appMode.value);
 
-  const initialized = useAppSelector(state => state.userState.initialized);
-  const authenticated = useAppSelector(state => state.userState.authenticated);
-  const userDataGetStatus = useAppSelector(state => state.userState.userDataGetStatus);
+  const initialized = useAppSelector((state) => state.userState.initialized);
+  const authenticated = useAppSelector((state) => state.userState.authenticated);
+  const userDataGetStatus = useAppSelector((state) => state.userState.userDataGetStatus);
 
-  const { connected, connCheckStatus } = useAppSelector(state => state.connectionState);
+  const { connected, connCheckStatus } = useAppSelector((state) => state.connectionState);
 
   useEffect(() => {
     if (connCheckStatus === 'idle') dispatch(getConnectionStatus());
@@ -52,12 +52,11 @@ export const ChosenPage = () => {
 function isLoading(connected: boolean, connCheckStatus: string, userDataGetStatus: string) {
   if (connCheckStatus === 'succeeded' && !connected) return false;
 
-  if (
-    connCheckStatus === 'idle' ||
-    connCheckStatus === 'pending' ||
-    userDataGetStatus === 'pending'
-  )
-    return true;
+  const connCheckStatusInFlux = connCheckStatus === 'idle' || connCheckStatus === 'pending';
+  // userDataGetStatus can fail momentarily while the user is being logged in — what can't fail is connection checking
+  const userDataGetStatusInFlux = userDataGetStatus === 'failed' || userDataGetStatus === 'pending';
+
+  if (connCheckStatusInFlux || userDataGetStatusInFlux) return true;
 
   return false;
 }
