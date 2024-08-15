@@ -1,6 +1,7 @@
 import plusThinIcon from '@assets/icons/plus-thin.svg';
 import type { MenuState } from '@remindr/shared';
 import { Menu } from '@remindr/shared';
+import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import type { AppDispatch } from '@renderer/app/store';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { clearSelectedTasks } from '@renderer/features/task-list/taskListSlice';
@@ -8,8 +9,8 @@ import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { isFullscreenMenuOpen, isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
-import type { FC } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useEffect, type FC } from 'react';
+import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 
 export const TaskCreateButton: FC = () => {
   const dispatch = useAppDispatch();
@@ -19,6 +20,12 @@ export const TaskCreateButton: FC = () => {
 
   const taskModificationMenuOpen =
     isMenuOpen(menuState, Menu.TaskEditMenu) || isMenuOpen(menuState, Menu.TaskCreateMenu);
+
+  const { enableScope, disableScope } = useHotkeysContext();
+
+  useEffect(() => {
+    taskModificationMenuOpen ? enableScope(HotkeyScope.Menu) : disableScope(HotkeyScope.Menu);
+  }, [taskModificationMenuOpen]);
 
   const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
