@@ -47,11 +47,12 @@ export function Dropdown<T>(props: DropdownProps<T>) {
 
   const dropdownMenuRef = useClickOutside(() => closeDropdown(), [], true);
 
+  const dropdownMenuButtonHeight = dropdownMenuRef.current?.clientHeight ?? 0;
   const scrollParentElement =
     scrollParentId !== undefined ? document.getElementById(scrollParentId) : dropdownMenuRef.current?.parentElement;
   const parentScrollTop = scrollParentElement?.scrollTop ?? 0;
   const offsetTop = dropdownMenuRef.current?.offsetTop ?? 0;
-  const yAnchor = offsetTop - parentScrollTop;
+  const yAnchor = dropdownMenuButtonHeight + offsetTop - parentScrollTop;
 
   return (
     <button

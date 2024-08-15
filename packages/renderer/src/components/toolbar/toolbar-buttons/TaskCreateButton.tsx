@@ -17,17 +17,16 @@ export const TaskCreateButton: FC = () => {
 
   const menuState = useAppSelector((state) => state.menuState);
   const animate = useAnimationsEnabled();
+  const { enableScope, disableScope } = useHotkeysContext();
 
   const taskModificationMenuOpen =
     isMenuOpen(menuState, Menu.TaskEditMenu) || isMenuOpen(menuState, Menu.TaskCreateMenu);
 
-  const { enableScope, disableScope } = useHotkeysContext();
+  const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
   useEffect(() => {
     taskModificationMenuOpen ? enableScope(HotkeyScope.Menu) : disableScope(HotkeyScope.Menu);
   }, [taskModificationMenuOpen]);
-
-  const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
   useHotkeys(
     'mod+n',
