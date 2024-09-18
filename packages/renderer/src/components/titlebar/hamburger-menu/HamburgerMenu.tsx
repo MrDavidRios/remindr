@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { delay } from '@renderer/scripts/utils/timing';
-import { AnimatePresence, motion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
@@ -67,131 +66,128 @@ export function HamburgerMenu() {
       <button type="button" id="hamburger-button" title="Menu" onClick={toggleMenu}>
         <img src={hamburgerIcon} alt="Open general menu" draggable="false" />
       </button>
-      <AnimatePresence>
-        {displayMenu && (
-          <div id="titlebarMenu">
-            <motion.ul
-              {...menuHeightAnimationProps(animationsEnabled)}
-              style={{ backgroundColor }}
-              animate={{ height: '50px' }}
-              ref={ulRef as unknown as React.RefObject<HTMLUListElement>}
-              onFocus={() => setFocusInSubmenu(false)}
-              onBlur={async () => {
-                await delay(0);
-                if (!ulRef.current?.contains(document.activeElement)) {
-                  closeMenu();
-                  return;
-                }
+      {displayMenu && (
+        <div id="titlebarMenu">
+          <ul
+            {...menuHeightAnimationProps(animationsEnabled)}
+            style={{ backgroundColor }}
+            ref={ulRef as unknown as React.RefObject<HTMLUListElement>}
+            onFocus={() => setFocusInSubmenu(false)}
+            onBlur={async () => {
+              await delay(0);
+              if (!ulRef.current?.contains(document.activeElement)) {
+                closeMenu();
+                return;
+              }
 
-                if (
-                  fileSubmenuRef.current?.contains(document.activeElement) ||
-                  helpSubmenuRef.current?.contains(document.activeElement)
-                )
-                  setFocusInSubmenu(true);
-              }}
-            >
-              <ArrowNavigable waitForChildAnimation disableNavigation={focusInSubmenu}>
-                <li
-                  id="fileDropdown"
-                  data-testid="file-dropdown"
-                  style={{ backgroundColor }}
-                  onFocus={() => {
-                    setShowFileSubmenu(true);
-                    setShowHelpSubmenu(false);
-                  }}
-                  onMouseEnter={() => setShowFileSubmenu(true)}
-                  onMouseLeave={() => setShowFileSubmenu(false)}
-                >
-                  File <img src={expandArrow} alt="Open file submenu" draggable="false" />
-                  {showFileSubmenu && (
-                    <ul
-                      ref={fileSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
-                      className="sub-menu"
-                      style={{ top: '32px', maxHeight: maxFileDropdownHeight }}
-                    >
-                      <ArrowNavigable>
-                        <li
-                          id="restartButton"
-                          title="Restart (Ctrl + R)"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === '') sendAction('restart', () => closeMenu());
-                          }}
-                          onClick={() => sendAction('restart', () => closeMenu())}
-                        >
-                          Restart
-                        </li>
-                        <li
-                          id="signOutButton"
-                          title="Sign Out"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === '') sendAction('sign-out', () => closeMenu());
-                          }}
-                          style={{
-                            display: showSignOutButton ? '' : 'none',
-                          }}
-                          onClick={() => sendAction('sign-out', () => closeMenu())}
-                        >
-                          Sign Out
-                        </li>
-                        <li
-                          id="quitButton"
-                          title="Quit (Ctrl + Q)"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === '') sendAction('quit', () => closeMenu());
-                          }}
-                          onClick={() => sendAction('quit', () => closeMenu())}
-                        >
-                          Quit
-                        </li>
-                      </ArrowNavigable>
-                    </ul>
-                  )}
-                </li>
-                <li
-                  id="helpDropdown"
-                  style={{ backgroundColor }}
-                  onFocus={() => {
-                    setShowHelpSubmenu(true);
-                    setShowFileSubmenu(false);
-                  }}
-                  onMouseEnter={() => setShowHelpSubmenu(true)}
-                  onMouseLeave={() => setShowHelpSubmenu(false)}
-                >
-                  Help <img src={expandArrow} alt="Open help submenu" draggable="false" />
-                  {showHelpSubmenu && (
-                    <ul
-                      ref={helpSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
-                      className="sub-menu"
-                      style={{ top: '57px', width: '150px' }}
-                    >
-                      <ArrowNavigable>
-                        <li
-                          id="checkForUpdatesButton"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === '') handleUpdateCheckButton(() => closeMenu());
-                          }}
-                          onClick={() => handleUpdateCheckButton(() => closeMenu())}
-                        >
-                          Check For Updates
-                        </li>
-                        <li
-                          id="reportBugButton"
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === '') handleReportBugButton(() => closeMenu());
-                          }}
-                          onClick={() => handleReportBugButton(() => closeMenu())}
-                        >
-                          Report a Bug
-                        </li>
-                      </ArrowNavigable>
-                    </ul>
-                  )}
-                </li>
-              </ArrowNavigable>
-            </motion.ul>
-          </div>
-        )}
-      </AnimatePresence>
+              if (
+                fileSubmenuRef.current?.contains(document.activeElement) ||
+                helpSubmenuRef.current?.contains(document.activeElement)
+              )
+                setFocusInSubmenu(true);
+            }}
+          >
+            <ArrowNavigable waitForChildAnimation disableNavigation={focusInSubmenu}>
+              <li
+                id="fileDropdown"
+                data-testid="file-dropdown"
+                style={{ backgroundColor }}
+                onFocus={() => {
+                  setShowFileSubmenu(true);
+                  setShowHelpSubmenu(false);
+                }}
+                onMouseEnter={() => setShowFileSubmenu(true)}
+                onMouseLeave={() => setShowFileSubmenu(false)}
+              >
+                File <img src={expandArrow} alt="Open file submenu" draggable="false" />
+                {showFileSubmenu && (
+                  <ul
+                    ref={fileSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
+                    className="sub-menu"
+                    style={{ top: '32px', maxHeight: maxFileDropdownHeight }}
+                  >
+                    <ArrowNavigable>
+                      <li
+                        id="restartButton"
+                        title="Restart (Ctrl + R)"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === '') sendAction('restart', () => closeMenu());
+                        }}
+                        onClick={() => sendAction('restart', () => closeMenu())}
+                      >
+                        Restart
+                      </li>
+                      <li
+                        id="signOutButton"
+                        title="Sign Out"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === '') sendAction('sign-out', () => closeMenu());
+                        }}
+                        style={{
+                          display: showSignOutButton ? '' : 'none',
+                        }}
+                        onClick={() => sendAction('sign-out', () => closeMenu())}
+                      >
+                        Sign Out
+                      </li>
+                      <li
+                        id="quitButton"
+                        title="Quit (Ctrl + Q)"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === '') sendAction('quit', () => closeMenu());
+                        }}
+                        onClick={() => sendAction('quit', () => closeMenu())}
+                      >
+                        Quit
+                      </li>
+                    </ArrowNavigable>
+                  </ul>
+                )}
+              </li>
+              <li
+                id="helpDropdown"
+                style={{ backgroundColor }}
+                onFocus={() => {
+                  setShowHelpSubmenu(true);
+                  setShowFileSubmenu(false);
+                }}
+                onMouseEnter={() => setShowHelpSubmenu(true)}
+                onMouseLeave={() => setShowHelpSubmenu(false)}
+              >
+                Help <img src={expandArrow} alt="Open help submenu" draggable="false" />
+                {showHelpSubmenu && (
+                  <ul
+                    ref={helpSubmenuRef as unknown as React.RefObject<HTMLUListElement>}
+                    className="sub-menu"
+                    style={{ top: '57px', width: '150px' }}
+                  >
+                    <ArrowNavigable>
+                      <li
+                        id="checkForUpdatesButton"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === '') handleUpdateCheckButton(() => closeMenu());
+                        }}
+                        onClick={() => handleUpdateCheckButton(() => closeMenu())}
+                      >
+                        Check For Updates
+                      </li>
+                      <li
+                        id="reportBugButton"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === '') handleReportBugButton(() => closeMenu());
+                        }}
+                        onClick={() => handleReportBugButton(() => closeMenu())}
+                      >
+                        Report a Bug
+                      </li>
+                    </ArrowNavigable>
+                  </ul>
+                )}
+              </li>
+            </ArrowNavigable>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
