@@ -1,12 +1,17 @@
 import { Middleware } from '@reduxjs/toolkit';
 import _ from 'lodash';
-import { removeTask, removeTasks, updateTask } from '../taskListSlice';
+import { completeTask, removeTask, removeTasks, updateTask } from '../taskListSlice';
 
 export const notificationEventMiddleware: Middleware =
   ({ getState }) =>
   (next) =>
   (action) => {
     const result = next(action);
+
+    // If a task is completed, make sure notifications.ts knows
+    if (completeTask.match(action)) {
+      window.electron.ipcRenderer.sendMessage('task-completed', JSON.stringify(action.payload));
+    }
 
     // If a task is deleted, make sure notifications.ts knows
     if (removeTask.match(action)) {

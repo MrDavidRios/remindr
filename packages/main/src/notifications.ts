@@ -259,7 +259,7 @@ export default function initializeNotificationScreenListeners() {
 
 // #endregion
 
-ipcMain.on('task-deleted', (_event, data) => {
+const removeTaskNotification = (_event: Electron.IpcMainEvent, data: string) => {
   const task = JSON.parse(data as string) as Task;
 
   if (groupNotifWindow && !groupNotifWindow.isDestroyed()) {
@@ -274,7 +274,10 @@ ipcMain.on('task-deleted', (_event, data) => {
       ongoingNotifications.delete(key);
     }
   });
-});
+};
+
+ipcMain.on('task-deleted', removeTaskNotification);
+ipcMain.on('task-completed', removeTaskNotification);
 
 ipcMain.on('scheduled-reminders-modified', (_event, data) => {
   const task = JSON.parse(data as string) as Task;
