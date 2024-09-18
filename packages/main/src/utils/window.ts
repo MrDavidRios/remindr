@@ -15,7 +15,10 @@ export default function initWindowEventListeners(mainWindow: BrowserWindow | nul
 
   ipcMain.on('minimize-window', () => {
     mainWindow?.minimize();
-    mainWindow?.webContents.send('window-minimized');
+
+    mainWindow?.getChildWindows().forEach((notification) => {
+      notification.show();
+    });
   });
 
   ipcMain.on('maximize-window', () => {

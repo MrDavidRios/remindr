@@ -157,7 +157,7 @@ function createNotificationWindow() {
     skipTaskbar: true,
     webPreferences: {
       nodeIntegration: true,
-      devTools: true,
+      devTools: false,
       preload: join(app.getAppPath(), 'packages/preload/dist/index.mjs'),
     },
   });
