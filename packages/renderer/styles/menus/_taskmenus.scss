@@ -26,6 +26,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    .completion-timestamp {
+      color: var(--text-color-secondary);
+    }
   }
 }
 

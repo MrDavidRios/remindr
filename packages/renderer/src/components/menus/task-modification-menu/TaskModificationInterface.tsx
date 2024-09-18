@@ -99,7 +99,7 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
         {/* Footer of the Task Modification Interface */}
         {editedTask.completed && editedTask.completionTime > 0 && (
           <div className="task-panel-footer">
-            <p style={{ fontSize: 14 }}>{`Completed on ${formatDateAndTime(
+            <p className="completion-timestamp" style={{ fontSize: 14 }}>{`Completed ${formatDateAndTime(
               new Date(editedTask.completionTime),
               dateFormat,
             )}`}</p>
