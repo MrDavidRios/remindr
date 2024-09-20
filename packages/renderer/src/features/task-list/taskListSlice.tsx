@@ -139,8 +139,17 @@ export const taskListSlice = createSlice({
       const onlyOtherSelectedTaskIsCurrentTask =
         state.selectedTasks.length === 1 && state.selectedTasks[0].creationTime === action.payload.creationTime;
 
-      if (state.selectedTasks.length === 0 || onlyOtherSelectedTaskIsCurrentTask)
-        throw new Error('selectTasksBetween: no other tasks selected');
+      // If there currently aren't any selected tasks, select the chosen task
+      if (state.selectedTasks.length === 0) {
+        state.selectedTasks = [action.payload];
+        return;
+      }
+
+      // If the other selected task is the current one, de-select it
+      if (onlyOtherSelectedTaskIsCurrentTask) {
+        state.selectedTasks = [];
+        return;
+      }
 
       const tasksOnScreen = sortForDisplay(
         getTaskListWithinTimeframe(state.value, state.timeframe, true),
@@ -157,6 +166,9 @@ export const taskListSlice = createSlice({
       }
 
       const tasksBetween = tasksOnScreen.slice(anchorIdx, endingTaskIdx + 1);
+
+      console.log(`[selectTasksBetween] - tasks between ${anchorIdx} and ${endingTaskIdx}:`, tasksBetween);
+
       state.selectedTasks = tasksBetween;
     },
     setTaskDisplayOutdated: (state, action: PayloadAction<boolean>) => {

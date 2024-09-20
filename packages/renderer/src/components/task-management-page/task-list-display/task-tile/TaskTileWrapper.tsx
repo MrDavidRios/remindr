@@ -198,8 +198,7 @@ function handleTaskTileClick(
     return;
   }
 
-  if (e.shiftKey && selectedTasks.length > 0) {
-    // Don't fire selectTasksBetween if there aren't any other selected tasks
+  if (e.shiftKey) {
     dispatch(selectTasksBetween(task));
     return;
   }
