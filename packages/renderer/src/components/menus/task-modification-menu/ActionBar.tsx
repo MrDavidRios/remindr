@@ -20,18 +20,34 @@ import { useHotkeys } from 'react-hotkeys-hook';
 
 interface ActionBarProps {
   task: Task;
-  showActionButtons: boolean;
+  creatingTask: boolean;
   onSave: (task: Task) => void;
 }
 
-export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave }) => {
+export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) => {
   const dispatch = useAppDispatch();
 
-  useSetupHotkeys(task, showActionButtons, onSave, dispatch);
+  useSetupHotkeys(task, creatingTask, onSave, dispatch);
 
   return (
-    <div id="taskActionsBar" className={showActionButtons ? '' : 'action-buttons-hidden'}>
-      {showActionButtons && (
+    <div id="taskActionsBar" className={!creatingTask ? '' : 'action-buttons-hidden'}>
+      {creatingTask ? (
+        <button
+          id="saveTaskButton"
+          className="action-button accessible-button"
+          onClick={() => onSave(task)}
+          type="button"
+          aria-label="Save Changes"
+        >
+          <img
+            src={checkIcon}
+            className="svg-filter"
+            draggable="false"
+            title="Save Changes (Ctrl + S)"
+            alt="Save Changes"
+          />
+        </button>
+      ) : (
         <div data-testid="action-buttons-wrapper">
           <button className="action-button accessible-button" onClick={() => deleteTask(task, dispatch)} type="button">
             <img
@@ -89,26 +105,11 @@ export const ActionBar: FC<ActionBarProps> = ({ task, showActionButtons, onSave 
           )}
         </div>
       )}
-      <button
-        id="saveTaskButton"
-        className="action-button accessible-button"
-        onClick={() => onSave(task)}
-        type="button"
-        aria-label="Save Changes"
-      >
-        <img
-          src={checkIcon}
-          className="svg-filter"
-          draggable="false"
-          title="Save Changes (Ctrl + S)"
-          alt="Save Changes"
-        />
-      </button>
     </div>
   );
 };
 
-function useSetupHotkeys(task: Task, showActionButtons: boolean, onSave: (task: Task) => void, dispatch: AppDispatch) {
+function useSetupHotkeys(task: Task, creatingTask: boolean, onSave: (task: Task) => void, dispatch: AppDispatch) {
   useHotkeys(
     'mod+s',
     (e) => {
@@ -132,7 +133,7 @@ function useSetupHotkeys(task: Task, showActionButtons: boolean, onSave: (task: 
       if (
         isFullscreenMenuOpen(store.getState().menuState) ||
         !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) ||
-        !showActionButtons
+        creatingTask
       )
         return;
 
@@ -148,7 +149,7 @@ function useSetupHotkeys(task: Task, showActionButtons: boolean, onSave: (task: 
       if (
         isFullscreenMenuOpen(store.getState().menuState) ||
         !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) ||
-        !showActionButtons
+        creatingTask
       )
         return;
       togglePinOnTask(task, dispatch);
@@ -162,7 +163,7 @@ function useSetupHotkeys(task: Task, showActionButtons: boolean, onSave: (task: 
     if (
       isFullscreenMenuOpen(store.getState().menuState) ||
       !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) ||
-      !showActionButtons
+      creatingTask
     )
       return;
     deleteTask(task, dispatch);

@@ -14,9 +14,13 @@ import DynamicInput from '../../dynamic-text-area/DynamicInput';
 interface SubtaskEditorProps {
   subtasks: Subtask[];
   onChange: (subtasks: Subtask[]) => void;
+  /**
+   * Call when the subtasks are changed in a way that don't overload the app with save calls (e.g. subtask input element blur)
+   */
+  onSaveableChange: (subtasks: Subtask[]) => void;
 }
 
-export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) => {
+export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSaveableChange }) => {
   const modifiedSubtasks = JSON.parse(JSON.stringify(subtasks)) as Subtask[];
   const finalInputRef = useRef<HTMLInputElement>(null);
 
@@ -196,6 +200,8 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange }) =>
                 if (e.currentTarget.value.trim() === '') {
                   removeSubtask(idx);
                 }
+
+                onSaveableChange(modifiedSubtasks);
               }}
               onNavigateUp={() => {
                 if (idx === 0) return;

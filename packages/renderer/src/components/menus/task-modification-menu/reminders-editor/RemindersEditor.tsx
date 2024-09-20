@@ -4,6 +4,7 @@ import type { MenuRect, Task } from '@remindr/shared';
 import { generateUniqueID, Menu, sortReminders } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { hideMenu, setFloatingMenuPosition, showMenu } from '@renderer/features/menu-state/menuSlice';
+import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import {
   getEditedTask,
   setEditedTask,
@@ -102,8 +103,11 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
   const onDeleteReminder = (idx: number) => {
     dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu }));
 
+    console.log('Deleting reminder at index', idx);
+
     editedTaskClone.scheduledReminders.splice(idx, 1);
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
+    dispatch(updateTask(editedTaskClone));
   };
 
   return (

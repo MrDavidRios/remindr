@@ -2,6 +2,7 @@ import attachmentIcon from '@assets/icons/attachment.svg';
 import type { Link, Task } from '@remindr/shared';
 import { getOpenableURL, LinkType, linkTypeLabels, Menu } from '@remindr/shared';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
+import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { getDefaultLink, getDisplayURL } from '@renderer/scripts/utils/linkutils';
@@ -22,6 +23,8 @@ export const LinkMenu: FC = () => {
   const dispatch = useAppDispatch();
 
   const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState));
+  const taskEditType = useAppSelector((state) => state.taskModificationState.lastEditType);
+
   // Is a link being created or edited?
   const linkEditState = useAppSelector((state) => state.taskModificationState.linkEditState);
   const creatingLink = linkEditState.state === 'create';
@@ -76,6 +79,8 @@ export const LinkMenu: FC = () => {
     }
 
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
+    if (taskEditType === 'edit') dispatch(updateTask(editedTaskClone));
+
     dispatch(hideMenu({ menu: Menu.LinkMenu }));
   };
 

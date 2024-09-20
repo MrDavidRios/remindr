@@ -2,6 +2,7 @@ import pencilIcon from '@assets/icons/pencil.svg';
 import type { Subtask } from '@remindr/shared';
 import { Task, formatDateAndTime } from '@remindr/shared';
 import { showDialog } from '@renderer/features/menu-state/menuSlice';
+import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import type { FC } from 'react';
@@ -15,14 +16,12 @@ import { RemindersEditor } from './reminders-editor/RemindersEditor';
 interface TaskModificationInterfaceProps {
   animationComplete: boolean;
   creating: boolean;
-  showActionButtons?: boolean;
-  onSave: (task: Task) => void;
+  onSave?: (task: Task) => void;
 }
 
 export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
   animationComplete,
   creating,
-  showActionButtons = true,
   onSave,
 }) => {
   const dispatch = useAppDispatch();
@@ -38,7 +37,11 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
       return;
     }
 
-    onSave(editedTask);
+    if (!creating) {
+      dispatch(updateTask(editedTask));
+    }
+
+    onSave?.(editedTask);
   }
 
   return (
@@ -63,6 +66,9 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
               editedTaskClone.name = e.currentTarget.value;
               dispatch(setEditedTask({ creating, task: editedTaskClone }));
             }}
+            onBlur={() => {
+              if (!creating) save();
+            }}
           />
 
           <RemindersEditor />
@@ -73,6 +79,9 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
               const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
               editedTaskClone.subtasks = JSON.parse(JSON.stringify(subtasks));
               dispatch(setEditedTask({ creating, task: editedTaskClone }));
+            }}
+            onSaveableChange={(subtasks: Subtask[]) => {
+              if (!creating) save();
             }}
           />
 
@@ -92,6 +101,9 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
                 editedTaskClone.notes = e.currentTarget.value;
                 dispatch(setEditedTask({ creating, task: editedTaskClone }));
               }}
+              onBlur={() => {
+                if (!creating) save();
+              }}
             />
           </div>
         </div>
@@ -106,7 +118,7 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
           </div>
         )}
       </div>
-      <ActionBar task={editedTask} onSave={save} showActionButtons={showActionButtons} />
+      <ActionBar task={editedTask} onSave={save} creatingTask={creating} />
     </div>
   );
 };

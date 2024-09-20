@@ -5,6 +5,7 @@ import store from '@renderer/app/store';
 import { DatePicker } from '@renderer/components/date-picker/DatePicker';
 import { FloatingMenu } from '@renderer/components/floating-menu/FloatingMenu';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
+import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
@@ -37,6 +38,7 @@ export const ScheduledReminderEditMenu: FC = () => {
 
   const { anchor, yOffset, gap } = useAppSelector((state) => state.menuState.scheduledReminderEditorPosition);
 
+  const taskEditType = useAppSelector((state) => state.taskModificationState.lastEditType);
   const reminderEditState = useAppSelector((state) => state.taskModificationState.reminderEditState);
 
   const creatingReminder = reminderEditState.state === 'create';
@@ -85,6 +87,8 @@ export const ScheduledReminderEditMenu: FC = () => {
     editedTaskClone.scheduledReminders[reminderEditState.idx] = updatedScheduledReminder;
 
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
+    if (taskEditType === 'edit') dispatch(updateTask(editedTaskClone));
+
     dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu }));
   }
 

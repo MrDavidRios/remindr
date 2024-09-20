@@ -1,6 +1,5 @@
 import { Task } from '@remindr/shared';
 import { menuWidthAnimationProps } from '@renderer/animation';
-import { clearSelectedTasks, updateTask } from '@renderer/features/task-list/taskListSlice';
 import { setEditedTask, setOriginalTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
@@ -40,11 +39,6 @@ export const TaskEditMenu: FC<TaskEditMenuProps> = ({ selectedTask }) => {
       }
     : {};
 
-  function onSave(task: Task) {
-    dispatch(updateTask(task));
-    dispatch(clearSelectedTasks());
-  }
-
   useEffect(() => {
     if (!selectedTask) return;
     dispatch(setOriginalTask({ task: selectedTask, creating: false }));
@@ -53,7 +47,7 @@ export const TaskEditMenu: FC<TaskEditMenuProps> = ({ selectedTask }) => {
 
   return (
     <motion.div id="taskEditWindow" {...animationProps} style={{ width }} className="active">
-      <TaskModificationInterface creating={false} animationComplete={animationComplete} onSave={onSave} />
+      <TaskModificationInterface creating={false} animationComplete={animationComplete} />
     </motion.div>
   );
 };

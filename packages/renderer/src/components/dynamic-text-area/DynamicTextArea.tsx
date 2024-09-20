@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 interface DynamicTextAreaProps extends React.HTMLProps<HTMLTextAreaElement> {
   value: string;
   allowNewLine?: boolean;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 }
 
 export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
@@ -15,6 +16,7 @@ export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
     value,
     autoFocus,
     onChange,
+    onBlur,
     allowNewLine = true,
   } = props;
 
@@ -59,6 +61,7 @@ export const DynamicTextArea: React.FC<DynamicTextAreaProps> = (props) => {
 
         textareaRef.current.value = cleanupText(e.currentTarget.value);
         onChange(e);
+        onBlur?.(e);
       }}
       placeholder={placeholder}
       maxLength={maxLength}

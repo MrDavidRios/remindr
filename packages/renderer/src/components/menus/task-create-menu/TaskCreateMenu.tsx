@@ -60,7 +60,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
     },
     {
       enableOnFormTags: true,
-      scopes: [HotkeyScope.Menu]
+      scopes: [HotkeyScope.Menu],
     },
   );
 
@@ -89,7 +89,6 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
       <TaskModificationInterface
         animationComplete={animationComplete}
         creating
-        showActionButtons={false}
         onSave={(task: Task) => {
           // If the menu is opening/closing, don't save - this mitigates repeated task saves/creations
           if (animationsEnabled && !animationComplete) return;

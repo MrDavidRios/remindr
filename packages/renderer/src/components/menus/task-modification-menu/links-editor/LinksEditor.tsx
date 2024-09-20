@@ -4,6 +4,7 @@ import type { Link, Task } from '@remindr/shared';
 import { Menu, generateUniqueID } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { showMenu } from '@renderer/features/menu-state/menuSlice';
+import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import {
   getEditedTask,
   setEditedTask,
@@ -33,6 +34,7 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
     const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
     editedTaskClone.links.splice(idx, 1);
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
+    dispatch(updateTask(editedTaskClone));
   };
 
   const onDuplicateLink = (idx: number) => {
@@ -41,6 +43,7 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
     linkClone.id = generateUniqueID();
     editedTaskClone.links.splice(idx + 1, 0, linkClone);
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
+    dispatch(updateTask(editedTaskClone));
   };
 
   return (

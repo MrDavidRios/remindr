@@ -1,10 +1,12 @@
 import { useAppSelector } from '@renderer/hooks';
 import React, { FC, useEffect } from 'react';
 
-interface NotesEditorProps extends React.HTMLProps<HTMLTextAreaElement> {}
+interface NotesEditorProps extends React.HTMLProps<HTMLTextAreaElement> {
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+}
 
 export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
-  const { id, className, placeholder, maxLength, onChange, value } = props;
+  const { id, className, placeholder, maxLength, onChange, onBlur, value } = props;
 
   const spellCheckEnabled = useAppSelector((state) => state.settings.value.spellcheck);
 
@@ -27,6 +29,7 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
 
         textareaRef.current.value = cleanupText(e.currentTarget.value);
         onChange(e);
+        onBlur?.(e);
       }}
       id={id}
       className={className}

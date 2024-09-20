@@ -1,8 +1,8 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
 import openIcon from '@assets/icons/open.svg';
-import { getTaskListActionVerb } from '@remindr/shared';
+import { getTaskListActionVerb, Task } from '@remindr/shared';
 import store from '@renderer/app/store';
-import { setSelectedTask, undoTaskListChange } from '@renderer/features/task-list/taskListSlice';
+import { removeSelectedTask, setSelectedTask, undoTaskListChange } from '@renderer/features/task-list/taskListSlice';
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
@@ -22,7 +22,7 @@ export function UndoNotification() {
 
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const updatedTask = useAppSelector(
-    (state) => state.taskList.value.filter((t) => t.creationTime === undoState?.task.creationTime)[0],
+    (state) => state.taskList.value.filter((t: Task) => t.creationTime === undoState?.task.creationTime)[0],
   );
   const [showUndoNotification, setShowUndoNotification] = useState(false);
 
@@ -53,6 +53,7 @@ export function UndoNotification() {
   }, [undoState]);
 
   function undoTaskAction() {
+    if (undoState?.task !== undefined) dispatch(removeSelectedTask(undoState?.task));
     dispatch(undoTaskListChange());
   }
 
