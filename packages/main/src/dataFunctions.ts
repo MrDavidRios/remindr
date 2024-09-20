@@ -20,6 +20,7 @@ import _ from 'lodash';
 import { quitApp, restartAndUpdateApp, restartApp } from './index.js';
 import { getAppMode } from './utils/appState.js';
 import { deleteFirebaseUser, getUserUID, signOutUser } from './utils/auth.js';
+import { getMainWindow } from './utils/getMainWindow.js';
 import showMessageBox from './utils/messagebox.js';
 import { getSettingsProfile, getUserProfile } from './utils/storeUserData.js';
 import { waitUntil } from './utils/timing.js';
@@ -120,7 +121,7 @@ async function initializeDataListeners() {
     const source = docSnapshot.metadata.hasPendingWrites ? 'Local' : 'Server';
     if (source !== 'Server') return;
 
-    const appWindow = mainWindow ?? BrowserWindow.getFocusedWindow();
+    const appWindow = getMainWindow();
     appWindow?.webContents.send('server-task-list-update', loadedTaskData);
   });
 }
@@ -149,7 +150,7 @@ ipcMain.handle('restart-firestore', async (_event, stringifiedAppData: string) =
 
   restartingFirestore = true;
 
-  log.info('[restart-firestore]: stopping firestore instance...');
+  log.info('[restart-firestore]: stopping firestore instance... stringified app data:', stringifiedAppData);
 
   // save changes
   await terminate(firestore);
@@ -174,10 +175,10 @@ ipcMain.handle('restart-firestore', async (_event, stringifiedAppData: string) =
   const appData: CompleteAppData = JSON.parse(stringifiedAppData);
 
   await saveData('user', JSON.stringify(appData.userData));
-  await saveData('tasks', JSON.stringify(appData.taskData));
+  await saveData('tasks', JSON.stringify(appData.taskData.taskList));
 
   log.info('[restart-firestore]: firestore instance restarted.');
-  return 'sucess: firestore instance restarted';
+  return 'success: firestore instance restarted';
 });
 
 // On logged-in event, add account data change listeners and update UID.
@@ -294,14 +295,14 @@ export async function actionOnSave(action: string) {
  * Called when the window regains focus (updates the save calls in the renderer process).
  */
 export function syncSaveCalls() {
-  const appWindow = mainWindow ?? BrowserWindow.getFocusedWindow();
+  const appWindow = getMainWindow();
   appWindow?.webContents.send('sync-save-calls', saveCalls);
 }
 
 function addSaveCall() {
   saveCalls++;
 
-  const appWindow = mainWindow ?? BrowserWindow.getFocusedWindow();
+  const appWindow = getMainWindow();
   if (getAppMode() === AppMode.Online) appWindow?.webContents.send('sync-save-calls', saveCalls);
 
   canQuit = false;
@@ -310,7 +311,7 @@ function addSaveCall() {
 function removeSaveCall() {
   saveCalls--;
 
-  const appWindow = mainWindow ?? BrowserWindow.getFocusedWindow();
+  const appWindow = getMainWindow();
   if (getAppMode() === AppMode.Online) appWindow?.webContents.send('sync-save-calls', saveCalls);
 
   if (saveCalls === 0) {
@@ -327,7 +328,7 @@ function removeSaveCall() {
  */
 const saveCallDurations = new Map<number, number>();
 let saveCallsMade = 0;
-export async function saveData(scope: string, stringifiedReminderList?: string): Promise<string | void> {
+export async function saveData(scope: 'user' | 'tasks', stringifiedTaskList?: string): Promise<string | void> {
   addSaveCall();
   log.info('(saveData) save call added... save calls:', saveCalls);
 
@@ -350,7 +351,7 @@ export async function saveData(scope: string, stringifiedReminderList?: string):
 
       if (saveCallDurations.has(saveCallIdx)) {
         log.info(`(saveData) save call #${saveCallIdx} took too long to complete. Restarting Firestore...`);
-        const appWindow = mainWindow ?? BrowserWindow.getFocusedWindow();
+        const appWindow = getMainWindow();
         appWindow?.webContents.send('restart-firestore');
       }
     }, 5000);
@@ -415,12 +416,11 @@ export async function saveData(scope: string, stringifiedReminderList?: string):
     }
     case 'tasks':
       {
-        if (!stringifiedReminderList) {
-          throw new Error('saveData - reminders: reminderList is undefined.');
+        if (!stringifiedTaskList) {
+          throw new Error('saveData - tasks: stringifiedTaskList is undefined.');
         }
 
-        // Expecting a 'ReminderCollection' class
-        const reminderListCopy = JSON.parse(stringifiedReminderList) as Task[];
+        const reminderListCopy = JSON.parse(stringifiedTaskList) as Task[];
 
         if (getAppMode() !== AppMode.Online) {
           store.set('reminders', reminderListCopy);
@@ -560,7 +560,7 @@ export async function loadData(
 
       if (!firestore) throw new Error('loadData: Firestore instance does not exist.');
 
-      log.info('%cLoading reminders data...', 'color: grey');
+      log.info('%cLoading task data...', 'color: grey');
 
       taskData = new TaskCollection();
 
@@ -569,7 +569,7 @@ export async function loadData(
       if (!docData.exists || !docData.docSnapshot) {
         taskDataExists = false;
 
-        // if task data doesn't exist, try to creat ea new document with an empty task list.
+        // if task data doesn't exist, try to create a new document with an empty task list.
         await saveData('tasks', JSON.stringify(new TaskCollection()));
 
         return loadData('tasks');
@@ -579,14 +579,14 @@ export async function loadData(
 
       const loadedTaskList = docData.docSnapshot.data()!.reminderList;
 
-      const instantiatedReminderList: Task[] = [];
+      const instantiatedTaskList: Task[] = [];
 
       for (let i = 0; i < loadedTaskList.length; i++) {
         const task = loadedTaskList[i];
-        instantiatedReminderList.push(task);
+        instantiatedTaskList.push(task);
       }
 
-      taskData.taskList = instantiatedReminderList;
+      taskData.taskList = instantiatedTaskList;
 
       return taskData;
     }
