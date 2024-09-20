@@ -18,11 +18,17 @@ vi.mock('@renderer/scripts/utils/userData', () => {
 });
 
 vi.mock('@renderer/scripts/systems/authentication', () => {
-  return {};
+  return {
+    getEmailVerifiedValue: vi.fn(() => true),
+  };
 });
 
 vi.mock('@renderer/app/store', () => {
-  return {};
+  return {
+    default: {
+      getState: vi.fn(),
+    },
+  };
 });
 
 vi.mock('@renderer/features/task-list/taskListSync', () => {

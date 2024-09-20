@@ -15,7 +15,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
   store?: AppStore;
 }
 
-const setupTestStore = (preloadedState?: Partial<RootState>) => {
+export const setupTestStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: rootReducer,
     preloadedState,
