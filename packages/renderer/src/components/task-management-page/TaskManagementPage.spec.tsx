@@ -1,8 +1,7 @@
 import { renderWithProviders, setupTestStore } from '@mocks/store-utils';
-import { testTask } from '@mocks/testObjs';
-import { createDefaultSettings, DateFormat, MenuState, ScheduledReminder, setDate, Timeframe } from '@remindr/shared';
+import { mockTaskListState, testTask } from '@mocks/testObjs';
+import { createDefaultSettings, DateFormat, MenuState, ScheduledReminder, setDate } from '@remindr/shared';
 import store from '@renderer/app/store';
-import { TaskListState } from '@renderer/features/task-list/taskListSlice';
 import { screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { TaskManagementPage } from './TaskManagementPage';
@@ -15,17 +14,6 @@ const mockMenuState: MenuState = {
     yOffset: { topAnchored: 0, bottomAnchored: 0 },
     gap: 0,
   },
-};
-
-const mockTaskListState: TaskListState = {
-  value: [],
-  taskListGetStatus: 'succeeded',
-  timeframe: Timeframe.All,
-  selectedTasks: [],
-  searchQuery: '',
-  taskListDisplayOutdated: false,
-  lastSelectedTaskNoShift: undefined,
-  lastTaskListAction: undefined,
 };
 
 describe('Task Management Page', () => {

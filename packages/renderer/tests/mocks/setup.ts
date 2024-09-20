@@ -37,6 +37,12 @@ vi.mock('@renderer/features/task-list/taskListSync', () => {
   };
 });
 
+vi.mock('@renderer/scripts/utils/taskfunctions', () => {
+  return {
+    saveTaskData: vi.fn(),
+  };
+});
+
 vi.mock('@renderer/scripts/utils/hooks/usedetectwheel', () => {
   return {
     useDetectWheel: vi.fn(),
