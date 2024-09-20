@@ -217,10 +217,10 @@ const firebaseHandler = {
 };
 
 const dataHandler = {
-  saveData: (scope: 'user' | 'tasks' | 'all', stringifiedReminderList?: string) => {
-    return ipcRenderer.invoke('save-data', scope, stringifiedReminderList);
+  saveData: (scope: 'user' | 'tasks', stringifiedTaskList?: string) => {
+    return ipcRenderer.invoke('save-data', scope, stringifiedTaskList);
   },
-  loadData: (scope: string) => {
+  loadData: (scope: 'user' | 'tasks' | 'all') => {
     return ipcRenderer.invoke('load-data', scope);
   },
   deleteAccountData: () => {

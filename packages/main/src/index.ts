@@ -11,7 +11,7 @@ import { readFile } from 'fs/promises';
 import { platform } from 'node:process';
 import path from 'path';
 import { initAutoUpdaterEventHandlers } from './appUpdater.js';
-import { deleteAccountData, isSaving, loadData, saveData, setMainWindowForDataFunctions } from './dataFunctions.js';
+import { deleteAccountData, isSaving, loadData, saveData } from './dataFunctions.js';
 import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
 import { initAppStateListeners } from './utils/appState.js';
@@ -76,8 +76,6 @@ export const callSetupFunctions = (window: BrowserWindow) => {
 
   // Dependent on Firebase
   initAuthEventListeners(window);
-
-  setMainWindowForDataFunctions(window);
 };
 
 /**
@@ -229,8 +227,8 @@ ipcMain.handle('show-message-box', (_event, options: MessageBoxOptions) => {
 // #endregion
 
 // #region Data
-ipcMain.handle('save-data', (_event, scope: string, stringifiedData: string) => {
-  saveData(scope, stringifiedData);
+ipcMain.handle('save-data', (_event, scope: 'user' | 'tasks', stringifiedTaskList: string) => {
+  saveData(scope, stringifiedTaskList);
 });
 
 ipcMain.handle('load-data', (_event, scope: 'user' | 'tasks' | 'all') => {

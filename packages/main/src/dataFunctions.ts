@@ -1,6 +1,6 @@
 import type { CompleteAppData, Settings, Task } from '@remindr/shared';
 import { AppMode, User as RemindrUser, TaskCollection, createDefaultSettings } from '@remindr/shared';
-import { BrowserWindow, ipcMain } from 'electron';
+import { ipcMain } from 'electron';
 import log from 'electron-log';
 import Store from 'electron-store';
 import { getApp } from 'firebase/app';
@@ -34,8 +34,6 @@ let restartingFirestore = false;
 let taskDocRef: DocumentReference<DocumentData>;
 let userDocRef: DocumentReference<DocumentData>;
 
-let mainWindow: BrowserWindow | undefined;
-
 let saveCalls = 0;
 let canQuit = true;
 
@@ -47,14 +45,6 @@ const deviceID = `_${Math.random().toString(36).substring(2, 9)}`;
 // #region Data Listeners
 let userDataListener: Unsubscribe | undefined;
 let taskDataListener: Unsubscribe | undefined;
-
-/**
- * Populated the main window variable in the data functions script.
- * @param window
- */
-export function setMainWindowForDataFunctions(window: BrowserWindow) {
-  mainWindow = window;
-}
 
 async function initializeDataListeners() {
   dataListenersRemoved = false;
@@ -150,7 +140,7 @@ ipcMain.handle('restart-firestore', async (_event, stringifiedAppData: string) =
 
   restartingFirestore = true;
 
-  log.info('[restart-firestore]: stopping firestore instance... stringified app data:', stringifiedAppData);
+  log.info('[restart-firestore]: stopping firestore instance...');
 
   // save changes
   await terminate(firestore);
