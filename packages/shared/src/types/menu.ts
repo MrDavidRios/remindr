@@ -1,3 +1,5 @@
+import { Task } from './classes/index.js';
+
 export enum Menu {
   TimeframeMenu,
   AccountMenu,
@@ -16,17 +18,28 @@ export enum Menu {
   UpdateNotification,
 }
 
-export interface MenuRect {
+export interface MenuPosition {
   x: number;
   y: number;
+}
+
+export interface MenuRect extends MenuPosition {
   width: number;
   height: number;
 }
 
 export interface MenuState {
   openMenus: Menu[];
+  openContextMenus: ContextMenuType[];
+  contextMenuPositions: Record<ContextMenuType, MenuPosition>;
+  contextMenuTask?: Task;
   dialogInfo: DialogState;
   scheduledReminderEditorPosition: FloatingMenuPosition;
+}
+
+export enum ContextMenuType {
+  TaskContextMenu = 'taskContextMenu',
+  GeneralContextMenu = 'generalContextMenu',
 }
 
 export interface DialogState extends DialogProps {

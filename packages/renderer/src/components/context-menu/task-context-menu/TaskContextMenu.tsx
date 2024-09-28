@@ -4,15 +4,16 @@ import skipIcon from '@assets/icons/skip.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import unpinIcon from '@assets/icons/unpin.svg';
 import type { Task } from '@remindr/shared';
-import { taskHasReminders } from '@remindr/shared';
-import type { AppDispatch } from '@renderer/app/store';
+import { ContextMenuType, taskHasReminders } from '@remindr/shared';
 import store from '@renderer/app/store';
+import { hideContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
   clearSelectedTasks,
   duplicateTask,
   removeTask,
   togglePinTask,
 } from '@renderer/features/task-list/taskListSlice';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { doIfTaskMenusAreClosed } from '@renderer/scripts/utils/menuutils';
 import React from 'react';
 import ReactFocusLock from 'react-focus-lock';
@@ -21,20 +22,20 @@ import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 import { ContextMenu } from '../ContextMenu';
 import { PostponeContextMenu } from './PostponeContextMenu';
 
-interface TaskContextMenuProps {
-  x: number;
-  y: number;
-  task: Task;
-  dispatch: AppDispatch;
-  hideTaskContextMenu: () => void;
-}
+export const TaskContextMenu: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { x, y } = useAppSelector((state) => state.menuState.contextMenuPositions[ContextMenuType.TaskContextMenu]);
+  const task = useAppSelector((state) => state.menuState.contextMenuTask);
 
-export const TaskContextMenu: React.FC<TaskContextMenuProps> = ({ x, y, task, dispatch, hideTaskContextMenu }) => {
+  const hideTaskContextMenu = () => dispatch(hideContextMenu(ContextMenuType.TaskContextMenu));
+
   useHotkeys('mod+p', () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))));
   useHotkeys('mod+d', () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))));
   useHotkeys('delete', () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTask(t)))));
 
-  function dropdownAction(actionTask: Task, action: (t: Task) => void) {
+  function dropdownAction(actionTask: Task | undefined, action: (t: Task) => void) {
+    if (actionTask === undefined) return;
+
     const selectedTasks = store.getState().taskList.selectedTasks;
 
     const actionTaskSelected = selectedTasks.filter((t) => t.creationTime === actionTask.creationTime).length > 0;
@@ -56,7 +57,7 @@ export const TaskContextMenu: React.FC<TaskContextMenuProps> = ({ x, y, task, di
     <ContextMenu id="taskContextMenu" x={x} y={y} hideMenu={hideTaskContextMenu}>
       <ReactFocusLock>
         <ArrowNavigable className="menu frosted" query=":scope > li:not(.hidden)" asUl autoFocus waitForChildAnimation>
-          {task.pinned ? (
+          {task?.pinned ? (
             <li title="Unpin task (Ctrl + P)" onClick={() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))}>
               <img src={unpinIcon} className="task-tile-image" draggable="false" alt="" />
               <p>Unpin</p>
@@ -79,7 +80,7 @@ export const TaskContextMenu: React.FC<TaskContextMenuProps> = ({ x, y, task, di
             <img src={skipIcon} className="task-tile-image" draggable="false" alt="" />
             <p>Skip</p>
           </li>
-          {taskHasReminders(task) && (
+          {task && taskHasReminders(task) && (
             <PostponeContextMenu dropdownAction={dropdownAction} task={task} dispatch={dispatch} />
           )}
           <li

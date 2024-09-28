@@ -1,6 +1,6 @@
 import pinIcon from '@assets/icons/pin.svg';
-import type { Task } from '@remindr/shared';
-import { GeneralContextMenu } from '@renderer/components/context-menu/GeneralContextMenu';
+import { ContextMenuType, type Task } from '@remindr/shared';
+import { showContextMenu } from '@renderer/features/menu-state/menuSlice';
 import { updateTaskGroupOrder } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
@@ -31,7 +31,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
   }, shallowEqual);
 
   const [expanded, setExpanded] = useState(true);
-  const [showContextMenu, setShowContextMenu] = useState({ show: false, x: 0, y: 0 });
 
   const pinned = name === 'Pinned';
   const reorderable = name === 'To-do';
@@ -87,7 +86,9 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
         <button
           className={`task-group-header frosted ${pinned ? 'icon' : ''} ${animationsEnabled ? 'animate' : ''}`}
           onClick={() => setExpanded(!expanded)}
-          onContextMenu={(e) => setShowContextMenu({ show: true, x: e.clientX, y: e.clientY })}
+          onContextMenu={(e) =>
+            dispatch(showContextMenu({ contextMenu: ContextMenuType.GeneralContextMenu, x: e.clientX, y: e.clientY }))
+          }
           type="button"
         >
           {pinned && <img id="rotatedPinnedIcon" src={pinIcon} className="svg-filter" draggable="false" alt="" />}
@@ -103,13 +104,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
           name={name}
         />
       </motion.div>
-      {showContextMenu.show && (
-        <GeneralContextMenu
-          x={showContextMenu.x}
-          y={showContextMenu.y}
-          hideGeneralContextMenu={() => setShowContextMenu({ show: false, x: 0, y: 0 })}
-        />
-      )}
     </>
   );
 });

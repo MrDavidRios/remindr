@@ -1,6 +1,6 @@
-import { Task, reminderRepeats } from '@remindr/shared';
+import { ContextMenuType, Task, reminderRepeats } from '@remindr/shared';
 import { AppDispatch } from '@renderer/app/store';
-import { TaskContextMenu } from '@renderer/components/context-menu/task-context-menu/TaskContextMenu';
+import { showContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
   addSelectedTask,
   removeSelectedTask,
@@ -51,10 +51,7 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
 
   const hasIndicators = hasReminders || hasNotes || repeats || multipleReminders || hasSubtasks || hasLinks;
 
-  const [showContextMenu, setShowContextMenu] = useState({ show: false, x: 0, y: 0 });
-
   const animationsEnabled = useAnimationsEnabled();
-
   const [animating, setAnimating] = useState(false);
 
   const opacityWhenVisible = task.completed ? 0.7 : 1;
@@ -110,7 +107,7 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
       completeButton.tabIndex = -1;
     },
     onContextMenu: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) =>
-      setShowContextMenu({ show: true, x: e.clientX, y: e.clientY }),
+      dispatch(showContextMenu({ contextMenu: ContextMenuType.TaskContextMenu, task, x: e.clientX, y: e.clientY })),
   };
 
   const defaultWrapperRef = useRef<HTMLLIElement>(null);
@@ -159,15 +156,6 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
         >
           <TaskTileContents task={task} />
         </motion.li>
-      )}
-      {showContextMenu.show && (
-        <TaskContextMenu
-          task={task}
-          dispatch={dispatch}
-          x={showContextMenu.x}
-          y={showContextMenu.y}
-          hideTaskContextMenu={() => setShowContextMenu({ show: false, x: 0, y: 0 })}
-        />
       )}
     </>
   );

@@ -1,10 +1,23 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { DialogProps, FloatingMenuPosition, Menu, MenuState, floatingMenus } from '@remindr/shared';
+import {
+  ContextMenuType,
+  DialogProps,
+  FloatingMenuPosition,
+  Menu,
+  MenuState,
+  Task,
+  floatingMenus,
+} from '@remindr/shared';
 import { isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
 
 export const initialMenuState: MenuState = {
   openMenus: [],
+  openContextMenus: [],
+  contextMenuPositions: {
+    [ContextMenuType.TaskContextMenu]: { x: 0, y: 0 },
+    [ContextMenuType.GeneralContextMenu]: { x: 0, y: 0 },
+  },
   dialogInfo: { title: undefined, message: '', options: [], result: undefined },
   scheduledReminderEditorPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
 };
@@ -55,6 +68,22 @@ export const menuStateSlice = createSlice({
 
       state.openMenus.push(action.payload);
     },
+    showContextMenu: (
+      state,
+      action: PayloadAction<{ contextMenu: ContextMenuType; task?: Task; x: number; y: number }>,
+    ) => {
+      if (state.openContextMenus.includes(action.payload.contextMenu)) return;
+
+      state.contextMenuTask = action.payload.task;
+      state.contextMenuPositions[action.payload.contextMenu] = { x: action.payload.x, y: action.payload.y };
+      state.openContextMenus.push(action.payload.contextMenu);
+    },
+    hideContextMenu: (state, action: PayloadAction<ContextMenuType>) => {
+      // Clear context menu task when closing a context menu
+      if (state.contextMenuTask !== undefined) state.contextMenuTask = undefined;
+
+      _.remove(state.openContextMenus, (menu) => menu === action.payload);
+    },
     showDialog: (state, action: PayloadAction<DialogProps>) => {
       state.openMenus.push(Menu.MessageModal);
       state.dialogInfo = action.payload;
@@ -70,5 +99,13 @@ export const menuStateSlice = createSlice({
 });
 
 export default menuStateSlice.reducer;
-export const { showMenu, hideMenu, toggleMenu, showDialog, setDialogResult, setFloatingMenuPosition } =
-  menuStateSlice.actions;
+export const {
+  showMenu,
+  hideMenu,
+  toggleMenu,
+  showContextMenu,
+  hideContextMenu,
+  showDialog,
+  setDialogResult,
+  setFloatingMenuPosition,
+} = menuStateSlice.actions;

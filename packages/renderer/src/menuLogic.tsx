@@ -2,6 +2,7 @@ import { AppMode, Menu } from '@remindr/shared';
 import { AnimatePresence } from 'framer-motion';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { AppDispatch } from './app/store';
+import { ContextMenus } from './components/context-menu/ContextMenus';
 import { AccountMenu } from './components/menus/account-menu/AccountMenu';
 import { LinkMenu } from './components/menus/link-menu/LinkMenu';
 import { ScheduledReminderEditMenu } from './components/menus/scheduled-reminder-menus/scheduled-reminder-edit-menu/ScheduledReminderEditMenu';
@@ -27,6 +28,7 @@ export const DisplayMenus = () => {
 
   return (
     <>
+      <ContextMenus />
       <AnimatePresence>
         {isMenuOpen(menuState, Menu.ScheduledReminderEditMenu) && <ScheduledReminderEditMenu />}
       </AnimatePresence>
