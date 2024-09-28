@@ -7,7 +7,7 @@
   "author": {
     "email": "mr.daverios@gmail.com",
     "name": "David Rios",
-    "url": "https://mrdavidrios.github.io"
+    "url": "https://drios.dev"
   },
   "main": "packages/main/dist/index.js",
   "packageManager": "npm@10.8.3",

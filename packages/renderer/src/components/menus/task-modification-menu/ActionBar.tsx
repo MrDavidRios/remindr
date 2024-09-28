@@ -113,11 +113,12 @@ function useSetupHotkeys(task: Task, creatingTask: boolean, onSave: (task: Task)
   useHotkeys(
     'mod+s',
     (e) => {
+      const taskCreationMenuOpen = isMenuOpen(store.getState().menuState, Menu.TaskCreateMenu);
+
       if (
         isFullscreenMenuOpen(store.getState().menuState) ||
         isMenuOpen(store.getState().menuState, Menu.ScheduledReminderEditMenu) ||
-        (!isMenuOpen(store.getState().menuState, Menu.TaskCreateMenu) &&
-          !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu)) ||
+        !taskCreationMenuOpen ||
         e.repeat
       )
         return;
