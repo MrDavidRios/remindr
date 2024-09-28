@@ -9,8 +9,8 @@ import { clearSelectedTasks, setTimeframe } from '@renderer/features/task-list/t
 import { useAppDispatch } from '@renderer/hooks';
 import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import { motion } from 'framer-motion';
-import _ from 'lodash';
 import { useEffect, useRef } from 'react';
 import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
@@ -94,7 +94,7 @@ export function TimeframeSelectMenu() {
     if (selectedTasks.length !== 1) return;
 
     const taskListOnScreen = getTaskListWithinTimeframe(store.getState().taskList.value, timeframe);
-    const taskIdx = _.findIndex(taskListOnScreen, selectedTasks[0]);
+    const taskIdx = getTaskIdx(selectedTasks[0], taskListOnScreen);
     if (taskIdx === -1) dispatch(clearSelectedTasks());
   };
 

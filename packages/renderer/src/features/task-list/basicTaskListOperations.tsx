@@ -56,7 +56,7 @@ export const completeTaskReducer = (
   const hasRecurringReminders = taskHasRecurringReminders(task);
 
   // If the task is selected, de-select it
-  if (_.findIndex(state.selectedTasks, task) > -1) _.remove(state.selectedTasks, task);
+  if (getTaskIdx(task, state.selectedTasks) > -1) _.remove(state.selectedTasks, task);
 
   if (!hasRecurringReminders) {
     // If the task doesn't have recurring reminders, just remove it
@@ -121,7 +121,7 @@ export const markTaskIncompleteReducer = (
   const task = action.payload;
 
   // If the task is selected, de-select it
-  if (_.findIndex(state.selectedTasks, task) > -1) _.remove(state.selectedTasks, task);
+  if (getTaskIdx(task, state.selectedTasks) > -1) _.remove(state.selectedTasks, task);
 
   // It is assumed that recurring reminders won't need any special treatment when marking tasks as incomplete.
   state.value[taskIdx].completed = false;

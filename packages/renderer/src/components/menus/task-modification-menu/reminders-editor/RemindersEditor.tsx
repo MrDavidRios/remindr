@@ -103,8 +103,6 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
   const onDeleteReminder = (idx: number) => {
     dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu }));
 
-    console.log('Deleting reminder at index', idx);
-
     editedTaskClone.scheduledReminders.splice(idx, 1);
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
     dispatch(updateTask(editedTaskClone));

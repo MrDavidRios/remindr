@@ -10,6 +10,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { taskHasNotes } from '@renderer/scripts/utils/taskfunctions';
+import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import { Reorder, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
@@ -39,10 +40,10 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
     (state) => state.taskList.selectedTasks,
     (selectedTasksBefore, selectedTasksAfter) => taskSelectionChange(task, selectedTasksBefore, selectedTasksAfter),
   );
-  const selected = _.findIndex(selectedTasks, task) >= 0;
+
+  const selected = getTaskIdx(task, selectedTasks) >= 0;
 
   const hasReminders = task.scheduledReminders.length > 0;
-
   const hasNotes = taskHasNotes(task);
   const repeats = hasReminders ? reminderRepeats(task.scheduledReminders[0]) : false;
   const multipleReminders = task.scheduledReminders.length > 1;

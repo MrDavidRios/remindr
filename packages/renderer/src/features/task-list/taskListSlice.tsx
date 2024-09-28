@@ -105,7 +105,8 @@ export const taskListSlice = createSlice({
       document.title = `${getTimeframeDisplayName(action.payload)} - Remindr`;
     },
     setSelectedTask: (state, action: PayloadAction<InstanceType<typeof Task>>) => {
-      const taskIdx = _.findIndex(state.selectedTasks, action.payload);
+      const taskIdx = getTaskIdx(action.payload, state.selectedTasks);
+
       if (taskIdx >= 0 && state.selectedTasks.length === 1) {
         // If task is the only one selected, deselect it
         state.selectedTasks.splice(taskIdx, 1);
@@ -117,7 +118,8 @@ export const taskListSlice = createSlice({
       state.selectedTasks = [action.payload];
     },
     addSelectedTask: (state, action: PayloadAction<InstanceType<typeof Task>>) => {
-      const taskIdx = _.findIndex(state.selectedTasks, action.payload);
+      const taskIdx = getTaskIdx(action.payload, state.selectedTasks);
+
       if (taskIdx >= 0) {
         state.selectedTasks.splice(taskIdx, 1);
         return;
@@ -156,8 +158,8 @@ export const taskListSlice = createSlice({
         state.searchQuery,
       );
 
-      let anchorIdx = _.findIndex(tasksOnScreen, state.lastSelectedTaskNoShift);
-      let endingTaskIdx = _.findIndex(tasksOnScreen, action.payload);
+      let anchorIdx = getTaskIdx(state.lastSelectedTaskNoShift, tasksOnScreen);
+      let endingTaskIdx = getTaskIdx(action.payload, tasksOnScreen);
 
       if (anchorIdx > endingTaskIdx) {
         const temp = endingTaskIdx;
@@ -166,8 +168,6 @@ export const taskListSlice = createSlice({
       }
 
       const tasksBetween = tasksOnScreen.slice(anchorIdx, endingTaskIdx + 1);
-
-      console.log(`[selectTasksBetween] - tasks between ${anchorIdx} and ${endingTaskIdx}:`, tasksBetween);
 
       state.selectedTasks = tasksBetween;
     },
@@ -178,7 +178,7 @@ export const taskListSlice = createSlice({
       if (!state.lastTaskListAction) return;
       if (state.lastTaskListAction.undone) return;
 
-      const selectedTaskIdx = _.findIndex(state.selectedTasks, state.lastTaskListAction.task);
+      const selectedTaskIdx = getTaskIdx(state.lastTaskListAction.task, state.selectedTasks);
       if (selectedTaskIdx >= 0) state.selectedTasks.splice(selectedTaskIdx, 1);
 
       const taskIdx = getTaskIdx(state.lastTaskListAction.task, state.value);

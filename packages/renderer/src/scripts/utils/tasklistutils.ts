@@ -9,7 +9,9 @@ export function getOverdueAmount(taskList: Task[]) {
   }).length;
 }
 
-export function getTaskIdx(task: Task, taskList: Task[]) {
+export function getTaskIdx(task: Task | undefined, taskList: Task[]) {
+  if (task === undefined) return -1;
+
   return _.findIndex(taskList, (t) => t.creationTime === task.creationTime);
 }
 
