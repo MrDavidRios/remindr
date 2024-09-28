@@ -46,6 +46,7 @@ export function GeneralSettingsPage() {
               tabIndex={0}
               id="hideOnStartup"
               name="hide-on-startup"
+              disabled={!settings.autoStartup}
               checked={settings.hideOnStartup}
               onChange={(e) => {
                 dispatch(
