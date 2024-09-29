@@ -144,13 +144,11 @@ export function formatDate(
 ): string {
   let includeYear = true;
 
+  // DateFormat.MDYText ('en-US') by default
   let locale = 'en-US';
 
   // Get locale based on user's settings
   switch (dateFormat) {
-    case DateFormat.MDYText:
-      locale = 'en-US';
-      break;
     case DateFormat.DMYText:
       locale = 'en-GB';
       break;

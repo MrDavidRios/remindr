@@ -1,4 +1,4 @@
-import { ScheduledReminder, getReminderDate } from '@remindr/shared';
+import { ScheduledReminder, getReminderDate, isCurrentMinute, setDate } from '@remindr/shared';
 import { describe, expect, it } from 'vitest';
 
 describe('getReminderDate', () => {
@@ -38,5 +38,23 @@ describe('getReminderDate', () => {
     const result = getReminderDate(reminderTime);
 
     expect(result).toEqual(expectedDate);
+  });
+});
+
+describe('isCurrentMinute', () => {
+  it('should return true if the reminder time is set to the current minute', () => {
+    const reminderTime = setDate(new ScheduledReminder(), new Date());
+
+    const result = isCurrentMinute(reminderTime);
+    expect(result).toBe(true);
+  });
+
+  it('should return false if the reminder time is not set to the current minute', () => {
+    const nextSecond = new Date();
+    nextSecond.setMinutes(new Date().getMinutes() + 1);
+    const reminderTime = setDate(new ScheduledReminder(), nextSecond);
+
+    const result = isCurrentMinute(reminderTime);
+    expect(result).toBe(false);
   });
 });
