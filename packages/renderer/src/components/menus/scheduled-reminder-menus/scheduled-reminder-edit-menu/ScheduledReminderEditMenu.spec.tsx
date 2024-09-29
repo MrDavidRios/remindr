@@ -1,20 +1,10 @@
 import { renderWithProviders } from '@mocks/store-utils';
-import { mockTaskListState, testTask } from '@mocks/testObjs';
+import { getMockTaskListState, mockMenuState, testTask } from '@mocks/testObjs';
 import { DateFormat, Menu, Repeat, ScheduledReminder, setDate } from '@remindr/shared';
 import { cleanup, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, test } from 'vitest';
 import { ScheduledReminderEditMenu } from './ScheduledReminderEditMenu';
-
-const mockMenuState = {
-  openMenus: [Menu.ScheduledReminderEditMenu],
-  dialogInfo: { title: undefined, message: '', options: [], result: undefined },
-  scheduledReminderEditorPosition: {
-    anchor: { x: 0, y: 0, width: 0, height: 0 },
-    yOffset: { topAnchored: 0, bottomAnchored: 0 },
-    gap: 0,
-  },
-};
 
 describe('Scheduled Reminder Edit Menu', () => {
   const testScheduledReminder = setDate(new ScheduledReminder(), new Date());
@@ -26,8 +16,8 @@ describe('Scheduled Reminder Edit Menu', () => {
       <ScheduledReminderEditMenu />,
       { dateFormat: DateFormat.YMDNumeric },
       {
-        menuState: mockMenuState,
-        taskList: { ...mockTaskListState, value: [testTask] },
+        menuState: { ...mockMenuState, openMenus: [Menu.ScheduledReminderEditMenu] },
+        taskList: getMockTaskListState([testTask]),
         taskModificationState: {
           taskEditState: { originalTask: testTask, editedTask: editedTask },
           taskCreationState: { originalTask: testTask, editedTask: editedTask },

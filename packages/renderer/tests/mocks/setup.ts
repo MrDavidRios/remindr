@@ -37,8 +37,11 @@ vi.mock('@renderer/features/task-list/taskListSync', () => {
   };
 });
 
-vi.mock('@renderer/scripts/utils/taskfunctions', () => {
+vi.mock('@renderer/scripts/utils/taskfunctions', async () => {
+  const taskFunctions = await vi.importActual('@renderer/scripts/utils/taskfunctions');
+
   return {
+    ...taskFunctions,
     saveTaskData: vi.fn(),
   };
 });
