@@ -2,7 +2,7 @@ import { restoreOrCreateWindow } from '@main/mainWindow.js';
 import initUserDataListeners, { isAutoStartupEnabled, isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
 import type { BadgeInfo, Task } from '@remindr/shared';
 import type { BrowserWindow, MessageBoxOptions } from 'electron';
-import { app, dialog, ipcMain, nativeImage, nativeTheme, shell } from 'electron';
+import { app, dialog, ipcMain, nativeImage, nativeTheme, session, shell } from 'electron';
 import Store from 'electron-store';
 import updater from 'electron-updater';
 import type { EncodingOption } from 'fs';
@@ -17,6 +17,7 @@ import './security-restrictions';
 import { initAppStateListeners } from './utils/appState.js';
 import initAuthEventListeners from './utils/auth.js';
 import { initFirebase } from './utils/firebase.js';
+import { getExtensionPath } from './utils/getExtensionPath.js';
 import { getMainAssetPath } from './utils/getMainAssetPath.js';
 import { getMainWindow } from './utils/getMainWindow.js';
 import { getPageTitle } from './utils/getPageTitle.js';
@@ -87,6 +88,23 @@ app
     await restoreOrCreateWindow();
   })
   .catch((e) => console.error('Failed create window:', e));
+
+if (import.meta.env.DEV) {
+  // Download React DevTools v4.25 here: https://polypane.app/fmkadmapgofadopljbjfkapdkoienihi.zip
+  // (https://github.com/facebook/react/issues/25843#issuecomment-1732226279)
+  const reactDevToolsPath = getExtensionPath(
+    'lmhkpmbekcpmknklioeibfkpmmfibljd/3.2.7_0',
+    undefined,
+    '/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi',
+  );
+
+  const reduxDevToolsPath = getExtensionPath('lmhkpmbekcpmknklioeibfkpmmfibljd/3.2.7_0');
+
+  app.whenReady().then(async () => {
+    await session.defaultSession.loadExtension(reactDevToolsPath);
+    await session.defaultSession.loadExtension(reduxDevToolsPath);
+  });
+}
 
 /**
  * Check for app updates, install it in background and notify user that new version was installed.
