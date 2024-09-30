@@ -1,4 +1,5 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { ipcMain } from 'electron';
+import { getMainWindow } from './getMainWindow.js';
 
 let mainMsgBoxId = 0;
 export default function showMessageBox(
@@ -9,7 +10,7 @@ export default function showMessageBox(
 ): Promise<{ response: number; checkboxChecked: boolean }> {
   const msgBoxId = mainMsgBoxId;
 
-  BrowserWindow.getFocusedWindow()?.webContents.send(
+  getMainWindow()?.webContents.send(
     'show-message-box',
     JSON.stringify({
       title,

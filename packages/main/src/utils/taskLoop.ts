@@ -2,6 +2,7 @@ import { notify } from '@main/notifications.js';
 import { isBetweenDates, isCurrentMinute, isOverdue, taskHasReminders, type Task } from '@remindr/shared';
 import { BrowserWindow } from 'electron';
 import Store from 'electron-store';
+import { getMainWindow } from './getMainWindow.js';
 
 const store = new Store();
 
@@ -36,7 +37,7 @@ function checkForReminders(mainWindow: BrowserWindow): void {
   let wasIdle = false;
 
   // Trigger re-render
-  (mainWindow ?? BrowserWindow.getFocusedWindow())?.webContents.send('task-display-outdated');
+  getMainWindow()?.webContents.send('task-display-outdated');
 
   if (getLastCheckTime()) {
     const timeDifference = new Date().getTime() - getLastCheckTime().getTime();
@@ -66,7 +67,7 @@ function checkForReminders(mainWindow: BrowserWindow): void {
 
       if (isCurrentMinute(scheduledReminder)) {
         if (scheduledReminder.repeat) {
-          (mainWindow ?? BrowserWindow.getFocusedWindow())?.webContents.send('advance-recurring-reminder', {
+          getMainWindow()?.webContents.send('advance-recurring-reminder', {
             task,
             index: j,
           });

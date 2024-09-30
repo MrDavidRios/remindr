@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { callSetupFunctions } from './index.js';
 import TrayBuilder from './tray.js';
+import { getMainWindow } from './utils/getMainWindow.js';
 
 const store = new Store();
 
@@ -108,7 +109,7 @@ async function createWindow() {
  * Restore an existing BrowserWindow or Create a new BrowserWindow.
  */
 export async function restoreOrCreateWindow() {
-  let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
+  let window = getMainWindow();
 
   if (window === undefined) {
     window = await createWindow();
