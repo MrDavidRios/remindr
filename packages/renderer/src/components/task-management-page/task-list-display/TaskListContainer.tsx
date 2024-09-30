@@ -27,14 +27,6 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
   useHotkeys(
     'esc',
     () => {
-      console.log(
-        'attempting to clear selected tasks...',
-        'fullscreen menu open: ',
-        isFullscreenMenuOpen(store.getState().menuState),
-        'floating menu open: ',
-        isFloatingMenuOpen(store.getState().menuState),
-      );
-
       if (isFullscreenMenuOpen(store.getState().menuState) || isFloatingMenuOpen(store.getState().menuState)) return;
 
       dispatch(clearSelectedTasks());
