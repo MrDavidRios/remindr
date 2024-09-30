@@ -4,7 +4,7 @@ import { backdropAnimationProps, menuAnimationProps } from '@renderer/animation'
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion } from 'framer-motion';
-import { createContext, FC, HTMLAttributes, ReactNode, useEffect, useRef } from 'react';
+import { createContext, FC, HTMLAttributes, ReactNode, useEffect } from 'react';
 import ReactFocusLock from 'react-focus-lock';
 import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 interface FullScreenMenuProps extends HTMLAttributes<HTMLDivElement> {
@@ -30,26 +30,16 @@ export const FullScreenMenu: FC<FullScreenMenuProps> = ({
 
   const classes = `fullscreen-menu frosted ${modal ? 'modal-menu' : ''} ${className}`;
 
-  const { enableScope, disableScope, enabledScopes } = useHotkeysContext();
+  const { enableScope, disableScope } = useHotkeysContext();
   const hotkeyScope = modal ? HotkeyScope.Modal : HotkeyScope.FullscreenMenu;
-
-  const openedAboveFullscreenMenu = useRef(enabledScopes.includes(HotkeyScope.FullscreenMenu));
 
   const onCloseMenu = () => {
     disableScope(hotkeyScope);
-
-    if (openedAboveFullscreenMenu) {
-      enableScope(HotkeyScope.FullscreenMenu);
-    }
 
     onClose();
   };
 
   useEffect(() => {
-    if (openedAboveFullscreenMenu) {
-      disableScope(HotkeyScope.FullscreenMenu);
-    }
-
     enableScope(hotkeyScope);
   }, []);
 

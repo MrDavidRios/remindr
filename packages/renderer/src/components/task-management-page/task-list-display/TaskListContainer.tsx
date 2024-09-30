@@ -7,7 +7,7 @@ import { getAccentColor } from '@renderer/scripts/systems/stylemanager';
 import { isFloatingMenuOpen, isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 import HashLoader from 'react-spinners/HashLoader';
 import { TaskList } from './TaskList';
 import { TaskListHeader } from './TaskListHeader';
@@ -23,10 +23,20 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
 
   const taskListGetStatus = useAppSelector((state) => state.taskList.taskListGetStatus);
 
+  const { enabledScopes } = useHotkeysContext();
+
   // Deselect all tasks on esc keypress
   useHotkeys(
     'esc',
     () => {
+      console.log(
+        'attempting to clear selected tasks...',
+        'fullscreen menu open: ',
+        isFullscreenMenuOpen(store.getState().menuState),
+        'floating menu open: ',
+        isFloatingMenuOpen(store.getState().menuState),
+      );
+
       if (isFullscreenMenuOpen(store.getState().menuState) || isFloatingMenuOpen(store.getState().menuState)) return;
 
       dispatch(clearSelectedTasks());
