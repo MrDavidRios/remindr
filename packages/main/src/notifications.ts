@@ -260,7 +260,7 @@ export default function initializeNotificationScreenListeners() {
 // #endregion
 
 const removeTaskNotification = (_event: Electron.IpcMainEvent, data: string) => {
-  const task = JSON.parse(data as string) as Task;
+  const task = JSON.parse(data) as Task;
 
   if (groupNotifWindow && !groupNotifWindow.isDestroyed()) {
     groupNotifWindow.webContents.send('remove-task-from-notif', task);

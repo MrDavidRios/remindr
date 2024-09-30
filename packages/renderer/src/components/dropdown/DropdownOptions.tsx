@@ -34,7 +34,7 @@ export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
 
             return (
               <div
-                key={idx}
+                key={optionLabels[idx]}
                 ref={optionRefs[idx]}
                 style={{ width: '100%' }}
                 className={`option ${bottomOption && 'bottom-option'}`}

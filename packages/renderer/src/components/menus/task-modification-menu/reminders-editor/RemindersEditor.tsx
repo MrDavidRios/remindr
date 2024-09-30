@@ -27,7 +27,7 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
 
   const currentlyEditedReminderIdx = useAppSelector((state) => state.taskModificationState.reminderEditState.idx);
 
-  const [hoveringOverEditor, setHoveringOverEditorHeader] = useState(false);
+  const [hoveringOverEditorHeader, setHoveringOverEditorHeader] = useState(false);
 
   const store = useAppStore();
 
@@ -146,7 +146,7 @@ export const RemindersEditor: FC<RemindersEditorProps> = () => {
             draggable={false}
             alt="Add reminder"
             style={{
-              visibility: hoveringOverEditor ? 'visible' : 'hidden',
+              visibility: hoveringOverEditorHeader ? 'visible' : 'hidden',
             }}
           />
         </button>

@@ -20,7 +20,7 @@ interface LinksEditorProps {}
 export const LinksEditor: FC<LinksEditorProps> = () => {
   const dispatch = useAppDispatch();
 
-  const [hoveringOverEditor, setHoveringOverEditorHeader] = useState(false);
+  const [hoveringOverEditorHeader, setHoveringOverEditorHeader] = useState(false);
 
   const openLinkMenu = (idx = -1) => {
     dispatch(setLinkEditState({ idx, state: idx === -1 ? 'create' : 'edit' }));
@@ -62,7 +62,7 @@ export const LinksEditor: FC<LinksEditorProps> = () => {
             src={plusIcon}
             draggable={false}
             alt="Add link"
-            style={{ visibility: hoveringOverEditor ? 'visible' : 'hidden' }}
+            style={{ visibility: hoveringOverEditorHeader ? 'visible' : 'hidden' }}
           />
         </button>
       </div>
