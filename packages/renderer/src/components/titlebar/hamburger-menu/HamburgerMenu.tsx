@@ -2,7 +2,6 @@ import expandArrow from '@assets/icons/expand-arrow.png';
 import hamburgerIcon from '@assets/icons/hamburger.svg';
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { AppMode, Menu } from '@remindr/shared';
-import { menuHeightAnimationProps } from '@renderer/animation';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
@@ -69,7 +68,6 @@ export function HamburgerMenu() {
       {displayMenu && (
         <div id="titlebarMenu">
           <ul
-            {...menuHeightAnimationProps(animationsEnabled)}
             style={{ backgroundColor }}
             ref={ulRef as unknown as React.RefObject<HTMLUListElement>}
             onFocus={() => setFocusInSubmenu(false)}
