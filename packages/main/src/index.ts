@@ -18,6 +18,7 @@ import { initAppStateListeners } from './utils/appState.js';
 import initAuthEventListeners from './utils/auth.js';
 import { initFirebase } from './utils/firebase.js';
 import { getExtensionPath } from './utils/getExtensionPath.js';
+import { getFocusedWindowProcessPath } from './utils/getFocusedWindow.js';
 import { getMainAssetPath } from './utils/getMainAssetPath.js';
 import { getMainWindow } from './utils/getMainWindow.js';
 import { getPageTitle } from './utils/getPageTitle.js';
@@ -347,4 +348,8 @@ ipcMain.on('open-dev-tools', () => {
 ipcMain.handle('get-page-title', async (_event, url) => {
   const pageTitle = await getPageTitle(url);
   return pageTitle;
+});
+
+ipcMain.on('get-focused-window-process-path', (event) => {
+  event.returnValue = getFocusedWindowProcessPath();
 });

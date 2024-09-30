@@ -87,6 +87,7 @@
     "firebase": "^10.13.2",
     "framer-motion": "^11.9.0",
     "jsdom": "^25.0.1",
+    "koffi": "^2.9.1",
     "react": "^18.3.1",
     "react-color": "^2.19.3",
     "react-dom": "^18.3.1",

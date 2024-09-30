@@ -76,6 +76,9 @@ const electronHandler = {
     isLinux(): boolean {
       return ipcRenderer.sendSync('is-platform-linux');
     },
+    getFocusedWindowProcessPath(): string {
+      return ipcRenderer.sendSync('get-focused-window-process-path');
+    },
   },
   path: {
     basename(path: string): string {
