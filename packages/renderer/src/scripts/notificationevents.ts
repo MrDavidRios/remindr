@@ -19,7 +19,7 @@ export function useNotificationEvents(dispatch: AppDispatch) {
     const taskList = store.getState().taskList.value;
     if (!taskList.some((e) => e.creationTime === task.creationTime)) return;
 
-    dispatch(setSelectedTask(task as Task));
+    dispatch(setSelectedTask(task));
   });
 
   window.electron.ipcRenderer.on('open-reminder-in-edit-menu', async (_e: unknown) => {
@@ -28,7 +28,7 @@ export function useNotificationEvents(dispatch: AppDispatch) {
     window.mainWindow.show();
 
     const selectedTasks = store.getState().taskList.selectedTasks;
-    if (!isTaskSelected(task as Task, selectedTasks)) dispatch(setSelectedTask(task));
+    if (!isTaskSelected(task, selectedTasks)) dispatch(setSelectedTask(task));
 
     await waitUntil(() => document.getElementById('taskEditWindow'));
     const taskEditWindow = document.getElementById('taskEditWindow');

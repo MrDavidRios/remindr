@@ -16,13 +16,10 @@ export const UpdateNotification: FC = () => {
     enableOnFormTags: true,
   });
 
-  let message = 'Checking for updates...';
+  let message;
   let showRestartButton = false;
 
   switch (updateStatus) {
-    case UpdateStatus.CheckingForUpdates:
-      message = 'Checking for updates...';
-      break;
     case UpdateStatus.UpdateAvailable:
       message = 'A new update is available. Downloading now...';
       break;
@@ -36,6 +33,7 @@ export const UpdateNotification: FC = () => {
     case UpdateStatus.NoUpdates:
       message = 'There are currently no new updates.';
       break;
+    case UpdateStatus.CheckingForUpdates:
     default:
       message = 'Checking for updates...';
       break;

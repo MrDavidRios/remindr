@@ -19,6 +19,20 @@
     width: min-content;
   }
 
+  label {
+    cursor: pointer;
+  }
+
+  .option {
+    .radio {
+      display: none;
+    }
+
+    &:hover {
+      background-color: var(--surface-active);
+    }
+  }
+
   .options-container {
     background: var(--surface-primary);
     color: var(--text-color-primary);
@@ -80,20 +94,4 @@
   padding: 5px 36px 5px 8px;
   cursor: pointer;
   border-bottom: 1px solid var(--surface-active);
-}
-
-.select-box {
-  label {
-    cursor: pointer;
-  }
-
-  .option {
-    .radio {
-      display: none;
-    }
-
-    &:hover {
-      background-color: var(--surface-active);
-    }
-  }
 }

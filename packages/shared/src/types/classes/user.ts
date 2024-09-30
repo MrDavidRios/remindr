@@ -19,7 +19,7 @@ export class User {
     this.lastLogin = lastLogin;
   }
 
-  getDefault(): User {
+  getDefault(): this {
     this.name = 'Test Name';
     this.email = 'default@email.com';
     this.settings = createDefaultSettings();

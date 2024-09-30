@@ -13,8 +13,8 @@ import { getFormattedReminderTime } from '../scripts/utils/timefunctions';
 window.electron.ipcRenderer.on('update-theme-in-notification', (_e: string) => updateTheme(_e));
 
 export const NotificationWindowContents: FC = () => {
-  const [taskReminderPair, updateTaskReminderPair] = useState<TaskScheduledReminderPair | undefined>(undefined);
-  const [settings, updateSettings] = useState<Settings>(createDefaultSettings());
+  const [taskReminderPair, setTaskReminderPair] = useState<TaskScheduledReminderPair | undefined>(undefined);
+  const [settings, setSettings] = useState<Settings>(createDefaultSettings());
 
   useEffect(() => {
     const initializeNotification = (_e: string) => {
@@ -24,9 +24,8 @@ export const NotificationWindowContents: FC = () => {
         stringifiedSettingsData: string;
       };
 
-      updateTaskReminderPair(data.taskReminderPair);
-
-      updateSettings(JSON.parse(data.stringifiedSettingsData) as Settings);
+      setTaskReminderPair(data.taskReminderPair);
+      setSettings(JSON.parse(data.stringifiedSettingsData) as Settings);
       updateTheme(data.stringifiedThemeData);
     };
 

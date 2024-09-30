@@ -26,24 +26,24 @@ export function isMenuOpen(state: MenuState, menu: Menu) {
 }
 
 export function isPrimaryMenuOpen(state: MenuState) {
-  for (let i = 0; i < primaryMenus.length; i++) {
-    if (state.openMenus.includes(primaryMenus[i])) return true;
+  for (const primaryMenu of primaryMenus) {
+    if (state.openMenus.includes(primaryMenu)) return true;
   }
 
   return false;
 }
 
 export function isFullscreenMenuOpen(state: MenuState) {
-  for (let i = 0; i < fullscreenMenus.length; i++) {
-    if (state.openMenus.includes(fullscreenMenus[i])) return true;
+  for (const fullscreenMenu of fullscreenMenus) {
+    if (state.openMenus.includes(fullscreenMenu)) return true;
   }
 
   return false;
 }
 
 export function isFloatingMenuOpen(state: MenuState) {
-  for (let i = 0; i < floatingMenus.length; i++) {
-    if (state.openMenus.includes(floatingMenus[i])) return true;
+  for (const floatingMenu of floatingMenus) {
+    if (state.openMenus.includes(floatingMenu)) return true;
   }
 
   return false;

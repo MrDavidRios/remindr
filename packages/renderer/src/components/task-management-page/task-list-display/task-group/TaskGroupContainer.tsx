@@ -77,33 +77,31 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
   }, [tasks]);
 
   return (
-    <>
-      <motion.div
-        className={`task-group-container ${expanded ? 'expanded' : ''}`}
-        {...animationProps}
-        layout={animationsEnabled ? 'position' : false}
+    <motion.div
+      className={`task-group-container ${expanded ? 'expanded' : ''}`}
+      {...animationProps}
+      layout={animationsEnabled ? 'position' : false}
+    >
+      <button
+        className={`task-group-header frosted ${pinned ? 'icon' : ''} ${animationsEnabled ? 'animate' : ''}`}
+        onClick={() => setExpanded(!expanded)}
+        onContextMenu={(e) =>
+          dispatch(showContextMenu({ contextMenu: ContextMenuType.GeneralContextMenu, x: e.clientX, y: e.clientY }))
+        }
+        type="button"
       >
-        <button
-          className={`task-group-header frosted ${pinned ? 'icon' : ''} ${animationsEnabled ? 'animate' : ''}`}
-          onClick={() => setExpanded(!expanded)}
-          onContextMenu={(e) =>
-            dispatch(showContextMenu({ contextMenu: ContextMenuType.GeneralContextMenu, x: e.clientX, y: e.clientY }))
-          }
-          type="button"
-        >
-          {pinned && <img id="rotatedPinnedIcon" src={pinIcon} className="svg-filter" draggable="false" alt="" />}
-          <span>{name}</span>
-          <span className="task-group-counter">{groupTasks.length}</span>
-        </button>
-        <TaskGroup
-          tasks={groupTasks}
-          reorderable={reorderable}
-          onReorder={onReorder}
-          onReorderComplete={onReorderComplete}
-          expanded={expanded}
-          name={name}
-        />
-      </motion.div>
-    </>
+        {pinned && <img id="rotatedPinnedIcon" src={pinIcon} className="svg-filter" draggable="false" alt="" />}
+        <span>{name}</span>
+        <span className="task-group-counter">{groupTasks.length}</span>
+      </button>
+      <TaskGroup
+        tasks={groupTasks}
+        reorderable={reorderable}
+        onReorder={onReorder}
+        onReorderComplete={onReorderComplete}
+        expanded={expanded}
+        name={name}
+      />
+    </motion.div>
   );
 });
