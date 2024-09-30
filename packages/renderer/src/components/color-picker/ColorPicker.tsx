@@ -1,4 +1,3 @@
-import { useClickOutside } from '@hooks/useoutsideclick';
 import { escEvent } from '@remindr/shared';
 import type { InputHTMLAttributes } from 'react';
 import React, { useEffect, useState } from 'react';
@@ -14,10 +13,9 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ initialColor, onUpdate
   const [color, setColor] = useState(initialColor);
   const [finalColor, setFinalColor] = useState(initialColor);
 
-  const [isPickerVisible, setPickerVisible] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
 
-  const togglePicker = () => (isPickerVisible ? setPickerVisible(false) : openTogglePicker());
-  const ref = useClickOutside(() => setPickerVisible(false));
+  const togglePicker = () => (pickerVisible ? setPickerVisible(false) : openTogglePicker());
 
   function openTogglePicker() {
     setColor(finalColor);
@@ -28,7 +26,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ initialColor, onUpdate
   useEffect(() => {
     // Focus on color picker whenever it's opened (allows 'esc' keypress to work)
     document.getElementById('colorPickerWrapper')?.querySelector('input')?.focus();
-  }, [isPickerVisible]);
+  }, [pickerVisible]);
 
   return (
     <>
@@ -38,7 +36,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ initialColor, onUpdate
         style={{ backgroundColor: finalColor }}
         onKeyDown={(e) => escEvent(e as unknown as KeyboardEvent, () => setPickerVisible(false))}
       />
-      {isPickerVisible && (
+      {pickerVisible && (
         <ModalWrapper
           id="colorPickerWrapper"
           className="frosted"
