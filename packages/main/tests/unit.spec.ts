@@ -24,6 +24,22 @@ vi.mock('electron', () => {
     value: { once: vi.fn(), send: vi.fn() },
   });
 
+  const menu = vi.fn() as unknown as MockedClass<typeof Menu>;
+  menu.buildFromTemplate = vi.fn();
+
+  const tray = vi.fn() as unknown as MockedClass<typeof Tray>;
+  tray.prototype.setToolTip = vi.fn();
+  tray.prototype.setContextMenu = vi.fn();
+  tray.prototype.setIgnoreDoubleClickEvents = vi.fn();
+  tray.prototype.on = vi.fn<never>();
+
+  const session = vi.fn() as unknown as MockedClass<typeof Electron.Session>;
+  Object.defineProperty(session, 'defaultSession', {
+    value: {
+      loadExtension: vi.fn(),
+    },
+  });
+
   const app = vi.fn() as unknown as Electron.App;
   app.on = vi.fn();
   app.quit = vi.fn();
@@ -42,16 +58,7 @@ vi.mock('electron', () => {
     handle: vi.fn(),
   };
 
-  const menu = vi.fn() as unknown as MockedClass<typeof Menu>;
-  menu.buildFromTemplate = vi.fn();
-
-  const tray = vi.fn() as unknown as MockedClass<typeof Tray>;
-  tray.prototype.setToolTip = vi.fn();
-  tray.prototype.setContextMenu = vi.fn();
-  tray.prototype.setIgnoreDoubleClickEvents = vi.fn();
-  tray.prototype.on = vi.fn<never>();
-
-  return { BrowserWindow: bw, Menu: menu, Tray: tray, app, ipcMain, nativeTheme };
+  return { BrowserWindow: bw, Menu: menu, Tray: tray, session, app, ipcMain, nativeTheme };
 });
 
 vi.mock('@main/appUpdater', () => {
