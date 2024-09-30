@@ -1,6 +1,12 @@
 import { notify } from '@main/notifications.js';
-import { isBetweenDates, isCurrentMinute, isOverdue, taskHasReminders, type Task } from '@remindr/shared';
-import { BrowserWindow } from 'electron';
+import {
+  isBetweenDates,
+  isCurrentMinute,
+  isOverdue,
+  ScheduledReminder,
+  taskHasReminders,
+  type Task,
+} from '@remindr/shared';
 import Store from 'electron-store';
 import { getMainWindow } from './getMainWindow.js';
 
@@ -8,10 +14,10 @@ const store = new Store();
 
 // eslint-disable-next-line no-undef
 let taskLoopInterval: NodeJS.Timeout;
-export function initializeTaskLoop(mainWindow: BrowserWindow): void {
+export function initializeTaskLoop(): void {
   if (taskLoopInterval) return;
 
-  checkForReminders(mainWindow);
+  checkForReminders();
 
   // Wait until the start of the next minute to begin the setInterval for checking of reminders
   const now = new Date();
@@ -28,12 +34,12 @@ export function initializeTaskLoop(mainWindow: BrowserWindow): void {
 
   taskLoopInterval = setTimeout(() => {
     // Check for reminders at the end of this current minute, and then every minute after that
-    checkForReminders(mainWindow);
+    checkForReminders();
     setInterval(checkForReminders, 60000);
   }, delay);
 }
 
-function checkForReminders(mainWindow: BrowserWindow): void {
+function checkForReminders(): void {
   let wasIdle = false;
 
   // Trigger re-render
@@ -54,43 +60,45 @@ function checkForReminders(mainWindow: BrowserWindow): void {
 
   // Check for reminders
   const taskList: Task[] = (store.get('task-list-current') as Task[]) ?? [];
-  const uncompletedTasks = taskList.filter((task: Task) => !task.completed);
+  const incompleteTasksWithReminders = taskList.filter((task: Task) => !task.completed && taskHasReminders(task));
 
-  for (let i = 0; i < uncompletedTasks.length; i++) {
-    const task = uncompletedTasks[i];
-
-    // eslint-disable-next-line no-continue
-    if (!taskHasReminders(task)) continue;
-
+  for (const task of incompleteTasksWithReminders) {
     for (let j = 0; j < task.scheduledReminders.length; j++) {
       const scheduledReminder = task.scheduledReminders[j];
 
       if (isCurrentMinute(scheduledReminder)) {
         if (scheduledReminder.repeat) {
-          getMainWindow()?.webContents.send('advance-recurring-reminder', {
-            task,
-            index: j,
-          });
+          advanceRecurringReminder(task, j);
         }
 
         notify(JSON.stringify(task), j);
-        // eslint-disable-next-line no-continue
-        continue;
       }
-
       // Trigger reminder even if Remindr wasn't open during the reminder time
-      if (
-        wasIdle &&
-        isOverdue(scheduledReminder) &&
-        isBetweenDates(scheduledReminder, getLastCheckTime(), new Date())
-      ) {
+      else if (closedDuringReminderTime(scheduledReminder, wasIdle)) {
         notify(JSON.stringify(task), j);
+
+        if (scheduledReminder.repeat) {
+          advanceRecurringReminder(task, j);
+        }
       }
     }
   }
 
   updateLastCheckTime();
 }
+
+const advanceRecurringReminder = (task: Task, index: number) => {
+  getMainWindow()?.webContents.send('advance-recurring-reminder', {
+    task,
+    index,
+  });
+};
+
+const closedDuringReminderTime = (scheduledReminder: ScheduledReminder, wasIdle: boolean) => {
+  const passedSinceLastCheckTime = isBetweenDates(scheduledReminder, getLastCheckTime(), new Date());
+
+  return wasIdle && isOverdue(scheduledReminder) && passedSinceLastCheckTime;
+};
 
 function updateLastCheckTime(): void {
   store.set('last-check-time', new Date());

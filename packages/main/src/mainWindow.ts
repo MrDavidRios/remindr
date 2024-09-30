@@ -7,7 +7,6 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { callSetupFunctions } from './index.js';
 import TrayBuilder from './tray.js';
-import { getMainWindow } from './utils/getMainWindow.js';
 
 const store = new Store();
 
@@ -68,7 +67,7 @@ async function createWindow() {
   browserWindow.webContents.once('did-finish-load', () => {
     // This makes sure events are sent to renderer process (and then notification windows) after the main window
     // renderer process is done loading. This way, no information is lost in the events.
-    initializeTaskLoop(browserWindow);
+    initializeTaskLoop();
 
     initializeNotificationScreenListeners();
   });
@@ -109,7 +108,7 @@ async function createWindow() {
  * Restore an existing BrowserWindow or Create a new BrowserWindow.
  */
 export async function restoreOrCreateWindow() {
-  let window = getMainWindow();
+  let window = BrowserWindow.getAllWindows().find((w) => !w.isDestroyed());
 
   if (window === undefined) {
     window = await createWindow();
