@@ -29,15 +29,19 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
       <AnimateChangeInHeight show>
         <h2>{name}</h2>
         <div className="tasks">
-          <LayoutGroup>
-            <AnimatePresence mode="popLayout">
-              {tasks.map((task) => (
-                <div key={task.creationTime}>
-                  <TaskTileWrapper task={task} reorderable={false} />
-                </div>
-              ))}
-            </AnimatePresence>
-          </LayoutGroup>
+          {tasks.length === 0 ? (
+            <p className="no-tasks-message">All done here!</p>
+          ) : (
+            <LayoutGroup>
+              <AnimatePresence mode="popLayout">
+                {tasks.map((task) => (
+                  <div key={task.creationTime}>
+                    <TaskTileWrapper task={task} reorderable={false} />
+                  </div>
+                ))}
+              </AnimatePresence>
+            </LayoutGroup>
+          )}
         </div>
         <TaskColumnActionBar />
       </AnimateChangeInHeight>

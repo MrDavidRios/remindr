@@ -21,6 +21,10 @@
 
     height: fit-content;
 
+    .no-tasks-message {
+      color: var(--text-color-secondary);
+    }
+
     .task-column-action-bar {
       padding-top: 12px;
       text-align: left;
