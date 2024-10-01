@@ -21,7 +21,13 @@
 
     height: fit-content;
 
-    .no-tasks-message {
+    .complete-tasks-header {
+      text-align: left;
+      padding: 8px 0 4px 0;
+    }
+
+    .no-tasks-message,
+    .complete-tasks-header {
       color: var(--text-color-secondary);
     }
 
