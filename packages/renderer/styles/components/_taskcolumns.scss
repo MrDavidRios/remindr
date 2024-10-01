@@ -1,0 +1,30 @@
+#taskColumns {
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+
+  min-width: 800px;
+  overflow-x: auto;
+  max-width: 100%;
+
+  .task-column {
+    &,
+    .tasks {
+      display: flex;
+      flex-direction: column;
+    }
+
+    padding: 16px 12px;
+
+    background-color: var(--surface-primary);
+    border-radius: var(--menu-border-radius);
+
+    gap: 24px;
+
+    .tasks {
+      gap: 6px;
+    }
+  }
+}

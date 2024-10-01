@@ -1,26 +1,11 @@
-@media only screen and (max-width: 900px) {
-  #listWrapper {
-    width: calc(100vw - 50px);
-    position: absolute;
-    right: 0;
-  }
-
-  #taskEditWindow.active {
-    + #taskListContainer {
-      overflow-x: hidden;
-
-      #taskListTopBar,
-      #taskListDisplayContainer {
-        min-width: calc(100vw - 50px);
-      }
-    }
-  }
-}
-
 #listWrapper {
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  width: calc(100vw - 50px);
+  position: absolute;
+  left: 0;
 }
 
 .timeInput {
@@ -210,6 +195,7 @@ nav ul div p {
 
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
+  height: 8px;
   width: 7px;
   /* width of the entire scrollbar */
 }
@@ -237,7 +223,7 @@ input::-webkit-inner-spin-button {
   z-index: 1;
   flex-shrink: 0;
 
-  box-shadow: 10px 0px 10px -8px rgba(0, 0, 0, 0.5);
+  box-shadow: 10px 0px 10px 10px rgba(0, 0, 0, 0.5);
 }
 
 #notesWrapper {
@@ -249,8 +235,13 @@ input::-webkit-inner-spin-button {
   min-width: calc(330px - 12px);
 }
 
-#taskEditWindow.active {
-  width: 330px;
+#taskListContainer:has(+ #taskEditWindow.active) {
+  overflow-x: hidden;
+
+  #taskListTopBar,
+  #taskListDisplayContainer {
+    min-width: calc(100vw - 50px);
+  }
 }
 
 #undoActionNotification {
@@ -404,4 +395,8 @@ input::-webkit-inner-spin-button {
   padding: 5px;
 
   color: var(--text-color-primary);
+
+  &.column-view {
+    overflow-x: auto;
+  }
 }

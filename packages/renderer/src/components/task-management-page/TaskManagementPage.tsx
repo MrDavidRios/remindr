@@ -48,8 +48,8 @@ export function TaskManagementPage() {
       <Toolbar />
 
       <div id="mainContainer">
-        <AnimatePresence>{showTaskEditMenu ? <TaskEditMenu selectedTask={selectedTasks[0]} /> : null}</AnimatePresence>
         <TaskListDisplay timeframe={timeframe} taskMenuShown={showTaskEditMenu} />
+        <AnimatePresence>{showTaskEditMenu ? <TaskEditMenu selectedTask={selectedTasks[0]} /> : null}</AnimatePresence>
         <AnimatePresence>{showTaskCreateMenu && <TaskCreateMenu id="taskCreationWindow" />}</AnimatePresence>
       </div>
 
