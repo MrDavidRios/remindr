@@ -9,19 +9,53 @@
   overflow-x: auto;
   max-width: 100%;
 
-  .task-column {
-    &,
-    .tasks {
-      display: flex;
-      flex-direction: column;
-    }
+  h2 {
+    margin-bottom: 24px;
+  }
 
+  .task-column {
     padding: 16px 12px;
 
     background-color: var(--surface-primary);
     border-radius: var(--menu-border-radius);
 
-    gap: 24px;
+    height: fit-content;
+
+    .task-column-action-bar {
+      padding-top: 12px;
+      text-align: left;
+      color: var(--text-color-secondary);
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        padding: 4px 6px;
+        border-radius: var(--menu-border-radius);
+
+        white-space: nowrap;
+        width: 100%;
+
+        &:hover {
+          background-color: var(--surface-active);
+          box-shadow: none;
+        }
+
+        img {
+          width: 16px;
+          height: 16px;
+
+          filter: var(--svg-filter);
+        }
+      }
+    }
+
+    &,
+    .tasks {
+      display: flex;
+      flex-direction: column;
+    }
 
     .tasks {
       gap: 6px;

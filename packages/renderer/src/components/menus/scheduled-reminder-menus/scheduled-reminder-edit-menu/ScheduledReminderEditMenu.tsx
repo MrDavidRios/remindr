@@ -38,6 +38,8 @@ export const ScheduledReminderEditMenu: FC = () => {
 
   const { anchor, yOffset, gap } = useAppSelector((state) => state.menuState.scheduledReminderEditorPosition);
 
+  console.log('anchor:', anchor);
+
   const taskEditType = useAppSelector((state) => state.taskModificationState.lastEditType);
   const reminderEditState = useAppSelector((state) => state.taskModificationState.reminderEditState);
 
@@ -180,7 +182,7 @@ export const ScheduledReminderEditMenu: FC = () => {
         }
       }}
     >
-      {/* <!-- Date Picker --> */}
+      {/* Date Picker */}
       <DatePicker
         date={getDate(updatedReminder)}
         onChange={(date) => {
@@ -190,7 +192,7 @@ export const ScheduledReminderEditMenu: FC = () => {
         }}
       />
 
-      {/* <!-- Time Input --> */}
+      {/* Time Input */}
       <div id="timeInputContainer" data-testid="time-input-container">
         <div id="timeInputWrapper">
           <SuggestedTimePicker reminder={updatedReminder} updateReminder={setUpdatedReminder} />

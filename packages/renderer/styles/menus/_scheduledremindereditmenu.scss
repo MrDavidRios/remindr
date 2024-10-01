@@ -11,7 +11,7 @@
   color: var(--text-color-primary);
 
   @media (max-width: 500px) {
-    left: calc(100vw - 400px - 40px) !important;
+    right: calc(100vw - 400px - 40px) !important;
   }
 
   #timeInputContainer {

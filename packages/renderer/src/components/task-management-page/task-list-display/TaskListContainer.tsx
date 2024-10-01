@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import HashLoader from 'react-spinners/HashLoader';
-import { TaskColumns } from './TaskColumns';
+import { TaskColumns } from './task-columns/TaskColumns';
 import { TaskList } from './TaskList';
 import { TaskListHeader } from './TaskListHeader';
 
@@ -60,7 +60,7 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
           {taskListGetStatus !== 'succeeded' ? (
             <HashLoader color={getAccentColor()} cssOverride={{ margin: 16 }} />
           ) : columnView ? (
-            <TaskColumns timeframe={timeframe} />
+            <TaskColumns />
           ) : (
             <TaskList timeframe={timeframe} />
           )}

@@ -45,8 +45,7 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
 
     // If y position will be going off the right edge of the screen, make sure it's positioned 20 pixels left of the right edge
     const borderAdjustedXPos = anchor.x + rect.width > innerWidth ? anchor.x - 20 : anchor.x;
-    const borderAdjustedYPos =
-      posYTopAnchored + rect.height > innerHeight ? posYBottomAnchored : posYTopAnchored;
+    const borderAdjustedYPos = posYTopAnchored + rect.height > innerHeight ? posYBottomAnchored : posYTopAnchored;
 
     setPosition({ x: borderAdjustedXPos, y: borderAdjustedYPos });
   }, [anchor, yOffset, gap, ref]);
