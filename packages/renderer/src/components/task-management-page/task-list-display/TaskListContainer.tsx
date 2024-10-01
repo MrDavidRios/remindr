@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import HashLoader from 'react-spinners/HashLoader';
+import { TaskColumns } from './TaskColumns';
 import { TaskList } from './TaskList';
 import { TaskListHeader } from './TaskListHeader';
 
@@ -22,6 +23,7 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
   const store = useAppStore();
 
   const taskListGetStatus = useAppSelector((state) => state.taskList.taskListGetStatus);
+  const columnView = useAppSelector((state) => state.settings.value.columnView);
 
   // Deselect all tasks on esc keypress
   useHotkeys(
@@ -54,9 +56,11 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
       <div id="listWrapper" className={taskMenuShown ? 'show-task-menu' : ''}>
         <TaskListHeader timeframe={timeframe} />
 
-        <ul id="taskListDisplayContainer" className="transition-disabled">
+        <ul id="taskListDisplayContainer" className={`transition-disabled ${columnView ? 'column-view' : ''}`}>
           {taskListGetStatus !== 'succeeded' ? (
             <HashLoader color={getAccentColor()} cssOverride={{ margin: 16 }} />
+          ) : columnView ? (
+            <TaskColumns timeframe={timeframe} />
           ) : (
             <TaskList timeframe={timeframe} />
           )}
