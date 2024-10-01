@@ -19,6 +19,9 @@ export const settingsSlice = createSlice({
   initialState: initialSettingsState,
   reducers: {
     updateSetting: (state, action: PayloadAction<{ key: keyof Settings; value: any }>) => {
+      // If the value is the same, don't update
+      if (state.value[action.payload.key] === action.payload.value) return;
+
       (state.value[action.payload.key] as any) = action.payload.value;
       state.value.timestamp = Date.now();
 

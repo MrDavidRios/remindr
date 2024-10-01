@@ -90,6 +90,9 @@ export const userStateSlice = createSlice({
     builder.addCase(updateSetting, (state, action) => {
       if (!state.user) return;
 
+      // If the setting is not changing, don't call firestore
+      if (state.user.settings[action.payload.key] === action.payload.value) return;
+
       const updatedSettings: Settings = { ...state.user.settings };
       state.user.settings = { ...updatedSettings, [action.payload.key]: action.payload.value };
 

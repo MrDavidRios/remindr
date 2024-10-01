@@ -1,8 +1,10 @@
 import plusIcon from '@assets/icons/plus.svg';
 import { Task } from '@remindr/shared';
+import { useAppDispatch } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
-import React from 'react';
+import { tasksInSameOrder } from '@renderer/scripts/utils/tasklistutils';
+import { AnimatePresence, motion, Reorder } from 'framer-motion';
+import React, { useState } from 'react';
 import { AnimateChangeInHeight } from '../../AnimateChangeInHeight';
 import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
 
@@ -24,12 +26,19 @@ const TaskColumnActionBar: React.FC = () => {
   );
 };
 
-const InternalTaskList: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
+const InternalTaskList: React.FC<{ tasks: Task[]; onReorderComplete?: () => void }> = ({
+  tasks,
+  onReorderComplete,
+}) => {
   return (
     <>
       {tasks.map((task) => (
         <div key={task.creationTime}>
-          <TaskTileWrapper task={task} reorderable={false} />
+          <TaskTileWrapper
+            task={task}
+            reorderable={onReorderComplete !== undefined}
+            onReorderComplete={onReorderComplete}
+          />
         </div>
       ))}
     </>
@@ -37,22 +46,45 @@ const InternalTaskList: React.FC<{ tasks: Task[] }> = ({ tasks }) => {
 };
 
 export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
+  const dispatch = useAppDispatch();
   const animationsEnabled = useAnimationsEnabled();
 
   const completeTasks = tasks.filter((task) => task.completed);
   const incompleteTasks = tasks.filter((task) => !task.completed);
+
+  const [orderedIncompleteTasks, setOrderedIncompleteTasks] = useState(incompleteTasks);
+
+  const onReorder = (newOrder: Task[]) => setOrderedIncompleteTasks(newOrder);
+
+  // useEffect(() => {
+  //   if ()
+  // }, [tasks]);
+
+  const animationProps = animationsEnabled
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
+    : {};
+
+  const onReorderComplete = () => {
+    if (tasksInSameOrder(incompleteTasks, orderedIncompleteTasks)) return;
+
+    // dispatch(updateTaskGroupOrder(orderedIncompleteTasks));
+  };
 
   return (
     <div className="task-column">
       <AnimateChangeInHeight show>
         <h2>{name}</h2>
         <div className="tasks">
-          <LayoutGroup>
+          <Reorder.Group className="task-group" values={tasks} axis="y" onReorder={onReorder} {...animationProps}>
             <AnimatePresence mode="popLayout">
-              {incompleteTasks.length === 0 ? (
+              {orderedIncompleteTasks.length === 0 ? (
                 <p className="no-tasks-message">All done here!</p>
               ) : (
-                <InternalTaskList tasks={incompleteTasks} />
+                <InternalTaskList tasks={orderedIncompleteTasks} onReorderComplete={onReorderComplete} />
               )}
               {completeTasks.length > 0 && (
                 <>
@@ -63,7 +95,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
                 </>
               )}
             </AnimatePresence>
-          </LayoutGroup>
+          </Reorder.Group>
         </div>
         <TaskColumnActionBar />
       </AnimateChangeInHeight>

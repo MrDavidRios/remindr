@@ -2,10 +2,11 @@ import { AppMode, Menu } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
 import { SyncIndicator } from './SyncIndicator';
 import { AccountMenuButton } from './toolbar-buttons/AccountMenuButton';
+import { ColumnsViewButton } from './toolbar-buttons/ColumnsViewButton';
+import { ListViewButton } from './toolbar-buttons/ListViewButton';
 import { ReturnToMainMenuButton } from './toolbar-buttons/ReturnToMainMenuButton';
 import { SettingsButton } from './toolbar-buttons/SettingsButton';
 import { TaskCreateButton } from './toolbar-buttons/TaskCreateButton';
-import { TimeframeMenuButton } from './toolbar-buttons/TimeframeMenuButton';
 
 export function Toolbar() {
   const appMode = useAppSelector((state) => state.appMode.value);
@@ -17,7 +18,8 @@ export function Toolbar() {
     <div id="mainToolbar" className={`frosted ${scheduledReminderEditMenuOpen ? 'submenu-open' : ''}`}>
       <div>
         <TaskCreateButton />
-        <TimeframeMenuButton />
+        <ListViewButton />
+        <ColumnsViewButton />
       </div>
       <div>
         <SyncIndicator />

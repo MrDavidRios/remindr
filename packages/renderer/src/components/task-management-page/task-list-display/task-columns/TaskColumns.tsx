@@ -30,10 +30,6 @@ export const TaskColumns = memo(function TaskColumns() {
         .adjacentDay == 'tomorrow',
   );
 
-  console.log('yesterdayTasks', yesterdayTasks);
-  console.log('todayTasks', todayTasks);
-  console.log('tomorrowTasks', tomorrowTasks);
-
   const columns = (
     <div id="taskColumns">
       <TaskColumn name="Yesterday" tasks={yesterdayTasks} />

@@ -14,17 +14,11 @@ export const TaskViewSettingsDropdown: FC = () => {
   const dispatch = useAppDispatch();
 
   const showCompletedTasks = useAppSelector((state) => state.settings.value.showCompletedTasks ?? true);
-  const columnView = useAppSelector((state) => state.settings.value.columnView ?? false);
 
   const backgroundColor = rgbaToHex(getComputedStyle(document.documentElement).getPropertyValue('--surface-primary'));
 
   const setCompletedTasksSetting = (value: boolean) => {
     dispatch(updateSetting({ key: 'showCompletedTasks', value }));
-    dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu, fromEscKeypress: false }));
-  };
-
-  const setColumnViewSetting = (value: boolean) => {
-    dispatch(updateSetting({ key: 'columnView', value }));
     dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu, fromEscKeypress: false }));
   };
 
@@ -59,25 +53,6 @@ export const TaskViewSettingsDropdown: FC = () => {
             >
               <img src={visibilityOnIcon} className="task-tile-image" draggable="false" alt="" />
               <p>Show completed tasks</p>
-            </li>
-          )}
-          {columnView ? (
-            <li
-              onClick={() => setColumnViewSetting(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') setColumnViewSetting(false);
-              }}
-            >
-              <p>Switch to list view</p>
-            </li>
-          ) : (
-            <li
-              onClick={() => setColumnViewSetting(true)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') setColumnViewSetting(true);
-              }}
-            >
-              <p>Switch to column view</p>
             </li>
           )}
         </ArrowNavigable>
