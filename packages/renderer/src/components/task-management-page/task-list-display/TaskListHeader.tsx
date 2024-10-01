@@ -18,11 +18,12 @@ export function TaskListHeader(props: TaskListHeaderProps) {
 
   const selectedTasks = useAppSelector((state) => state.taskList.selectedTasks, shallowEqual);
   const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
+  const columnView = useAppSelector((state) => state.settings.value.columnView);
 
   const timeframeDisplayName = getTimeframeDisplayName(timeframe);
-  const headerText = isValidSearchString(searchQuery)
-    ? `Search results for "${searchQuery}":`
-    : `${timeframeDisplayName}`;
+
+  const defaultHeaderText = columnView ? 'At a glance' : `${timeframeDisplayName}`;
+  const headerText = isValidSearchString(searchQuery) ? `Search results for "${searchQuery}":` : defaultHeaderText;
 
   return (
     <div id="taskListTopBar" style={{ height: getHeaderWrapperHeight(timeframe) }}>
