@@ -1,7 +1,7 @@
 import plusIcon from '@assets/icons/plus.svg';
 import { columnTasksInDifferentOrder, Task } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
-import { updateTasks } from '@renderer/features/task-list/taskListSlice';
+import { addTask, updateTasks } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { tasksInSameOrder } from '@renderer/scripts/utils/tasklistutils';
@@ -9,6 +9,7 @@ import { AnimatePresence, motion, Reorder } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { AnimateChangeInHeight } from '../../AnimateChangeInHeight';
+import { NewTaskTile } from '../task-tile/NewTaskTile';
 import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
 
 interface TaskColumnProps {
@@ -16,15 +17,22 @@ interface TaskColumnProps {
   tasks: Task[];
 }
 
-const TaskColumnActionBar: React.FC = () => {
+interface TaskColumnActionBarProps {
+  newTaskTileOpen: boolean;
+  onAddTask: () => void;
+}
+
+const TaskColumnActionBar: React.FC<TaskColumnActionBarProps> = ({ newTaskTileOpen, onAddTask }) => {
   const animationsEnabled = useAnimationsEnabled();
 
   return (
     <motion.div className="task-column-action-bar" layout={animationsEnabled ? 'position' : false}>
-      <button>
-        <img src={plusIcon} draggable={false} alt="" />
-        Add task
-      </button>
+      {!newTaskTileOpen && (
+        <button onClick={onAddTask}>
+          <img src={plusIcon} draggable={false} alt="" />
+          Add task
+        </button>
+      )}
     </motion.div>
   );
 };
@@ -43,6 +51,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
   const incompleteTasks = getOrderedIncompleteTasks(tasks);
 
   const [orderedIncompleteTasks, setOrderedIncompleteTasks] = useState(incompleteTasks);
+  const [showNewTaskTile, setShowNewTaskTile] = useState(false);
 
   useEffect(() => {
     if (!_.isEqual(tasks, orderedIncompleteTasks) || !tasksInSameOrder(tasks, orderedIncompleteTasks)) {
@@ -51,6 +60,15 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
       return;
     }
   }, [tasks]);
+
+  const createTask = (taskName: string) => {
+    // Make new task serializable for Redux to properly process
+    const newTask: Task = JSON.parse(JSON.stringify(new Task(taskName)));
+    newTask.taskColumnId = name;
+    newTask.orderInTaskColumn = orderedIncompleteTasks.length;
+
+    dispatch(addTask(newTask));
+  };
 
   const onReorder = (reorderedTasks: Task[]) => setOrderedIncompleteTasks(reorderedTasks);
 
@@ -114,7 +132,8 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
               </>
             )}
           </div>
-          <TaskColumnActionBar />
+          {showNewTaskTile && <NewTaskTile createTask={createTask} onEscape={() => setShowNewTaskTile(false)} />}
+          <TaskColumnActionBar newTaskTileOpen={showNewTaskTile} onAddTask={() => setShowNewTaskTile(true)} />
         </AnimateChangeInHeight>
       </ArrowNavigable>
     </div>

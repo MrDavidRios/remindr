@@ -31,6 +31,12 @@
       color: var(--text-color-secondary);
     }
 
+    .dynamic-text-area {
+      min-width: 100px;
+      max-width: 100%;
+      width: 100%;
+    }
+
     .task-column-action-bar {
       padding-top: 12px;
       text-align: left;
