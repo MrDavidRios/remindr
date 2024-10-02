@@ -1,11 +1,12 @@
-import { Repeat, ScheduledReminder, addMonths, getReminderDate } from '@remindr/shared';
+import { Repeat, ScheduledReminder } from '../types/index.js';
+import { addMonths, getReminderDate } from './datefunctions.js';
 
 /**
  * Gets the next date for a reminder based on its repeat interval.
  * @param task The reminder to get the next repeat date for.
  * @returns
  */
-export default function getNextRepeatDate(reminder: ScheduledReminder): Date {
+export function getNextRepeatDate(reminder: ScheduledReminder): Date {
   let reminderDate = getReminderDate(reminder);
 
   switch (reminder.repeat) {

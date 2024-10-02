@@ -1,14 +1,12 @@
-import {
-  Task,
-  Repeat,
-  getReminderDate,
-  setDate,
-  sortReminders,
-  ScheduledReminder,
-  generateUniqueID,
-  getDate,
-} from '@remindr/shared';
-import getNextRepeatDate from './repeatHelper';
+import { Repeat, ScheduledReminder, type Task } from '../types/index.js';
+import { getReminderDate } from './datefunctions.js';
+import { generateUniqueID } from './idutils.js';
+import { getNextRepeatDate } from './repeatfunctions.js';
+import { getDate, setDate, sortReminders } from './scheduledreminderfunctions.js';
+
+export function taskHasReminders(task: Task): boolean {
+  return task.scheduledReminders.length > 0;
+}
 
 export function taskHasNotes(task: Task): boolean {
   if (task.notes?.trim().length > 0) return true;
@@ -18,10 +16,6 @@ export function taskHasNotes(task: Task): boolean {
 
 export function isTaskSelected(task: Task, selectedTasks: Task[]): boolean {
   return selectedTasks.some((e) => e.creationTime === task.creationTime);
-}
-
-export function saveTaskData(taskList: Task[]) {
-  window.data.saveData('tasks', JSON.stringify(taskList));
 }
 
 export function postponeTask(task: Task, minutes: number, idx = 0): Task {

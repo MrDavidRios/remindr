@@ -1,4 +1,4 @@
-import { ScheduledReminder } from '@remindr/shared';
+import { ScheduledReminder } from '../types/index.js';
 
 /**
  * Formats an hour value to be displayed.

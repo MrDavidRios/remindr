@@ -6,12 +6,16 @@ import pencilIcon from '@assets/icons/pencil.svg';
 import repeatIcon from '@assets/icons/repeat.svg';
 import subtasksIcon from '@assets/icons/subtasks.svg';
 import type { Task } from '@remindr/shared';
-import { isOverdue, reminderRepeats, Repeat } from '@remindr/shared';
+import {
+  getFormattedReminderTime,
+  getReminderDisplayDate,
+  isOverdue,
+  reminderRepeats,
+  Repeat,
+  taskHasNotes,
+} from '@remindr/shared';
 import { completeTask, markTaskIncomplete } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
-import { getReminderDisplayDate } from '@renderer/scripts/utils/scheduledreminderfunctions';
-import { taskHasNotes } from '@renderer/scripts/utils/taskfunctions';
-import { getFormattedReminderTime } from '@renderer/scripts/utils/timefunctions';
 import type { FC } from 'react';
 
 interface TaskTileContentsProps {

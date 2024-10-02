@@ -7,14 +7,13 @@ import {
   TaskListAction,
   Timeframe,
   generateUniqueID,
+  getNextRepeatDate,
   getTimeframeDisplayName,
   setDate,
 } from '@remindr/shared';
 import { sortForDisplay } from '@renderer/components/task-management-page/task-list-display/task-group/taskgroups';
 import { updateOverlayIcons } from '@renderer/scripts/systems/badges';
 import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
-import getNextRepeatDate from '@renderer/scripts/utils/repeatHelper';
-import { saveTaskData } from '@renderer/scripts/utils/taskfunctions';
 import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import _ from 'lodash';
 import { setAppMode } from '../app-mode/appModeSlice';
@@ -32,6 +31,10 @@ import {
   updateTaskReducer,
 } from './basicTaskListOperations';
 import { initializeTaskListSyncListener } from './taskListSync';
+
+function saveTaskData(taskList: Task[]) {
+  window.data.saveData('tasks', JSON.stringify(taskList));
+}
 
 export interface TaskListState {
   value: InstanceType<typeof Task>[];

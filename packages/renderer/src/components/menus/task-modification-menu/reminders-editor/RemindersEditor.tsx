@@ -1,7 +1,7 @@
 import reminderIcon from '@assets/icons/bell.svg';
 import plusIcon from '@assets/icons/plus.svg';
 import type { MenuRect, Task } from '@remindr/shared';
-import { generateUniqueID, Menu, sortReminders } from '@remindr/shared';
+import { generateUniqueID, getDefaultScheduledReminder, Menu, sortReminders } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { hideMenu, setFloatingMenuPosition, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { updateTask } from '@renderer/features/task-list/taskListSlice';
@@ -12,7 +12,6 @@ import {
 } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
 import { convertDOMRectToMenuRect, isMenuOpen } from '@renderer/scripts/utils/menuutils';
-import { getDefaultScheduledReminder } from '@renderer/scripts/utils/scheduledreminderfunctions';
 import { motion } from 'framer-motion';
 import type { FC } from 'react';
 import { useRef, useState } from 'react';

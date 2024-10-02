@@ -29,6 +29,16 @@ export class Task {
 
   completed: boolean;
 
+  /**
+   * The ID of the column the task is in. Is an empty string if the task is not in a column.
+   */
+  taskColumnId: string;
+
+  /**
+   * The order of the task in the column. Is -1 if the task is not in a column.
+   */
+  orderInTaskColumn: number;
+
   constructor(
     name: string,
     scheduledReminders?: ScheduledReminder[],
@@ -37,8 +47,6 @@ export class Task {
     completionTime?: number,
     links?: Link[],
     notes?: string,
-    pinned?: boolean,
-    completed?: boolean,
   ) {
     this.name = name;
     this.scheduledReminders = scheduledReminders ?? [];
@@ -47,7 +55,11 @@ export class Task {
     this.completionTime = completionTime ?? -1;
     this.links = links ?? [];
     this.notes = notes ?? '';
-    this.pinned = pinned ?? false;
-    this.completed = completed ?? false;
+
+    this.pinned = false;
+    this.completed = false;
+
+    this.taskColumnId = '';
+    this.orderInTaskColumn = -1;
   }
 }

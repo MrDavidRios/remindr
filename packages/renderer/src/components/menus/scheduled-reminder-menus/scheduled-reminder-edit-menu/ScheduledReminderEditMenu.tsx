@@ -1,6 +1,18 @@
 import checkIcon from '@assets/icons/check.svg';
 import type { ScheduledReminder, Task } from '@remindr/shared';
-import { getDate, Menu, setDate } from '@remindr/shared';
+import {
+  formatHour,
+  formatMinute,
+  getDate,
+  getDefaultScheduledReminder,
+  getFormattedReminderTime,
+  getReminderDisplayDate,
+  getScheduledReminderClone,
+  Menu,
+  militaryToStandardHour,
+  setDate,
+  standardToMilHour,
+} from '@remindr/shared';
 import store from '@renderer/app/store';
 import { DatePicker } from '@renderer/components/date-picker/DatePicker';
 import { FloatingMenu } from '@renderer/components/floating-menu/FloatingMenu';
@@ -10,18 +22,6 @@ import { getEditedTask, setEditedTask } from '@renderer/features/task-modificati
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
-import {
-  getDefaultScheduledReminder,
-  getReminderDisplayDate,
-  getScheduledReminderClone,
-} from '@renderer/scripts/utils/scheduledreminderfunctions';
-import {
-  formatHour,
-  formatMinute,
-  getFormattedReminderTime,
-  militaryToStandardHour,
-  standardToMilHour,
-} from '@renderer/scripts/utils/timefunctions';
 import { delay } from '@renderer/scripts/utils/timing';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';

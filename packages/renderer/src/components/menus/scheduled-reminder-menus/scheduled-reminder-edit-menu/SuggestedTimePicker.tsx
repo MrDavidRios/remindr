@@ -1,6 +1,5 @@
 import alarmIcon from '@assets/icons/alarm.svg';
-import { setDate, type ScheduledReminder } from '@remindr/shared';
-import { getScheduledReminderClone } from '@renderer/scripts/utils/scheduledreminderfunctions';
+import { getScheduledReminderClone, setDate, type ScheduledReminder } from '@remindr/shared';
 import { AnimatePresence } from 'framer-motion';
 import type { FC } from 'react';
 import { useRef, useState } from 'react';

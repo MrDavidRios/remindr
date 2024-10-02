@@ -3,12 +3,12 @@ import closeButtonIcon from '@assets/icons/close-button.svg';
 import openIcon from '@assets/icons/open.svg';
 import type { Settings, TaskScheduledReminderPair } from '@remindr/shared';
 import { createDefaultSettings } from '@remindr/shared';
+import { getFormattedReminderTime } from '@remindr/shared/src/utils/timefunctions';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import '../../styles/css/notification.css';
 import { updateTheme } from '../scripts/systems/notifications/notificationutils';
 import { getIpcRendererOutput } from '../scripts/utils/ipcRendererOutput';
-import { getFormattedReminderTime } from '../scripts/utils/timefunctions';
 
 window.electron.ipcRenderer.on('update-theme-in-notification', (_e: string) => updateTheme(_e));
 

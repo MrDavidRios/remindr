@@ -10,7 +10,7 @@ import { TaskColumn } from './TaskColumn';
 export const TaskColumns = memo(function TaskColumns() {
   const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
 
-  const filteredSearchResults = useAppSelector((state) => {
+  const filteredTasks = useAppSelector((state) => {
     const tasks = state.taskList.value;
     const searchResults = searchTasks(tasks, searchQuery);
 
@@ -18,13 +18,16 @@ export const TaskColumns = memo(function TaskColumns() {
     return showCompleted ? searchResults : searchResults.filter((task) => !task.completed);
   }, shallowEqual);
 
-  const yesterdayTasks = filteredSearchResults.filter(
+  const tasksInColumns = filteredTasks.filter((task) => task.taskColumnId !== undefined && task.taskColumnId !== '');
+  console.log('[TaskColumns]: tasksInColumns:', tasksInColumns);
+
+  const yesterdayTasks = tasksInColumns.filter(
     (t) =>
       (isReminderToday(t.scheduledReminders[0], true) as { isReminderToday: boolean; adjacentDay: string })
         .adjacentDay == 'yesterday',
   );
-  const todayTasks = filteredSearchResults.filter((t) => isReminderToday(t.scheduledReminders[0]));
-  const tomorrowTasks = filteredSearchResults.filter(
+  const todayTasks = tasksInColumns.filter((t) => isReminderToday(t.scheduledReminders[0]));
+  const tomorrowTasks = tasksInColumns.filter(
     (t) =>
       (isReminderToday(t.scheduledReminders[0], true) as { isReminderToday: boolean; adjacentDay: string })
         .adjacentDay == 'tomorrow',
@@ -42,7 +45,7 @@ export const TaskColumns = memo(function TaskColumns() {
     return (
       <LayoutGroup>
         <AnimatePresence mode="popLayout">
-          {filteredSearchResults.map((task) => (
+          {filteredTasks.map((task) => (
             <div key={task.creationTime}>
               <TaskTileWrapper task={task} reorderable={false} />
             </div>

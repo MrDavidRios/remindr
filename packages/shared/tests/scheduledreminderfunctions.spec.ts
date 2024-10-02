@@ -1,6 +1,5 @@
-import { ScheduledReminder, setDate } from '@remindr/shared';
+import { getDefaultScheduledReminder, ScheduledReminder, setDate } from '@remindr/shared';
 import { describe, expect, test } from 'vitest';
-import { getDefaultScheduledReminder } from './scheduledreminderfunctions';
 
 describe('Scheduled Reminder Functions', () => {
   test('getDateFromNextHalfHour returns the correct date', () => {

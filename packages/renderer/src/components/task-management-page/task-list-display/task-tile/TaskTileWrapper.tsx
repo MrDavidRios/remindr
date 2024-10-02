@@ -1,4 +1,4 @@
-import { ContextMenuType, Task, reminderRepeats } from '@remindr/shared';
+import { ContextMenuType, Task, reminderRepeats, taskHasNotes } from '@remindr/shared';
 import { AppDispatch } from '@renderer/app/store';
 import { showContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
@@ -9,7 +9,6 @@ import {
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
-import { taskHasNotes } from '@renderer/scripts/utils/taskfunctions';
 import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import { Reorder, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import _ from 'lodash';

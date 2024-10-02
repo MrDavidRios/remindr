@@ -1,7 +1,6 @@
 import repeatIcon from '@assets/icons/repeat.svg';
 import type { ScheduledReminder } from '@remindr/shared';
-import { Repeat } from '@remindr/shared';
-import { getScheduledReminderClone } from '@renderer/scripts/utils/scheduledreminderfunctions';
+import { getScheduledReminderClone, Repeat } from '@remindr/shared';
 import { AnimatePresence } from 'framer-motion';
 import type { FC } from 'react';
 import { useRef, useState } from 'react';

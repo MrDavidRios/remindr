@@ -1,8 +1,8 @@
 import checkImg from '@assets/icons/check.png';
 import type { Settings, Task } from '@remindr/shared';
+import { getReminderDisplayDate } from '@remindr/shared/src/utils/scheduledreminderfunctions';
+import { getFormattedReminderTime } from '@remindr/shared/src/utils/timefunctions';
 import type { FC } from 'react';
-import { getReminderDisplayDate } from '../scripts/utils/scheduledreminderfunctions';
-import { getFormattedReminderTime } from '../scripts/utils/timefunctions';
 
 interface ReminderListElementProps {
   task: Task;
@@ -11,12 +11,7 @@ interface ReminderListElementProps {
   onComplete: () => void;
 }
 
-export const ReminderListElement: FC<ReminderListElementProps> = ({
-  task,
-  reminderIdx,
-  settings,
-  onComplete,
-}) => {
+export const ReminderListElement: FC<ReminderListElementProps> = ({ task, reminderIdx, settings, onComplete }) => {
   return (
     <div
       className="notif-element"
@@ -40,11 +35,7 @@ export const ReminderListElement: FC<ReminderListElementProps> = ({
         aria-label="Complete Task"
         onClick={onComplete}
       >
-        <img
-          src={checkImg}
-          draggable={false}
-          alt=""
-        />
+        <img src={checkImg} draggable={false} alt="" />
       </button>
     </div>
   );

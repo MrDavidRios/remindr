@@ -1,10 +1,9 @@
 import angelRightIcon from '@assets/icons/angel-right.svg';
 import snoozeIcon from '@assets/icons/snooze.svg';
-import type { Task } from '@remindr/shared';
+import { postponeTask, type Task } from '@remindr/shared';
 import type { AppDispatch } from '@renderer/app/store';
 import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
-import { postponeTask } from '@renderer/scripts/utils/taskfunctions';
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
