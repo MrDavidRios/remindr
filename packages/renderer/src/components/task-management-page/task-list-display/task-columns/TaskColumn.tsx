@@ -1,5 +1,5 @@
 import plusIcon from '@assets/icons/plus.svg';
-import { Task } from '@remindr/shared';
+import { columnTasksInDifferentOrder, Task } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { updateTasks } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
@@ -70,6 +70,9 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
 
       clonedIncompleteTasks.push(task);
     }
+
+    // If sorting the column tasks puts them in the same order, don't re-save the list.
+    if (!columnTasksInDifferentOrder(orderedIncompleteTasks, clonedIncompleteTasks)) return;
 
     dispatch(updateTasks(clonedIncompleteTasks));
   };

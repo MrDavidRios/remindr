@@ -33,3 +33,15 @@ export const getTaskColumnId = (task: Task): string => {
 
   return capitalizeFirstLetter(adjacentDay);
 };
+
+export const columnTasksInDifferentOrder = (taskListA: Task[], taskListB: Task[]): boolean => {
+  for (const taskA of taskListA) {
+    const taskB = taskListB.find((t) => t.creationTime === taskA.creationTime);
+
+    if (taskA.orderInTaskColumn !== taskB?.orderInTaskColumn) {
+      return true;
+    }
+  }
+
+  return false;
+};
