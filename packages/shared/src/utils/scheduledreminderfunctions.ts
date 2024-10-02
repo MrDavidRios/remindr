@@ -17,8 +17,8 @@ export function getReminderDisplayDate(
 
   const readableDate = `${formatDate(reminderDate, dateFormat, shortenMonth, includeYearIfSame)}`;
 
-  const { isReminderToday: reminderToday, adjacentDay } = isReminderToday(scheduledReminder, true) as {
-    isReminderToday: boolean;
+  const { reminderToday, adjacentDay } = isReminderToday(scheduledReminder, true) as {
+    reminderToday: boolean;
     adjacentDay: string;
   };
 
@@ -117,7 +117,7 @@ export function getCalculableDate(comparableDate: Date, scheduledReminderTime: S
 export function isReminderToday(
   reminderTime: ScheduledReminder,
   requestAdjacentDays = false,
-): boolean | { isReminderToday: boolean; adjacentDay: string } {
+): boolean | { reminderToday: boolean; adjacentDay: string } {
   if (reminderTime === undefined) return false;
 
   if (requestAdjacentDays) {
@@ -133,7 +133,7 @@ export function isReminderToday(
       reminderTime.reminderYear === new Date().getFullYear()
     ) {
       return {
-        isReminderToday: true,
+        reminderToday: true,
         adjacentDay: 'none',
       };
     }
@@ -143,7 +143,7 @@ export function isReminderToday(
       reminderTime.reminderYear === yesterdayDate.getFullYear()
     ) {
       return {
-        isReminderToday: false,
+        reminderToday: false,
         adjacentDay: 'yesterday',
       };
     }
@@ -153,12 +153,12 @@ export function isReminderToday(
       reminderTime.reminderYear === tomorrowDate.getFullYear()
     ) {
       return {
-        isReminderToday: false,
+        reminderToday: false,
         adjacentDay: 'tomorrow',
       };
     }
     return {
-      isReminderToday: false,
+      reminderToday: false,
       adjacentDay: 'none',
     };
   }

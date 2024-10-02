@@ -23,14 +23,14 @@ export const TaskColumns = memo(function TaskColumns() {
 
   const yesterdayTasks = tasksInColumns.filter(
     (t) =>
-      (isReminderToday(t.scheduledReminders[0], true) as { isReminderToday: boolean; adjacentDay: string })
-        .adjacentDay == 'yesterday',
+      (isReminderToday(t.scheduledReminders[0], true) as { reminderToday: boolean; adjacentDay: string }).adjacentDay ==
+      'yesterday',
   );
   const todayTasks = tasksInColumns.filter((t) => isReminderToday(t.scheduledReminders[0]));
   const tomorrowTasks = tasksInColumns.filter(
     (t) =>
-      (isReminderToday(t.scheduledReminders[0], true) as { isReminderToday: boolean; adjacentDay: string })
-        .adjacentDay == 'tomorrow',
+      (isReminderToday(t.scheduledReminders[0], true) as { reminderToday: boolean; adjacentDay: string }).adjacentDay ==
+      'tomorrow',
   );
 
   const columns = (
