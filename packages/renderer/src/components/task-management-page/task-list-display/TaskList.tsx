@@ -40,7 +40,7 @@ export const TaskList = memo(function TaskList({ timeframe }: TaskListProps) {
         <AnimatePresence mode="popLayout">
           {filteredSearchResults.map((task) => (
             <div key={task.creationTime}>
-              <TaskTileWrapper task={task} reorderable={false} />
+              <TaskTileWrapper task={task} />
             </div>
           ))}
         </AnimatePresence>

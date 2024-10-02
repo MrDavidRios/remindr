@@ -17,7 +17,7 @@ import { TaskTileContents } from './TaskTileContents';
 
 interface TaskTileWrapperProps {
   task: Task;
-  reorderable: boolean;
+  reorderable?: boolean;
   onReorderComplete?: () => void;
 }
 
@@ -32,7 +32,7 @@ const taskSelectionChange = (task: Task, selectedTasksBefore: Task[], selectedTa
   return wasSelectedBefore === isSelectedAfter;
 };
 
-export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reorderable, onReorderComplete }) => {
+export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reorderable = false, onReorderComplete }) => {
   const dispatch = useAppDispatch();
 
   const selectedTasks = useAppSelector(

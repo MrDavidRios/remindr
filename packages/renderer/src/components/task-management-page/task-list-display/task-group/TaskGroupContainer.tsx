@@ -66,14 +66,10 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
   useEffect(() => {
     if (!reorderable) return;
 
-    if (!_.isEqual(tasks, orderedTasks)) {
+    if (!_.isEqual(tasks, orderedTasks) || !tasksInSameOrder(tasks, orderedTasks)) {
       setOrderedTasks(tasks);
       return;
     }
-
-    if (tasksInSameOrder(tasks, orderedTasks)) return;
-
-    setOrderedTasks(tasks);
   }, [tasks]);
 
   return (

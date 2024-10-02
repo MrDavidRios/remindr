@@ -239,6 +239,20 @@ export const taskListSlice = createSlice({
       // Don't save if task list hasn't changed
       saveTaskData(state.value);
     },
+    /**
+     * Updates a specific set of tasks.
+     * @param state
+     * @param action
+     */
+    updateTasks: (state, action: PayloadAction<InstanceType<typeof Task>[]>) => {
+      // for each task, update the task in the state
+      for (const task of action.payload) {
+        const taskIdx = getTaskIdx(task, state.value);
+        state.value[taskIdx] = task;
+      }
+
+      saveTaskData(state.value);
+    },
     updateSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
     },
@@ -292,6 +306,7 @@ export const {
   addTask,
   removeTask,
   updateTask,
+  updateTasks,
   duplicateTask,
   completeTask,
   markTaskIncomplete,

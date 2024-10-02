@@ -1,4 +1,3 @@
-import { isReminderToday } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
 import { isValidSearchString, searchTasks } from '@renderer/scripts/utils/searchutils';
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
@@ -19,19 +18,9 @@ export const TaskColumns = memo(function TaskColumns() {
   }, shallowEqual);
 
   const tasksInColumns = filteredTasks.filter((task) => task.taskColumnId !== undefined && task.taskColumnId !== '');
-  console.log('[TaskColumns]: tasksInColumns:', tasksInColumns);
-
-  const yesterdayTasks = tasksInColumns.filter(
-    (t) =>
-      (isReminderToday(t.scheduledReminders[0], true) as { reminderToday: boolean; adjacentDay: string }).adjacentDay ==
-      'yesterday',
-  );
-  const todayTasks = tasksInColumns.filter((t) => isReminderToday(t.scheduledReminders[0]));
-  const tomorrowTasks = tasksInColumns.filter(
-    (t) =>
-      (isReminderToday(t.scheduledReminders[0], true) as { reminderToday: boolean; adjacentDay: string }).adjacentDay ==
-      'tomorrow',
-  );
+  const yesterdayTasks = tasksInColumns.filter((t) => t.taskColumnId === 'Yesterday');
+  const todayTasks = tasksInColumns.filter((t) => t.taskColumnId === 'Today');
+  const tomorrowTasks = tasksInColumns.filter((t) => t.taskColumnId === 'Tomorrow');
 
   const columns = (
     <div id="taskColumns">
@@ -47,7 +36,7 @@ export const TaskColumns = memo(function TaskColumns() {
         <AnimatePresence mode="popLayout">
           {filteredTasks.map((task) => (
             <div key={task.creationTime}>
-              <TaskTileWrapper task={task} reorderable={false} />
+              <TaskTileWrapper task={task} />
             </div>
           ))}
         </AnimatePresence>

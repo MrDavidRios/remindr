@@ -50,7 +50,7 @@ export const TaskGroup: FC<TaskGroupProps> = ({ tasks, reorderable, onReorder, o
                   <AnimatePresence mode="popLayout">
                     {tasks.map((task) => (
                       <div key={task.creationTime}>
-                        <TaskTileWrapper task={task} reorderable={false} />
+                        <TaskTileWrapper task={task} />
                       </div>
                     ))}
                   </AnimatePresence>

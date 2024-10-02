@@ -21,7 +21,7 @@ describe('Task Tile Wrapper', () => {
     });
     vi.mocked(store.getState).mockReturnValue(mockedStore.getState());
 
-    renderWithProviders(<TaskTileWrapper task={mockTask} reorderable={false} />, undefined, {
+    renderWithProviders(<TaskTileWrapper task={mockTask} />, undefined, {
       menuState: mockMenuState,
       taskList: taskListState,
     });
