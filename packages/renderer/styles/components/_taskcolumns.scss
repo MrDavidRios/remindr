@@ -31,14 +31,27 @@
       color: var(--text-color-secondary);
     }
 
-    .dynamic-text-area {
-      min-width: 100px;
-      max-width: 100%;
-      width: 100%;
+    .new-task-tile {
+      margin-top: 5px;
+
+      display: flex;
+      align-items: center;
+
+      border-radius: 5px;
+      min-height: 60px;
+      padding: 10px;
+
+      .dynamic-text-area {
+        min-width: 100px;
+        max-width: 100%;
+        width: 100%;
+
+        font-size: 16px;
+        border: none;
+      }
     }
 
     .task-column-action-bar {
-      padding-top: 12px;
       text-align: left;
       color: var(--text-color-secondary);
 

@@ -28,7 +28,7 @@ const TaskColumnActionBar: React.FC<TaskColumnActionBarProps> = ({ newTaskTileOp
   return (
     <motion.div className="task-column-action-bar" layout={animationsEnabled ? 'position' : false}>
       {!newTaskTileOpen && (
-        <button onClick={onAddTask}>
+        <button onClick={onAddTask} style={{ marginTop: 12 }}>
           <img src={plusIcon} draggable={false} alt="" />
           Add task
         </button>

@@ -1,4 +1,6 @@
 import { DynamicTextArea } from '@renderer/components/dynamic-text-area/DynamicTextArea';
+import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { motion } from 'framer-motion';
 import React from 'react';
 
 interface NewTaskTileProps {
@@ -7,10 +9,14 @@ interface NewTaskTileProps {
 }
 
 export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }) => {
+  const animationsEnabled = useAnimationsEnabled();
+
   const [taskName, setTaskName] = React.useState('');
 
   return (
-    <div
+    <motion.div
+      className="new-task-tile frosted"
+      layout={animationsEnabled ? 'position' : false}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -29,7 +35,7 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
     >
       <DynamicTextArea
         aria-label="task-title"
-        placeholder="New task"
+        placeholder="Enter a title"
         maxLength={255}
         value={taskName}
         autoFocus
@@ -41,6 +47,6 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
           setTaskName(e.currentTarget.value);
         }}
       />
-    </div>
+    </motion.div>
   );
 };
