@@ -1,4 +1,4 @@
-import { ipcMain, type BrowserWindow } from 'electron';
+import { ipcMain } from 'electron';
 import type { Auth } from 'firebase/auth';
 import { EmailAuthCredential, getAuth, onAuthStateChanged, signInWithCredential } from 'firebase/auth';
 import { existsSync, unlinkSync } from 'fs';
@@ -13,17 +13,18 @@ import {
   signInUser,
   updateUserEmail,
 } from './firebase.js';
+import { getMainWindow } from './getMainWindow.js';
 
 let auth: Auth | undefined;
 /**
  * Sets up authentication event listeners (e.g. sign in, sign out, create user, etc.) — Dependent on Firebase already being set up!
  * @param mainWindow
  */
-export default function initAuthEventListeners(mainWindow: BrowserWindow | null) {
+export default function initAuthEventListeners() {
   auth = getAuth();
 
   onAuthStateChanged(auth, (/* user */) => {
-    mainWindow?.webContents.send('auth-state-changed');
+    getMainWindow()?.webContents.send('auth-state-changed');
   });
 
   ipcMain.handle('create-user', (_event, email: string, password: string) => {

@@ -1,5 +1,6 @@
 import { notify } from '@main/notifications.js';
 import {
+  getDaysBetweenDates,
   isBetweenDates,
   isCurrentMinute,
   isOverdue,
@@ -39,16 +40,33 @@ export function initializeTaskLoop(): void {
   }, delay);
 }
 
+/**
+ * Things the app needs to do when the day has changed.
+ */
+function onDayChange(daysSinceLastCheck: number): void {
+  // Go through tasks that have task column names of 'Yesterday', 'Today', and 'Tomorrow' and move them to the appropriate column
+
+  getMainWindow()?.webContents.send('shift-task-columns', daysSinceLastCheck);
+
+  // Assign yesterday an idx of -1, today an idx of 0, and tomorrow an idx of 1.
+  // make data structure with tasks
+}
+
 function checkForReminders(): void {
   let wasIdle = false;
 
   // Trigger re-render
   getMainWindow()?.webContents.send('task-display-outdated');
 
-  if (getLastCheckTime()) {
-    const timeDifference = new Date().getTime() - getLastCheckTime().getTime();
+  const lastCheckTime = getLastCheckTime();
+  if (lastCheckTime) {
+    const timeDifference = new Date().getTime() - lastCheckTime.getTime();
 
-    // If computer was idle for three minutes, check for missed reminders
+    // If the day has changed between the last check time and now, calculate how many days and call onDayChange
+    const daysSinceLastCheck = getDaysBetweenDates(lastCheckTime, new Date());
+    if (daysSinceLastCheck > 0) onDayChange(daysSinceLastCheck);
+
+    // If computer was idle for a minute, check for missed reminders
     if (timeDifference > 60000) {
       wasIdle = true;
     } else {

@@ -46,3 +46,9 @@ export const TaskColumns = memo(function TaskColumns() {
 
   return columns;
 });
+
+window.electron.ipcRenderer.on('shift-task-columns', (shiftAmount: number) => {
+  console.log('[TaskColumns] Shifting task columns by', shiftAmount);
+
+  // this is an operation that should be done in middleware.
+});

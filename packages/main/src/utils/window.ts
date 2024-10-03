@@ -1,12 +1,12 @@
-import { ipcMain, type BrowserWindow } from 'electron';
+import { ipcMain } from 'electron';
+import { getMainWindow } from './getMainWindow.js';
 
-let globalMainWindow: BrowserWindow | null = null;
 /**
  * Sets up window event listeners (e.g. minimize, maximize, close, hide, show, etc.)
  * @param mainWindow
  */
-export default function initWindowEventListeners(mainWindow: BrowserWindow | null) {
-  globalMainWindow = mainWindow;
+export default function initWindowEventListeners() {
+  const mainWindow = getMainWindow();
 
   mainWindow?.on('minimize', () => {
     mainWindow?.getChildWindows().forEach((notification) => {
@@ -44,11 +44,15 @@ export default function initWindowEventListeners(mainWindow: BrowserWindow | nul
 }
 
 export function hideWindow() {
-  globalMainWindow?.hide();
-  globalMainWindow?.webContents.send('window-hidden');
+  const mainWindow = getMainWindow();
+
+  mainWindow?.hide();
+  mainWindow?.webContents.send('window-hidden');
 }
 
 function showWindow() {
-  globalMainWindow?.show();
-  globalMainWindow?.webContents.send('window-shown');
+  const mainWindow = getMainWindow();
+
+  mainWindow?.show();
+  mainWindow?.webContents.send('window-shown');
 }

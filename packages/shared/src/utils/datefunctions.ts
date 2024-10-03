@@ -197,3 +197,13 @@ export function formatDateAndTime(date: Date, dateFormat: DateFormat, removeYear
   formattedDate = formattedDate.replace(`, ${currentYear}`, '');
   return `${formattedDate} at ${time}`;
 }
+
+export function getDaysBetweenDates(dateA: Date, dateB: Date): number {
+  const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+
+  dateA.setHours(0, 0, 0);
+  dateB.setHours(0, 0, 0);
+
+  const diffDays = Math.round(Math.abs((dateA.valueOf() - dateB.valueOf()) / oneDay));
+  return diffDays;
+}

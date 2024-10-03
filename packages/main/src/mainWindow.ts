@@ -39,7 +39,7 @@ async function createWindow() {
   const trayBuilder = new TrayBuilder(browserWindow);
   trayBuilder.buildTray();
 
-  callSetupFunctions(browserWindow);
+  callSetupFunctions();
 
   /**
    * If the 'show' property of the BrowserWindow's constructor is omitted from the initialization options,

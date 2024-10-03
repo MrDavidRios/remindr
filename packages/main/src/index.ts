@@ -1,7 +1,7 @@
 import { restoreOrCreateWindow } from '@main/mainWindow.js';
 import initUserDataListeners, { isAutoStartupEnabled, isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
 import type { BadgeInfo, Task } from '@remindr/shared';
-import type { BrowserWindow, MessageBoxOptions } from 'electron';
+import type { MessageBoxOptions } from 'electron';
 import { app, dialog, ipcMain, nativeImage, nativeTheme, session, shell } from 'electron';
 import Store from 'electron-store';
 import updater from 'electron-updater';
@@ -62,12 +62,12 @@ app.on('activate', restoreOrCreateWindow);
 
 initFirebase();
 
-export const callSetupFunctions = (window: BrowserWindow) => {
+export const callSetupFunctions = () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
 
-  initWindowEventListeners(window);
-  initNotificationEventListeners(window);
+  initWindowEventListeners();
+  initNotificationEventListeners();
 
   // Listeners that aren't dependent on renderer to work
   initAutoUpdaterEventHandlers();
@@ -76,7 +76,7 @@ export const callSetupFunctions = (window: BrowserWindow) => {
   initUserDataListeners();
 
   // Dependent on Firebase
-  initAuthEventListeners(window);
+  initAuthEventListeners();
 };
 
 /**

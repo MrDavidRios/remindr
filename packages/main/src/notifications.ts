@@ -27,55 +27,59 @@ let groupNotifWindow: BrowserWindow | undefined;
 
 const styleValues: Map<string, string> = new Map();
 
-let globalMainWindow: BrowserWindow | null = null;
 /**
  * Initializes notification event listeners (e.g. notify, close-notification, update-notification-style-values, etc.)
  * @param mainWindow
  */
-export function initNotificationEventListeners(mainWindow: BrowserWindow | null) {
-  globalMainWindow = mainWindow;
+export function initNotificationEventListeners() {
+  ipcMain.on('update-notification-style-values', (_e, styleData) => {
+    const updatedStyleValues = JSON.parse(styleData) as Record<string, string>;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [property, value] of Object.entries(updatedStyleValues)) {
+      styleValues.set(property, value);
+    }
+
+    if (isGroupNotifOpen) {
+      groupNotifWindow?.webContents.send(
+        'update-theme-in-notification',
+        JSON.stringify(Object.fromEntries(styleValues)),
+      );
+      return;
+    }
+
+    ongoingNotifications.forEach(async (notifWindow) => {
+      notifWindow.webContents.send('update-theme-in-notification', JSON.stringify(Object.fromEntries(styleValues)));
+      notifWindow.webContents.send('update-settings-in-notification', getSettingsProfile());
+    });
+  });
+
+  ipcMain.on('close-notification', (_event, stringifiedTaskReminderPair) => {
+    if (isGroupNotifCreated) {
+      closeGroupNotification();
+      return;
+    }
+
+    const taskReminderPair = getTaskReminderPair(stringifiedTaskReminderPair);
+    const notificationWindow = ongoingNotifications.get(taskReminderPair!);
+
+    if (!notificationWindow) throw new Error('close-notification: notification window not found');
+
+    notificationWindow.close();
+    ongoingNotifications.delete(taskReminderPair!);
+  });
+
+  // Notification event listener
+  ipcMain.on('notify', (_event, stringifiedTask: string, scheduledReminderIdx: number) => {
+    notify(stringifiedTask, scheduledReminderIdx);
+  });
 }
 
-ipcMain.on('update-notification-style-values', (_e, styleData) => {
-  const updatedStyleValues = JSON.parse(styleData) as Record<string, string>;
-  // eslint-disable-next-line no-restricted-syntax
-  for (const [property, value] of Object.entries(updatedStyleValues)) {
-    styleValues.set(property, value);
-  }
-
-  if (isGroupNotifOpen) {
-    groupNotifWindow?.webContents.send('update-theme-in-notification', JSON.stringify(Object.fromEntries(styleValues)));
-    return;
-  }
-
-  ongoingNotifications.forEach(async (notifWindow) => {
-    notifWindow.webContents.send('update-theme-in-notification', JSON.stringify(Object.fromEntries(styleValues)));
-    notifWindow.webContents.send('update-settings-in-notification', getSettingsProfile());
-  });
-});
-
-ipcMain.on('close-notification', (_event, stringifiedTaskReminderPair) => {
-  if (isGroupNotifCreated) {
-    closeGroupNotification();
-    return;
-  }
-
-  const taskReminderPair = getTaskReminderPair(stringifiedTaskReminderPair);
-  const notificationWindow = ongoingNotifications.get(taskReminderPair!);
-
-  if (!notificationWindow) throw new Error('close-notification: notification window not found');
-
-  notificationWindow.close();
-  ongoingNotifications.delete(taskReminderPair!);
-});
-
-// Notification event listener
-ipcMain.on('notify', (_event, stringifiedTask: string, scheduledReminderIdx: number) => {
-  notify(stringifiedTask, scheduledReminderIdx);
-});
-
 export function notify(stringifiedTask: string, scheduledReminderIndex: number): void {
+  const mainWindow = getMainWindow();
+
   const task = JSON.parse(stringifiedTask) as Task;
+
+  console.log(`notify - starting notification for ${task.name}`, task);
 
   const notifDetails: TaskScheduledReminderPair = {
     task,
@@ -94,7 +98,7 @@ export function notify(stringifiedTask: string, scheduledReminderIndex: number):
   const settings = JSON.parse(getSettingsProfile()) ?? createDefaultSettings();
   if (settings.nativeNotifications) {
     // Delegate firing of native notification to renderer util script
-    globalMainWindow?.webContents.send('deploy-native-notification', {
+    mainWindow?.webContents.send('deploy-native-notification', {
       task,
       index: scheduledReminderIndex,
     });
