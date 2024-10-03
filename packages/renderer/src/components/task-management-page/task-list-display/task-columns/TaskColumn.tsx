@@ -93,13 +93,14 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
     dispatch(updateTasks(clonedIncompleteTasks));
   };
 
+  const showNoTasksMessage = orderedIncompleteTasks.length === 0 && !showNewTaskTile;
   return (
     <div className="task-column">
       <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" id={name}>
         <AnimateChangeInHeight show>
           <h2>{name}</h2>
           <div className="tasks">
-            {orderedIncompleteTasks.length === 0 && <p className="no-tasks-message">All done here!</p>}
+            {showNoTasksMessage && <p className="no-tasks-message">All done here!</p>}
             <Reorder.Group
               className="task-group"
               values={orderedIncompleteTasks}
