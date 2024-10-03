@@ -1,12 +1,11 @@
 import expandArrow from '@assets/icons/expand-arrow.png';
 import hamburgerIcon from '@assets/icons/hamburger.svg';
 import { useClickOutside } from '@hooks/useoutsideclick';
-import { AppMode, Menu } from '@remindr/shared';
+import { AppMode, delay, Menu } from '@remindr/shared';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
-import { delay } from '@renderer/scripts/utils/timing';
 import { useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';

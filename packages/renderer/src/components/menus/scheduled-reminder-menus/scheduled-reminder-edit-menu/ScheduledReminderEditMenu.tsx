@@ -1,6 +1,7 @@
 import checkIcon from '@assets/icons/check.svg';
 import type { ScheduledReminder, Task } from '@remindr/shared';
 import {
+  delay,
   formatHour,
   formatMinute,
   getDate,
@@ -23,7 +24,6 @@ import { getEditedTask, setEditedTask } from '@renderer/features/task-modificati
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
-import { delay } from '@renderer/scripts/utils/timing';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';

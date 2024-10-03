@@ -1,8 +1,7 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
-import { Menu, Task } from '@remindr/shared';
+import { Menu, Task, waitUntil } from '@remindr/shared';
 import { AppDispatch, RootState } from '@renderer/app/store';
 import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
-import { waitUntil } from '@renderer/scripts/utils/timing';
 import _ from 'lodash';
 import { hideMenu, showDialog, showMenu } from '../menuSlice';
 

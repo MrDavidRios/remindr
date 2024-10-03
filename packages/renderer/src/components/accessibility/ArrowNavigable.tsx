@@ -1,4 +1,4 @@
-import { waitUntil } from '@renderer/scripts/utils/timing';
+import { waitUntil } from '@remindr/shared';
 import type { LegacyRef } from 'react';
 import React, { useEffect, useRef } from 'react';
 

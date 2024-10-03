@@ -2,7 +2,7 @@ import angelRightIcon from '@assets/icons/angel-right.svg';
 import closeButtonIcon from '@assets/icons/close-button.svg';
 import openIcon from '@assets/icons/open.svg';
 import type { Settings, TaskScheduledReminderPair } from '@remindr/shared';
-import { createDefaultSettings } from '@remindr/shared';
+import { createDefaultSettings, waitUntil } from '@remindr/shared';
 import { getFormattedReminderTime } from '@remindr/shared/src/utils/timefunctions';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
@@ -12,28 +12,45 @@ import { getIpcRendererOutput } from '../scripts/utils/ipcRendererOutput';
 
 window.electron.ipcRenderer.on('update-theme-in-notification', (_e: string) => updateTheme(_e));
 
+type NotificationWindowData = {
+  taskReminderPair: TaskScheduledReminderPair;
+  settings: Settings;
+  stringifiedThemeData: string;
+};
+
+// Separates event handling from React, preventing failure if the event is sent before the component is mounted.
+let initialNotificationData: NotificationWindowData | undefined = undefined;
+window.electron.ipcRenderer.on('initialize-notification', (_e: string) => {
+  const eventNotificationData = getIpcRendererOutput(_e) as {
+    taskReminderPair: TaskScheduledReminderPair;
+    stringifiedThemeData: string;
+    stringifiedSettingsData: string;
+  };
+
+  initialNotificationData = {
+    taskReminderPair: eventNotificationData.taskReminderPair,
+    settings: JSON.parse(eventNotificationData.stringifiedSettingsData) as Settings,
+    stringifiedThemeData: eventNotificationData.stringifiedThemeData,
+  };
+});
+
 export const NotificationWindowContents: FC = () => {
-  const [taskReminderPair, setTaskReminderPair] = useState<TaskScheduledReminderPair | undefined>(undefined);
-  const [settings, setSettings] = useState<Settings>(createDefaultSettings());
+  const [taskReminderPair, setTaskReminderPair] = useState<TaskScheduledReminderPair | undefined>(
+    initialNotificationData?.taskReminderPair,
+  );
+  const [settings, setSettings] = useState<Settings>(initialNotificationData?.settings ?? createDefaultSettings());
 
   useEffect(() => {
-    const initializeNotification = (_e: string) => {
-      const data = getIpcRendererOutput(_e) as {
-        taskReminderPair: TaskScheduledReminderPair;
-        stringifiedThemeData: string;
-        stringifiedSettingsData: string;
-      };
+    const waitForInitialNotificationData = async () => {
+      await waitUntil(() => initialNotificationData !== undefined);
 
-      setTaskReminderPair(data.taskReminderPair);
-      setSettings(JSON.parse(data.stringifiedSettingsData) as Settings);
-      updateTheme(data.stringifiedThemeData);
+      setTaskReminderPair(initialNotificationData?.taskReminderPair);
+      setSettings(initialNotificationData?.settings ?? createDefaultSettings());
+
+      if (initialNotificationData?.stringifiedThemeData) updateTheme(initialNotificationData.stringifiedThemeData);
     };
 
-    const notifInitDataListener = window.electron.ipcRenderer.on('initialize-notification', initializeNotification);
-
-    return () => {
-      notifInitDataListener();
-    };
+    waitForInitialNotificationData();
   }, []);
 
   const closeNotification = () =>
@@ -84,7 +101,7 @@ export const NotificationWindowContents: FC = () => {
   };
 
   const reminder =
-    taskReminderPair !== undefined
+    taskReminderPair?.task !== undefined
       ? taskReminderPair.task.scheduledReminders[taskReminderPair.scheduledReminderIndex]
       : undefined;
 

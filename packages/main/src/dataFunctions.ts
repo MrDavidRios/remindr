@@ -1,5 +1,5 @@
 import type { CompleteAppData, Settings, Task } from '@remindr/shared';
-import { AppMode, User as RemindrUser, TaskCollection, createDefaultSettings } from '@remindr/shared';
+import { AppMode, User as RemindrUser, TaskCollection, createDefaultSettings, waitUntil } from '@remindr/shared';
 import { ipcMain } from 'electron';
 import log from 'electron-log';
 import Store from 'electron-store';
@@ -23,7 +23,6 @@ import { deleteFirebaseUser, getUserUID, signOutUser } from './utils/auth.js';
 import { getMainWindow } from './utils/getMainWindow.js';
 import showMessageBox from './utils/messagebox.js';
 import { getSettingsProfile, getUserProfile } from './utils/storeUserData.js';
-import { waitUntil } from './utils/timing.js';
 import { hideWindow } from './utils/window.js';
 
 const store = new Store();

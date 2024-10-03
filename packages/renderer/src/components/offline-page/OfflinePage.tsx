@@ -1,10 +1,9 @@
 import remindrLoadingIcon from '@assets/icons/logo-full-size.png';
-import { AppMode } from '@remindr/shared';
+import { AppMode, delay } from '@remindr/shared';
 import { setAppMode } from '@renderer/features/app-mode/appModeSlice';
 import { updateConnectionState } from '@renderer/features/connection-state/connectionState';
 import { useAppDispatch } from '@renderer/hooks';
 import { initializeUser } from '@renderer/scripts/systems/authentication';
-import { delay } from '@renderer/scripts/utils/timing';
 import { useEffect, useState } from 'react';
 
 export function OfflinePage() {

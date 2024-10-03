@@ -1,9 +1,8 @@
-import { isTaskSelected, postponeTask, Task } from '@remindr/shared';
+import { isTaskSelected, postponeTask, Task, waitUntil } from '@remindr/shared';
 import store, { AppDispatch } from '../app/store';
 import { completeTask, removeSelectedTask, setSelectedTask, updateTask } from '../features/task-list/taskListSlice';
 import { initNativeNotificationListener } from './systems/notifications/nativenotification';
 import { getIpcRendererOutput } from './utils/ipcRendererOutput';
-import { waitUntil } from './utils/timing';
 
 let listenersInitialized = false;
 export function useNotificationEvents(dispatch: AppDispatch) {

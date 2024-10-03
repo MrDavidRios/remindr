@@ -2,9 +2,15 @@ import calendarIcon from '@assets/icons/calendar-time.svg';
 import deleteIcon from '@assets/icons/plus-thin.svg';
 import repeatIcon from '@assets/icons/repeat.svg';
 import type { DateFormat, MenuRect, ScheduledReminder } from '@remindr/shared';
-import { getFormattedReminderTime, getReminderDisplayDate, isOverdue, reminderRepeats, Repeat } from '@remindr/shared';
+import {
+  delay,
+  getFormattedReminderTime,
+  getReminderDisplayDate,
+  isOverdue,
+  reminderRepeats,
+  Repeat,
+} from '@remindr/shared';
 import { convertDOMRectToMenuRect } from '@renderer/scripts/utils/menuutils';
-import { delay } from '@renderer/scripts/utils/timing';
 import type { FC } from 'react';
 import { useEffect, useRef, useState } from 'react';
 

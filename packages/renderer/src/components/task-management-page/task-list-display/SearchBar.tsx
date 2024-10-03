@@ -1,10 +1,10 @@
 import cancelIcon from '@assets/icons/close-button.svg';
 import searchIcon from '@assets/icons/search.svg';
+import { waitUntil } from '@remindr/shared';
 import { updateSearchQuery } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppStore } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { isValidSearchString } from '@renderer/scripts/utils/searchutils';
-import { waitUntil } from '@renderer/scripts/utils/timing';
 import { AnimatePresence, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';

@@ -1,6 +1,6 @@
+import { delay, waitUntil } from '@remindr/shared';
 import store from '@renderer/app/store';
 import { updateOverlayIcons } from '@renderer/scripts/systems/badges';
-import { delay, waitUntil } from '@renderer/scripts/utils/timing';
 
 let initialized = false;
 let updateOverdueBadgeInterval: NodeJS.Timeout | null = null;
