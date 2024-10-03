@@ -7,6 +7,7 @@ export * from './link.js';
 export * from './menu.js';
 export * from './message.js';
 export * from './mousetrap.js';
+export * from './page.js';
 export * from './taskListAction.js';
 export * from './theme.js';
 export * from './timeframe.js';

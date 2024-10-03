@@ -1,5 +1,5 @@
 import settingsPanelIcon from '@assets/icons/settings-panel.svg';
-import { getTimeframeDisplayName, Menu, Timeframe } from '@remindr/shared';
+import { getTimeframeDisplayName, Menu, Page, Timeframe } from '@remindr/shared';
 import { toggleMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { isValidSearchString } from '@renderer/scripts/utils/searchutils';
@@ -18,7 +18,8 @@ export function TaskListHeader(props: TaskListHeaderProps) {
 
   const selectedTasks = useAppSelector((state) => state.taskList.selectedTasks, shallowEqual);
   const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
-  const columnView = useAppSelector((state) => state.settings.value.columnView);
+  const taskView = useAppSelector((state) => state.pageState.currentPage);
+  const columnView = taskView === Page.ColumnView;
 
   const timeframeDisplayName = getTimeframeDisplayName(timeframe);
 

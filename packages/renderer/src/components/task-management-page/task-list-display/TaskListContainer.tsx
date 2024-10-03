@@ -1,4 +1,4 @@
-import { Timeframe } from '@remindr/shared';
+import { Page, Timeframe } from '@remindr/shared';
 import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { AppDispatch } from '@renderer/app/store';
 import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '@renderer/features/task-list/taskListSlice';
@@ -23,7 +23,8 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
   const store = useAppStore();
 
   const taskListGetStatus = useAppSelector((state) => state.taskList.taskListGetStatus);
-  const columnView = useAppSelector((state) => state.settings.value.columnView);
+  const taskView = useAppSelector((state) => state.pageState.currentPage);
+  const columnView = taskView === Page.ColumnView;
 
   // Deselect all tasks on esc keypress
   useHotkeys(

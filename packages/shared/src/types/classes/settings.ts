@@ -60,8 +60,6 @@ export type Settings = {
   reorderableTodo: boolean;
 
   showCompletedTasks: boolean;
-
-  columnView: boolean;
 };
 
 export function createDefaultSettings(overrides: Partial<Settings> = {}): Settings {
@@ -89,7 +87,6 @@ export function createDefaultSettings(overrides: Partial<Settings> = {}): Settin
     spellcheck: true,
     reorderableTodo: false,
     showCompletedTasks: true,
-    columnView: false,
     ...overrides,
   };
 }
