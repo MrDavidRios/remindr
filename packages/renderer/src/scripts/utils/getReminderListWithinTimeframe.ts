@@ -44,8 +44,8 @@ export function getTaskListWithinTimeframe(taskList: Task[], timeframe: Timefram
       reminderListWithinTimeframe = _.filter(reminderListWithinTimeframe, (task: Task) => {
         if (task.scheduledReminders.length === 0) return false;
 
-        const { isReminderToday: reminderToday, adjacentDay } = isReminderToday(task.scheduledReminders[0], true) as {
-          isReminderToday: boolean;
+        const { reminderToday, adjacentDay } = isReminderToday(task.scheduledReminders[0], true) as {
+          reminderToday: boolean;
           adjacentDay: string;
         };
 

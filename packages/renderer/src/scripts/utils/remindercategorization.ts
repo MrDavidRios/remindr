@@ -16,8 +16,8 @@ const months = [
 ];
 
 export default function categorizeTaskByDate(task: Task): string {
-  const { isReminderToday: reminderToday, adjacentDay } = isReminderToday(task.scheduledReminders[0], true) as {
-    isReminderToday: boolean;
+  const { reminderToday, adjacentDay } = isReminderToday(task.scheduledReminders[0], true) as {
+    reminderToday: boolean;
     adjacentDay: string;
   };
 

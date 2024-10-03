@@ -55,6 +55,10 @@ vi.mock('@renderer/scripts/utils/hooks/usedetectwheel', () => {
 // https://stackoverflow.com/questions/57311971/error-not-implemented-window-scrollto-how-do-we-remove-this-error-from-jest-t
 window.scrollTo = vi.fn();
 
+(window as any).data = {
+  saveData: vi.fn(),
+};
+
 (window as any).userState = {
   setUserProfile: vi.fn(),
   loadSettings: vi.fn(() => createDefaultSettings()),
