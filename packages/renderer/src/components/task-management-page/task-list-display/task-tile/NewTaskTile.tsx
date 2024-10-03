@@ -1,5 +1,4 @@
 import { DynamicTextArea } from '@renderer/components/dynamic-text-area/DynamicTextArea';
-import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { motion } from 'framer-motion';
 import React from 'react';
 
@@ -9,14 +8,11 @@ interface NewTaskTileProps {
 }
 
 export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }) => {
-  const animationsEnabled = useAnimationsEnabled();
-
   const [taskName, setTaskName] = React.useState('');
 
   return (
     <motion.div
       className="new-task-tile frosted"
-      layout={animationsEnabled ? 'position' : false}
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
           e.preventDefault();

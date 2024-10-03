@@ -23,10 +23,8 @@ interface TaskColumnActionBarProps {
 }
 
 const TaskColumnActionBar: React.FC<TaskColumnActionBarProps> = ({ newTaskTileOpen, onAddTask }) => {
-  const animationsEnabled = useAnimationsEnabled();
-
   return (
-    <motion.div className="task-column-action-bar" layout={animationsEnabled ? 'position' : false}>
+    <motion.div className="task-column-action-bar">
       {!newTaskTileOpen && (
         <button onClick={onAddTask} style={{ marginTop: 12 }}>
           <img src={plusIcon} draggable={false} alt="" />
