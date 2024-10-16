@@ -8,6 +8,7 @@ interface FloatingMenuProps extends HTMLAttributes<HTMLDivElement> {
   yOffset: { bottomAnchored: number; topAnchored: number };
   children: ReactNode;
   gap: number;
+  rightAlign?: boolean;
   clickOutsideExceptions?: string[];
   onClickOutside?: () => void;
 }
@@ -16,6 +17,7 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
   anchor,
   yOffset,
   gap,
+  rightAlign,
   clickOutsideExceptions,
   className,
   id,
@@ -43,12 +45,26 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
     const posYTopAnchored = anchor.y + anchor.height + gap + yOffset.topAnchored;
     const posYBottomAnchored = anchor.y - rect.height - gap - yOffset.bottomAnchored;
 
-    // If y position will be going off the right edge of the screen, make sure it's positioned 20 pixels left of the right edge
-    const borderAdjustedXPos = anchor.x + rect.width > innerWidth ? anchor.x - 20 : anchor.x;
+    const menuXPos = rightAlign ? anchor.x + anchor.width - rect.width : anchor.x;
+    let borderAdjustedXPos = menuXPos;
+
+    // Overflowing off right edge of screen
+    if (!rightAlign && menuXPos + rect.width > innerWidth) {
+      borderAdjustedXPos = innerWidth - rect.width - 20;
+    }
+
+    // Overflowing off left edge of screen
+    if (rightAlign && menuXPos < 0) {
+      borderAdjustedXPos = 20;
+    }
+
     const borderAdjustedYPos = posYTopAnchored + rect.height > innerHeight ? posYBottomAnchored : posYTopAnchored;
 
     setPosition({ x: borderAdjustedXPos, y: borderAdjustedYPos });
   }, [anchor, yOffset, gap, ref]);
+
+  const menuWidth = ref.current?.getBoundingClientRect().width ?? 0;
+  const horizontalPosProps = rightAlign ? { right: window.innerWidth - position.x - menuWidth } : { left: position.x };
 
   return (
     <div
@@ -57,8 +73,8 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
       className={className}
       style={{
         visibility: position.x === -1 ? 'hidden' : 'visible',
-        left: position.x,
         top: position.y,
+        ...horizontalPosProps,
         ...style,
       }}
       onKeyDown={onKeyDown}

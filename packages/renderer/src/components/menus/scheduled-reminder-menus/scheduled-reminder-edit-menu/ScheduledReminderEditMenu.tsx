@@ -39,8 +39,6 @@ export const ScheduledReminderEditMenu: FC = () => {
 
   const { anchor, yOffset, gap } = useAppSelector((state) => state.menuState.scheduledReminderEditorPosition);
 
-  console.log('anchor:', anchor);
-
   const taskEditType = useAppSelector((state) => state.taskModificationState.lastEditType);
   const reminderEditState = useAppSelector((state) => state.taskModificationState.reminderEditState);
 
@@ -169,6 +167,7 @@ export const ScheduledReminderEditMenu: FC = () => {
       anchor={anchor}
       yOffset={yOffset}
       gap={gap}
+      rightAlign={taskEditType === 'edit'}
       id="scheduledReminderEditMenu"
       className="frosted"
       clickOutsideExceptions={['.reminder-tile']}
