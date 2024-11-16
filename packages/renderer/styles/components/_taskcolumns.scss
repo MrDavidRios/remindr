@@ -1,13 +1,13 @@
 #taskColumns {
   height: 100%;
 
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
   gap: 12px;
 
   min-width: 800px;
   overflow-x: auto;
   max-width: 100%;
+  justify-content: center;
 
   h2 {
     margin-bottom: 24px;
@@ -15,6 +15,7 @@
 
   .task-column {
     padding: 16px 12px;
+    min-width: calc((100% / 3) - 12px);
 
     background-color: var(--surface-primary);
     border-radius: var(--menu-border-radius);

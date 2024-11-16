@@ -18,8 +18,6 @@ export function useTaskLoopEvents(dispatch: AppDispatch) {
       index: number;
     };
 
-    console.log('[task loop event: advance-recurring-reminder', task, index);
-
     dispatch(advanceRecurringReminder({ task, reminderIdx: index }));
   });
 }

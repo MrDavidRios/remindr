@@ -4,12 +4,13 @@ import {
   isBetweenDates,
   isCurrentMinute,
   isOverdue,
+  msUntilNextMinute,
   ScheduledReminder,
   taskHasReminders,
   type Task,
 } from '@remindr/shared';
 import Store from 'electron-store';
-import { getMainWindow } from './getMainWindow.js';
+import { getMainWindow } from './utils/getMainWindow.js';
 
 const store = new Store();
 
@@ -21,17 +22,7 @@ export function initializeTaskLoop(): void {
   checkForReminders();
 
   // Wait until the start of the next minute to begin the setInterval for checking of reminders
-  const now = new Date();
-  const nextMinute = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes() + 1,
-    0,
-    0,
-  );
-  const delay = nextMinute.getTime() - now.getTime();
+  const delay = msUntilNextMinute();
 
   taskLoopInterval = setTimeout(() => {
     // Check for reminders at the end of this current minute, and then every minute after that
@@ -47,9 +38,6 @@ function onDayChange(daysSinceLastCheck: number): void {
   // Go through tasks that have task column names of 'Yesterday', 'Today', and 'Tomorrow' and move them to the appropriate column
 
   getMainWindow()?.webContents.send('shift-task-columns', daysSinceLastCheck);
-
-  // Assign yesterday an idx of -1, today an idx of 0, and tomorrow an idx of 1.
-  // make data structure with tasks
 }
 
 function checkForReminders(): void {

@@ -14,7 +14,7 @@ import {
   setDate,
   standardToMilHour,
 } from '@remindr/shared';
-import { getTaskColumnId } from '@remindr/shared/src/utils';
+import { getTaskColumnIdx } from '@remindr/shared/src/utils';
 import store from '@renderer/app/store';
 import { DatePicker } from '@renderer/components/date-picker/DatePicker';
 import { FloatingMenu } from '@renderer/components/floating-menu/FloatingMenu';
@@ -86,7 +86,7 @@ export const ScheduledReminderEditMenu: FC = () => {
 
     const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
     editedTaskClone.scheduledReminders[reminderEditState.idx] = updatedScheduledReminder;
-    editedTaskClone.taskColumnId = getTaskColumnId(editedTaskClone);
+    editedTaskClone.columnIdx = getTaskColumnIdx(editedTaskClone);
 
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
     if (taskEditType === 'edit') dispatch(updateTask(editedTaskClone));

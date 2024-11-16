@@ -23,6 +23,7 @@ describe('Task Context Menu', () => {
       taskList: mockTaskListState,
       settings: { value: createDefaultSettings(), syncOnline: false },
     });
+
     vi.mocked(store.getState).mockReturnValue(mockedStore.getState());
 
     renderWithProviders(<TaskContextMenu />, undefined, {

@@ -1,3 +1,4 @@
+import { createDefaultSettings, TASK_COLUMNS } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
 import { isValidSearchString, searchTasks } from '@renderer/scripts/utils/searchutils';
 import { AnimatePresence, LayoutGroup } from 'framer-motion';
@@ -8,6 +9,8 @@ import { TaskColumn } from './TaskColumn';
 
 export const TaskColumns = memo(function TaskColumns() {
   const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
+  const enabledTaskColumns =
+    useAppSelector((state) => state.settings.value.enabledTaskColumns) ?? createDefaultSettings().enabledTaskColumns;
 
   const filteredTasks = useAppSelector((state) => {
     const tasks = state.taskList.value;
@@ -16,19 +19,6 @@ export const TaskColumns = memo(function TaskColumns() {
     const showCompleted = state.settings.value.showCompletedTasks ?? true;
     return showCompleted ? searchResults : searchResults.filter((task) => !task.completed);
   }, shallowEqual);
-
-  const tasksInColumns = filteredTasks.filter((task) => task.taskColumnId !== undefined && task.taskColumnId !== '');
-  const yesterdayTasks = tasksInColumns.filter((t) => t.taskColumnId === 'Yesterday');
-  const todayTasks = tasksInColumns.filter((t) => t.taskColumnId === 'Today');
-  const tomorrowTasks = tasksInColumns.filter((t) => t.taskColumnId === 'Tomorrow');
-
-  const columns = (
-    <div id="taskColumns">
-      <TaskColumn name="Yesterday" tasks={yesterdayTasks} />
-      <TaskColumn name="Today" tasks={todayTasks} />
-      <TaskColumn name="Tomorrow" tasks={tomorrowTasks} />
-    </div>
-  );
 
   if (isValidSearchString(searchQuery)) {
     return (
@@ -44,11 +34,22 @@ export const TaskColumns = memo(function TaskColumns() {
     );
   }
 
-  return columns;
-});
+  const taskColumnsToRender = Array.from(TASK_COLUMNS.keys()).filter((columnIdx) =>
+    enabledTaskColumns.includes(columnIdx),
+  );
+  console.log('Rendering task columns', taskColumnsToRender);
 
-window.electron.ipcRenderer.on('shift-task-columns', (shiftAmount: number) => {
-  console.log('[TaskColumns] Shifting task columns by', shiftAmount);
+  return (
+    <div id="taskColumns">
+      {taskColumnsToRender.map((columnIdx) => {
+        const columnName = TASK_COLUMNS.get(columnIdx);
+        if (!columnName) {
+          return null;
+        }
 
-  // this is an operation that should be done in middleware.
+        const tasksInColumn = filteredTasks.filter((task) => task.columnIdx === columnIdx);
+        return <TaskColumn key={columnName} name={columnName} tasks={tasksInColumn} />;
+      })}
+    </div>
+  );
 });

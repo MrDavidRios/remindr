@@ -1,19 +1,19 @@
-import { capitalizeFirstLetter, isOverdue, isReminderToday } from '../index.js';
+import { getDate, getDaysBetweenDates, isOverdue } from '../index.js';
 import { ScheduledReminder, Task } from '../types/index.js';
 
 /**
- * Sets the task column id for a task based on its earliest non-overdue reminder date.
+ * Sets the task column idx for a task based on its earliest non-overdue reminder date.
  *
- * If the task already has a column id assigned, it will return the same id, as once assigned,
+ * If the task already has a column idx assigned, it will return the same idx, as once assigned,
  * it should only be directly modifiable by the user.
  * @param task
  * @returns
  */
-export const getTaskColumnId = (task: Task): string => {
-  if (task.taskColumnId !== undefined && task.taskColumnId !== '') return task.taskColumnId;
+export const getTaskColumnIdx = (task: Task): number | undefined => {
+  if (task.columnIdx !== undefined) return task.columnIdx;
 
   // If a task has no scheduled reminders, don't give it a column id.
-  if (task.scheduledReminders.length === 0) return '';
+  if (task.scheduledReminders.length === 0) return undefined;
 
   let relevantReminder: ScheduledReminder;
 
@@ -24,14 +24,11 @@ export const getTaskColumnId = (task: Task): string => {
   if (nonOverdueRemiders.length === 0) relevantReminder = task.scheduledReminders[lastReminderIdx];
   else relevantReminder = task.scheduledReminders[0];
 
-  const { reminderToday, adjacentDay } = isReminderToday(relevantReminder, true) as {
-    reminderToday: boolean;
-    adjacentDay: string;
-  };
+  const reminderDate = getDate(relevantReminder);
+  let dayDiff = getDaysBetweenDates(new Date(), reminderDate);
+  if (reminderDate < new Date()) dayDiff *= -1;
 
-  if (reminderToday) return 'Today';
-
-  return capitalizeFirstLetter(adjacentDay);
+  return dayDiff;
 };
 
 export const columnTasksInDifferentOrder = (taskListA: Task[], taskListB: Task[]): boolean => {

@@ -162,6 +162,7 @@ export function isReminderToday(
       adjacentDay: 'none',
     };
   }
+
   const sameDay = new Date().getDate() === reminderTime.reminderDay;
   const sameMonth = new Date().getMonth() === reminderTime.reminderMonth - 1;
   const sameYear = new Date().getFullYear() === reminderTime.reminderYear;

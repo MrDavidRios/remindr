@@ -1,11 +1,12 @@
 import initializeNotificationScreenListeners from '@main/notifications.js';
+import { initializeTaskLoop } from '@main/taskLoop.js';
 import { isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
-import { initializeTaskLoop } from '@main/utils/taskLoop.js';
 import { app, BrowserWindow } from 'electron';
 import Store from 'electron-store';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { callSetupFunctions } from './index.js';
+import { checkForOpenOnNewDay, initializeTimeLoop } from './timeLoop.js';
 import TrayBuilder from './tray.js';
 
 const store = new Store();
@@ -65,6 +66,9 @@ async function createWindow() {
   });
 
   browserWindow.webContents.once('did-finish-load', () => {
+    checkForOpenOnNewDay();
+    initializeTimeLoop();
+
     // This makes sure events are sent to renderer process (and then notification windows) after the main window
     // renderer process is done loading. This way, no information is lost in the events.
     initializeTaskLoop();

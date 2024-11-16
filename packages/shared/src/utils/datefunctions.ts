@@ -198,6 +198,15 @@ export function formatDateAndTime(date: Date, dateFormat: DateFormat, removeYear
   return `${formattedDate} at ${time}`;
 }
 
+/**
+ * Gets the amount of days between two dates.
+ *
+ * For example, if `dateA` is January 3rd, 2024 and `dateB` is January 4th, 2024, the function will return 1.
+ * Hour/minute values are not factored into the calculation.
+ * @param dateA
+ * @param dateB
+ * @returns
+ */
 export function getDaysBetweenDates(dateA: Date, dateB: Date): number {
   const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
 
@@ -207,3 +216,18 @@ export function getDaysBetweenDates(dateA: Date, dateB: Date): number {
   const diffDays = Math.round(Math.abs((dateA.valueOf() - dateB.valueOf()) / oneDay));
   return diffDays;
 }
+
+export const msUntilNextMinute = () => {
+  const now = new Date();
+  const nextMinute = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes() + 1,
+    0,
+    0,
+  );
+
+  return nextMinute.getTime() - now.getTime();
+};

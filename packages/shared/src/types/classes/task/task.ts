@@ -30,9 +30,9 @@ export class Task {
   completed: boolean;
 
   /**
-   * The ID of the column the task is in. Is an empty string if the task is not in a column.
+   * The idx of the column the task is in. Mapping from idx to column name can be found in `@shared/constants`
    */
-  taskColumnId: string;
+  columnIdx: number | undefined;
 
   /**
    * The order of the task in the column. Is -1 if the task is not in a column.
@@ -59,7 +59,7 @@ export class Task {
     this.pinned = false;
     this.completed = false;
 
-    this.taskColumnId = '';
+    this.columnIdx = undefined;
     this.orderInTaskColumn = -1;
   }
 }

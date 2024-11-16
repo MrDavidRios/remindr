@@ -1,5 +1,13 @@
-import { ScheduledReminder, getDaysBetweenDates, getReminderDate, isCurrentMinute, setDate } from '@remindr/shared';
-import { describe, expect, it } from 'vitest';
+import {
+  ScheduledReminder,
+  getDaysBetweenDates,
+  getReminderDate,
+  isCurrentMinute,
+  msUntilNextMinute,
+  setDate,
+} from '@remindr/shared';
+import { beforeEach } from 'node:test';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 describe('getReminderDate', () => {
   it('should return the correct Date object for a given ScheduledReminder', () => {
@@ -146,5 +154,64 @@ describe('getDaysBetween', () => {
 
     const result = getDaysBetweenDates(dateA, dateB);
     expect(result).toBe(2);
+  });
+});
+
+describe('msUntilNextMinute', () => {
+  const currentYear = new Date().getFullYear();
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('should return the correct milliseconds until the next minute when seconds are 0', () => {
+    const mockDate = new Date(currentYear, 0, 1, 0, 0, 0, 0);
+    vi.setSystemTime(mockDate);
+    const expectedMs = 60000; // 60 seconds * 1000 milliseconds
+
+    const test = new Date();
+
+    const result = msUntilNextMinute();
+    expect(result).toBeCloseTo(expectedMs, -2); // Allowing a small margin for execution time
+  });
+
+  it('should return the correct milliseconds until the next minute when seconds are 30', () => {
+    const mockDate = new Date(currentYear, 0, 1, 0, 0, 30, 0);
+    vi.setSystemTime(mockDate);
+    const expectedMs = 30000; // 30 seconds * 1000 milliseconds
+
+    const result = msUntilNextMinute();
+    expect(result).toBeCloseTo(expectedMs, -2); // Allowing a small margin for execution time
+  });
+
+  it('should return the correct milliseconds until the next minute when seconds are 59', () => {
+    const mockDate = new Date(currentYear, 0, 1, 0, 0, 59, 0);
+    vi.setSystemTime(mockDate);
+    const expectedMs = 1000; // 1 second * 1000 milliseconds
+
+    const result = msUntilNextMinute();
+    expect(result).toBeCloseTo(expectedMs, -2); // Allowing a small margin for execution time
+  });
+
+  it('should return the correct milliseconds until the next minute when milliseconds are non-zero', () => {
+    const mockDate = new Date(currentYear, 0, 1, 0, 0, 30, 500); // 30 seconds and 500 milliseconds
+    vi.setSystemTime(mockDate);
+    const expectedMs = 29500; // 29.5 seconds * 1000 milliseconds
+
+    const result = msUntilNextMinute();
+    expect(result).toBeCloseTo(expectedMs, -2); // Allowing a small margin for execution time
+  });
+
+  it('should return the correct milliseconds until the next minute when seconds are 0 and milliseconds are non-zero', () => {
+    const mockDate = new Date(currentYear, 0, 1, 0, 0, 0, 500); // 0 seconds and 500 milliseconds
+    vi.setSystemTime(mockDate);
+    const expectedMs = 59500; // 59.5 seconds * 1000 milliseconds
+
+    const result = msUntilNextMinute();
+    expect(result).toBeCloseTo(expectedMs, -2); // Allowing a small margin for execution time
   });
 });
