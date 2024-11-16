@@ -17,9 +17,11 @@ vi.mock('electron', () => {
   bw.prototype.isDestroyed = vi.fn();
   bw.prototype.isMinimized = vi.fn();
   bw.prototype.getParentWindow = vi.fn();
-  bw.prototype.focus = vi.fn();
+  bw.prototype.show = vi.fn();
   bw.prototype.restore = vi.fn();
+  bw.prototype.focus = vi.fn();
   bw.prototype.removeMenu = vi.fn();
+  bw.prototype.isVisible = vi.fn();
 
   Object.defineProperty(bw.prototype, 'webContents', {
     value: { once: vi.fn(), send: vi.fn() },
