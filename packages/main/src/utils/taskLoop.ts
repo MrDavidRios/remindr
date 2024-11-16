@@ -56,7 +56,7 @@ function checkForReminders(): void {
   let wasIdle = false;
 
   // Trigger re-render
-  getMainWindow()?.webContents.send('task-display-outdated');
+  getMainWindow()?.webContents.send('update-task-display');
 
   const lastCheckTime = getLastCheckTime();
   if (lastCheckTime) {

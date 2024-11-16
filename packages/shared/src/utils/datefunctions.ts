@@ -199,7 +199,7 @@ export function formatDateAndTime(date: Date, dateFormat: DateFormat, removeYear
 }
 
 export function getDaysBetweenDates(dateA: Date, dateB: Date): number {
-  const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+  const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
 
   dateA.setHours(0, 0, 0);
   dateB.setHours(0, 0, 0);

@@ -8,7 +8,7 @@ export function useTaskLoopEvents(dispatch: AppDispatch) {
   if (listenersInitialized) return;
   listenersInitialized = true;
 
-  window.electron.ipcRenderer.on('task-display-outdated', () => {
+  window.electron.ipcRenderer.on('update-task-display', () => {
     dispatch(setTaskDisplayOutdated(true));
   });
 
