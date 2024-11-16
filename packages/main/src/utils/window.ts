@@ -25,11 +25,6 @@ export default function initWindowEventListeners() {
   ipcMain.on('maximize-window', () => mainWindow?.maximize());
   ipcMain.on('unmaximize-window', () => mainWindow?.unmaximize());
 
-  ipcMain.on('close-window', () => {
-    mainWindow?.close();
-    mainWindow?.webContents.send('window-closed');
-  });
-
   ipcMain.on('hide-window', hideWindow);
 
   ipcMain.on('show-window', showWindow);

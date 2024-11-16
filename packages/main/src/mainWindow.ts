@@ -120,6 +120,8 @@ export async function restoreOrCreateWindow() {
 
   if (window.isMinimized()) {
     window.restore();
+  } else if (!window.isVisible()) {
+    window.show();
   }
 
   window.focus();

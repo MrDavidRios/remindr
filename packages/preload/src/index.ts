@@ -99,9 +99,6 @@ const mainWindowHandler = {
   unmaximize() {
     ipcRenderer.send('unmaximize-window');
   },
-  close() {
-    ipcRenderer.send('close-window');
-  },
   hide() {
     ipcRenderer.send('hide-window');
   },
