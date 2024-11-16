@@ -1,3 +1,4 @@
+import doubleExpandArrowIcon from '@assets/icons/angel-right-double.svg';
 import checkIcon from '@assets/icons/check.svg';
 import duplicateIcon from '@assets/icons/duplicate.svg';
 import pinIcon from '@assets/icons/pin.svg';
@@ -37,73 +38,68 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
           className="action-button accessible-button"
           onClick={() => onSave(task)}
           type="button"
+          title="Save Changes (Ctrl + S)"
           aria-label="Save Changes"
         >
-          <img
-            src={checkIcon}
-            className="svg-filter"
-            draggable="false"
-            title="Save Changes (Ctrl + S)"
-            alt="Save Changes"
-          />
+          <img src={checkIcon} className="svg-filter" draggable="false" alt="Save Changes" />
         </button>
       ) : (
-        <div data-testid="action-buttons-wrapper">
-          <button className="action-button accessible-button" onClick={() => deleteTask(task, dispatch)} type="button">
-            <img
-              src={trashcanIcon}
-              className="action-button svg-filter"
-              draggable="false"
-              title="Delete (Del)"
-              alt="Delete Task"
-            />
-          </button>
-          <button
-            className="action-button accessible-button"
-            onClick={() => duplicateEditedTask(task, dispatch)}
-            type="button"
-          >
-            <img
-              src={duplicateIcon}
-              className="action-button svg-filter"
-              draggable="false"
-              title="Duplicate (Ctrl + D)"
-              alt="Duplicate Task"
-            />
-          </button>
-          {task.pinned ? (
+        <>
+          <div>
             <button
+              id="collapseTaskEditMenu"
               className="action-button accessible-button"
-              id="unpinBtn"
-              onClick={() => togglePinOnTask(task, dispatch)}
+              onClick={() => dispatch(clearSelectedTasks())}
               type="button"
-              aria-label="Unpin Task"
+              title="Close (Esc)"
+              aria-label="Close Menu"
             >
-              <img
-                src={unpinIcon}
-                className="action-button svg-filter"
-                draggable="false"
+              <img src={doubleExpandArrowIcon} draggable="false" alt="Close Menu" />
+            </button>
+          </div>
+          <div data-testid="action-buttons-wrapper">
+            {task.pinned ? (
+              <button
+                className="action-button accessible-button"
+                id="unpinBtn"
+                onClick={() => togglePinOnTask(task, dispatch)}
+                type="button"
                 title="Unpin (Ctrl + P)"
-                alt="Unpin Task"
-              />
-            </button>
-          ) : (
+                aria-label="Unpin Task"
+              >
+                <img src={unpinIcon} className="action-button svg-filter" draggable="false" alt="Unpin Task" />
+              </button>
+            ) : (
+              <button
+                className="action-button accessible-button"
+                onClick={() => togglePinOnTask(task, dispatch)}
+                type="button"
+                title="Pin (Ctrl + P)"
+                aria-label="Pin Task"
+              >
+                <img src={pinIcon} className="action-button svg-filter" draggable="false" alt="Pin Task" />
+              </button>
+            )}
             <button
               className="action-button accessible-button"
-              onClick={() => togglePinOnTask(task, dispatch)}
+              onClick={() => duplicateEditedTask(task, dispatch)}
               type="button"
-              aria-label="Pin Task"
+              title="Duplicate (Ctrl + D)"
+              aria-label="Duplicate Task"
             >
-              <img
-                src={pinIcon}
-                className="action-button svg-filter"
-                draggable="false"
-                title="Pin (Ctrl + P)"
-                alt="Pin Task"
-              />
+              <img src={duplicateIcon} className="action-button svg-filter" draggable="false" alt="Duplicate Task" />
             </button>
-          )}
-        </div>
+            <button
+              className="action-button accessible-button"
+              onClick={() => deleteTask(task, dispatch)}
+              type="button"
+              title="Delete (Del)"
+              aria-label="Delete Task"
+            >
+              <img src={trashcanIcon} className="action-button svg-filter" draggable="false" alt="Delete Task" />
+            </button>
+          </div>
+        </>
       )}
     </div>
   );

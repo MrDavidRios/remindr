@@ -79,8 +79,6 @@ export function notify(stringifiedTask: string, scheduledReminderIndex: number):
 
   const task = JSON.parse(stringifiedTask) as Task;
 
-  console.log(`notify - starting notification for ${task.name}`, task);
-
   const notifDetails: TaskScheduledReminderPair = {
     task,
     scheduledReminderIndex,
