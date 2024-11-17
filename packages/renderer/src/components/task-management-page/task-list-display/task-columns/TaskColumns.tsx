@@ -37,7 +37,6 @@ export const TaskColumns = memo(function TaskColumns() {
   const taskColumnsToRender = Array.from(TASK_COLUMNS.keys()).filter((columnIdx) =>
     enabledTaskColumns.includes(columnIdx),
   );
-  console.log('Rendering task columns', taskColumnsToRender);
 
   return (
     <div id="taskColumns">

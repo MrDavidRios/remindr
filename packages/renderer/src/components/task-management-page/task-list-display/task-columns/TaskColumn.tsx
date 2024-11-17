@@ -1,5 +1,6 @@
 import plusIcon from '@assets/icons/plus.svg';
 import { columnTasksInDifferentOrder, Task } from '@remindr/shared';
+import { getColumnIdxFromName } from '@remindr/shared/src';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { addTask, updateTasks } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
@@ -62,7 +63,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
   const createTask = (taskName: string) => {
     // Make new task serializable for Redux to properly process
     const newTask: Task = JSON.parse(JSON.stringify(new Task(taskName)));
-    newTask.taskColumnId = name;
+    newTask.columnIdx = getColumnIdxFromName(name);
     newTask.orderInTaskColumn = orderedIncompleteTasks.length;
 
     dispatch(addTask(newTask));

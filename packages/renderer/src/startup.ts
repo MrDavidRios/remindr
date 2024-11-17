@@ -9,7 +9,11 @@ import { initTaskColumnShiftListeners } from './scripts/systems/task-columns/shi
 import { useTaskLoopEvents } from './scripts/taskLoopEvents';
 import { useUpdateNotificationListeners } from './scripts/updatenotification';
 
+let startupActionsCalled = false;
 export function useStartupActions(dispatch: AppDispatch) {
+  if (startupActionsCalled) return;
+  startupActionsCalled = true;
+
   // Auth
   useAuth(dispatch, store.getState().settings.value.startupMode);
 

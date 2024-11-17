@@ -29,6 +29,7 @@ export function createDefaultSettings(overrides: Partial<Settings> = {}): Settin
     spellcheck: true,
     reorderableTodo: false,
     showCompletedTasks: true,
+    enabledTaskColumns: [-1, 0, 1],
     ...overrides,
   };
 }

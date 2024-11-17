@@ -1,6 +1,7 @@
 import { getDaysBetweenDates, msUntilNextMinute } from '@remindr/shared';
 import { ipcMain } from 'electron';
 import Store from 'electron-store';
+import { getMainWindow } from './utils/getMainWindow.js';
 
 const store = new Store();
 
@@ -12,10 +13,12 @@ export function checkForOpenOnNewDay() {
   if (lastOpenedTimestamp !== undefined) {
     // If the day has changed between the last check time and now, calculate how many days and call onDayChange
     const daysSinceLastCheck = getDaysBetweenDates(lastOpenedTimestamp, new Date());
-    if (daysSinceLastCheck > 0) ipcMain.emit('day-changed', daysSinceLastCheck);
+    if (daysSinceLastCheck > 0) {
+      ipcMain.emit('day-changed', daysSinceLastCheck);
+    }
   }
 
-  store.set('last-opened-timestamp', new Date().getTime());
+  store.set('last-opened-timestamp', new Date());
 }
 
 let timeLoopInterval: NodeJS.Timeout;
@@ -32,13 +35,11 @@ export function initializeTimeLoop() {
 }
 
 /**
- * Check if the day has changed onlywhile the app has been opened, since we already check if the day has changed when
+ * Check if the day has changed only while the app has been opened, since we already check if the day has changed when
  * the app is opened.
  */
 let lastDayCheckTimestamp: Date;
 function checkForDayChange() {
-  ipcMain.emit('day-changed', 0);
-
   if (lastDayCheckTimestamp) {
     const daysSinceLastCheck = getDaysBetweenDates(lastDayCheckTimestamp, new Date());
     if (daysSinceLastCheck > 0) {
@@ -50,4 +51,6 @@ function checkForDayChange() {
 }
 
 // Catch all day change events and forward to renderer
-ipcMain.on('day-changed', (daysSinceUpdate) => {});
+ipcMain.on('day-changed', (daysSinceUpdate) => {
+  getMainWindow()?.webContents.send('day-changed', daysSinceUpdate);
+});

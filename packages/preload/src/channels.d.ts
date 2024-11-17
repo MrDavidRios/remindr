@@ -5,7 +5,8 @@ export type AppEvent =
   | 'system-theme-changed'
   | 'show-message-box-response'
   | 'background-image-update'
-  | 'update-task-display';
+  | 'update-task-display'
+  | 'day-changed';
 export type AuthEvent = 'logged-in' | 'signed-out';
 export type TaskInteractionEvent =
   | 'task-deleted'
