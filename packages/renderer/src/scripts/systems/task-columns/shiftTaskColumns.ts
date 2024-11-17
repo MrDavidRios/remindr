@@ -25,13 +25,13 @@ export async function shiftTaskColumns(daysSinceUpdate: number): Promise<void> {
   const taskList = store.getState().taskList.value;
   const tasksInColumns = taskList.filter((task) => task.columnIdx !== undefined);
 
-  for (const task of tasksInColumns) {
+  const updatedTasks = tasksInColumns.map((task) => {
     if (task.columnIdx !== undefined) {
-      task.columnIdx -= daysSinceUpdate;
+      return { ...task, columnIdx: task.columnIdx - daysSinceUpdate };
     }
-  }
 
-  console.log('[shiftTaskColumns]:', tasksInColumns);
+    return task;
+  });
 
-  dispatch(updateTasks(tasksInColumns));
+  dispatch(updateTasks(updatedTasks));
 }
