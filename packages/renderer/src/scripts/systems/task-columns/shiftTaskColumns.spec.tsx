@@ -16,16 +16,17 @@ describe('shiftTaskColumns', () => {
       taskList: {
         ...mockTaskListState,
         value: [todayTask, yesterdayTask, uncategorizedTask],
+        taskListGetStatus: 'succeeded',
       },
     });
 
     vi.mocked(store.getState).mockReturnValue(mockedStore.getState());
   });
 
-  it('should shift task columns by the given number of days', () => {
+  it('should shift task columns by the given number of days', async () => {
     const dispatch = vi.fn();
     initTaskColumnShiftListeners(dispatch as any as AppDispatch);
-    shiftTaskColumns(2);
+    await shiftTaskColumns(2);
 
     expect(store.getState).toHaveBeenCalled();
     expect(dispatch).toHaveBeenCalledWith(
@@ -38,6 +39,6 @@ describe('shiftTaskColumns', () => {
 
   it('should throw an error if dispatch is not initialized', () => {
     initTaskColumnShiftListeners(undefined as any as AppDispatch);
-    expect(() => shiftTaskColumns(2)).toThrow(ReferenceError);
+    expect(() => shiftTaskColumns(2)).rejects.toThrowError(ReferenceError);
   });
 });
