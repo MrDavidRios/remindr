@@ -96,7 +96,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
 
   const showNoTasksMessage = orderedIncompleteTasks.length === 0 && !showNewTaskTile;
   return (
-    <div className="task-column">
+    <div className="task-column frosted">
       <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" id={name}>
         <AnimateChangeInHeight show>
           <h2>{name}</h2>
