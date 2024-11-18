@@ -3,7 +3,6 @@ import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigabl
 import { useAppSelector } from '@renderer/hooks';
 import { AnimatePresence, Reorder, motion } from 'framer-motion';
 import { FC } from 'react';
-import { AnimateChangeInHeight } from '../../AnimateChangeInHeight';
 import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
 
 interface TaskGroupProps {
@@ -20,36 +19,34 @@ export const TaskGroup: FC<TaskGroupProps> = ({ tasks, reorderable, onReorder, o
 
   return (
     <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" id={name}>
-      <AnimateChangeInHeight show={expanded}>
-        <AnimatePresence>
-          {expanded && (
-            // eslint-disable-next-line react/jsx-no-useless-fragment
-            <>
-              {reorderable && reoderableTodoTasksEnabled ? (
-                <Reorder.Group className="task-group" values={tasks} axis="y" onReorder={onReorder}>
-                  <AnimatePresence mode="popLayout">
-                    {tasks.map((task) => (
-                      <div key={task.creationTime}>
-                        <TaskTileWrapper task={task} reorderable onReorderComplete={onReorderComplete} />
-                      </div>
-                    ))}
-                  </AnimatePresence>
-                </Reorder.Group>
-              ) : (
-                <motion.div className="task-group">
-                  <AnimatePresence mode="popLayout">
-                    {tasks.map((task) => (
-                      <div key={task.creationTime}>
-                        <TaskTileWrapper task={task} />
-                      </div>
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
-              )}
-            </>
-          )}
-        </AnimatePresence>
-      </AnimateChangeInHeight>
+      <AnimatePresence>
+        {expanded && (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          <>
+            {reorderable && reoderableTodoTasksEnabled ? (
+              <Reorder.Group className="task-group" values={tasks} axis="y" onReorder={onReorder}>
+                <AnimatePresence mode="popLayout">
+                  {tasks.map((task) => (
+                    <div key={task.creationTime}>
+                      <TaskTileWrapper task={task} reorderable onReorderComplete={onReorderComplete} />
+                    </div>
+                  ))}
+                </AnimatePresence>
+              </Reorder.Group>
+            ) : (
+              <motion.div className="task-group">
+                <AnimatePresence mode="popLayout">
+                  {tasks.map((task) => (
+                    <div key={task.creationTime}>
+                      <TaskTileWrapper task={task} />
+                    </div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            )}
+          </>
+        )}
+      </AnimatePresence>
     </ArrowNavigable>
   );
 };

@@ -9,7 +9,6 @@ import { tasksInSameOrder } from '@renderer/scripts/utils/tasklistutils';
 import { AnimatePresence, motion, Reorder } from 'framer-motion';
 import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { AnimateChangeInHeight } from '../../AnimateChangeInHeight';
 import { NewTaskTile } from '../task-tile/NewTaskTile';
 import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
 
@@ -98,43 +97,41 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
   return (
     <div className="task-column frosted">
       <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" id={name}>
-        <AnimateChangeInHeight show>
-          <h2>{name}</h2>
-          <div className="tasks">
-            {showNoTasksMessage && <p className="no-tasks-message">All done here!</p>}
-            <Reorder.Group
-              className="task-group"
-              values={orderedIncompleteTasks}
-              axis="y"
-              onReorder={onReorder}
-              {...animationProps}
-            >
+        <h2>{name}</h2>
+        <div className="tasks">
+          {showNoTasksMessage && <p className="no-tasks-message">All done here!</p>}
+          <Reorder.Group
+            className="task-group"
+            values={orderedIncompleteTasks}
+            axis="y"
+            onReorder={onReorder}
+            {...animationProps}
+          >
+            <AnimatePresence mode="popLayout">
+              {orderedIncompleteTasks.map((task) => (
+                <div key={task.creationTime}>
+                  <TaskTileWrapper task={task} reorderable onReorderComplete={onReorderComplete} />
+                </div>
+              ))}
+            </AnimatePresence>
+          </Reorder.Group>
+          {completeTasks.length > 0 && (
+            <>
+              <motion.p className="complete-tasks-header" layout={animationsEnabled ? 'position' : false}>
+                Completed
+              </motion.p>
               <AnimatePresence mode="popLayout">
-                {orderedIncompleteTasks.map((task) => (
+                {completeTasks.map((task) => (
                   <div key={task.creationTime}>
-                    <TaskTileWrapper task={task} reorderable onReorderComplete={onReorderComplete} />
+                    <TaskTileWrapper task={task} />
                   </div>
                 ))}
               </AnimatePresence>
-            </Reorder.Group>
-            {completeTasks.length > 0 && (
-              <>
-                <motion.p className="complete-tasks-header" layout={animationsEnabled ? 'position' : false}>
-                  Completed
-                </motion.p>
-                <AnimatePresence mode="popLayout">
-                  {completeTasks.map((task) => (
-                    <div key={task.creationTime}>
-                      <TaskTileWrapper task={task} />
-                    </div>
-                  ))}
-                </AnimatePresence>
-              </>
-            )}
-          </div>
-          {showNewTaskTile && <NewTaskTile createTask={createTask} onEscape={() => setShowNewTaskTile(false)} />}
-          <TaskColumnActionBar newTaskTileOpen={showNewTaskTile} onAddTask={() => setShowNewTaskTile(true)} />
-        </AnimateChangeInHeight>
+            </>
+          )}
+        </div>
+        {showNewTaskTile && <NewTaskTile createTask={createTask} onEscape={() => setShowNewTaskTile(false)} />}
+        <TaskColumnActionBar newTaskTileOpen={showNewTaskTile} onAddTask={() => setShowNewTaskTile(true)} />
       </ArrowNavigable>
     </div>
   );
