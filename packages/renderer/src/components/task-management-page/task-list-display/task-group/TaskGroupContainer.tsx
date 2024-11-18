@@ -47,14 +47,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
     };
   }, []);
 
-  const animationProps = animationsEnabled
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
-    : {};
-
   // Reorderable group logic
   const onReorder = (newOrder: Task[]) => setOrderedTasks(newOrder);
   const onReorderComplete = () => {
@@ -75,7 +67,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
   return (
     <motion.div
       className={`task-group-container ${expanded ? 'expanded' : ''}`}
-      {...animationProps}
       layout={animationsEnabled ? 'position' : false}
     >
       <button

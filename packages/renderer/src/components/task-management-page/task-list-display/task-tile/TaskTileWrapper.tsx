@@ -10,9 +10,9 @@ import {
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
-import { Reorder, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
+import { Reorder, motion, useMotionValue } from 'framer-motion';
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { TaskTileContents } from './TaskTileContents';
 
 interface TaskTileWrapperProps {
@@ -52,28 +52,13 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
   const hasIndicators = hasReminders || hasNotes || repeats || multipleReminders || hasSubtasks || hasLinks;
 
   const animationsEnabled = useAnimationsEnabled();
-  const [animating, setAnimating] = useState(false);
 
-  const opacityWhenVisible = task.completed ? 0.7 : 1;
-  const opacity = useMotionValue(animationsEnabled ? 0 : opacityWhenVisible);
-  useMotionValueEvent(opacity, 'animationCancel', () => setAnimating(false));
-  useMotionValueEvent(opacity, 'animationStart', () => setAnimating(true));
-  useMotionValueEvent(opacity, 'animationComplete', () => setAnimating(false));
-
-  const animationProps = animationsEnabled
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: opacityWhenVisible },
-        exit: { opacity: 0 },
-      }
-    : {};
-
+  const opacity = task.completed ? 0.7 : 1;
   const y = useMotionValue(0);
   const taskTileProps = {
-    className: taskTileClasses(task.completed, hasIndicators, selected, animating),
-    ...animationProps,
+    className: taskTileClasses(task.completed, hasIndicators, selected),
     // Fixes bug where task tiles would be invisible if list was expanded and animations were suddenly disabled
-    style: { opacity, y },
+    style: { y, opacity },
     onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
       // Detail is 0 when the click is triggered by a keyboard event (spacebar)
       if (e.detail === 0) return;
@@ -161,10 +146,10 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task, reordera
   );
 };
 
-const taskTileClasses = (completed: boolean, hasIndicators: boolean, selected: boolean, animating: boolean) => {
+const taskTileClasses = (completed: boolean, hasIndicators: boolean, selected: boolean) => {
   return `task-tile frosted ${hasIndicators ? '' : 'task-tile-no-attributes'} ${selected ? 'selected' : ''} ${
-    animating ? 'animating' : ''
-  } ${completed ? 'completed' : ''}`;
+    completed ? 'completed' : ''
+  }`;
 };
 
 function handleTaskTileClick(

@@ -1,7 +1,6 @@
 import { Task } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { useAppSelector } from '@renderer/hooks';
-import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { AnimatePresence, Reorder, motion } from 'framer-motion';
 import { FC } from 'react';
 import { AnimateChangeInHeight } from '../../AnimateChangeInHeight';
@@ -17,16 +16,7 @@ interface TaskGroupProps {
 }
 
 export const TaskGroup: FC<TaskGroupProps> = ({ tasks, reorderable, onReorder, onReorderComplete, expanded, name }) => {
-  const animationsEnabled = useAnimationsEnabled();
   const reoderableTodoTasksEnabled = useAppSelector((state) => state.settings.value.reorderableTodo ?? false);
-
-  const animationProps = animationsEnabled
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
-    : {};
 
   return (
     <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" id={name}>
@@ -36,7 +26,7 @@ export const TaskGroup: FC<TaskGroupProps> = ({ tasks, reorderable, onReorder, o
             // eslint-disable-next-line react/jsx-no-useless-fragment
             <>
               {reorderable && reoderableTodoTasksEnabled ? (
-                <Reorder.Group className="task-group" values={tasks} axis="y" onReorder={onReorder} {...animationProps}>
+                <Reorder.Group className="task-group" values={tasks} axis="y" onReorder={onReorder}>
                   <AnimatePresence mode="popLayout">
                     {tasks.map((task) => (
                       <div key={task.creationTime}>
@@ -46,7 +36,7 @@ export const TaskGroup: FC<TaskGroupProps> = ({ tasks, reorderable, onReorder, o
                   </AnimatePresence>
                 </Reorder.Group>
               ) : (
-                <motion.div className="task-group" {...animationProps}>
+                <motion.div className="task-group">
                   <AnimatePresence mode="popLayout">
                     {tasks.map((task) => (
                       <div key={task.creationTime}>
