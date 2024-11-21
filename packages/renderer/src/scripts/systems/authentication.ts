@@ -14,6 +14,7 @@ export const useAuth = (dispatch: AppDispatch, startupMode: AppMode) => {
   if (window.firebase.auth.authCredentialExists() && startupMode === AppMode.Online) {
     // Startup mode is online
     window.firebase.auth.updateUserFromStorage();
+    console.log('User signed in from storage');
     initUserState(dispatch); // sometimes auth-state-changed isn't triggered fsr, so add this to ensure that auth state changes
   }
 
@@ -24,12 +25,6 @@ export const useAuth = (dispatch: AppDispatch, startupMode: AppMode) => {
 
   window.electron.ipcRenderer.on('auth-state-changed', async () => {
     const signedIn = window.firebase.auth.currentlySignedIn();
-
-    // For when starting up in login screen mode and user is signed in
-    if (manuallySignedOutUser) {
-      manuallySignedOutUser = false;
-      return;
-    }
 
     if (!signedIn) {
       if (!window.firebase.auth.authCredentialExists()) {
@@ -63,9 +58,11 @@ async function initUserState(dispatch: AppDispatch) {
 
   dispatch(setAppMode(AppMode.Online));
 
+  console.trace('(initUserState): trying to get user data...');
+
   const dispatchInfo = await dispatch(getUserData());
 
-  if (!dispatchInfo.type.includes('rejected')) {
+  if (dispatchInfo.type.includes('fulfilled')) {
     // User data successfully loaded
     dispatch(updateUserState({ authenticated: true, initialized: true }));
     return;
@@ -285,8 +282,6 @@ export async function deleteAccount(): Promise<void> {
   await window.firebase.auth.deleteAuthCredential();
   await window.data.deleteAccountData();
 }
-
-let manuallySignedOutUser = false;
 
 export function getEmailVerifiedValue(authVal: string | boolean) {
   if (typeof authVal === 'string') return false;

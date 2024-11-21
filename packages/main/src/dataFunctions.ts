@@ -319,7 +319,6 @@ const saveCallDurations = new Map<number, number>();
 let saveCallsMade = 0;
 export async function saveData(scope: 'user' | 'tasks', stringifiedTaskList?: string): Promise<string | void> {
   addSaveCall();
-  log.info('(saveData) save call added... save calls:', saveCalls);
 
   const uid = getUserUID();
 
@@ -406,14 +405,14 @@ export async function saveData(scope: 'user' | 'tasks', stringifiedTaskList?: st
     case 'tasks':
       {
         if (!stringifiedTaskList) {
-          throw new Error('saveData - tasks: stringifiedTaskList is undefined.');
+          throw new Error('(saveData) tasks: stringifiedTaskList is undefined.');
         }
 
         const reminderListCopy = JSON.parse(stringifiedTaskList) as Task[];
 
         if (getAppMode() !== AppMode.Online) {
           store.set('reminders', reminderListCopy);
-          log.info('%cTask data saved locally.', 'color: green; font-style: bold');
+          log.info('(saveData) Task data saved locally.');
           break;
         }
 
@@ -449,25 +448,25 @@ export async function saveData(scope: 'user' | 'tasks', stringifiedTaskList?: st
             reminderList: newReminderList,
           });
 
-          log.info('%cTask data saved.', 'color: green; font-style: bold');
+          log.info('(saveData) Task data saved.');
         } else {
           // If reminder file doesn't exist, then create it
           await setDoc(taskDocRef, {
             reminderList: newReminderList,
           });
 
-          log.info('%cTask data entry created.', 'color: green; font-style: bold');
+          log.info('(saveData) Task data entry created.');
         }
       }
       break;
     default:
-      throw new Error(`saveData (reminders): Invalid data scope: ${scope}`);
+      9;
+      throw new Error(`(saveData): Invalid data scope: ${scope}`);
   }
 
   saveCallDurations.delete(saveCallIdx);
 
   removeSaveCall();
-  log.info('(saveData) save call removed... save calls:', saveCalls);
 }
 
 let userData: RemindrUser | undefined;
@@ -487,7 +486,7 @@ export async function loadData(
     case 'user': {
       userData = new RemindrUser();
 
-      log.info('Loading user... app mode:', getAppMode());
+      log.info('(loadData) Loading user data... app mode:', getAppMode());
 
       if (getAppMode() !== AppMode.Online) {
         userData = (store.get('userData') as RemindrUser) ?? new RemindrUser().getDefault();
@@ -495,21 +494,19 @@ export async function loadData(
         return userData;
       }
 
-      if (!firestore) throw new Error('loadData: Firestore instance does not exist.');
+      if (!firestore) throw new Error('(loadData) Firestore instance does not exist.');
 
       const userRef = doc(collection(firestore, 'users'), uid);
-
-      log.info(`%cLoading user data; uid: ${uid}; path: ${userRef.path}`, 'color: grey');
 
       const docData = await documentExists(userRef);
 
       if (!userData) {
-        throw new Error('loadData (user): Local user data does not exist.');
+        throw new Error('(loadData) Local user data does not exist.');
       }
 
       if (!docData.exists || !docData.docSnapshot) {
         userDataExists = false;
-        throw new Error('ERR001: loadData (user): User data file does not exist.');
+        throw new Error('(loadData) User data file does not exist.');
       }
 
       userDataExists = true;
@@ -535,7 +532,7 @@ export async function loadData(
         });
 
       // Load in background image if stored
-      log.info('%cUser data loaded.', 'color: green; font-style: bold');
+      log.info('(loadData) User data loaded.');
 
       return userData;
     }
@@ -547,9 +544,9 @@ export async function loadData(
         return taskData;
       }
 
-      if (!firestore) throw new Error('loadData: Firestore instance does not exist.');
+      if (!firestore) throw new Error('(loadData) Firestore instance does not exist.');
 
-      log.info('%cLoading task data...', 'color: grey');
+      log.info('(loadData) Loading task data...');
 
       taskData = new TaskCollection();
 

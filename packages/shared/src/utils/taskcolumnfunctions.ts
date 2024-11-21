@@ -26,7 +26,7 @@ export const getTaskColumnIdx = (task: Task): number | undefined => {
 
   const reminderDate = getDate(relevantReminder);
   let dayDiff = getDaysBetweenDates(new Date(), reminderDate);
-  if (reminderDate < new Date()) dayDiff *= -1;
+  if (reminderDate < new Date() && Math.abs(dayDiff) !== 0) dayDiff *= -1;
 
   return dayDiff;
 };

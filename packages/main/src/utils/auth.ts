@@ -119,7 +119,7 @@ export default function initAuthEventListeners() {
 }
 
 export function getUserUID(): string | undefined {
-  return auth?.currentUser?.uid ?? undefined;
+  return auth?.currentUser?.uid;
 }
 
 export async function deleteFirebaseUser() {
