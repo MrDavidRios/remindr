@@ -10,10 +10,8 @@ import { ScheduledReminder, Task } from '../types/index.js';
  * @returns
  */
 export const getTaskColumnIdx = (task: Task): number | undefined => {
-  if (task.columnIdx !== undefined) return task.columnIdx;
-
   // If a task has no scheduled reminders, don't give it a column id.
-  if (task.scheduledReminders.length === 0) return undefined;
+  if (task.scheduledReminders.length === 0) return task.columnIdx;
 
   let relevantReminder: ScheduledReminder;
 

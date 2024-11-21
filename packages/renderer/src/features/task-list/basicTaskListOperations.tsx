@@ -43,16 +43,12 @@ export const updateTaskReducer = (
 ) => {
   const taskIdx = getTaskIdx(action.payload, state.value);
 
-  const oldTaskState = JSON.parse(JSON.stringify(state.value[taskIdx]));
+  const oldTaskState: Task = JSON.parse(JSON.stringify(state.value[taskIdx]));
 
   // Don't do anything if no changes were made
   if (_.isEqual(oldTaskState, action.payload)) return;
 
-  // Ignore columnIdx to avoid overriding any re-orders that happen mid-edit
-  const updatedTask: Task = JSON.parse(JSON.stringify(action.payload));
-  updatedTask.columnIdx = oldTaskState.columnIdx;
-
-  state.value[taskIdx] = updatedTask;
+  state.value[taskIdx] = action.payload;
   state.lastTaskListAction = { type: 'update', task: oldTaskState, undone: false };
   saveData(state.value);
 };

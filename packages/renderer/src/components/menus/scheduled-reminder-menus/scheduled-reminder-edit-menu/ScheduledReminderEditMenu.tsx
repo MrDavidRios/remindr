@@ -87,8 +87,6 @@ export const ScheduledReminderEditMenu: FC = () => {
     const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
     editedTaskClone.scheduledReminders[reminderEditState.idx] = updatedScheduledReminder;
 
-    console.log('editedTaskClone', editedTaskClone, 'column idx: ', getTaskColumnIdx(editedTaskClone));
-
     editedTaskClone.columnIdx = getTaskColumnIdx(editedTaskClone);
 
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));

@@ -1,4 +1,4 @@
-import { waitUntil } from '@remindr/shared';
+import { getTaskColumnIdx, waitUntil } from '@remindr/shared';
 import store, { AppDispatch } from '@renderer/app/store';
 import { updateTasks } from '@renderer/features/task-list/taskListSlice';
 import { getIpcRendererOutput } from '@renderer/scripts/utils/ipcRendererOutput';
@@ -23,9 +23,13 @@ export async function shiftTaskColumns(daysSinceUpdate: number): Promise<void> {
 
   // get task list
   const taskList = store.getState().taskList.value;
-  const tasksInColumns = taskList.filter((task) => task.columnIdx !== undefined);
 
-  const updatedTasks = tasksInColumns.map((task) => {
+  // We want to shift tasks in columns that don't currently have reminders
+  const reminderlessTasksInColumns = taskList.filter(
+    (task) => task.columnIdx !== undefined && task.scheduledReminders.length === 0,
+  );
+
+  const updatedReminderlessTasks = reminderlessTasksInColumns.map((task) => {
     if (task.columnIdx !== undefined) {
       return { ...task, columnIdx: task.columnIdx - daysSinceUpdate };
     }
@@ -33,5 +37,12 @@ export async function shiftTaskColumns(daysSinceUpdate: number): Promise<void> {
     return task;
   });
 
-  dispatch(updateTasks(updatedTasks));
+  // Assign relevant tasks with reminders to columns based on their earliest reminder
+  const tasksWithReminders = taskList.filter((task) => task.scheduledReminders.length > 0);
+  const updatedTasksWithReminders = tasksWithReminders.map((task) => {
+    const columnIdx = getTaskColumnIdx(task);
+    return { ...task, columnIdx };
+  });
+
+  dispatch(updateTasks([...updatedReminderlessTasks, ...updatedTasksWithReminders]));
 }

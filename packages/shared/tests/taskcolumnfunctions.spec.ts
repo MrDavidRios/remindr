@@ -2,11 +2,16 @@ import { getTaskColumnIdx, ScheduledReminder, setDate, Task } from '@remindr/sha
 import { describe, expect, test } from 'vitest';
 
 describe('getTaskColumnIdx', () => {
-  test('should return undefined if task has no scheduled reminders', () => {
+  test('should return already set column idx if task has no scheduled reminders', () => {
     const testTask = new Task('test task');
     testTask.scheduledReminders = [];
 
+    const testTaskWithSetIdx = new Task('test task');
+    testTaskWithSetIdx.scheduledReminders = [];
+    testTaskWithSetIdx.columnIdx = 1;
+
     expect(getTaskColumnIdx(testTask)).toBe(undefined);
+    expect(getTaskColumnIdx(testTaskWithSetIdx)).toBe(1);
   });
 
   test("should return -1 if task's earliest reminder is yesterday", () => {
