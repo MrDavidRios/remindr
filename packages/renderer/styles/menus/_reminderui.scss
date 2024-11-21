@@ -398,5 +398,7 @@ input::-webkit-inner-spin-button {
 
   &.column-view {
     overflow-x: auto;
+    padding-top: 5px;
+    margin-bottom: 10px;
   }
 }

@@ -21,6 +21,14 @@
     border-radius: var(--menu-border-radius);
 
     height: fit-content;
+    max-height: 100%;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
+    .tasks {
+      overflow-y: auto;
+    }
 
     .complete-tasks-header {
       text-align: left;
