@@ -98,7 +98,7 @@ if (import.meta.env.DEV) {
     '/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi',
   );
 
-  const reduxDevToolsPath = getExtensionPath('lmhkpmbekcpmknklioeibfkpmmfibljd/3.2.7_0');
+  const reduxDevToolsPath = getExtensionPath('lmhkpmbekcpmknklioeibfkpmmfibljd/3.2.7_1');
 
   app.whenReady().then(async () => {
     await session.defaultSession.loadExtension(reactDevToolsPath);

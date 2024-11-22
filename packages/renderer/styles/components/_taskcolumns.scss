@@ -63,6 +63,10 @@
     .task-column-action-bar {
       text-align: left;
       color: var(--text-color-secondary);
+      display: grid;
+      width: 100%;
+      grid-template-columns: auto 28px;
+      gap: 8px;
 
       button {
         display: flex;

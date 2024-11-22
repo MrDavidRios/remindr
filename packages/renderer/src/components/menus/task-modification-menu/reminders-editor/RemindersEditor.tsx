@@ -17,9 +17,7 @@ import type { FC } from 'react';
 import { useRef, useState } from 'react';
 import { ReminderTile } from './ReminderTile';
 
-interface RemindersEditorProps {}
-
-export const RemindersEditor: FC<RemindersEditorProps> = () => {
+export const RemindersEditor: FC = () => {
   const dispatch = useAppDispatch();
   const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
   const militaryTime = useAppSelector((state) => state.settings.value.militaryTime);

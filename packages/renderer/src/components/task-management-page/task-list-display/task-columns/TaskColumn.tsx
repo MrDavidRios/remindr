@@ -1,4 +1,3 @@
-import plusIcon from '@assets/icons/plus.svg';
 import { columnTasksInDifferentOrder, Task } from '@remindr/shared';
 import { getColumnIdxFromName } from '@remindr/shared/src';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
@@ -11,29 +10,12 @@ import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { NewTaskTile } from '../task-tile/NewTaskTile';
 import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
+import { TaskColumnActionBar } from './TaskColumnActionBar';
 
 interface TaskColumnProps {
   name: string;
   tasks: Task[];
 }
-
-interface TaskColumnActionBarProps {
-  newTaskTileOpen: boolean;
-  onAddTask: () => void;
-}
-
-const TaskColumnActionBar: React.FC<TaskColumnActionBarProps> = ({ newTaskTileOpen, onAddTask }) => {
-  return (
-    <motion.div className="task-column-action-bar">
-      {!newTaskTileOpen && (
-        <button onClick={onAddTask} style={{ marginTop: 12 }}>
-          <img src={plusIcon} draggable={false} alt="" />
-          Add task
-        </button>
-      )}
-    </motion.div>
-  );
-};
 
 const getOrderedIncompleteTasks = (tasks: Task[]) => {
   const filtered = tasks.filter((task) => !task.completed);
@@ -70,14 +52,6 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
 
   const onReorder = (reorderedTasks: Task[]) => setOrderedIncompleteTasks(reorderedTasks);
 
-  const animationProps = animationsEnabled
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-      }
-    : {};
-
   const onReorderComplete = () => {
     const clonedIncompleteTasks: Task[] = [];
     for (let i = 0; i < orderedIncompleteTasks.length; i++) {
@@ -99,13 +73,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
       <h2>{name}</h2>
       <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" className="tasks" id={name}>
         {showNoTasksMessage && <p className="no-tasks-message">All done here!</p>}
-        <Reorder.Group
-          className="task-group"
-          values={orderedIncompleteTasks}
-          axis="y"
-          onReorder={onReorder}
-          {...animationProps}
-        >
+        <Reorder.Group className="task-group" values={orderedIncompleteTasks} axis="y" onReorder={onReorder}>
           <AnimatePresence mode="popLayout">
             {orderedIncompleteTasks.map((task) => (
               <div key={task.creationTime}>
@@ -130,7 +98,11 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
         )}
       </ArrowNavigable>
       {showNewTaskTile && <NewTaskTile createTask={createTask} onEscape={() => setShowNewTaskTile(false)} />}
-      <TaskColumnActionBar newTaskTileOpen={showNewTaskTile} onAddTask={() => setShowNewTaskTile(true)} />
+      <TaskColumnActionBar
+        columnIdx={getColumnIdxFromName(name)}
+        newTaskTileOpen={showNewTaskTile}
+        onAddTask={() => setShowNewTaskTile(true)}
+      />
     </div>
   );
 };

@@ -36,4 +36,9 @@ export const mockMenuState: MenuState = {
     yOffset: { topAnchored: 0, bottomAnchored: 0 },
     gap: 0,
   },
+  addExistingReminderMenuPosition: {
+    anchor: { x: 0, y: 0, width: 0, height: 0 },
+    yOffset: { topAnchored: 0, bottomAnchored: 0 },
+    gap: 0,
+  },
 };

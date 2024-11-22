@@ -4,6 +4,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { AppDispatch } from './app/store';
 import { ContextMenus } from './components/context-menu/ContextMenus';
 import { AccountMenu } from './components/menus/account-menu/AccountMenu';
+import { AddExistingReminderMenu } from './components/menus/add-existing-reminder-menu/AddExistingReminderMenu';
 import { LinkMenu } from './components/menus/link-menu/LinkMenu';
 import { ScheduledReminderEditMenu } from './components/menus/scheduled-reminder-menus/scheduled-reminder-edit-menu/ScheduledReminderEditMenu';
 import SettingsMenu from './components/menus/settings-menu/SettingsMenu';
@@ -43,6 +44,9 @@ export const DisplayMenus = () => {
       <AnimatePresence>{isMenuOpen(menuState, Menu.AccountMenu) && <AccountMenu />}</AnimatePresence>
       <AnimatePresence>{isMenuOpen(menuState, Menu.MessageModal) && <MessageModal />}</AnimatePresence>
       <AnimatePresence>{isMenuOpen(menuState, Menu.UpdateNotification) && <UpdateNotification />}</AnimatePresence>
+      <AnimatePresence>
+        {isMenuOpen(menuState, Menu.AddExistingReminderMenu) && <AddExistingReminderMenu />}
+      </AnimatePresence>
     </>
   );
 };

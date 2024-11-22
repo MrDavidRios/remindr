@@ -20,6 +20,7 @@ export const initialMenuState: MenuState = {
   },
   dialogInfo: { title: undefined, message: '', options: [], result: undefined },
   scheduledReminderEditorPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
+  addExistingReminderMenuPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
 };
 
 export const menuStateSlice = createSlice({
@@ -94,6 +95,9 @@ export const menuStateSlice = createSlice({
     setFloatingMenuPosition: (state, action: PayloadAction<{ menu: Menu; positionInfo: FloatingMenuPosition }>) => {
       if (action.payload.menu === Menu.ScheduledReminderEditMenu)
         state.scheduledReminderEditorPosition = action.payload.positionInfo;
+
+      if (action.payload.menu === Menu.AddExistingReminderMenu)
+        state.addExistingReminderMenuPosition = action.payload.positionInfo;
     },
   },
 });

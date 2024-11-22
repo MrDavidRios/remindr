@@ -16,6 +16,7 @@ export enum Menu {
   MessageModal,
   HamburgerMenu,
   UpdateNotification,
+  AddExistingReminderMenu,
 }
 
 export interface MenuPosition {
@@ -35,6 +36,7 @@ export interface MenuState {
   contextMenuTask?: Task;
   dialogInfo: DialogState;
   scheduledReminderEditorPosition: FloatingMenuPosition;
+  addExistingReminderMenuPosition: FloatingMenuPosition;
 }
 
 export enum ContextMenuType {
@@ -67,4 +69,9 @@ export const fullscreenMenus = [
   Menu.RestoreDataMenu,
   Menu.MessageModal,
 ];
-export const floatingMenus = [Menu.HamburgerMenu, Menu.UpdateNotification, Menu.ScheduledReminderEditMenu];
+export const floatingMenus = [
+  Menu.HamburgerMenu,
+  Menu.UpdateNotification,
+  Menu.ScheduledReminderEditMenu,
+  Menu.AddExistingReminderMenu,
+];
