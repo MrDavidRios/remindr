@@ -1,12 +1,21 @@
 import { renderWithProviders, setupTestStore } from '@mocks/store-utils';
 import { mockMenuState, mockTaskListState, testTask } from '@mocks/testObjs';
-import { ContextMenuType, createDefaultSettings, MenuState, ScheduledReminder, setDate, Task } from '@remindr/shared';
+import {
+  ContextMenuType,
+  createDefaultSettings,
+  MenuState,
+  Page,
+  ScheduledReminder,
+  setDate,
+  Task,
+} from '@remindr/shared';
 import store from '@renderer/app/store';
+import { PageState } from '@renderer/features/page-state/pageState';
 import { cleanup, screen } from '@testing-library/react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { TaskContextMenu } from './TaskContextMenu';
 
-describe('Task Context Menu', () => {
+describe('Task Context Menu - Task List Page', () => {
   const testScheduledReminder = setDate(new ScheduledReminder(), new Date());
   const editedTask = { ...testTask, name: 'Edited Task' };
   editedTask.scheduledReminders = [JSON.parse(JSON.stringify(testScheduledReminder))];
@@ -18,6 +27,10 @@ describe('Task Context Menu', () => {
       contextMenuTask,
     };
 
+    const pageState: PageState = {
+      currentPage: Page.TaskListView,
+    };
+
     const mockedStore = setupTestStore({
       menuState: menuState,
       taskList: mockTaskListState,
@@ -27,6 +40,7 @@ describe('Task Context Menu', () => {
     vi.mocked(store.getState).mockReturnValue(mockedStore.getState());
 
     renderWithProviders(<TaskContextMenu />, undefined, {
+      pageState: pageState,
       menuState: menuState,
       taskList: mockTaskListState,
     });
@@ -67,5 +81,51 @@ describe('Task Context Menu', () => {
 
     const postponeDropdown = screen.queryByTitle('Postpone reminder');
     expect(postponeDropdown).not.toBeInTheDocument();
+  });
+});
+
+describe('Task Context Menu - Task Columns Page', () => {
+  const testScheduledReminder = setDate(new ScheduledReminder(), new Date());
+  const editedTask = { ...testTask, name: 'Edited Task' };
+  editedTask.scheduledReminders = [JSON.parse(JSON.stringify(testScheduledReminder))];
+
+  const mockStoreAndRender = (contextMenuTask: Task) => {
+    const menuState: MenuState = {
+      ...mockMenuState,
+      openContextMenus: [ContextMenuType.TaskContextMenu],
+      contextMenuTask,
+    };
+
+    const pageState: PageState = {
+      currentPage: Page.ColumnView,
+    };
+
+    const mockedStore = setupTestStore({
+      menuState: menuState,
+      taskList: mockTaskListState,
+      settings: { value: createDefaultSettings(), syncOnline: false },
+    });
+
+    vi.mocked(store.getState).mockReturnValue(mockedStore.getState());
+
+    renderWithProviders(<TaskContextMenu />, undefined, {
+      pageState: pageState,
+      menuState: menuState,
+      taskList: mockTaskListState,
+    });
+  };
+
+  afterEach(() => {
+    vi.resetAllMocks();
+    cleanup();
+  });
+
+  test('should not show pin buttons', async () => {
+    mockStoreAndRender({ ...testTask, pinned: false });
+
+    const unpinButton = screen.queryByTitle('Unpin task (Ctrl + P)');
+    const pinButton = screen.queryByTitle('Pin task (Ctrl + P)');
+    expect(unpinButton).not.toBeInTheDocument();
+    expect(pinButton).not.toBeInTheDocument();
   });
 });

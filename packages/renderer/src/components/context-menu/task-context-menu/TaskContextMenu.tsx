@@ -4,7 +4,7 @@ import skipIcon from '@assets/icons/skip.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import unpinIcon from '@assets/icons/unpin.svg';
 import type { Task } from '@remindr/shared';
-import { ContextMenuType, taskHasReminders } from '@remindr/shared';
+import { ContextMenuType, Page, taskHasReminders } from '@remindr/shared';
 import store from '@renderer/app/store';
 import { hideContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
@@ -26,6 +26,9 @@ export const TaskContextMenu: React.FC = () => {
   const dispatch = useAppDispatch();
   const { x, y } = useAppSelector((state) => state.menuState.contextMenuPositions[ContextMenuType.TaskContextMenu]);
   const task = useAppSelector((state) => state.menuState.contextMenuTask);
+  const page = useAppSelector((state) => state.pageState.currentPage);
+
+  const inTaskListView = page === Page.TaskListView;
 
   const hideTaskContextMenu = () => dispatch(hideContextMenu(ContextMenuType.TaskContextMenu));
 
@@ -53,23 +56,32 @@ export const TaskContextMenu: React.FC = () => {
     hideTaskContextMenu();
   }
 
+  const showPinButtons = inTaskListView;
+
   return (
     <ContextMenu id="taskContextMenu" x={x} y={y} hideMenu={hideTaskContextMenu}>
       <ReactFocusLock>
         <ArrowNavigable className="menu frosted" query=":scope > li:not(.hidden)" asUl autoFocus waitForChildAnimation>
-          {task?.pinned ? (
-            <li title="Unpin task (Ctrl + P)" onClick={() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))}>
-              <img src={unpinIcon} className="task-tile-image" draggable="false" alt="" />
-              <p>Unpin</p>
-            </li>
-          ) : (
-            <li title="Pin task (Ctrl + P)" onClick={() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))}>
-              <img src={pinIcon} className="task-tile-image" draggable="false" alt="" />
-              <p>Pin</p>
-            </li>
+          {showPinButtons && (
+            <>
+              {task?.pinned ? (
+                <li
+                  title="Unpin task (Ctrl + P)"
+                  onClick={() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))}
+                >
+                  <img src={unpinIcon} className="task-tile-image" draggable="false" alt="" />
+                  <p>Unpin</p>
+                </li>
+              ) : (
+                <li title="Pin task (Ctrl + P)" onClick={() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))}>
+                  <img src={pinIcon} className="task-tile-image" draggable="false" alt="" />
+                  <p>Pin</p>
+                </li>
+              )}
+            </>
           )}
           <li
-            className="menu-top-border"
+            className={showPinButtons ? 'menu-top-border' : ''}
             title="Duplicate task (Ctrl + D)"
             onClick={() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))}
           >

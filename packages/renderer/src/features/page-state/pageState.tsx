@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Page } from '@remindr/shared';
 
-interface PageState {
+export interface PageState {
   currentPage: Page;
 }
 
