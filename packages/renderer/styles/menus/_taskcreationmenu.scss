@@ -87,6 +87,21 @@
   @include task-menu-input();
 }
 
+.task-modification-interface .completion-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &.task-complete-button-container:active {
+    margin-inline-start: 0;
+  }
+
+  .task-complete-button-checkmark {
+    filter: var(--ui-accent-color-filter);
+    visibility: visible;
+  }
+}
+
 #taskTitleInput {
   font-size: 15px;
 }

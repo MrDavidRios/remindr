@@ -1,3 +1,5 @@
+import checkImg from '@assets/icons/check.png';
+import circle from '@assets/icons/circle.svg';
 import pencilIcon from '@assets/icons/pencil.svg';
 import type { Subtask } from '@remindr/shared';
 import { Task, formatDateAndTime } from '@remindr/shared';
@@ -31,24 +33,71 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
 
   const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
 
-  async function save() {
-    if (editedTask.name.trim() === '') {
+  /**
+   * It's possible that save is called before the updated task is set in the state. This function will save the task that is passed in, or the edited task if no task is passed in.
+   * @param task
+   * @returns
+   */
+  async function save(task?: Task) {
+    const taskToSave = task ?? editedTask;
+
+    if (taskToSave.name.trim() === '') {
       dispatch(showDialog({ title: 'Invalid Name', message: 'Make sure your task has a name.' }));
       return;
     }
 
     if (!creating) {
-      dispatch(updateTask(editedTask));
+      dispatch(updateTask(taskToSave));
     }
 
-    onSave?.(editedTask);
+    onSave?.(taskToSave);
   }
 
+  const toggleComplete = () => {
+    const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
+    editedTaskClone.completed = !editedTaskClone.completed;
+    editedTaskClone.completionTime = editedTaskClone.completed ? Date.now() : -1;
+    dispatch(setEditedTask({ creating, task: editedTaskClone }));
+    return editedTaskClone;
+  };
+
+  const toggleCompleteButtonTitle = editedTask.completed ? 'Mark incomplete' : 'Mark complete';
   return (
     <div className="task-panel frosted">
       <div className="task-modification-interface">
         <div>
-          <h3 id="taskCreationWindowHeader">{creating ? 'New Task' : 'Edit Task'}</h3>
+          <div className="completion-title-wrapper">
+            {!creating && (
+              <button
+                className={`task-complete-button-container`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.stopPropagation();
+
+                    const updatedTask = toggleComplete();
+                    save(updatedTask);
+                  }
+                }}
+                onClick={(e) => {
+                  // Stops the parent from taking credit for the click
+                  e.stopPropagation();
+
+                  const updatedTask = toggleComplete();
+                  save(updatedTask);
+                }}
+                tabIndex={-1}
+                type="button"
+                aria-label={toggleCompleteButtonTitle}
+                title={toggleCompleteButtonTitle}
+              >
+                <img className="task-complete-button svg-filter" src={circle} draggable="false" alt="" />
+                {editedTask.completed && (
+                  <img className="task-complete-button-checkmark" src={checkImg} draggable="false" alt="" />
+                )}
+              </button>
+            )}
+            <h3 id="taskCreationWindowHeader">{creating ? 'New Task' : 'Edit Task'}</h3>
+          </div>
 
           <DynamicTextArea
             id="taskTitleInput"
