@@ -1,15 +1,17 @@
 import duplicateIcon from '@assets/icons/duplicate.svg';
 import pinIcon from '@assets/icons/pin.svg';
+import removeIcon from '@assets/icons/remove.svg';
 import skipIcon from '@assets/icons/skip.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import unpinIcon from '@assets/icons/unpin.svg';
 import type { Task } from '@remindr/shared';
-import { ContextMenuType, Page, taskHasReminders } from '@remindr/shared';
+import { ContextMenuType, Page, TASK_COLUMNS, taskHasReminders } from '@remindr/shared';
 import store from '@renderer/app/store';
 import { hideContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
   clearSelectedTasks,
   duplicateTask,
+  removeFromColumn,
   removeTask,
   togglePinTask,
 } from '@renderer/features/task-list/taskListSlice';
@@ -28,7 +30,8 @@ export const TaskContextMenu: React.FC = () => {
   const task = useAppSelector((state) => state.menuState.contextMenuTask);
   const page = useAppSelector((state) => state.pageState.currentPage);
 
-  const inTaskListView = page === Page.TaskListView;
+  const inListView = page === Page.ListView;
+  const inColumnView = page === Page.ColumnView;
 
   const hideTaskContextMenu = () => dispatch(hideContextMenu(ContextMenuType.TaskContextMenu));
 
@@ -56,10 +59,14 @@ export const TaskContextMenu: React.FC = () => {
     hideTaskContextMenu();
   }
 
-  const showPinButtons = inTaskListView;
+  const showPinButtons = inListView;
+
+  const showRemoveFromColumnBtn =
+    inColumnView && task && task.columnIdx !== undefined && task.scheduledReminders.length === 0;
+  const showWide = showRemoveFromColumnBtn;
 
   return (
-    <ContextMenu id="taskContextMenu" x={x} y={y} hideMenu={hideTaskContextMenu}>
+    <ContextMenu id="taskContextMenu" className={showWide ? 'wide' : ''} x={x} y={y} hideMenu={hideTaskContextMenu}>
       <ReactFocusLock>
         <ArrowNavigable className="menu frosted" query=":scope > li:not(.hidden)" asUl autoFocus waitForChildAnimation>
           {showPinButtons && (
@@ -80,8 +87,17 @@ export const TaskContextMenu: React.FC = () => {
               )}
             </>
           )}
+          {showRemoveFromColumnBtn && task.columnIdx !== undefined && (
+            <li
+              title={`Remove task from "${TASK_COLUMNS.get(task.columnIdx)}" column`}
+              onClick={() => dropdownAction(task, (t) => dispatch(removeFromColumn(t)))}
+            >
+              <img src={removeIcon} className="task-tile-image" draggable="false" alt="" />
+              <p>Remove from column</p>
+            </li>
+          )}
           <li
-            className={showPinButtons ? 'menu-top-border' : ''}
+            className={showRemoveFromColumnBtn ? 'menu-top-border' : ''}
             title="Duplicate task (Ctrl + D)"
             onClick={() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))}
           >

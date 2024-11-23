@@ -102,6 +102,15 @@ export const taskListSlice = createSlice({
       state.lastTaskListAction = { type: 'update', task: oldTaskState, undone: false };
       saveTaskData(state.value);
     },
+    removeFromColumn(state, action: PayloadAction<InstanceType<typeof Task>>) {
+      const taskIdx = getTaskIdx(action.payload, state.value);
+      const oldTaskState = JSON.parse(JSON.stringify(state.value[taskIdx]));
+
+      state.value[taskIdx].columnIdx = undefined;
+
+      state.lastTaskListAction = { type: 'update', task: oldTaskState, undone: false };
+      saveTaskData(state.value);
+    },
     setTimeframe: (state, action: PayloadAction<Timeframe>) => {
       state.timeframe = action.payload;
 
@@ -316,6 +325,7 @@ export const {
   unpinTasks,
   setTaskList,
   togglePinTask,
+  removeFromColumn,
   setTimeframe,
   setSelectedTask,
   addSelectedTask,

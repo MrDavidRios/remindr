@@ -13,7 +13,7 @@ export const ListViewButton: FC = () => {
       id="listViewButton"
       className="toolbar-button"
       title="List View"
-      onClick={() => dispatch(updateCurrentPage(Page.TaskListView))}
+      onClick={() => dispatch(updateCurrentPage(Page.ListView))}
       aria-label="List View"
     >
       <div className="toolbar-button-img-container">

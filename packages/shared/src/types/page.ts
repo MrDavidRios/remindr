@@ -1,4 +1,4 @@
 export enum Page {
-  TaskListView,
+  ListView,
   ColumnView,
 }

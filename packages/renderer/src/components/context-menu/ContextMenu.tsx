@@ -11,7 +11,7 @@ interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
   hideMenu: () => void;
 }
 
-export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, children, hideMenu }) => {
+export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, className, children, hideMenu }) => {
   const openMenus = useAppSelector((state) => state.menuState.openMenus);
 
   const [position, setPosition] = useState({ x, y });
@@ -47,7 +47,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, children, hideMenu
     <div
       id={id}
       ref={ref as unknown as React.RefObject<HTMLDivElement>}
-      className="context-menu menu frosted"
+      className={`context-menu menu frosted ${className}`}
       style={{ left: position.x, top: position.y, visibility: isVisible ? 'visible' : 'hidden' }}
     >
       {children}

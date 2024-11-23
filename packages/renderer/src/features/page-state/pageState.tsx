@@ -6,7 +6,7 @@ export interface PageState {
 }
 
 const initialState: PageState = {
-  currentPage: Page.TaskListView,
+  currentPage: Page.ListView,
 };
 
 export const pageStateSlice = createSlice({

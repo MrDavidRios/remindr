@@ -60,6 +60,20 @@
 #taskContextMenu {
   width: 125px;
 
+  &.wide {
+    width: 190px;
+
+    li ul {
+      margin: 0 0 0 190px;
+    }
+
+    .postpone-ctx-menu img:last-of-type {
+      position: absolute;
+      right: 6px;
+      left: inherit;
+    }
+  }
+
   li ul {
     position: absolute;
     left: 0;

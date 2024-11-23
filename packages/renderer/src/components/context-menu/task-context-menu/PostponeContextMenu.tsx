@@ -42,7 +42,7 @@ export const PostponeContextMenu: FC<PostponeContextMenuProps> = ({ dropdownActi
 
   return (
     <li
-      className="menu-top-border"
+      className="menu-top-border postpone-ctx-menu"
       title="Postpone reminder"
       style={{ position: 'relative' }}
       onFocus={() => setShowContextMenu(true)}

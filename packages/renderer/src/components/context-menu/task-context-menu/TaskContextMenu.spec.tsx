@@ -8,6 +8,7 @@ import {
   ScheduledReminder,
   setDate,
   Task,
+  TASK_COLUMNS,
 } from '@remindr/shared';
 import store from '@renderer/app/store';
 import { PageState } from '@renderer/features/page-state/pageState';
@@ -28,7 +29,7 @@ describe('Task Context Menu - Task List Page', () => {
     };
 
     const pageState: PageState = {
-      currentPage: Page.TaskListView,
+      currentPage: Page.ListView,
     };
 
     const mockedStore = setupTestStore({
@@ -127,5 +128,19 @@ describe('Task Context Menu - Task Columns Page', () => {
     const pinButton = screen.queryByTitle('Pin task (Ctrl + P)');
     expect(unpinButton).not.toBeInTheDocument();
     expect(pinButton).not.toBeInTheDocument();
+  });
+
+  test('should show remove from column button if task is in column and has no reminders', async () => {
+    mockStoreAndRender({ ...testTask, columnIdx: 0 });
+
+    const removeFromColumnButton = screen.queryByTitle(`Remove task from "${TASK_COLUMNS.get(0)}" column`);
+    expect(removeFromColumnButton).toBeInTheDocument();
+  });
+
+  test('should not show remove from column button if task is in column and has reminders', async () => {
+    mockStoreAndRender({ ...testTask, scheduledReminders: [new ScheduledReminder()], columnIdx: 0 });
+
+    const removeFromColumnButton = screen.queryByTitle(`Remove task from "${TASK_COLUMNS.get(0)}" column`);
+    expect(removeFromColumnButton).not.toBeInTheDocument();
   });
 });
