@@ -97,7 +97,7 @@ export const TaskContextMenu: React.FC = () => {
             </li>
           )}
           <li
-            className={showRemoveFromColumnBtn ? 'menu-top-border' : ''}
+            className={inListView || showRemoveFromColumnBtn ? 'menu-top-border' : ''}
             title="Duplicate task (Ctrl + D)"
             onClick={() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))}
           >

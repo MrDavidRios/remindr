@@ -47,6 +47,11 @@ export function applyTheme(): void {
     case Theme.Dark:
       // #252525 (gray 900)
       root.style.setProperty('--surface-primary', `rgba(37, 37, 37, ${settings.enableTransparency ? '0.90' : '1.0'})`);
+      // #1A1A1A
+      root.style.setProperty(
+        '--surface-primary-dark',
+        `rgba(26, 26, 26, ${settings.enableTransparency ? '0.90' : '1.0'})`,
+      );
       // #323232 (gray 800)
       root.style.setProperty(
         '--surface-secondary',
@@ -75,6 +80,11 @@ export function applyTheme(): void {
       root.style.setProperty(
         '--surface-primary',
         `rgb(250, 250, 250, ${settings.enableTransparency ? '0.85' : '1.0'})`,
+      );
+      // #1A1A1A
+      root.style.setProperty(
+        '--surface-primary-dark',
+        `rgba(220, 220, 220, ${settings.enableTransparency ? '0.90' : '1.0'})`,
       );
       // #E6E6E6 (gray 200)
       root.style.setProperty(
