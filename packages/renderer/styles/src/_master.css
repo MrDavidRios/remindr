@@ -28,7 +28,7 @@
 
 body {
   height: 100%;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   text-align: center;
   user-select: none;
   overflow: hidden;
@@ -42,7 +42,7 @@ h1 {
 }
 
 .general-button {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   background-color: var(--ui-accent-color);
   border-radius: 30px;
   cursor: pointer;
@@ -59,7 +59,7 @@ h1 {
 
 button:hover {
   background-color: var(--ui-accent-color);
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--subtle-box-shadow);
 }
 
 button:active {
@@ -100,7 +100,7 @@ input {
   color: var(--text-color-primary);
   transition-property: border-bottom;
   transition-duration: 0.5s;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 ::-webkit-input-placeholder {
@@ -136,7 +136,7 @@ input:hover::-webkit-input-placeholder {
 }
 .form-input.border-bottom ~ .border-bottom-animation {
   position: absolute;
-  content: '';
+  content: "";
   width: 0;
   background: var(--text-color-primary);
   height: 2px;
@@ -183,12 +183,12 @@ input:focus {
 }
 
 #message {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   padding-bottom: 15px;
 }
 
 .notification-button {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   margin: 5px;
   border-radius: 12px;
   background-color: var(--ui-accent-color);

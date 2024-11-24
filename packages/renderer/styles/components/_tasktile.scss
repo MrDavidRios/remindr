@@ -23,12 +23,11 @@
 
   &:hover {
     background-color: var(--surface-secondary);
-    box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
   }
 
   &.selected {
     background-color: var(--surface-active);
-    box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
+    box-shadow: var(--subtle-box-shadow);
   }
 
   &.selected:hover {

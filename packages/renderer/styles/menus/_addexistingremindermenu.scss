@@ -1,5 +1,6 @@
 #addExistingReminderMenu {
   position: absolute;
+  background-color: var(--surface-primary-dark);
   border-radius: var(--menu-border-radius);
   display: flex;
 
@@ -62,14 +63,14 @@
     gap: 6px;
 
     > div {
-      background-color: var(--surface-secondary);
+      background-color: var(--surface-primary);
       padding: 8px 8px;
 
       border-radius: 4px;
 
       &:hover {
         cursor: pointer;
-        filter: brightness(1.2);
+        background-color: var(--surface-secondary);
       }
     }
   }
