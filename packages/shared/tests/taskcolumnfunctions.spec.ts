@@ -1,6 +1,14 @@
 import { getTaskColumnIdx, ScheduledReminder, setDate, Task } from '@remindr/shared';
 import { describe, expect, test } from 'vitest';
 
+const createScheduledReminderList = (relativeDays: number[]): ScheduledReminder[] => {
+  return relativeDays.map((day) => {
+    const date = new Date();
+    date.setDate(date.getDate() + day);
+    return setDate(new ScheduledReminder(), date);
+  });
+};
+
 describe('getTaskColumnIdx', () => {
   test('should return already set column idx if task has no scheduled reminders', () => {
     const testTask = new Task('test task');
@@ -14,31 +22,49 @@ describe('getTaskColumnIdx', () => {
     expect(getTaskColumnIdx(testTaskWithSetIdx)).toBe(1);
   });
 
-  test("should return -1 if task's earliest reminder is yesterday", () => {
-    const testTask = new Task('test task');
-    const yesterdayDate = new Date();
-    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-    const testScheduledReminder = setDate(new ScheduledReminder(), yesterdayDate);
-    testTask.scheduledReminders = [testScheduledReminder];
+  describe('multiple reminders', () => {
+    test("should return -1 if task's earliest reminder is yesterday", () => {
+      const testTask = new Task('test task');
+      testTask.scheduledReminders = createScheduledReminderList([-1, 15]);
 
-    expect(getTaskColumnIdx(testTask)).toBe(-1);
+      expect(getTaskColumnIdx(testTask)).toBe(-1);
+    });
+
+    test("should return 0 if task's earliest reminder is on the same day", () => {
+      const testTask = new Task('test task');
+      testTask.scheduledReminders = createScheduledReminderList([0, 15]);
+
+      expect(getTaskColumnIdx(testTask)).toBe(0);
+    });
+
+    test("should return 1 if task's earliest reminder is set for tomorrow", () => {
+      const testTask = new Task('test task');
+      testTask.scheduledReminders = createScheduledReminderList([1, 15]);
+
+      expect(getTaskColumnIdx(testTask)).toBe(1);
+    });
   });
 
-  test("should return 0 if task's earliest reminder is on the same day", () => {
-    const testTask = new Task('test task');
-    const testScheduledReminder = setDate(new ScheduledReminder(), new Date());
-    testTask.scheduledReminders = [testScheduledReminder];
+  describe('single reminder', () => {
+    test("should return -1 if task's earliest reminder is yesterday", () => {
+      const testTask = new Task('test task');
+      testTask.scheduledReminders = createScheduledReminderList([-1]);
 
-    expect(getTaskColumnIdx(testTask)).toBe(0);
-  });
+      expect(getTaskColumnIdx(testTask)).toBe(-1);
+    });
 
-  test("should return 1 if task's earliest reminder is set for tomorrow", () => {
-    const testTask = new Task('test task');
-    const tomorrowDate = new Date();
-    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-    const testScheduledReminder = setDate(new ScheduledReminder(), tomorrowDate);
-    testTask.scheduledReminders = [testScheduledReminder];
+    test("should return 0 if task's earliest reminder is on the same day", () => {
+      const testTask = new Task('test task');
+      testTask.scheduledReminders = createScheduledReminderList([0]);
 
-    expect(getTaskColumnIdx(testTask)).toBe(1);
+      expect(getTaskColumnIdx(testTask)).toBe(0);
+    });
+
+    test("should return 1 if task's earliest reminder is set for tomorrow", () => {
+      const testTask = new Task('test task');
+      testTask.scheduledReminders = createScheduledReminderList([1]);
+
+      expect(getTaskColumnIdx(testTask)).toBe(1);
+    });
   });
 });

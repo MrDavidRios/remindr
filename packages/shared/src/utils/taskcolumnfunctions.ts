@@ -1,4 +1,4 @@
-import { getDate, getDaysBetweenDates, isOverdue } from '../index.js';
+import { getDate, getDaysBetweenDates, isOverdue, sortReminders } from '../index.js';
 import { ScheduledReminder, Task } from '../types/index.js';
 
 /**
@@ -15,12 +15,15 @@ export const getTaskColumnIdx = (task: Task): number | undefined => {
 
   let relevantReminder: ScheduledReminder;
 
-  // If all of a task's scheduled reminders are overdue, base the column id off of the latest overdue reminder.
-  const nonOverdueRemiders = task.scheduledReminders.filter((r) => !isOverdue(r));
+  // make sure reminders are sorted by date
+  const reminders = sortReminders(task.scheduledReminders);
 
-  const lastReminderIdx = task.scheduledReminders.length - 1;
-  if (nonOverdueRemiders.length === 0) relevantReminder = task.scheduledReminders[lastReminderIdx];
-  else relevantReminder = task.scheduledReminders[0];
+  // If all of a task's scheduled reminders are overdue, base the column id off of the latest overdue reminder.
+  const nonOverdueRemiders = reminders.filter((r) => !isOverdue(r));
+
+  const lastReminderIdx = reminders.length - 1;
+  if (nonOverdueRemiders.length === 0) relevantReminder = reminders[lastReminderIdx];
+  else relevantReminder = reminders[0];
 
   const reminderDate = getDate(relevantReminder);
   let dayDiff = getDaysBetweenDates(new Date(), reminderDate);
