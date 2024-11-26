@@ -2,6 +2,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import {
   generateUniqueID,
   getNextRepeatDate,
+  getTaskColumnIdx,
   Repeat,
   ScheduledReminder,
   setDate,
@@ -9,7 +10,7 @@ import {
   Task,
   taskHasRecurringReminders,
 } from '@remindr/shared';
-import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
+import { getIdxInTaskList, getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import _ from 'lodash';
 import { TaskListState } from './taskListSlice';
 
@@ -18,9 +19,15 @@ export const addTaskReducer = (
   action: PayloadAction<InstanceType<typeof Task>>,
   saveData: (taskList: Task[]) => void,
 ) => {
-  state.value.push(action.payload);
+  // set task column idx
+  const taskClone: Task = JSON.parse(JSON.stringify(action.payload));
+  const incompleteTasksInColumn = state.value.filter(
+    (task) => task.columnIdx === getTaskColumnIdx(action.payload) && !task.completed,
+  );
+  taskClone.orderInTaskColumn = getIdxInTaskList(taskClone, incompleteTasksInColumn);
 
-  state.lastTaskListAction = { type: 'add', task: action.payload, undone: false };
+  state.value.push(taskClone);
+  state.lastTaskListAction = { type: 'add', task: taskClone, undone: false };
   saveData(state.value);
 };
 

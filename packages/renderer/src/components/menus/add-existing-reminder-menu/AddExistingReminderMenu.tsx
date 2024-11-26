@@ -50,9 +50,7 @@ export const AddExistingReminderMenu: FC = () => {
       id="addExistingReminderMenu"
       className="frosted"
       clickOutsideExceptions={['.add-external-task-button']}
-      onClickOutside={() => {
-        dispatch(hideMenu({ menu: Menu.AddExistingReminderMenu, fromEscKeypress: true }));
-      }}
+      onClickOutside={() => dispatch(hideMenu({ menu: Menu.AddExistingReminderMenu, fromEscKeypress: true }))}
     >
       <div className="titlebar">
         <p>Add Existing Task</p>

@@ -78,3 +78,12 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
 export function taskHasRecurringReminders(task: Task): boolean {
   return task.scheduledReminders.some((e) => e.repeat !== Repeat["Don't Repeat"]);
 }
+
+export function getEarliestReminder(task: Task): ScheduledReminder {
+  if (task.scheduledReminders.length === 0) {
+    throw new Error('Task has no reminders');
+  }
+
+  const sortedReminders = sortReminders(task.scheduledReminders);
+  return sortedReminders[0];
+}
