@@ -12,11 +12,12 @@ export const GeneralContextMenu: React.FC = () => {
   const dispatch = useAppDispatch();
   const { x, y } = useAppSelector((state) => state.menuState.contextMenuPositions[ContextMenuType.GeneralContextMenu]);
 
-  const hideGeneralContextMenu = () => dispatch(hideContextMenu(ContextMenuType.GeneralContextMenu));
+  const hideGeneralContextMenu = (fromEscKeypress: boolean) =>
+    dispatch(hideContextMenu(ContextMenuType.GeneralContextMenu), { fromEscKeypress });
 
   function dropdownAction(action: () => void) {
     action();
-    hideGeneralContextMenu();
+    hideGeneralContextMenu(false);
   }
 
   return (

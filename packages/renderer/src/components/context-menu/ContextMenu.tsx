@@ -1,14 +1,14 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import type { FC, HTMLAttributes } from 'react';
 import { useEffect, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
   x: number;
   y: number;
-  hideMenu: () => void;
+  hideMenu: (fromEscKeypress: boolean) => void;
 }
 
 export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, className, children, hideMenu }) => {
@@ -17,18 +17,18 @@ export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, className, childre
   const [position, setPosition] = useState({ x, y });
   const [isVisible, setIsVisible] = useState(false);
 
-  const ref = useClickOutside(() => hideMenu());
+  const ref = useClickOutside(() => hideMenu(false));
 
-  useHotkeys('esc', () => hideMenu());
+  useHotkey(['esc'], () => hideMenu(true));
 
   // Hide menu when scrolling on task list container
   useDetectWheel({
     element: document.getElementById('taskListContainer') as HTMLElement | undefined,
-    callback: hideMenu,
+    callback: () => hideMenu(false),
   });
 
   useEffect(() => {
-    if (isVisible) hideMenu();
+    if (isVisible) hideMenu(false);
   }, [openMenus]);
 
   useEffect(() => {

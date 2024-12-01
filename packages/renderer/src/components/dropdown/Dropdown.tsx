@@ -1,7 +1,5 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
-import { useRef, useState } from 'react';
-import { useHotkeysContext } from 'react-hotkeys-hook';
+import { useState } from 'react';
 import { DropdownOptions } from './DropdownOptions';
 
 export interface DropdownProps<T> {
@@ -20,30 +18,9 @@ export function Dropdown<T>(props: DropdownProps<T>) {
 
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = () => (isOpen ? closeDropdown() : openDropdown());
-  const { enableScope, disableScope, enabledScopes } = useHotkeysContext();
 
-  const previouslyEnabledScopes = useRef<string[]>(enabledScopes);
-
-  const openDropdown = () => {
-    setIsOpen(true);
-
-    previouslyEnabledScopes.current = enabledScopes;
-    for (const scope of previouslyEnabledScopes.current) {
-      disableScope(scope);
-    }
-
-    enableScope(HotkeyScope.Dropdown);
-  };
-
-  const closeDropdown = () => {
-    setIsOpen(false);
-
-    for (const scope of previouslyEnabledScopes.current) {
-      enableScope(scope);
-    }
-
-    disableScope(HotkeyScope.Dropdown);
-  };
+  const openDropdown = () => setIsOpen(true);
+  const closeDropdown = () => setIsOpen(false);
 
   const dropdownMenuRef = useClickOutside(() => closeDropdown(), [], true);
 

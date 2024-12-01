@@ -1,9 +1,9 @@
 import { Menu } from '@remindr/shared';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { shallowEqual } from 'react-redux';
 import { TaskCreateMenu } from '../menus/task-create-menu/TaskCreateMenu';
 import { TaskEditMenu } from '../menus/task-edit-menu/TaskEditMenu';
@@ -35,7 +35,7 @@ export function TaskManagementPage() {
   }, [selectedTasks]);
 
   // Test notifications with Cmd/Ctrl + T in development
-  useHotkeys('mod+t', () => {
+  useHotkey(['mod+t'], () => {
     if (window.electron.remote.isPackaged()) return;
 
     for (let i = 0; i < selectedTasks.length; i++) {

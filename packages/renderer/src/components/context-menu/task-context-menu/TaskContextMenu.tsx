@@ -16,10 +16,10 @@ import {
   togglePinTask,
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { doIfTaskMenusAreClosed } from '@renderer/scripts/utils/menuutils';
 import React from 'react';
 import ReactFocusLock from 'react-focus-lock';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 import { ContextMenu } from '../ContextMenu';
 import { PostponeContextMenu } from './PostponeContextMenu';
@@ -33,11 +33,12 @@ export const TaskContextMenu: React.FC = () => {
   const inListView = page === Page.ListView;
   const inColumnView = page === Page.ColumnView;
 
-  const hideTaskContextMenu = () => dispatch(hideContextMenu(ContextMenuType.TaskContextMenu));
+  const hideTaskContextMenu = (fromEscKeypress: boolean) =>
+    dispatch(hideContextMenu(ContextMenuType.TaskContextMenu), { fromEscKeypress });
 
-  useHotkeys('mod+p', () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))));
-  useHotkeys('mod+d', () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))));
-  useHotkeys('delete', () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTask(t)))));
+  useHotkey(['mod+p'], () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))));
+  useHotkey(['mod+d'], () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))));
+  useHotkey(['delete'], () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTask(t)))));
 
   function dropdownAction(actionTask: Task | undefined, action: (t: Task) => void) {
     if (actionTask === undefined) return;
@@ -47,7 +48,7 @@ export const TaskContextMenu: React.FC = () => {
     const actionTaskSelected = selectedTasks.filter((t) => t.creationTime === actionTask.creationTime).length > 0;
     if (!actionTaskSelected) {
       action(actionTask);
-      hideTaskContextMenu();
+      hideTaskContextMenu(false);
       return;
     }
 
@@ -56,7 +57,7 @@ export const TaskContextMenu: React.FC = () => {
     }
 
     dispatch(clearSelectedTasks());
-    hideTaskContextMenu();
+    hideTaskContextMenu(false);
   }
 
   const showPinButtons = inListView;

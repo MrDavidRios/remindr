@@ -12,9 +12,11 @@ import { NotificationsSettingsPage } from './settings-pages/NotificationsSetting
 import { TasksSettingsPage } from './settings-pages/TasksSettingsPage';
 import { AppearanceSettingsPage } from './settings-pages/appearance-settings-page/AppearanceSettingsPage';
 
-export default function SettingsMenu() {
+export const SettingsMenu = () => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState<SettingsPage>(SettingsPage.General);
+
+  console.log('we live on');
 
   return (
     <FullScreenMenu
@@ -33,7 +35,7 @@ export default function SettingsMenu() {
       </div>
     </FullScreenMenu>
   );
-}
+};
 
 function getSettingsPage(page: SettingsPage) {
   switch (page) {

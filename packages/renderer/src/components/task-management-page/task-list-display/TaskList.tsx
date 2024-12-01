@@ -13,7 +13,6 @@ interface TaskListProps {
   timeframe: Timeframe;
 }
 
-// export const TaskList: React.FC<TaskListProps> = ({ timeframe }) => {
 export const TaskList = memo(function TaskList({ timeframe }: TaskListProps) {
   const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
 

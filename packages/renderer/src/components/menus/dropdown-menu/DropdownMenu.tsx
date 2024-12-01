@@ -1,12 +1,11 @@
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import type { FC, FocusEvent, HTMLAttributes, ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
+import { useEffect, useState } from 'react';
 
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/
 interface DropdownMenuProps extends HTMLAttributes<HTMLUListElement> {
@@ -34,17 +33,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   const [hideOverflow, setHideOverflow] = useState(true);
   const animationsEnabled = useAnimationsEnabled();
 
-  const onCloseDropdown = () => {
-    for (const scope of previouslyEnabledScopes.current) {
-      enableScope(scope);
-    }
-
-    disableScope(HotkeyScope.Dropdown);
-    onClose?.();
-  };
-
-  const { enableScope, disableScope, enabledScopes } = useHotkeysContext();
-  useHotkeys('esc', () => onCloseDropdown(), { scopes: [HotkeyScope.Dropdown] });
+  useHotkey(['esc'], () => onClose?.());
 
   const height = useMotionValue(0);
   let lastFocusedIdx = -1;
@@ -61,13 +50,6 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
 
   useEffect(() => {
     if (!ref.current || ref.current.children.length === 0) return;
-
-    previouslyEnabledScopes.current = enabledScopes;
-    for (const scope of previouslyEnabledScopes.current) {
-      disableScope(scope);
-    }
-
-    enableScope(HotkeyScope.Dropdown);
 
     // Focus on first element in menu
     setFocusOnMenuItem(0);
@@ -116,17 +98,15 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
     menuItem.focus();
   }
 
-  const ref = useClickOutside(() => onCloseDropdown(), clickOutsideExceptions, ignoreGlobalClickOutsideExceptions);
+  const ref = useClickOutside(() => onClose?.(), clickOutsideExceptions, ignoreGlobalClickOutsideExceptions);
   useDetectWheel({
     element: document.body,
     callback: () => {
       if (!closeOnScroll) return;
 
-      onCloseDropdown();
+      onClose?.();
     },
   });
-
-  const previouslyEnabledScopes = useRef<string[]>(enabledScopes);
 
   return (
     <motion.ul

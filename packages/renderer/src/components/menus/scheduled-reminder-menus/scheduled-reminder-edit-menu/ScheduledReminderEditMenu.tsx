@@ -23,10 +23,10 @@ import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { RepeatIntervalPicker } from './RepeatIntervalPicker';
 import { SuggestedTimePicker } from './SuggestedTimePicker';
 
@@ -104,20 +104,16 @@ export const ScheduledReminderEditMenu: FC = () => {
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
   };
 
-  useHotkeys(
-    'esc',
-    () => {
-      const competingMenuOpen =
-        isPrimaryMenuOpen(store.getState().menuState) || isFullscreenMenuOpen(store.getState().menuState);
-      if (competingMenuOpen) return;
+  useHotkey(['esc'], () => {
+    const competingMenuOpen =
+      isPrimaryMenuOpen(store.getState().menuState) || isFullscreenMenuOpen(store.getState().menuState);
+    if (competingMenuOpen) return;
 
-      onMenuClose();
+    onMenuClose();
 
-      dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu, fromEscKeypress: true }));
-    },
-    { enableOnFormTags: true },
-  );
-  useHotkeys('mod+s', handleEditCompletion, { enableOnFormTags: true });
+    dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu, fromEscKeypress: true }));
+  });
+  useHotkey(['mod+s'], handleEditCompletion);
   useDetectWheel({
     element: document.querySelector('.task-modification-interface') as HTMLElement | undefined,
     callback: () => {

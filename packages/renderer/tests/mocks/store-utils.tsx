@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { AppMode, createDefaultSettings, Settings } from '@remindr/shared';
 import { render, RenderOptions } from '@testing-library/react';
 import { ReactNode } from 'react';
-import { HotkeysProvider } from 'react-hotkeys-hook';
 import { Provider } from 'react-redux';
 import { rootReducer } from '../../src/app/rootReducer';
 import { AppStore, RootState } from '../../src/app/store';
@@ -33,12 +32,7 @@ export function renderWithProviders(
     ...renderOptions
   }: ExtendedRenderOptions = {},
 ) {
-  render(
-    <Provider store={store}>
-      <HotkeysProvider>{children}</HotkeysProvider>
-    </Provider>,
-    renderOptions,
-  );
+  render(<Provider store={store}>{children}</Provider>, renderOptions);
 }
 
 export const setupTestingState = (stateOverrides?: Partial<RootState>, settingsOverrides?: Partial<Settings>) => {

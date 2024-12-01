@@ -1,6 +1,5 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { Menu, Timeframe } from '@remindr/shared';
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { menuWidthAnimationProps } from '@renderer/animation';
 import type { AppDispatch } from '@renderer/app/store';
 import store from '@renderer/app/store';
@@ -9,85 +8,31 @@ import { clearSelectedTasks, setTimeframe } from '@renderer/features/task-list/t
 import { useAppDispatch } from '@renderer/hooks';
 import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
-import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
 
 interface CloseMenuProps {
   dispatch: AppDispatch;
-  disableScope: (scope: string) => void;
   enableScope: (scope: string) => void;
   fromEscKeypress: boolean;
   previouslyEnabledScopes: string[];
 }
-const closeMenu = ({
-  dispatch,
-  disableScope,
-  enableScope,
-  fromEscKeypress,
-  previouslyEnabledScopes,
-}: CloseMenuProps) => {
-  for (const scope of previouslyEnabledScopes) {
-    enableScope(scope);
-  }
-
-  disableScope(HotkeyScope.Modal);
-
-  dispatch(hideMenu({ menu: Menu.TimeframeMenu, fromEscKeypress }));
-};
 
 export function TimeframeSelectMenu() {
   const dispatch = useAppDispatch();
   const animationsEnabled = useAnimationsEnabled();
-  const { enableScope, disableScope, enabledScopes } = useHotkeysContext();
-  const previouslyEnabledScopes = useRef<string[]>(enabledScopes);
 
   const timeframeMenuBtnRef = useClickOutside(
-    () =>
-      closeMenu({
-        dispatch,
-        disableScope,
-        enableScope,
-        fromEscKeypress: false,
-        previouslyEnabledScopes: previouslyEnabledScopes.current,
-      }),
+    () => dispatch(hideMenu({ menu: Menu.TimeframeMenu })),
     ['#timeframeMenuButton'],
   );
 
-  useHotkeys(
-    'esc',
-    () =>
-      closeMenu({
-        dispatch,
-        disableScope,
-        enableScope,
-        fromEscKeypress: true,
-        previouslyEnabledScopes: previouslyEnabledScopes.current,
-      }),
-    {
-      scopes: HotkeyScope.Modal,
-    },
-  );
-
-  useEffect(() => {
-    previouslyEnabledScopes.current = enabledScopes;
-    for (const scope of previouslyEnabledScopes.current) {
-      disableScope(scope);
-    }
-
-    enableScope(HotkeyScope.Modal);
-  }, []);
+  useHotkey(['esc'], () => dispatch(hideMenu({ menu: Menu.TimeframeMenu, fromEscKeypress: true })));
 
   const selectTimeframe = (timeframe: Timeframe) => {
-    closeMenu({
-      dispatch,
-      disableScope,
-      enableScope,
-      fromEscKeypress: false,
-      previouslyEnabledScopes: previouslyEnabledScopes.current,
-    });
+    dispatch(hideMenu({ menu: Menu.TimeframeMenu }));
     dispatch(setTimeframe(timeframe));
 
     const selectedTasks = store.getState().taskList.selectedTasks;

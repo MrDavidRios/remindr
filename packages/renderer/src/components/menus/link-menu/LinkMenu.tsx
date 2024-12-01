@@ -5,11 +5,11 @@ import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
 import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { getDefaultLink, getDisplayURL } from '@renderer/scripts/utils/linkutils';
 import { getFaviconURL, getObsidianNoteName, isObsidianURL } from '@renderer/scripts/utils/urlfunctions';
 import type { FC } from 'react';
 import { useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { isURL } from 'validator';
 import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { Dropdown } from '../../dropdown/Dropdown';
@@ -84,7 +84,7 @@ export const LinkMenu: FC = () => {
     dispatch(hideMenu({ menu: Menu.LinkMenu }));
   };
 
-  useHotkeys('mod+s', handleLinkCompleteButton, { enableOnFormTags: true });
+  useHotkey(['mod+s'], handleLinkCompleteButton);
 
   return (
     <FullScreenMenu

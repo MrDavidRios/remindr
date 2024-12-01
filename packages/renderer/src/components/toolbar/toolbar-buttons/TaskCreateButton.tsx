@@ -1,46 +1,36 @@
 import plusThinIcon from '@assets/icons/plus-thin.svg';
 import type { MenuState } from '@remindr/shared';
 import { Menu } from '@remindr/shared';
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import type { AppDispatch } from '@renderer/app/store';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { clearSelectedTasks } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isFullscreenMenuOpen, isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
-import { useEffect, type FC } from 'react';
-import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
+import { type FC } from 'react';
 
 export const TaskCreateButton: FC = () => {
   const dispatch = useAppDispatch();
 
   const menuState = useAppSelector((state) => state.menuState);
   const animate = useAnimationsEnabled();
-  const { enableScope, disableScope } = useHotkeysContext();
 
   const taskModificationMenuOpen =
     isMenuOpen(menuState, Menu.TaskEditMenu) || isMenuOpen(menuState, Menu.TaskCreateMenu);
 
   const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
-  useEffect(() => {
-    taskModificationMenuOpen ? enableScope(HotkeyScope.Menu) : disableScope(HotkeyScope.Menu);
-  }, [taskModificationMenuOpen]);
+  useHotkey(['mod+n'], () => {
+    if (isFullscreenMenuOpen(menuState)) return;
 
-  useHotkeys(
-    'mod+n',
-    () => {
-      if (isFullscreenMenuOpen(menuState)) return;
+    if (isMenuOpen(menuState, Menu.TaskEditMenu)) {
+      dispatch(clearSelectedTasks());
+    }
 
-      if (isMenuOpen(menuState, Menu.TaskEditMenu)) {
-        dispatch(clearSelectedTasks());
-      }
-
-      dispatch(showMenu(Menu.TaskCreateMenu));
-    },
-    { enableOnFormTags: true },
-  );
+    dispatch(showMenu(Menu.TaskCreateMenu));
+  });
 
   return (
     <button

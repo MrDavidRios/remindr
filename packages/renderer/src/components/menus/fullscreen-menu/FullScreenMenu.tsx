@@ -1,12 +1,11 @@
 import { AppMode, Menu } from '@remindr/shared';
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
-import { backdropAnimationProps, menuAnimationProps } from '@renderer/animation';
+import { backdropAnimationProps } from '@renderer/animation';
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { motion } from 'framer-motion';
-import { createContext, FC, HTMLAttributes, ReactNode, useEffect } from 'react';
+import { createContext, FC, HTMLAttributes, ReactNode } from 'react';
 import ReactFocusLock from 'react-focus-lock';
-import { useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 interface FullScreenMenuProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   menuType: Menu;
@@ -30,29 +29,16 @@ export const FullScreenMenu: FC<FullScreenMenuProps> = ({
 
   const classes = `fullscreen-menu frosted ${modal ? 'modal-menu' : ''} ${className}`;
 
-  const { enableScope, disableScope } = useHotkeysContext();
-  const hotkeyScope = modal ? HotkeyScope.Modal : HotkeyScope.FullscreenMenu;
-
-  const onCloseMenu = () => {
-    disableScope(hotkeyScope);
-
-    onClose();
-  };
-
-  useEffect(() => {
-    enableScope(hotkeyScope);
-  }, []);
-
-  useHotkeys('esc', () => onCloseMenu(), { enableOnFormTags: true, scopes: [hotkeyScope] });
+  useHotkey(['esc'], () => onClose());
 
   return (
-    <FullScreenMenuContext.Provider value={{ onClose: onCloseMenu }}>
+    <FullScreenMenuContext.Provider value={{ onClose }}>
       <ReactFocusLock returnFocus>
         <div className="full-window-container" style={style}>
-          <motion.div className="backdrop" {...backdropAnimationProps(animationsEnabled)} />
-          <motion.div id={id} className={classes} {...menuAnimationProps(animate)}>
+          <motion.div className="backdrop" {...backdropAnimationProps(animate)} />
+          <div id={id} className={classes}>
             {children}
-          </motion.div>
+          </div>
         </div>
       </ReactFocusLock>
     </FullScreenMenuContext.Provider>

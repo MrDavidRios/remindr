@@ -1,13 +1,12 @@
 import { Page, Timeframe } from '@remindr/shared';
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { AppDispatch } from '@renderer/app/store';
 import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
 import { getAccentColor } from '@renderer/scripts/systems/stylemanager';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isFloatingMenuOpen, isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import HashLoader from 'react-spinners/HashLoader';
 import { TaskColumns } from './task-columns/TaskColumns';
 import { TaskList } from './TaskList';
@@ -27,17 +26,17 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
   const columnView = taskView === Page.ColumnView;
 
   // Deselect all tasks on esc keypress
-  useHotkeys(
-    'esc',
+  useHotkey(
+    ['esc'],
     () => {
       if (isFullscreenMenuOpen(store.getState().menuState) || isFloatingMenuOpen(store.getState().menuState)) return;
 
       dispatch(clearSelectedTasks());
     },
-    {
-      enableOnFormTags: true,
-      scopes: [HotkeyScope.Menu],
-    },
+    // {
+    //   enableOnFormTags: true,
+    //   scopes: [HotkeyScope.Menu],
+    // },
   );
 
   useEffect(() => {

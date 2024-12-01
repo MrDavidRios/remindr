@@ -12,9 +12,9 @@ import {
   unpinTasks,
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import type { FC } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks }) => {
   const dispatch = useAppDispatch();
@@ -101,29 +101,17 @@ function setupHotkeys(
   onDuplicate: () => void,
   onDelete: () => void,
 ) {
-  useHotkeys(
-    'mod+d',
-    () => {
-      if (isFullscreenMenuOpen(store.getState().menuState)) return;
+  useHotkey(['mod+d'], () => {
+    if (isFullscreenMenuOpen(store.getState().menuState)) return;
 
-      onDuplicate();
-    },
-    {
-      enableOnFormTags: true,
-    },
-  );
-  useHotkeys(
-    'mod+p',
-    () => {
-      if (isFullscreenMenuOpen(store.getState().menuState)) return;
-      taskPinned ? onUnpin() : onPin();
-    },
-    {
-      enableOnFormTags: true,
-    },
-  );
+    onDuplicate();
+  });
+  useHotkey(['mod+p'], () => {
+    if (isFullscreenMenuOpen(store.getState().menuState)) return;
+    taskPinned ? onUnpin() : onPin();
+  });
 
-  useHotkeys('delete', () => {
+  useHotkey(['delete'], () => {
     if (isFullscreenMenuOpen(store.getState().menuState)) return;
     onDelete();
   });

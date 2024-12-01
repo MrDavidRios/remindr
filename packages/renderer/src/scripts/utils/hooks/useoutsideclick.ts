@@ -1,6 +1,5 @@
-import type { MutableRefObject, RefObject } from 'react';
+import type { RefObject } from 'react';
 import { useEffect, useRef } from 'react';
-import type { RefType } from 'react-hotkeys-hook/dist/types';
 
 const globalExceptions = ['.backdrop', '.full-window-container'];
 
@@ -19,7 +18,7 @@ export function useClickOutside(
   callback: () => void,
   exceptions: string[] = [],
   ignoreGlobalExceptions?: boolean,
-): MutableRefObject<RefType<HTMLElement>> {
+): RefObject<HTMLElement> {
   const domNodeRef = useRef() as RefObject<HTMLElement>;
 
   useEffect(() => {

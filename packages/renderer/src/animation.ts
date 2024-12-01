@@ -4,7 +4,6 @@ export const backdropAnimationProps = (animationsEnabled: boolean) => {
         animate: { opacity: 0.5 },
         initial: { opacity: 0 },
         exit: { opacity: 0 },
-        transition: { duration: 0.3 },
       }
     : {
         style: { opacity: 0.5 },
@@ -15,17 +14,6 @@ const popupMenuTransition = { ease: 'easeOut', duration: 0.2 };
 const popupMenuAnimationProps = {
   layout: true,
   transition: { popupMenuTransition },
-};
-
-export const menuAnimationProps = (animationsEnabled: boolean) => {
-  if (!animationsEnabled) return {};
-
-  return {
-    animate: { scale: 1 },
-    initial: { scale: 0.4 },
-    exit: { scale: 0.4, opacity: 0 },
-    transition: { type: 'spring', duration: 0.25 },
-  };
 };
 
 export const menuHeightAnimationProps = (animationsEnabled: boolean) => {

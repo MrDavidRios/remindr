@@ -1,16 +1,15 @@
 import { Menu, Task } from '@remindr/shared';
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { menuHeightAnimationProps } from '@renderer/animation';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { addTask } from '@renderer/features/task-list/taskListSlice';
 import { setEditedTask, setOriginalTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppStore } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { FC, HTMLProps, useEffect, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { TaskModificationInterface } from '../task-modification-menu/TaskModificationInterface';
 
 interface TaskCreateMenuProps extends HTMLProps<HTMLDivElement> {}
@@ -49,20 +48,13 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
       }
     : { style: { height: '520px' } };
 
-  useHotkeys(
-    'esc',
-    () => {
-      const menuState = store.getState().menuState;
-      const scheduledReminderEditMenuOpen = menuState.openMenus.includes(Menu.ScheduledReminderEditMenu);
-      if (isFullscreenMenuOpen(menuState) || scheduledReminderEditMenuOpen) return;
+  useHotkey(['esc'], () => {
+    const menuState = store.getState().menuState;
+    const scheduledReminderEditMenuOpen = menuState.openMenus.includes(Menu.ScheduledReminderEditMenu);
+    if (isFullscreenMenuOpen(menuState) || scheduledReminderEditMenuOpen) return;
 
-      dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true, fromEscKeypress: true }));
-    },
-    {
-      enableOnFormTags: true,
-      scopes: [HotkeyScope.Menu],
-    },
-  );
+    dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true, fromEscKeypress: true }));
+  });
 
   const ref = useClickOutside(async () => {
     const menuState = store.getState().menuState;

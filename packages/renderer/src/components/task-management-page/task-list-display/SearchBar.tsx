@@ -4,10 +4,10 @@ import { waitUntil } from '@remindr/shared';
 import { updateSearchQuery } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppStore } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isValidSearchString } from '@renderer/scripts/utils/searchutils';
 import { AnimatePresence, motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { memo, useEffect, useRef, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 export const SearchBar = memo(function SearchBar() {
   const dispatch = useAppDispatch();
@@ -62,9 +62,7 @@ export const SearchBar = memo(function SearchBar() {
       }
     : { style: { opacity: 1 } };
 
-  useHotkeys('mod+f', () => {
-    setShowSearchBar(true);
-  });
+  useHotkey(['mod+f'], () => setShowSearchBar(true));
 
   const toggleSearchBar = () => {
     if (showSearchBar) {

@@ -71,7 +71,7 @@ async function initializeDataListeners() {
   let userProfile: RemindrUser = JSON.parse(getUserProfile());
   let userDataSyncAmount = 0;
 
-  log.info('Initializing data listeners...');
+  log.info('(initializeDataListeners) Initializing data listeners...');
   userDataListener = onSnapshot(userDocRef, (docSnapshot) => {
     if (dataListenersRemoved) return;
 

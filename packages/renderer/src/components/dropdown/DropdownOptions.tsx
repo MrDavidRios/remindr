@@ -1,8 +1,7 @@
-import { HotkeyScope } from '@renderer-types/hotkeyScope';
 import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { useRef } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { RemoveScroll } from 'react-remove-scroll';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
 import type { DropdownProps } from './Dropdown';
@@ -17,7 +16,7 @@ export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
   const optionRefs = options.map(() => useRef(null));
   const animationsEnabled = useAnimationsEnabled();
 
-  useHotkeys('esc', () => closeDropdown(), { scopes: [HotkeyScope.Dropdown] });
+  useHotkey(['esc'], () => closeDropdown());
 
   return (
     <RemoveScroll>

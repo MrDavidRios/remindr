@@ -3,7 +3,6 @@ import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { showResetPasswordPrompt } from '@renderer/scripts/systems/authentication';
 import type { Dispatch, FC, SetStateAction } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { DropdownMenu } from '../dropdown-menu/DropdownMenu';
 
 interface AccountActionsMenuProps {
@@ -20,8 +19,6 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
   const dispatch = useAppDispatch();
 
   const email = useAppSelector((state) => state.userState.user?.email);
-
-  useHotkeys('esc', () => setShowAccountActionsMenu(false));
 
   function handleSignOutButtonClick() {
     dispatch(hideMenu({ menu: Menu.AccountMenu }));

@@ -5,17 +5,17 @@ import store from '@renderer/app/store';
 import { removeSelectedTask, setSelectedTask, undoTaskListChange } from '@renderer/features/task-list/taskListSlice';
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { useDispatch } from 'react-redux';
 
 let hideNotificationTimeout: NodeJS.Timeout;
 export function UndoNotification() {
   const dispatch = useDispatch();
 
-  useHotkeys('mod+z', () => {
+  useHotkey(['mod+z'], () => {
     if (isFullscreenMenuOpen(store.getState().menuState)) return;
     undoTaskAction();
   });
@@ -35,7 +35,7 @@ export function UndoNotification() {
     setShowUndoNotification(false);
   };
 
-  useHotkeys('mod+o', openTask);
+  useHotkey(['mod+o'], openTask);
 
   useEffect(() => {
     if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
