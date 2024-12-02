@@ -1,4 +1,4 @@
-import { Menu, MENU_TYPES } from '@remindr/shared';
+import { Menu, MENU_TYPES, MenuType } from '@remindr/shared';
 import store, { AppDispatch } from '@renderer/app/store';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { useEffect } from 'react';
@@ -9,9 +9,15 @@ import { isMenuOpen } from '../menuutils';
  * @param menu the menu we are closing with 'esc' keypress. If being used from a dropdown, this is its parent menu.
  * @param isDropdown
  */
-export function useEscToClose(dispatch: AppDispatch, menu: Menu) {
+export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
   const onEsc = () => {
-    let highestPriority = Infinity;
+    let menuWithHighestPriority: {
+      menu: Menu;
+      menuType: MenuType;
+    } = {
+      menu: Menu.None,
+      menuType: MenuType.None,
+    };
 
     const openMenus = store.getState().menuState.openMenus;
 
@@ -26,18 +32,23 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu) {
 
       console.log('open menu: ', Menu[openMenu], ', menu type: ', menuType);
 
-      if (menuType !== undefined) highestPriority = Math.min(menuType, highestPriority);
-    });
+      if (menuType === undefined) throw new Error(`Menu type not found for menu: ${Menu[openMenu]}`);
 
-    console.log('highest priority: ', highestPriority, '; menu: ', Menu[menu], menu, '\n===');
+      if (menuType < menuWithHighestPriority.menuType)
+        menuWithHighestPriority = {
+          menu: openMenu,
+          menuType,
+        };
+    });
 
     const menuPriority = MENU_TYPES.get(menu) ?? Infinity;
 
     const menuDropdownState = store.getState().menuState.openDropdowns[menu] ?? [];
     const menuHasOpenDropdowns = menuDropdownState.length > 0;
 
-    if (highestPriority >= menuPriority && !menuHasOpenDropdowns) {
+    if (menuWithHighestPriority.menuType >= menuPriority && !menuHasOpenDropdowns) {
       dispatch(hideMenu({ menu, fromEscKeypress: true }));
+    } else {
     }
   };
 

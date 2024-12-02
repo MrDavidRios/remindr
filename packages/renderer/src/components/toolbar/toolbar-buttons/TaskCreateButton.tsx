@@ -4,7 +4,7 @@ import { Menu } from '@remindr/shared';
 import type { AppDispatch } from '@renderer/app/store';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { clearSelectedTasks } from '@renderer/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isMenuOpen } from '@renderer/scripts/utils/menuutils';
@@ -13,6 +13,7 @@ import { type FC } from 'react';
 
 export const TaskCreateButton: FC = () => {
   const dispatch = useAppDispatch();
+  const store = useAppStore();
 
   const menuState = useAppSelector((state) => state.menuState);
   const animate = useAnimationsEnabled();
@@ -23,12 +24,7 @@ export const TaskCreateButton: FC = () => {
   const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
   useHotkey(['mod+n'], () => {
-    console.log(
-      '(TaskCreateButton) mod + n; open menus:',
-      menuState.openMenus.map((menu) => Menu[menu]),
-    );
-
-    if (isMenuOpen(menuState, Menu.TaskEditMenu)) {
+    if (store.getState().taskList.selectedTasks.length > 0) {
       dispatch(clearSelectedTasks());
     }
 
@@ -79,6 +75,6 @@ function closeTaskModificationMenu(menuState: MenuState, dispatch: AppDispatch) 
   }
 
   if (isMenuOpen(menuState, Menu.TaskCreateMenu)) {
-    dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true }));
+    dispatch(hideMenu({ menu: Menu.TaskCreateMenu /*, checkForUnsavedWork: true*/ }));
   }
 }

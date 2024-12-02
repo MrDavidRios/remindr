@@ -27,6 +27,7 @@ export enum MenuType {
   Floating,
   Secondary,
   Primary,
+  None = Infinity,
 }
 
 export interface MenuPosition {
