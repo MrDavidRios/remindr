@@ -56,7 +56,7 @@ function useMenuHotkeys(dispatch: AppDispatch, appMode: AppMode, authenticated: 
 
   useHotkey(['mod+a'], () => {
     const isOffline = appMode === AppMode.Offline;
-    // if (onLoginScreen || isOffline || !authenticated) return;
+    if (onLoginScreen || isOffline || !authenticated) return;
 
     dispatch(showMenu(Menu.AccountMenu));
   });

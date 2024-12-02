@@ -1,5 +1,5 @@
 import { AppMode, Menu } from '@remindr/shared';
-import { backdropAnimationProps } from '@renderer/animation';
+import { backdropAnimationProps, menuAnimationProps } from '@renderer/animation';
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
@@ -36,9 +36,9 @@ export const FullScreenMenu: FC<FullScreenMenuProps> = ({
       <ReactFocusLock returnFocus>
         <div className="full-window-container" style={style}>
           <motion.div className="backdrop" {...backdropAnimationProps(animate)} />
-          <div id={id} className={classes}>
+          <motion.div id={id} className={classes} {...menuAnimationProps(animate)}>
             {children}
-          </div>
+          </motion.div>
         </div>
       </ReactFocusLock>
     </FullScreenMenuContext.Provider>
