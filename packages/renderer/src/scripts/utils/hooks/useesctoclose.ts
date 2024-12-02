@@ -2,6 +2,7 @@ import { Menu, MENU_TYPES } from '@remindr/shared';
 import store, { AppDispatch } from '@renderer/app/store';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { useEffect } from 'react';
+import { isMenuOpen } from '../menuutils';
 
 /**
  * @param dispatch
@@ -13,15 +14,22 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu) {
     let highestPriority = Infinity;
 
     const openMenus = store.getState().menuState.openMenus;
+
+    console.log('(useEscToClose) attempting to close menu: ', Menu[menu]);
+    console.log(
+      'open menus:',
+      openMenus.map((openMenu) => Menu[openMenu]),
+    );
+
     openMenus.forEach((openMenu) => {
       const menuType = MENU_TYPES.get(openMenu);
 
-      // console.log('open menu: ', Menu[openMenu], ', menu type: ', menuType);
+      console.log('open menu: ', Menu[openMenu], ', menu type: ', menuType);
 
       if (menuType !== undefined) highestPriority = Math.min(menuType, highestPriority);
     });
 
-    // console.log('highest priority: ', highestPriority, '; menu: ', Menu[menu], menu, '\n===');
+    console.log('highest priority: ', highestPriority, '; menu: ', Menu[menu], menu, '\n===');
 
     const menuPriority = MENU_TYPES.get(menu) ?? Infinity;
 
@@ -34,7 +42,14 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu) {
   };
 
   const handler = (e: KeyboardEvent) => {
-    if (e.key.toLowerCase() === 'escape') onEsc();
+    if (e.key.toLowerCase() === 'escape') {
+      if (e.defaultPrevented) return;
+
+      if (isMenuOpen(store.getState().menuState, menu)) {
+        e.preventDefault();
+        onEsc();
+      }
+    }
   };
 
   useEffect(() => {
