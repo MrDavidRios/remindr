@@ -1,4 +1,4 @@
-import { Timeframe, timeframeDisplayNames } from '@remindr/shared';
+import { Menu, Timeframe, timeframeDisplayNames } from '@remindr/shared';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
@@ -14,6 +14,7 @@ export function TasksSettingsPage() {
       <div id="timeframeSettingDropdownWrapper">
         <p className="dropdown-label">When Remindr opens, load tasks for</p>
         <Dropdown
+          parentMenu={Menu.SettingsMenu}
           name="timeframe"
           options={Object.keys(Timeframe)}
           optionLabels={timeframeDisplayNames}

@@ -1,24 +1,16 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
 import { Menu, Timeframe } from '@remindr/shared';
 import { menuWidthAnimationProps } from '@renderer/animation';
-import type { AppDispatch } from '@renderer/app/store';
 import store from '@renderer/app/store';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { clearSelectedTasks, setTimeframe } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { getTaskListWithinTimeframe } from '@renderer/scripts/utils/getReminderListWithinTimeframe';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
+import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
 import { motion } from 'framer-motion';
 import { ArrowNavigable } from '../accessibility/ArrowNavigable';
-
-interface CloseMenuProps {
-  dispatch: AppDispatch;
-  enableScope: (scope: string) => void;
-  fromEscKeypress: boolean;
-  previouslyEnabledScopes: string[];
-}
 
 export function TimeframeSelectMenu() {
   const dispatch = useAppDispatch();
@@ -29,7 +21,7 @@ export function TimeframeSelectMenu() {
     ['#timeframeMenuButton'],
   );
 
-  useHotkey(['esc'], () => dispatch(hideMenu({ menu: Menu.TimeframeMenu, fromEscKeypress: true })));
+  useEscToClose(dispatch, Menu.TimeframeMenu);
 
   const selectTimeframe = (timeframe: Timeframe) => {
     dispatch(hideMenu({ menu: Menu.TimeframeMenu }));

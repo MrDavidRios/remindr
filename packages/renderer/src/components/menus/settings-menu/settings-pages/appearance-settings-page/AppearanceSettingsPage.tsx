@@ -1,5 +1,5 @@
 import imageIcon from '@assets/icons/image.svg';
-import { Theme, themeLabels } from '@remindr/shared';
+import { Menu, Theme, themeLabels } from '@remindr/shared';
 import type { AppDispatch } from '@renderer/app/store';
 import { ColorPicker } from '@renderer/components/color-picker/ColorPicker';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
@@ -117,6 +117,7 @@ export function AppearanceSettingsPage() {
           Theme
         </p>
         <Dropdown
+          parentMenu={Menu.SettingsMenu}
           name="theme"
           options={Object.keys(Theme)}
           optionLabels={themeLabels}

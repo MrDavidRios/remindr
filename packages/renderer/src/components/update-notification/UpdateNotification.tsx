@@ -1,7 +1,7 @@
 import { Menu, UpdateStatus } from '@remindr/shared';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
+import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { motion } from 'framer-motion';
 import { FC } from 'react';
 
@@ -12,7 +12,7 @@ export const UpdateNotification: FC = () => {
   const downloadedReleaseName = useAppSelector((state) => state.updateState.downloadedReleaseName);
   const enableAnimations = useAppSelector((state) => state.settings.value.enableAnimations);
 
-  useHotkey(['esc'], () => dispatch(hideMenu({ menu: Menu.UpdateNotification, fromEscKeypress: true })));
+  useEscToClose(dispatch, Menu.UpdateNotification);
 
   let message;
   let showRestartButton = false;

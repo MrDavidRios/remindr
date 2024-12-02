@@ -1,5 +1,5 @@
 import { Menu } from '@remindr/shared';
-import { hideMenu, setDialogResult } from '@renderer/features/menu-state/menuSlice';
+import { setDialogResult } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { FC } from 'react';
 import { FullScreenMenu } from '../menus/fullscreen-menu/FullScreenMenu';
@@ -10,12 +10,7 @@ export const MessageModal: FC = () => {
   const { title, message, options } = useAppSelector((state) => state.menuState.dialogInfo);
 
   return (
-    <FullScreenMenu
-      menuType={Menu.MessageModal}
-      className="menu with-title"
-      id="messageModal"
-      onClose={() => dispatch(hideMenu({ menu: Menu.MessageModal }))}
-    >
+    <FullScreenMenu menuType={Menu.MessageModal} className="menu with-title" id="messageModal">
       <div>
         {title && <h3>{title}</h3>}
         <p>{message}</p>

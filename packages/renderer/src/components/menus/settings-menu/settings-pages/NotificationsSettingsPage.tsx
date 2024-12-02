@@ -1,3 +1,4 @@
+import { Menu } from '@remindr/shared';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
@@ -49,6 +50,7 @@ export function NotificationsSettingsPage() {
       </div>
       <p style={{ padding: '10px 0' }}>Send notifications through:</p>
       <Dropdown
+        parentMenu={Menu.SettingsMenu}
         name="notificationSystem"
         options={[0, 1]}
         optionLabels={["Remindr's notification system", 'Native notification system']}

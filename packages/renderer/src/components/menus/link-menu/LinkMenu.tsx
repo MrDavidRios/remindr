@@ -87,13 +87,7 @@ export const LinkMenu: FC = () => {
   useHotkey(['mod+s'], handleLinkCompleteButton);
 
   return (
-    <FullScreenMenu
-      modal
-      menuType={Menu.LinkMenu}
-      className="menu"
-      id="linkMenu"
-      onClose={() => dispatch(hideMenu({ menu: Menu.LinkMenu }))}
-    >
+    <FullScreenMenu modal menuType={Menu.LinkMenu} className="menu" id="linkMenu">
       <div className="titlebar">
         <div>
           <h3>{`${creatingLink ? 'Add' : 'Edit'} Link`}</h3>
@@ -105,6 +99,7 @@ export const LinkMenu: FC = () => {
         <div>
           <p>Link type:</p>
           <Dropdown
+            parentMenu={Menu.LinkMenu}
             name="linkType"
             selectedIdx={Object.values(LinkType).indexOf(updatedLink.type)}
             options={Object.keys(LinkType)}

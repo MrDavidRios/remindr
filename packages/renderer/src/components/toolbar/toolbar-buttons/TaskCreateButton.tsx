@@ -7,7 +7,7 @@ import { clearSelectedTasks } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFullscreenMenuOpen, isMenuOpen } from '@renderer/scripts/utils/menuutils';
+import { isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
 import { type FC } from 'react';
 
@@ -23,7 +23,10 @@ export const TaskCreateButton: FC = () => {
   const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
   useHotkey(['mod+n'], () => {
-    if (isFullscreenMenuOpen(menuState)) return;
+    console.log(
+      '(TaskCreateButton) mod + n; open menus:',
+      menuState.openMenus.map((menu) => Menu[menu]),
+    );
 
     if (isMenuOpen(menuState, Menu.TaskEditMenu)) {
       dispatch(clearSelectedTasks());

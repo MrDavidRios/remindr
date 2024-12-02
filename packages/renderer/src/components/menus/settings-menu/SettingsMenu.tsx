@@ -1,6 +1,4 @@
 import { Menu } from '@remindr/shared';
-import { hideMenu } from '@renderer/features/menu-state/menuSlice';
-import { useAppDispatch } from '@renderer/hooks';
 import { useState } from 'react';
 import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
@@ -13,17 +11,10 @@ import { TasksSettingsPage } from './settings-pages/TasksSettingsPage';
 import { AppearanceSettingsPage } from './settings-pages/appearance-settings-page/AppearanceSettingsPage';
 
 export const SettingsMenu = () => {
-  const dispatch = useAppDispatch();
   const [page, setPage] = useState<SettingsPage>(SettingsPage.General);
 
-  console.log('we live on');
-
   return (
-    <FullScreenMenu
-      menuType={Menu.SettingsMenu}
-      id="settingsMenu"
-      onClose={() => dispatch(hideMenu({ menu: Menu.SettingsMenu }))}
-    >
+    <FullScreenMenu menuType={Menu.SettingsMenu} id="settingsMenu">
       <div id="settingsHeaderWrapper">
         <h2 id="settingsMenuHeader">Settings</h2>
         <CloseMenuButton id="settingsMenuCloseButton" />

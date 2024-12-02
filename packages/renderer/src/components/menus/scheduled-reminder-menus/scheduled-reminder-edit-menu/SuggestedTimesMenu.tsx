@@ -1,4 +1,4 @@
-import { addMinutes } from '@remindr/shared';
+import { addMinutes, Menu } from '@remindr/shared';
 import React from 'react';
 import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
@@ -22,6 +22,7 @@ export const SuggestedTimesMenu: React.FC<SuggestedTimesMenuProps> = ({
 
   return (
     <DropdownMenu
+      parentMenu={Menu.ScheduledReminderEditMenu}
       id="suggestedTimesMenu"
       onClose={() => setShowSuggestedTimesMenu(false)}
       clickOutsideExceptions={['#suggestedTimesInputButton']}

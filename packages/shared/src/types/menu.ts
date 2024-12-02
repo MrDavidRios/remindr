@@ -1,4 +1,5 @@
 import { Task } from './classes/index.js';
+import { MenuDropdownMap } from './index.js';
 
 export enum Menu {
   TimeframeMenu,
@@ -17,6 +18,15 @@ export enum Menu {
   HamburgerMenu,
   UpdateNotification,
   AddExistingReminderMenu,
+  /** Used in cases where a `Menu` type needs to be specified but no `Menu` values qualify. */
+  None,
+}
+
+export enum MenuType {
+  Modal,
+  Floating,
+  Secondary,
+  Primary,
 }
 
 export interface MenuPosition {
@@ -34,6 +44,7 @@ export interface MenuState {
   openContextMenus: ContextMenuType[];
   contextMenuPositions: Record<ContextMenuType, MenuPosition>;
   contextMenuTask?: Task;
+  openDropdowns: MenuDropdownMap;
   dialogInfo: DialogState;
   scheduledReminderEditorPosition: FloatingMenuPosition;
   addExistingReminderMenuPosition: FloatingMenuPosition;
@@ -59,19 +70,3 @@ export interface FloatingMenuPosition {
   yOffset: { topAnchored: number; bottomAnchored: number };
   gap: number;
 }
-
-export const primaryMenus = [Menu.AccountMenu, Menu.SettingsMenu];
-export const fullscreenMenus = [
-  Menu.AccountMenu,
-  Menu.SettingsMenu,
-  Menu.LinkMenu,
-  Menu.BackupDataMenu,
-  Menu.RestoreDataMenu,
-  Menu.MessageModal,
-];
-export const floatingMenus = [
-  Menu.HamburgerMenu,
-  Menu.UpdateNotification,
-  Menu.ScheduledReminderEditMenu,
-  Menu.AddExistingReminderMenu,
-];

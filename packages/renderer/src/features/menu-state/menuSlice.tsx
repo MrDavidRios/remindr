@@ -1,13 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import {
-  ContextMenuType,
-  DialogProps,
-  FloatingMenuPosition,
-  Menu,
-  MenuState,
-  Task,
-  floatingMenus,
-} from '@remindr/shared';
+import { ContextMenuType, DialogProps, FloatingMenuPosition, Menu, MenuState, Task } from '@remindr/shared';
 import { isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
 
@@ -18,6 +10,7 @@ export const initialMenuState: MenuState = {
     [ContextMenuType.TaskContextMenu]: { x: 0, y: 0 },
     [ContextMenuType.GeneralContextMenu]: { x: 0, y: 0 },
   },
+  openDropdowns: {},
   dialogInfo: { title: undefined, message: '', options: [], result: undefined },
   scheduledReminderEditorPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
   addExistingReminderMenuPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
@@ -32,33 +25,11 @@ export const menuStateSlice = createSlice({
 
       if (state.openMenus.includes(menu)) return;
 
-      // When opening a primary menu, close all other primary menus
       if (isPrimaryMenu(menu)) state.openMenus = state.openMenus.filter((openMenu) => !isPrimaryMenu(openMenu));
 
       state.openMenus.push(menu);
     },
-    hideMenu: (
-      state,
-      action: PayloadAction<{ menu: Menu; checkForUnsavedWork?: boolean; fromEscKeypress?: boolean }>,
-    ) => {
-      // If message modal is open, it should close first. Return
-      if (state.openMenus.includes(Menu.MessageModal) && action.payload.menu !== Menu.MessageModal) return;
-
-      // If a floating menu is open, it should close first. Return
-      const isFloatingMenu = floatingMenus.includes(action.payload.menu);
-
-      // Fixes bug where fullscreen menus (account, settings, etc.) would not close with 'esc' keypress if the scheduled reminder editor was open
-      const floatingMenuExceptions = [Menu.ScheduledReminderEditMenu];
-      const filteredFloatingMenus = floatingMenus.filter((menu) => !floatingMenuExceptions.includes(menu));
-
-      const floatingMenuOpen = state.openMenus.some((menu) => filteredFloatingMenus.includes(menu));
-      if (action.payload.fromEscKeypress && floatingMenuOpen && !isFloatingMenu) return;
-
-      // If the task creation or edit menus are being closed, close the scheduled reminder edit menu as well.
-      if (action.payload.menu === Menu.TaskCreateMenu || action.payload.menu === Menu.TaskEditMenu) {
-        _.remove(state.openMenus, (menu) => menu === Menu.ScheduledReminderEditMenu);
-      }
-
+    hideMenu: (state, action: PayloadAction<{ menu: Menu; fromEscKeypress?: boolean }>) => {
       _.remove(state.openMenus, (menu) => menu === action.payload.menu);
     },
     toggleMenu: (state, action: PayloadAction<Menu>) => {
@@ -99,6 +70,20 @@ export const menuStateSlice = createSlice({
       if (action.payload.menu === Menu.AddExistingReminderMenu)
         state.addExistingReminderMenuPosition = action.payload.positionInfo;
     },
+    openDropdown: (state, action: PayloadAction<{ menu: Menu; dropdownName: string }>) => {
+      const openDropdownsInMenu = state.openDropdowns[action.payload.menu] ?? [];
+
+      if (openDropdownsInMenu.includes(action.payload.dropdownName)) return;
+      openDropdownsInMenu.push(action.payload.dropdownName);
+
+      state.openDropdowns[action.payload.menu] = openDropdownsInMenu;
+    },
+    closeDropdown: (state, action: PayloadAction<{ menu: Menu; dropdownName: string }>) => {
+      const updatedDropdownState = state.openDropdowns[action.payload.menu] ?? [];
+      _.remove(updatedDropdownState, (dropdown) => dropdown === action.payload.dropdownName);
+
+      state.openDropdowns[action.payload.menu] = updatedDropdownState;
+    },
   },
 });
 
@@ -112,4 +97,6 @@ export const {
   showDialog,
   setDialogResult,
   setFloatingMenuPosition,
+  openDropdown,
+  closeDropdown,
 } = menuStateSlice.actions;

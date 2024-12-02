@@ -39,11 +39,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
   }
 
   return (
-    <FullScreenMenu
-      menuType={Menu.AccountDeleteMenu}
-      className="account-panel"
-      onClose={() => setShowAccountDeleteMenu(false)}
-    >
+    <FullScreenMenu menuType={Menu.AccountDeleteMenu} className="account-panel">
       <div id="accountPasswordResetMenuHeader">
         <h3 className="account-panel-header">Delete Account</h3>
         <CloseMenuButton id="accountDeletionAuthenticationWindowCloseButton" />

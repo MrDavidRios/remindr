@@ -1,4 +1,4 @@
-import { AppMode, appModeLabels, DateFormat, dateFormatDisplayNames, getDayNameFromIdx } from '@remindr/shared';
+import { AppMode, appModeLabels, DateFormat, dateFormatDisplayNames, getDayNameFromIdx, Menu } from '@remindr/shared';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
@@ -82,6 +82,7 @@ export function GeneralSettingsPage() {
       <div id="startupModeSettingDropdownWrapper">
         <p className="dropdown-label">Startup mode:</p>
         <Dropdown
+          parentMenu={Menu.SettingsMenu}
           name="appMode"
           options={Object.keys(AppMode)}
           optionLabels={appModeLabels}
@@ -104,6 +105,7 @@ export function GeneralSettingsPage() {
       <div id="weekStartSettingDropdownWrapper">
         <p className="dropdown-label">First day of week:</p>
         <Dropdown
+          parentMenu={Menu.SettingsMenu}
           name="weekStartDay"
           options={Array.from({ length: 7 }, (_, dayIdx) => dayIdx)}
           optionLabels={Array.from({ length: 7 }, (_, dayIdx) => getDayNameFromIdx(dayIdx, 0, false))}
@@ -122,6 +124,7 @@ export function GeneralSettingsPage() {
       <div id="dateFormatSettingDropdownWrapper">
         <p className="dropdown-label">Date format:</p>
         <Dropdown
+          parentMenu={Menu.SettingsMenu}
           name="dateFormat"
           options={Object.keys(DateFormat).filter((key) => !Number.isNaN(Number(key)))}
           optionLabels={dateFormatDisplayNames}

@@ -5,9 +5,8 @@ import { addTask } from '@renderer/features/task-list/taskListSlice';
 import { setEditedTask, setOriginalTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppStore } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
+import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
-import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
 import { FC, HTMLProps, useEffect, useState } from 'react';
 import { TaskModificationInterface } from '../task-modification-menu/TaskModificationInterface';
@@ -48,20 +47,10 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
       }
     : { style: { height: '520px' } };
 
-  useHotkey(['esc'], () => {
-    const menuState = store.getState().menuState;
-    const scheduledReminderEditMenuOpen = menuState.openMenus.includes(Menu.ScheduledReminderEditMenu);
-    if (isFullscreenMenuOpen(menuState) || scheduledReminderEditMenuOpen) return;
-
-    dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true, fromEscKeypress: true }));
-  });
+  useEscToClose(dispatch, Menu.TaskCreateMenu); /* checkForUnsavedWork: true */
 
   const ref = useClickOutside(async () => {
-    const menuState = store.getState().menuState;
-    const scheduledReminderEditMenuOpen = menuState.openMenus.includes(Menu.ScheduledReminderEditMenu);
-    if (isFullscreenMenuOpen(menuState) || scheduledReminderEditMenuOpen) return;
-
-    dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true }));
+    dispatch(hideMenu({ menu: Menu.TaskCreateMenu })); /* checkForUnsavedWork: true */
   }, ['#taskCreateButton', '#scheduledReminderEditMenu', '#linkMenu']);
 
   useEffect(() => {
@@ -86,7 +75,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
           if (animationsEnabled && !animationComplete) return;
 
           dispatch(addTask(task));
-          dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: false }));
+          dispatch(hideMenu({ menu: Menu.TaskCreateMenu /*checkForUnsavedWork: false*/ }));
         }}
       />
     </motion.div>

@@ -1,7 +1,6 @@
 import extraMenuIcon from '@assets/icons/extra-menu.png';
 import { Menu } from '@remindr/shared';
-import { hideMenu } from '@renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useAppSelector } from '@renderer/hooks';
 import { AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
@@ -12,7 +11,6 @@ import { AccountDetails } from './AccountDetails';
 import { EmailResetMenu } from './EmailResetMenu';
 
 export const AccountMenu = () => {
-  const dispatch = useAppDispatch();
   const userData = useAppSelector((state) => state.userState.user);
 
   const [showAccountActionsMenu, setShowAccountActionsMenu] = useState(false);
@@ -20,11 +18,7 @@ export const AccountMenu = () => {
   const [showAccountDeleteMenu, setShowAccountDeleteMenu] = useState(false);
 
   return (
-    <FullScreenMenu
-      menuType={Menu.AccountMenu}
-      id="accountMenu"
-      onClose={() => dispatch(hideMenu({ menu: Menu.AccountMenu }))}
-    >
+    <FullScreenMenu menuType={Menu.AccountMenu} id="accountMenu">
       <div id="accountMenuHeaderWrapper">
         <h2 id="accountMenuHeader">Account</h2>
         <button

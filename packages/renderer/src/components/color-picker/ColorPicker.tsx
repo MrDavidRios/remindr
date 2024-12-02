@@ -1,4 +1,4 @@
-import { escEvent } from '@remindr/shared';
+import { escEvent, Menu } from '@remindr/shared';
 import type { InputHTMLAttributes } from 'react';
 import React, { useEffect, useState } from 'react';
 import { ChromePicker } from 'react-color';
@@ -38,6 +38,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ initialColor, onUpdate
       />
       {pickerVisible && (
         <ModalWrapper
+          parentMenu={Menu.SettingsMenu}
           id="colorPickerWrapper"
           className="frosted"
           onClose={() => setPickerVisible(false)}

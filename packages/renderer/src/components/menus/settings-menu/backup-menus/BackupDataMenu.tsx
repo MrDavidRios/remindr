@@ -38,13 +38,7 @@ export const BackupDataMenu: FC = () => {
   }, [dataBackedUp]);
 
   return (
-    <FullScreenMenu
-      modal
-      menuType={Menu.BackupDataMenu}
-      className="menu"
-      id="backupDataMenu"
-      onClose={() => dispatch(hideMenu({ menu: Menu.BackupDataMenu }))}
-    >
+    <FullScreenMenu modal menuType={Menu.BackupDataMenu} className="menu" id="backupDataMenu">
       <div className="titlebar">
         <div>
           <h3>Backup Data</h3>

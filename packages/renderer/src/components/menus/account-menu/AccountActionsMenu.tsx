@@ -27,6 +27,7 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
 
   return (
     <DropdownMenu
+      parentMenu={Menu.AccountMenu}
       id="accountActionsMenu"
       onClose={() => setShowAccountActionsMenu(false)}
       clickOutsideExceptions={['#accountMenuSettingsButton']}

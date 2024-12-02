@@ -5,7 +5,7 @@ import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
-import type { FC } from 'react';
+import { type FC } from 'react';
 import ReactFocusLock from 'react-focus-lock';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 import { DropdownMenu } from '../../menus/dropdown-menu/DropdownMenu';
@@ -24,8 +24,9 @@ export const TaskViewSettingsDropdown: FC = () => {
 
   return (
     <DropdownMenu
-      className="menu context-menu"
+      parentMenu={Menu.None}
       id="taskListViewSettingsMenu"
+      className="menu context-menu"
       onClose={() => dispatch(hideMenu({ menu: Menu.TaskListViewSettingsMenu }))}
       clickOutsideExceptions={['#viewSettingsButton']}
       style={{ backgroundColor }}

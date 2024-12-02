@@ -1,4 +1,4 @@
-import { Repeat } from '@remindr/shared';
+import { Menu, Repeat } from '@remindr/shared';
 import React from 'react';
 import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
@@ -21,6 +21,7 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
 
   return (
     <DropdownMenu
+      parentMenu={Menu.ScheduledReminderEditMenu}
       id="repeatIntervalsMenu"
       onClose={() => setShowRepeatIntervalsMenu(false)}
       clickOutsideExceptions={['#repeatIntervalInputButton']}

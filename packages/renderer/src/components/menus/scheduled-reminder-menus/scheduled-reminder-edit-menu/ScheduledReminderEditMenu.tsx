@@ -15,7 +15,6 @@ import {
   standardToMilHour,
 } from '@remindr/shared';
 import { getTaskColumnIdx } from '@remindr/shared/src/utils';
-import store from '@renderer/app/store';
 import { DatePicker } from '@renderer/components/date-picker/DatePicker';
 import { FloatingMenu } from '@renderer/components/floating-menu/FloatingMenu';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
@@ -23,8 +22,8 @@ import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
+import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { RepeatIntervalPicker } from './RepeatIntervalPicker';
@@ -104,15 +103,7 @@ export const ScheduledReminderEditMenu: FC = () => {
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
   };
 
-  useHotkey(['esc'], () => {
-    const competingMenuOpen =
-      isPrimaryMenuOpen(store.getState().menuState) || isFullscreenMenuOpen(store.getState().menuState);
-    if (competingMenuOpen) return;
-
-    onMenuClose();
-
-    dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu, fromEscKeypress: true }));
-  });
+  useEscToClose(dispatch, Menu.ScheduledReminderEditMenu);
   useHotkey(['mod+s'], handleEditCompletion);
   useDetectWheel({
     element: document.querySelector('.task-modification-interface') as HTMLElement | undefined,

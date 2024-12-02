@@ -22,13 +22,7 @@ export const RestoreDataMenu: FC = () => {
   const disableRestore = !restoringTasks && !restoringSettings;
 
   return (
-    <FullScreenMenu
-      modal
-      menuType={Menu.RestoreDataMenu}
-      className="menu"
-      id="restoreDataMenu"
-      onClose={() => dispatch(hideMenu({ menu: Menu.RestoreDataMenu }))}
-    >
+    <FullScreenMenu modal menuType={Menu.RestoreDataMenu} className="menu" id="restoreDataMenu">
       <div className="titlebar">
         <div>
           <h3>Restore Data</h3>

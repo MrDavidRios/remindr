@@ -1,4 +1,7 @@
+import { Menu } from '@remindr/shared';
 import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
+import { closeDropdown, openDropdown } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
@@ -9,9 +12,12 @@ import { useEffect, useState } from 'react';
 
 // https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/examples/menu-button-links/
 interface DropdownMenuProps extends HTMLAttributes<HTMLUListElement> {
+  parentMenu: Menu;
+  id: string;
   children: ReactNode;
   onClose?: () => void;
   onBlur?: (e: FocusEvent<HTMLUListElement>) => void;
+  overrideEscBehavior?: boolean;
   clickOutsideExceptions?: string[];
   ignoreGlobalClickOutsideExceptions?: boolean;
   closeOnScroll?: boolean;
@@ -19,6 +25,7 @@ interface DropdownMenuProps extends HTMLAttributes<HTMLUListElement> {
 }
 
 export const DropdownMenu: FC<DropdownMenuProps> = ({
+  parentMenu,
   id,
   'aria-label': ariaLabel,
   children,
@@ -30,10 +37,22 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
   closeOnScroll,
   animate,
 }) => {
+  const dispatch = useAppDispatch();
+
   const [hideOverflow, setHideOverflow] = useState(true);
   const animationsEnabled = useAnimationsEnabled();
 
-  useHotkey(['esc'], () => onClose?.());
+  useEffect(() => {
+    dispatch(openDropdown({ menu: parentMenu, dropdownName: id }));
+  }, []);
+
+  const onCloseDropdown = () => {
+    dispatch(closeDropdown({ menu: parentMenu, dropdownName: id }));
+
+    onClose?.();
+  };
+
+  useHotkey(['esc'], () => onCloseDropdown());
 
   const height = useMotionValue(0);
   let lastFocusedIdx = -1;
@@ -98,13 +117,13 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
     menuItem.focus();
   }
 
-  const ref = useClickOutside(() => onClose?.(), clickOutsideExceptions, ignoreGlobalClickOutsideExceptions);
+  const ref = useClickOutside(() => onCloseDropdown(), clickOutsideExceptions, ignoreGlobalClickOutsideExceptions);
   useDetectWheel({
     element: document.body,
     callback: () => {
       if (!closeOnScroll) return;
 
-      onClose?.();
+      onCloseDropdown();
     },
   });
 

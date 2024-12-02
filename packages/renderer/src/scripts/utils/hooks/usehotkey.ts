@@ -7,13 +7,6 @@ const keyAbbreviations = new Map([
 
 function compareKeyCodeToEvent(keyCode: string, e: KeyboardEvent): boolean {
   const keywords = keyCode.split('+');
-
-  // console.log(
-  //   `(compareKeyCodeToEvent) - key abbreviation for ${e.key.toLowerCase()}: ${keyAbbreviations.get(
-  //     e.key.toLowerCase(),
-  //   )}`,
-  // );
-
   const eventKey = keyAbbreviations.get(e.key.toLowerCase()) ?? e.key.toLowerCase();
 
   let hasShift = false;
@@ -41,8 +34,6 @@ function compareKeyCodeToEvent(keyCode: string, e: KeyboardEvent): boolean {
   if (key === '') {
     throw new Error(`parseKeyCode: No key provided; key code: ${keyCode}`);
   }
-
-  console.log(`(compareKeyCodeToEvent) keys: ${key} vs. ${eventKey}, mod: ${hasMod} vs. ${e.metaKey}`);
 
   if (hasShift != e.shiftKey) return false;
 

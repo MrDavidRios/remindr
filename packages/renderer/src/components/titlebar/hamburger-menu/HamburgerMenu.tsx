@@ -5,7 +5,7 @@ import { AppMode, delay, Menu } from '@remindr/shared';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { rgbaToHex } from '@renderer/scripts/utils/colorutils';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
+import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { useRef, useState } from 'react';
 import { ArrowNavigable } from '../../accessibility/ArrowNavigable';
 
@@ -20,7 +20,7 @@ export function HamburgerMenu() {
   const [showHelpSubmenu, setShowHelpSubmenu] = useState(false);
 
   const ref = useClickOutside(() => dispatch(hideMenu({ menu: Menu.HamburgerMenu })), undefined, true);
-  useHotkey(['esc'], () => dispatch(hideMenu({ menu: Menu.HamburgerMenu })));
+  useEscToClose(dispatch, Menu.HamburgerMenu);
 
   const maxFileDropdownHeight = authenticated ? '85px' : '60px';
 

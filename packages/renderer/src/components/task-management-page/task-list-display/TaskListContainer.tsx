@@ -4,7 +4,6 @@ import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '@render
 import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
 import { getAccentColor } from '@renderer/scripts/systems/stylemanager';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFloatingMenuOpen, isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import HashLoader from 'react-spinners/HashLoader';
@@ -26,18 +25,9 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
   const columnView = taskView === Page.ColumnView;
 
   // Deselect all tasks on esc keypress
-  useHotkey(
-    ['esc'],
-    () => {
-      if (isFullscreenMenuOpen(store.getState().menuState) || isFloatingMenuOpen(store.getState().menuState)) return;
-
-      dispatch(clearSelectedTasks());
-    },
-    // {
-    //   enableOnFormTags: true,
-    //   scopes: [HotkeyScope.Menu],
-    // },
-  );
+  useHotkey(['esc'], () => {
+    dispatch(clearSelectedTasks());
+  });
 
   useEffect(() => {
     attemptGetTaskList(taskListGetStatus, dispatch);

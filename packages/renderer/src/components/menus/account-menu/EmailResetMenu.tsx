@@ -110,12 +110,7 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
   }
 
   return (
-    <FullScreenMenu
-      menuType={Menu.EmailResetMenu}
-      modal
-      className="account-panel"
-      onClose={() => setShowEmailResetMenu(false)}
-    >
+    <FullScreenMenu menuType={Menu.EmailResetMenu} modal className="account-panel">
       <div id="accountPasswordResetMenuHeader">
         <h3 className="account-panel-header">Reset Email</h3>
         <CloseMenuButton id="emailResetMenuCloseButton" />

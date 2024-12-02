@@ -1,7 +1,6 @@
 import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { Menu, Task, waitUntil } from '@remindr/shared';
 import { AppDispatch, RootState } from '@renderer/app/store';
-import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
 import { hideMenu, showDialog, showMenu } from '../menuSlice';
 
@@ -19,9 +18,6 @@ startListeningForHideMenu({
     if (taskCreateMenu?.classList.contains('closing')) return;
 
     listenerApi.cancelActiveListeners();
-
-    const fullscreenMenuOpen = isFullscreenMenuOpen(listenerApi.getState().menuState);
-    if (fullscreenMenuOpen) return;
 
     const createdTaskState = listenerApi.getState().taskModificationState.taskCreationState.editedTask ?? new Task('');
     const createdTask = JSON.parse(JSON.stringify(createdTaskState));

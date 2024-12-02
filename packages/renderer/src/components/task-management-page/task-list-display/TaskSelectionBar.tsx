@@ -3,7 +3,6 @@ import pinIcon from '@assets/icons/pin.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import unpinIcon from '@assets/icons/unpin.svg';
 import type { Task } from '@remindr/shared';
-import store from '@renderer/app/store';
 import {
   clearSelectedTasks,
   duplicateTasks,
@@ -13,7 +12,6 @@ import {
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import type { FC } from 'react';
 
 export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks }) => {
@@ -102,17 +100,13 @@ function setupHotkeys(
   onDelete: () => void,
 ) {
   useHotkey(['mod+d'], () => {
-    if (isFullscreenMenuOpen(store.getState().menuState)) return;
-
     onDuplicate();
   });
   useHotkey(['mod+p'], () => {
-    if (isFullscreenMenuOpen(store.getState().menuState)) return;
     taskPinned ? onUnpin() : onPin();
   });
 
   useHotkey(['delete'], () => {
-    if (isFullscreenMenuOpen(store.getState().menuState)) return;
     onDelete();
   });
 }

@@ -16,7 +16,7 @@ import {
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFullscreenMenuOpen, isMenuOpen } from '@renderer/scripts/utils/menuutils';
+import { isMenuOpen } from '@renderer/scripts/utils/menuutils';
 import type { FC } from 'react';
 
 interface ActionBarProps {
@@ -109,42 +109,21 @@ function useSetupHotkeys(task: Task, creatingTask: boolean, onSave: (task: Task)
   useHotkey(['mod+s'], (e) => {
     const taskCreationMenuOpen = isMenuOpen(store.getState().menuState, Menu.TaskCreateMenu);
 
-    if (
-      isFullscreenMenuOpen(store.getState().menuState) ||
-      isMenuOpen(store.getState().menuState, Menu.ScheduledReminderEditMenu) ||
-      !taskCreationMenuOpen ||
-      e.repeat
-    )
-      return;
+    if (!taskCreationMenuOpen || e.repeat) return;
     onSave(task);
   });
   useHotkey(['mod+d'], () => {
-    if (
-      isFullscreenMenuOpen(store.getState().menuState) ||
-      !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) ||
-      creatingTask
-    )
-      return;
+    if (creatingTask) return;
 
     duplicateEditedTask(task, dispatch);
   });
   useHotkey(['mod+p'], () => {
-    if (
-      isFullscreenMenuOpen(store.getState().menuState) ||
-      !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) ||
-      creatingTask
-    )
-      return;
+    if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
     togglePinOnTask(task, dispatch);
   });
 
   useHotkey(['delete'], () => {
-    if (
-      isFullscreenMenuOpen(store.getState().menuState) ||
-      !isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) ||
-      creatingTask
-    )
-      return;
+    if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
     deleteTask(task, dispatch);
   });
 }

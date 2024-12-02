@@ -1,12 +1,4 @@
-import {
-  ContextMenuType,
-  Menu,
-  MenuRect,
-  MenuState,
-  floatingMenus,
-  fullscreenMenus,
-  primaryMenus,
-} from '@remindr/shared';
+import { ContextMenuType, MENU_TYPES, Menu, MenuRect, MenuState, MenuType } from '@remindr/shared';
 
 /**
  * Carries out the given callback only if both the task creation and edit menus are closed.
@@ -25,35 +17,11 @@ export function isMenuOpen(state: MenuState, menu: Menu) {
   return state.openMenus.includes(menu);
 }
 
-export function isPrimaryMenuOpen(state: MenuState) {
-  for (const primaryMenu of primaryMenus) {
-    if (state.openMenus.includes(primaryMenu)) return true;
-  }
-
-  return false;
-}
-
-export function isFullscreenMenuOpen(state: MenuState) {
-  for (const fullscreenMenu of fullscreenMenus) {
-    if (state.openMenus.includes(fullscreenMenu)) return true;
-  }
-
-  return false;
-}
-
-export function isFloatingMenuOpen(state: MenuState) {
-  for (const floatingMenu of floatingMenus) {
-    if (state.openMenus.includes(floatingMenu)) return true;
-  }
-
-  return false;
-}
-
 export function isContextMenuOpen(state: MenuState, contextMenu: ContextMenuType) {
   return state.openContextMenus.includes(contextMenu);
 }
 
-export const isPrimaryMenu = (menu: Menu) => primaryMenus.includes(menu);
+export const isPrimaryMenu = (menu: Menu) => MENU_TYPES.get(menu) === MenuType.Primary;
 
 export const convertDOMRectToMenuRect = (rect?: DOMRect): MenuRect | undefined => {
   if (!rect) return undefined;

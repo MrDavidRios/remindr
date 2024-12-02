@@ -1,12 +1,10 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
 import openIcon from '@assets/icons/open.svg';
 import { getTaskListActionVerb, Task } from '@remindr/shared';
-import store from '@renderer/app/store';
 import { removeSelectedTask, setSelectedTask, undoTaskListChange } from '@renderer/features/task-list/taskListSlice';
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFullscreenMenuOpen } from '@renderer/scripts/utils/menuutils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -16,7 +14,6 @@ export function UndoNotification() {
   const dispatch = useDispatch();
 
   useHotkey(['mod+z'], () => {
-    if (isFullscreenMenuOpen(store.getState().menuState)) return;
     undoTaskAction();
   });
 

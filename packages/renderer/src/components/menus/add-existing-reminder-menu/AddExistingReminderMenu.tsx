@@ -1,15 +1,13 @@
 import closeButtonIcon from '@assets/icons/close-button.svg';
 import searchIcon from '@assets/icons/search.svg';
 import { Menu, Task } from '@remindr/shared';
-import store from '@renderer/app/store';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { FloatingMenu } from '@renderer/components/floating-menu/FloatingMenu';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { isFullscreenMenuOpen, isPrimaryMenuOpen } from '@renderer/scripts/utils/menuutils';
+import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { isValidSearchString, searchTasks } from '@renderer/scripts/utils/searchutils';
 import { FC, useState } from 'react';
 import ReactFocusLock from 'react-focus-lock';
@@ -30,15 +28,8 @@ export const AddExistingReminderMenu: FC = () => {
     ? searchTasks(reminderlessTasks, searchQuery)
     : reminderlessTasks;
 
-  useHotkey(['esc'], () => {
-    const competingMenuOpen =
-      isPrimaryMenuOpen(store.getState().menuState) || isFullscreenMenuOpen(store.getState().menuState);
-    if (competingMenuOpen) return;
-
-    dispatch(hideMenu({ menu: Menu.AddExistingReminderMenu, fromEscKeypress: true }));
-  });
-
   const closeMenu = () => dispatch(hideMenu({ menu: Menu.AddExistingReminderMenu }));
+  useEscToClose(dispatch, Menu.AddExistingReminderMenu);
 
   // Hide menu when scrolling on task list container
   useDetectWheel({

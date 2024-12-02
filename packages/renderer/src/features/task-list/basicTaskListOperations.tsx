@@ -48,15 +48,12 @@ export const updateTaskReducer = (
   action: PayloadAction<InstanceType<typeof Task>>,
   saveData: (taskList: Task[]) => void,
 ) => {
-  console.log('updating task...');
-
   const taskIdx = getTaskIdx(action.payload, state.value);
 
   const oldTaskState: Task = JSON.parse(JSON.stringify(state.value[taskIdx]));
 
   // Don't do anything if no changes were made
   if (_.isEqual(oldTaskState, action.payload)) {
-    console.log('same shit lol', oldTaskState, action.payload);
     return;
   }
 

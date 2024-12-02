@@ -1,8 +1,12 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
+import { Menu } from '@remindr/shared';
+import { closeDropdown, openDropdown } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
 import { useState } from 'react';
 import { DropdownOptions } from './DropdownOptions';
 
 export interface DropdownProps<T> {
+  parentMenu: Menu;
   name: string;
   options: T[];
   optionLabels: string[];
@@ -12,17 +16,35 @@ export interface DropdownProps<T> {
 }
 
 export function Dropdown<T>(props: DropdownProps<T>) {
-  const { name, options, optionLabels, selectedIdx: initialSelectedIdx = 0, onSelect, scrollParentId } = props;
+  const dispatch = useAppDispatch();
+
+  const {
+    parentMenu,
+    name,
+    options,
+    optionLabels,
+    selectedIdx: initialSelectedIdx = 0,
+    onSelect,
+    scrollParentId,
+  } = props;
 
   const [selectedIdx, setSelectedIdx] = useState(initialSelectedIdx);
 
   const [isOpen, setIsOpen] = useState(false);
-  const toggleOpen = () => (isOpen ? closeDropdown() : openDropdown());
+  const toggleOpen = () => (isOpen ? onCloseDropdown() : onOpenDropdown());
 
-  const openDropdown = () => setIsOpen(true);
-  const closeDropdown = () => setIsOpen(false);
+  const onOpenDropdown = () => {
+    dispatch(openDropdown({ menu: parentMenu, dropdownName: name }));
 
-  const dropdownMenuRef = useClickOutside(() => closeDropdown(), [], true);
+    setIsOpen(true);
+  };
+  const onCloseDropdown = () => {
+    dispatch(closeDropdown({ menu: parentMenu, dropdownName: name }));
+
+    setIsOpen(false);
+  };
+
+  const dropdownMenuRef = useClickOutside(() => onCloseDropdown(), [], true);
 
   const dropdownMenuButtonHeight = dropdownMenuRef.current?.clientHeight ?? 0;
   const scrollParentElement =
@@ -37,7 +59,7 @@ export function Dropdown<T>(props: DropdownProps<T>) {
       ref={dropdownMenuRef as unknown as React.RefObject<HTMLButtonElement>}
       onClick={toggleOpen}
       onKeyDown={(e) => {
-        if (e.key === 'Tab') closeDropdown();
+        if (e.key === 'Tab') onCloseDropdown();
       }}
       type="button"
       aria-controls={`${name}Listbox`}
@@ -47,6 +69,7 @@ export function Dropdown<T>(props: DropdownProps<T>) {
     >
       {isOpen && (
         <DropdownOptions
+          parentMenu={parentMenu}
           name={name}
           options={options}
           optionLabels={optionLabels}
@@ -56,7 +79,7 @@ export function Dropdown<T>(props: DropdownProps<T>) {
             onSelect(idx);
           }}
           closeDropdown={() => {
-            closeDropdown();
+            onCloseDropdown();
             dropdownMenuRef.current?.focus();
           }}
         />
