@@ -14,6 +14,7 @@ import {
   removeTask,
   togglePinTask,
 } from '@renderer/features/task-list/taskListSlice';
+import { getEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { isMenuOpen } from '@renderer/scripts/utils/menuutils';
@@ -22,13 +23,13 @@ import type { FC } from 'react';
 interface ActionBarProps {
   task: Task;
   creatingTask: boolean;
-  onSave: (task: Task) => void;
+  onSave: () => void;
 }
 
 export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) => {
   const dispatch = useAppDispatch();
 
-  useSetupHotkeys(task, creatingTask, onSave, dispatch);
+  useSetupHotkeys(creatingTask, onSave, dispatch);
 
   return (
     <div id="taskActionsBar" className={!creatingTask ? '' : 'action-buttons-hidden'}>
@@ -36,7 +37,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
         <button
           id="saveTaskButton"
           className="action-button accessible-button"
-          onClick={() => onSave(task)}
+          onClick={() => onSave()}
           type="button"
           title="Save Changes (Ctrl + S)"
           aria-label="Save Changes"
@@ -62,7 +63,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
               <button
                 className="action-button accessible-button"
                 id="unpinBtn"
-                onClick={() => togglePinOnTask(task, dispatch)}
+                onClick={() => togglePinOnEditedTask(dispatch)}
                 type="button"
                 title="Unpin (Ctrl + P)"
                 aria-label="Unpin Task"
@@ -72,7 +73,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
             ) : (
               <button
                 className="action-button accessible-button"
-                onClick={() => togglePinOnTask(task, dispatch)}
+                onClick={() => togglePinOnEditedTask(dispatch)}
                 type="button"
                 title="Pin (Ctrl + P)"
                 aria-label="Pin Task"
@@ -82,7 +83,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
             )}
             <button
               className="action-button accessible-button"
-              onClick={() => duplicateEditedTask(task, dispatch)}
+              onClick={() => duplicateEditedTask(dispatch)}
               type="button"
               title="Duplicate (Ctrl + D)"
               aria-label="Duplicate Task"
@@ -91,7 +92,7 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
             </button>
             <button
               className="action-button accessible-button"
-              onClick={() => deleteTask(task, dispatch)}
+              onClick={() => removeEditedTask(dispatch)}
               type="button"
               title="Delete (Del)"
               aria-label="Delete Task"
@@ -105,40 +106,52 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
   );
 };
 
-function useSetupHotkeys(task: Task, creatingTask: boolean, onSave: (task: Task) => void, dispatch: AppDispatch) {
+function useSetupHotkeys(creatingTask: boolean, onSave: () => void, dispatch: AppDispatch) {
   useHotkey(['mod+s'], (e) => {
     const taskCreationMenuOpen = isMenuOpen(store.getState().menuState, Menu.TaskCreateMenu);
 
     if (!taskCreationMenuOpen || e.repeat) return;
-    onSave(task);
+
+    onSave();
   });
   useHotkey(['mod+d'], () => {
     if (creatingTask) return;
 
-    duplicateEditedTask(task, dispatch);
+    duplicateEditedTask(dispatch);
   });
   useHotkey(['mod+p'], () => {
     if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
-    togglePinOnTask(task, dispatch);
+
+    togglePinOnEditedTask(dispatch);
   });
 
   useHotkey(['delete'], () => {
     if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
-    deleteTask(task, dispatch);
+
+    removeEditedTask(dispatch);
   });
 }
 
-function togglePinOnTask(task: Task, dispatch: AppDispatch) {
+function togglePinOnEditedTask(dispatch: AppDispatch) {
+  const task = getEditedTask(store.getState().taskModificationState);
+  if (!task) return;
+
   dispatch(togglePinTask(task));
   dispatch(clearSelectedTasks());
 }
 
-function deleteTask(task: Task, dispatch: AppDispatch) {
+function removeEditedTask(dispatch: AppDispatch) {
+  const task = getEditedTask(store.getState().taskModificationState);
+  if (!task) return;
+
   dispatch(removeTask(task));
   dispatch(clearSelectedTasks());
 }
 
-function duplicateEditedTask(task: Task, dispatch: AppDispatch) {
+function duplicateEditedTask(dispatch: AppDispatch) {
+  const task = getEditedTask(store.getState().taskModificationState);
+  if (!task) return;
+
   dispatch(duplicateTask(task));
   dispatch(clearSelectedTasks());
 }

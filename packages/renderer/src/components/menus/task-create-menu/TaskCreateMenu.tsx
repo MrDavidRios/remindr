@@ -3,26 +3,30 @@ import { menuHeightAnimationProps } from '@renderer/animation';
 import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { addTask } from '@renderer/features/task-list/taskListSlice';
 import { setEditedTask, setOriginalTask } from '@renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppStore } from '@renderer/hooks';
+import { useAppDispatch } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
-import { FC, HTMLProps, useEffect, useState } from 'react';
+import { FC, HTMLProps, useEffect, useRef, useState } from 'react';
 import { TaskModificationInterface } from '../task-modification-menu/TaskModificationInterface';
 
 interface TaskCreateMenuProps extends HTMLProps<HTMLDivElement> {}
 
 export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
   const dispatch = useAppDispatch();
-  const store = useAppStore();
 
   const animationsEnabled = useAnimationsEnabled();
-  const [animationComplete, setAnimationComplete] = useState(!animationsEnabled);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const animationCompleteRef = useRef<boolean>();
   const [closing, setClosing] = useState(false);
 
+  animationCompleteRef.current = animationComplete;
+
   const height = useMotionValue(animationsEnabled ? 0 : 520);
-  useMotionValueEvent(height, 'animationCancel', () => setAnimationComplete(false));
+  useMotionValueEvent(height, 'animationCancel', () => {
+    setAnimationComplete(false);
+  });
   useMotionValueEvent(height, 'animationStart', () => {
     if (parseInt((height.get() as unknown as string).slice(0, -2), 10) > 500) {
       setClosing(true);
@@ -72,7 +76,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
         creating
         onSave={(task: Task) => {
           // If the menu is opening/closing, don't save - this mitigates repeated task saves/creations
-          if (animationsEnabled && !animationComplete) return;
+          if (animationsEnabled && !animationCompleteRef.current) return;
 
           dispatch(addTask(task));
           dispatch(hideMenu({ menu: Menu.TaskCreateMenu /*checkForUnsavedWork: false*/ }));

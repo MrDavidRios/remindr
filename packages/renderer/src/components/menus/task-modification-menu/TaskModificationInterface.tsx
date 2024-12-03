@@ -6,7 +6,7 @@ import { Task, formatDateAndTime } from '@remindr/shared';
 import { showDialog } from '@renderer/features/menu-state/menuSlice';
 import { updateTask } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
 import type { FC } from 'react';
 import { DynamicTextArea } from '../../dynamic-text-area/DynamicTextArea';
 import { ActionBar } from './ActionBar';
@@ -27,6 +27,7 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
   onSave,
 }) => {
   const dispatch = useAppDispatch();
+  const store = useAppStore();
 
   const fallbackTask = JSON.parse(JSON.stringify(new Task(''))) as Task;
   const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState, creating)) ?? fallbackTask;
@@ -39,9 +40,10 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
    * @returns
    */
   async function save(task?: Task) {
-    const taskToSave = task ?? editedTask;
+    const currentEditedTask = getEditedTask(store.getState().taskModificationState, creating) ?? fallbackTask;
+    const taskToSave = task ?? currentEditedTask;
 
-    console.log('SAVE', taskToSave);
+    console.log('(TaskModificationInterface): SAVE', taskToSave, 'creating: ', creating);
 
     if (taskToSave.name.trim() === '') {
       dispatch(showDialog({ title: 'Invalid Name', message: 'Make sure your task has a name.' }));
@@ -131,7 +133,7 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
               editedTaskClone.subtasks = JSON.parse(JSON.stringify(subtasks));
               dispatch(setEditedTask({ creating, task: editedTaskClone }));
             }}
-            onSaveableChange={(subtasks: Subtask[]) => {
+            onSaveableChange={() => {
               if (!creating) save();
             }}
           />
