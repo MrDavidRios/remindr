@@ -1,3 +1,5 @@
+import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
 import React, { useContext } from 'react';
 import { FullScreenMenuContext } from '../menus/fullscreen-menu/FullScreenMenu';
 
@@ -7,11 +9,12 @@ import { FullScreenMenuContext } from '../menus/fullscreen-menu/FullScreenMenu';
  * @returns
  */
 export const DismissButton: React.FC = () => {
-  const { onClose } = useContext(FullScreenMenuContext);
+  const dispatch = useAppDispatch();
+  const { menuType } = useContext(FullScreenMenuContext);
 
   return (
     <div className="dismiss-button-wrapper">
-      <button className="primary-button" onClick={onClose} type="button">
+      <button className="primary-button" onClick={() => dispatch(hideMenu({ menu: menuType }))} type="button">
         Dismiss
       </button>
     </div>

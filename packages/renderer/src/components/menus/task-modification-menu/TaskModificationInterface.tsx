@@ -41,6 +41,8 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
   async function save(task?: Task) {
     const taskToSave = task ?? editedTask;
 
+    console.log('SAVE', taskToSave);
+
     if (taskToSave.name.trim() === '') {
       dispatch(showDialog({ title: 'Invalid Name', message: 'Make sure your task has a name.' }));
       return;

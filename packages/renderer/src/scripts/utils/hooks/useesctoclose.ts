@@ -10,6 +10,9 @@ import { isMenuOpen } from '../menuutils';
  * @param isDropdown
  */
 export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
+  /**
+   * @returns true if the menu was closed, false otherwise
+   */
   const onEsc = () => {
     let menuWithHighestPriority: {
       menu: Menu;
@@ -34,11 +37,12 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
 
       if (menuType === undefined) throw new Error(`Menu type not found for menu: ${Menu[openMenu]}`);
 
-      if (menuType < menuWithHighestPriority.menuType)
+      if (menuType < menuWithHighestPriority.menuType) {
         menuWithHighestPriority = {
           menu: openMenu,
           menuType,
         };
+      }
     });
 
     const menuPriority = MENU_TYPES.get(menu) ?? Infinity;
@@ -48,8 +52,10 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
 
     if (menuWithHighestPriority.menuType >= menuPriority && !menuHasOpenDropdowns) {
       dispatch(hideMenu({ menu, fromEscKeypress: true }));
-    } else {
+      return true;
     }
+
+    return false;
   };
 
   const handler = (e: KeyboardEvent) => {
@@ -57,8 +63,8 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
       if (e.defaultPrevented) return;
 
       if (isMenuOpen(store.getState().menuState, menu)) {
-        e.preventDefault();
-        onEsc();
+        const menuClosed = onEsc();
+        if (menuClosed) e.preventDefault();
       }
     }
   };
