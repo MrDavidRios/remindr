@@ -186,6 +186,14 @@ export const taskListSlice = createSlice({
     setTaskDisplayOutdated: (state, action: PayloadAction<boolean>) => {
       state.taskListDisplayOutdated = action.payload;
     },
+    selectLastModifiedTask: (state) => {
+      if (!state.lastTaskListAction) return;
+
+      const taskIdx = getTaskIdx(state.lastTaskListAction.task, state.value);
+      if (taskIdx === -1) return;
+
+      state.selectedTasks = [state.value[taskIdx]];
+    },
     undoTaskListChange: (state) => {
       if (!state.lastTaskListAction) return;
       if (state.lastTaskListAction.undone) return;
@@ -333,6 +341,7 @@ export const {
   clearSelectedTasks,
   selectTasksBetween,
   setTaskDisplayOutdated,
+  selectLastModifiedTask,
   undoTaskListChange,
   advanceRecurringReminder,
   updateTaskGroupOrder,

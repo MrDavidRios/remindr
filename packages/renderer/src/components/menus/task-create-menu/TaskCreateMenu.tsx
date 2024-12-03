@@ -21,6 +21,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
   const animationCompleteRef = useRef<boolean>();
   const [closing, setClosing] = useState(false);
 
+  // Allows TaskModificationInterface -> onSave callback function to access the updated value of animationComplete
   animationCompleteRef.current = animationComplete;
 
   const height = useMotionValue(animationsEnabled ? 0 : 520);

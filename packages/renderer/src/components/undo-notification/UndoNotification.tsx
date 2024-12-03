@@ -1,16 +1,20 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
 import openIcon from '@assets/icons/open.svg';
-import { getTaskListActionVerb, Task } from '@remindr/shared';
-import { removeSelectedTask, setSelectedTask, undoTaskListChange } from '@renderer/features/task-list/taskListSlice';
+import { getTaskListActionVerb } from '@remindr/shared';
+import {
+  removeSelectedTask,
+  selectLastModifiedTask,
+  undoTaskListChange,
+} from '@renderer/features/task-list/taskListSlice';
 import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 let hideNotificationTimeout: NodeJS.Timeout;
-export function UndoNotification() {
+export const UndoNotification: FC = () => {
   const dispatch = useDispatch();
 
   useHotkey(['mod+z'], () => {
@@ -18,21 +22,20 @@ export function UndoNotification() {
   });
 
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
-  const updatedTask = useAppSelector(
-    (state) => state.taskList.value.filter((t: Task) => t.creationTime === undoState?.task.creationTime)[0],
-  );
   const [showUndoNotification, setShowUndoNotification] = useState(false);
+  const undoNotificationShowing = useRef<boolean>(false);
+  undoNotificationShowing.current = showUndoNotification;
 
-  const canOpenTask = updatedTask && undoState?.type !== 'remove';
+  const canOpenTask = undoState?.type !== 'remove';
   const openTask = () => {
     // Don't open the task if the undo notification isn't showing
-    if (!showUndoNotification) return;
+    if (!undoNotificationShowing.current) return;
 
-    dispatch(setSelectedTask(updatedTask));
+    dispatch(selectLastModifiedTask());
     setShowUndoNotification(false);
   };
 
-  useHotkey(['mod+o'], openTask);
+  useHotkey(['mod+o'], () => openTask());
 
   useEffect(() => {
     if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
@@ -107,4 +110,4 @@ export function UndoNotification() {
       )}
     </AnimatePresence>
   );
-}
+};
