@@ -5,7 +5,7 @@ import skipIcon from '@assets/icons/skip.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import unpinIcon from '@assets/icons/unpin.svg';
 import type { Task } from '@remindr/shared';
-import { ContextMenuType, Page, TASK_COLUMNS, taskHasReminders } from '@remindr/shared';
+import { ContextMenuType, Menu, Page, TASK_COLUMNS, taskHasReminders } from '@remindr/shared';
 import store from '@renderer/app/store';
 import { hideContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
@@ -36,9 +36,21 @@ export const TaskContextMenu: React.FC = () => {
   const hideTaskContextMenu = (fromEscKeypress: boolean) =>
     dispatch(hideContextMenu(ContextMenuType.TaskContextMenu), { fromEscKeypress });
 
-  useHotkey(['mod+p'], () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))));
-  useHotkey(['mod+d'], () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))));
-  useHotkey(['delete'], () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTask(t)))));
+  useHotkey(
+    ['mod+p'],
+    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(togglePinTask(t)))),
+    Menu.None,
+  );
+  useHotkey(
+    ['mod+d'],
+    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))),
+    Menu.None,
+  );
+  useHotkey(
+    ['delete'],
+    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTask(t)))),
+    Menu.None,
+  );
 
   function dropdownAction(actionTask: Task | undefined, action: (t: Task) => void) {
     if (actionTask === undefined) return;

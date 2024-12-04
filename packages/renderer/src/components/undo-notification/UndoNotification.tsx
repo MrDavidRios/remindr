@@ -1,6 +1,6 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
 import openIcon from '@assets/icons/open.svg';
-import { getTaskListActionVerb } from '@remindr/shared';
+import { getTaskListActionVerb, Menu } from '@remindr/shared';
 import {
   removeSelectedTask,
   selectLastModifiedTask,
@@ -17,10 +17,6 @@ let hideNotificationTimeout: NodeJS.Timeout;
 export const UndoNotification: FC = () => {
   const dispatch = useDispatch();
 
-  useHotkey(['mod+z'], () => {
-    undoTaskAction();
-  });
-
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const [showUndoNotification, setShowUndoNotification] = useState(false);
   const undoNotificationShowing = useRef<boolean>(false);
@@ -35,7 +31,8 @@ export const UndoNotification: FC = () => {
     setShowUndoNotification(false);
   };
 
-  useHotkey(['mod+o'], () => openTask());
+  useHotkey(['mod+o'], () => openTask(), Menu.None);
+  useHotkey(['mod+z'], () => undoTaskAction(), Menu.None);
 
   useEffect(() => {
     if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);

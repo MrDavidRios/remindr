@@ -1,6 +1,6 @@
 import cancelIcon from '@assets/icons/close-button.svg';
 import searchIcon from '@assets/icons/search.svg';
-import { waitUntil } from '@remindr/shared';
+import { Menu, waitUntil } from '@remindr/shared';
 import { updateSearchQuery } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppStore } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
@@ -62,7 +62,7 @@ export const SearchBar = memo(function SearchBar() {
       }
     : { style: { opacity: 1 } };
 
-  useHotkey(['mod+f'], () => setShowSearchBar(true));
+  useHotkey(['mod+f'], () => setShowSearchBar(true), Menu.None);
 
   const toggleSearchBar = () => {
     if (showSearchBar) {

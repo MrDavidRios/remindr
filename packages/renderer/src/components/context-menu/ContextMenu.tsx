@@ -1,4 +1,5 @@
 import { useClickOutside } from '@hooks/useoutsideclick';
+import { Menu } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
 import { useDetectWheel } from '@renderer/scripts/utils/hooks/usedetectwheel';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
@@ -19,7 +20,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, className, childre
 
   const ref = useClickOutside(() => hideMenu(false));
 
-  useHotkey(['esc'], () => hideMenu(true));
+  useHotkey(['esc'], () => hideMenu(true), Menu.None, { prioritize: true });
 
   // Hide menu when scrolling on task list container
   useDetectWheel({

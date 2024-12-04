@@ -2,7 +2,7 @@ import duplicateIcon from '@assets/icons/duplicate.svg';
 import pinIcon from '@assets/icons/pin.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import unpinIcon from '@assets/icons/unpin.svg';
-import type { Task } from '@remindr/shared';
+import { Menu, type Task } from '@remindr/shared';
 import {
   clearSelectedTasks,
   duplicateTasks,
@@ -99,14 +99,25 @@ function setupHotkeys(
   onDuplicate: () => void,
   onDelete: () => void,
 ) {
-  useHotkey(['mod+d'], () => {
-    onDuplicate();
-  });
-  useHotkey(['mod+p'], () => {
-    taskPinned ? onUnpin() : onPin();
-  });
-
-  useHotkey(['delete'], () => {
-    onDelete();
-  });
+  useHotkey(
+    ['mod+d'],
+    () => {
+      onDuplicate();
+    },
+    Menu.None,
+  );
+  useHotkey(
+    ['mod+p'],
+    () => {
+      taskPinned ? onUnpin() : onPin();
+    },
+    Menu.None,
+  );
+  useHotkey(
+    ['delete'],
+    () => {
+      onDelete();
+    },
+    Menu.None,
+  );
 }

@@ -104,7 +104,7 @@ export const ScheduledReminderEditMenu: FC = () => {
   };
 
   useEscToClose(dispatch, Menu.ScheduledReminderEditMenu);
-  useHotkey(['mod+s'], handleEditCompletion);
+  useHotkey(['mod+s'], handleEditCompletion, Menu.ScheduledReminderEditMenu);
   useDetectWheel({
     element: document.querySelector('.task-modification-interface') as HTMLElement | undefined,
     callback: () => {

@@ -84,7 +84,7 @@ export const LinkMenu: FC = () => {
     dispatch(hideMenu({ menu: Menu.LinkMenu }));
   };
 
-  useHotkey(['mod+s'], handleLinkCompleteButton);
+  useHotkey(['mod+s'], handleLinkCompleteButton, Menu.LinkMenu);
 
   return (
     <FullScreenMenu modal menuType={Menu.LinkMenu} className="menu" id="linkMenu">

@@ -1,3 +1,4 @@
+import { Menu } from '@remindr/shared';
 import { dynamicMenuHeightAnimationProps } from '@renderer/animation';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
@@ -16,7 +17,7 @@ export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
   const optionRefs = options.map(() => useRef(null));
   const animationsEnabled = useAnimationsEnabled();
 
-  useHotkey(['esc'], () => closeDropdown());
+  useHotkey(['esc'], () => closeDropdown(), Menu.None, { prioritize: true });
 
   return (
     <RemoveScroll>

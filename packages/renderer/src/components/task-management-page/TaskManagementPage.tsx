@@ -35,13 +35,17 @@ export function TaskManagementPage() {
   }, [selectedTasks]);
 
   // Test notifications with Cmd/Ctrl + T in development
-  useHotkey(['mod+t'], () => {
-    if (window.electron.remote.isPackaged()) return;
+  useHotkey(
+    ['mod+t'],
+    () => {
+      if (window.electron.remote.isPackaged()) return;
 
-    for (let i = 0; i < selectedTasks.length; i++) {
-      window.notifications.notify(JSON.stringify(selectedTasks[i]), 0);
-    }
-  });
+      for (let i = 0; i < selectedTasks.length; i++) {
+        window.notifications.notify(JSON.stringify(selectedTasks[i]), 0);
+      }
+    },
+    Menu.None,
+  );
 
   return (
     <div id="appMainPageContainer">

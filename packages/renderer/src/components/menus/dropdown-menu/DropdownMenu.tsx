@@ -52,7 +52,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
     onClose?.();
   };
 
-  useHotkey(['esc'], () => onCloseDropdown());
+  useHotkey(['esc'], () => onCloseDropdown(), Menu.None, { prioritize: true });
 
   const height = useMotionValue(0);
   let lastFocusedIdx = -1;

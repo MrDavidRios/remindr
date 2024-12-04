@@ -107,29 +107,47 @@ export const ActionBar: FC<ActionBarProps> = ({ task, creatingTask, onSave }) =>
 };
 
 function useSetupHotkeys(creatingTask: boolean, onSave: () => void, dispatch: AppDispatch) {
-  useHotkey(['mod+s'], (e) => {
-    const taskCreationMenuOpen = isMenuOpen(store.getState().menuState, Menu.TaskCreateMenu);
+  const menu = creatingTask ? Menu.TaskCreateMenu : Menu.TaskEditMenu;
 
-    if (!taskCreationMenuOpen || e.repeat) return;
+  useHotkey(
+    ['mod+s'],
+    (e) => {
+      const taskCreationMenuOpen = isMenuOpen(store.getState().menuState, Menu.TaskCreateMenu);
 
-    onSave();
-  });
-  useHotkey(['mod+d'], () => {
-    if (creatingTask) return;
+      if (!taskCreationMenuOpen || e.repeat) return;
 
-    duplicateEditedTask(dispatch);
-  });
-  useHotkey(['mod+p'], () => {
-    if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
+      onSave();
+    },
+    menu,
+  );
+  useHotkey(
+    ['mod+d'],
+    () => {
+      if (creatingTask) return;
 
-    togglePinOnEditedTask(dispatch);
-  });
+      duplicateEditedTask(dispatch);
+    },
+    menu,
+  );
+  useHotkey(
+    ['mod+p'],
+    () => {
+      if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
 
-  useHotkey(['delete'], () => {
-    if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
+      togglePinOnEditedTask(dispatch);
+    },
+    menu,
+  );
 
-    removeEditedTask(dispatch);
-  });
+  useHotkey(
+    ['delete'],
+    () => {
+      if (!isMenuOpen(store.getState().menuState, Menu.TaskEditMenu) || creatingTask) return;
+
+      removeEditedTask(dispatch);
+    },
+    menu,
+  );
 }
 
 function togglePinOnEditedTask(dispatch: AppDispatch) {

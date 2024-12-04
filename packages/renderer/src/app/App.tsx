@@ -1,3 +1,4 @@
+import { Menu } from '@remindr/shared';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { useEffect } from 'react';
 import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
@@ -16,21 +17,10 @@ function Root() {
   useEffect(() => useStartupActions(dispatch), []);
 
   // Initialize Hotkeys
-  useHotkey(['mod+w'], () => {
-    window.mainWindow.hide();
-  });
-
-  useHotkey(['mod+q'], () => {
-    window.electron.ipcRenderer.sendMessage('action-on-save', 'quit');
-  });
-
-  useHotkey(['mod+r'], () => {
-    window.electron.ipcRenderer.sendMessage('action-on-save', 'restart');
-  });
-
-  useHotkey(['mod+shift+i'], () => {
-    window.mainWindow.openDevTools();
-  });
+  useHotkey(['mod+w'], () => window.mainWindow.hide(), Menu.None);
+  useHotkey(['mod+q'], () => window.electron.ipcRenderer.sendMessage('action-on-save', 'quit'), Menu.None);
+  useHotkey(['mod+r'], () => window.electron.ipcRenderer.sendMessage('action-on-save', 'restart'), Menu.None);
+  useHotkey(['mod+shift+i'], () => window.mainWindow.openDevTools(), Menu.None);
 
   return (
     <div id="appWrapper">

@@ -42,7 +42,7 @@ export const ModalWrapper: React.FC<ModalWrapperProps> = ({
     onClose?.();
   };
 
-  useHotkey(['esc'], () => onCloseModal());
+  useHotkey(['esc'], () => onCloseModal(), Menu.None, { prioritize: true });
 
   const ref = useClickOutside(
     () => {

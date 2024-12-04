@@ -23,13 +23,17 @@ export const TaskCreateButton: FC = () => {
 
   const titleText = taskModificationMenuOpen ? 'Cancel Edits (Esc)' : 'Add Task (Ctrl + N)';
 
-  useHotkey(['mod+n'], () => {
-    if (store.getState().taskList.selectedTasks.length > 0) {
-      dispatch(clearSelectedTasks());
-    }
+  useHotkey(
+    ['mod+n'],
+    () => {
+      if (store.getState().taskList.selectedTasks.length > 0) {
+        dispatch(clearSelectedTasks());
+      }
 
-    dispatch(showMenu(Menu.TaskCreateMenu));
-  });
+      dispatch(showMenu(Menu.TaskCreateMenu));
+    },
+    Menu.None,
+  );
 
   return (
     <button

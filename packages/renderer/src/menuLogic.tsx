@@ -54,15 +54,23 @@ export const DisplayMenus = () => {
 function useMenuHotkeys(dispatch: AppDispatch, appMode: AppMode, authenticated: boolean) {
   const onLoginScreen = appMode === AppMode.LoginScreen || (appMode === AppMode.Online && !authenticated);
 
-  useHotkey(['mod+a'], () => {
-    const isOffline = appMode === AppMode.Offline;
-    if (onLoginScreen || isOffline || !authenticated) return;
+  useHotkey(
+    ['mod+a'],
+    () => {
+      const isOffline = appMode === AppMode.Offline;
+      if (onLoginScreen || isOffline || !authenticated) return;
 
-    dispatch(showMenu(Menu.AccountMenu));
-  });
-  useHotkey(['mod+comma'], () => {
-    if (onLoginScreen) return;
+      dispatch(showMenu(Menu.AccountMenu));
+    },
+    Menu.None,
+  );
+  useHotkey(
+    ['mod+comma'],
+    () => {
+      if (onLoginScreen) return;
 
-    dispatch(showMenu(Menu.SettingsMenu));
-  });
+      dispatch(showMenu(Menu.SettingsMenu));
+    },
+    Menu.None,
+  );
 }

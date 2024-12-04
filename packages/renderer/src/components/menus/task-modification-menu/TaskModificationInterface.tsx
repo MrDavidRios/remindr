@@ -43,8 +43,6 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
     const currentEditedTask = getEditedTask(store.getState().taskModificationState, creating) ?? fallbackTask;
     const taskToSave = task ?? currentEditedTask;
 
-    console.log('(TaskModificationInterface): SAVE', taskToSave, 'creating: ', creating);
-
     if (taskToSave.name.trim() === '') {
       dispatch(showDialog({ title: 'Invalid Name', message: 'Make sure your task has a name.' }));
       return;
