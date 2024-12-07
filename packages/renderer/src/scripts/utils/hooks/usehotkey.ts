@@ -110,5 +110,5 @@ export function useHotkey(
     return () => {
       window.removeEventListener('keydown', handler);
     };
-  }, []);
+  });
 }

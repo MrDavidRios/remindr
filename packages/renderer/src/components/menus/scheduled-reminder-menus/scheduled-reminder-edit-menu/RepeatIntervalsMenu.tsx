@@ -1,4 +1,6 @@
 import { Menu, Repeat } from '@remindr/shared';
+import { closeDropdown } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
 import React from 'react';
 import { DropdownMenu } from '../../dropdown-menu/DropdownMenu';
 
@@ -11,9 +13,13 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
   updateRepeatInterval,
   setShowRepeatIntervalsMenu,
 }) => {
+  const dispatch = useAppDispatch();
+
   function handleRepeatIntervalClick(e: React.MouseEvent<HTMLLIElement, MouseEvent>, interval: Repeat) {
     // Make sure click events don't propogate to the dropdown open button
     e.stopPropagation();
+
+    dispatch(closeDropdown({ menu: Menu.ScheduledReminderEditMenu, dropdownName: 'repeatIntervalsMenu' }));
 
     setShowRepeatIntervalsMenu(false);
     updateRepeatInterval(interval);

@@ -44,7 +44,7 @@ export function useClickOutside(
     return () => {
       document.removeEventListener('mousedown', handler);
     };
-  }, []);
+  });
 
   return domNodeRef as RefObject<HTMLElement>;
 }

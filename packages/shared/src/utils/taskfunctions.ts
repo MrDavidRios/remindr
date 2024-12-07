@@ -81,6 +81,7 @@ export function taskHasRecurringReminders(task: Task): boolean {
 
 export function getEarliestReminder(task: Task): ScheduledReminder {
   if (task.scheduledReminders.length === 0) {
+    console.log('task:', JSON.parse(JSON.stringify(task)));
     throw new Error('Task has no reminders');
   }
 

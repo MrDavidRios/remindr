@@ -10,7 +10,7 @@ import { useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 let hideNotificationTimeout: NodeJS.Timeout;
@@ -19,13 +19,11 @@ export const UndoNotification: FC = () => {
 
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const [showUndoNotification, setShowUndoNotification] = useState(false);
-  const undoNotificationShowing = useRef<boolean>(false);
-  undoNotificationShowing.current = showUndoNotification;
 
   const canOpenTask = undoState?.type !== 'remove';
   const openTask = () => {
     // Don't open the task if the undo notification isn't showing
-    if (!undoNotificationShowing.current) return;
+    if (!showUndoNotification) return;
 
     dispatch(selectLastModifiedTask());
     setShowUndoNotification(false);

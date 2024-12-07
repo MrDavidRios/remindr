@@ -47,6 +47,8 @@ export const ScheduledReminderEditMenu: FC = () => {
   const [updatedReminder, setUpdatedReminder] = useState<ScheduledReminder>(reminder ?? getDefaultScheduledReminder());
 
   function handleEditCompletion() {
+    console.log('hourInputState:', hourInputState, 'minuteInputState:', minuteInputState);
+
     // Make updatedReminder serializable
     const updatedScheduledReminder = JSON.parse(JSON.stringify(updatedReminder)) as ScheduledReminder;
 

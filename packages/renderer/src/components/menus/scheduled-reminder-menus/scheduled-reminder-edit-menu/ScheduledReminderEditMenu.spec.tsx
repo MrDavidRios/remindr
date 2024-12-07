@@ -16,7 +16,7 @@ describe('Scheduled Reminder Edit Menu', () => {
       <ScheduledReminderEditMenu />,
       { dateFormat: DateFormat.YMDNumeric },
       {
-        menuState: { ...mockMenuState, openMenus: [Menu.ScheduledReminderEditMenu] },
+        menuState: { ...mockMenuState, openMenus: [Menu.ScheduledReminderEditMenu], openDropdowns: {} },
         taskList: getMockTaskListState([testTask]),
         taskModificationState: {
           taskEditState: { originalTask: testTask, editedTask: editedTask },

@@ -8,7 +8,7 @@ import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimation
 import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
 import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
 import { motion, useMotionValue, useMotionValueEvent } from 'framer-motion';
-import { FC, HTMLProps, useEffect, useRef, useState } from 'react';
+import { FC, HTMLProps, useEffect, useState } from 'react';
 import { TaskModificationInterface } from '../task-modification-menu/TaskModificationInterface';
 
 interface TaskCreateMenuProps extends HTMLProps<HTMLDivElement> {}
@@ -18,11 +18,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
 
   const animationsEnabled = useAnimationsEnabled();
   const [animationComplete, setAnimationComplete] = useState(false);
-  const animationCompleteRef = useRef<boolean>();
   const [closing, setClosing] = useState(false);
-
-  // Allows TaskModificationInterface -> onSave callback function to access the updated value of animationComplete
-  animationCompleteRef.current = animationComplete;
 
   const height = useMotionValue(animationsEnabled ? 0 : 520);
   useMotionValueEvent(height, 'animationCancel', () => {
@@ -77,7 +73,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
         creating
         onSave={(task: Task) => {
           // If the menu is opening/closing, don't save - this mitigates repeated task saves/creations
-          if (animationsEnabled && !animationCompleteRef.current) return;
+          if (animationsEnabled && !animationComplete) return;
 
           dispatch(addTask(task));
           dispatch(hideMenu({ menu: Menu.TaskCreateMenu /*checkForUnsavedWork: false*/ }));
