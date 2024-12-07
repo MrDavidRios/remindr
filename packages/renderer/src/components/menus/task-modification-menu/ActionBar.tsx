@@ -147,6 +147,9 @@ function useSetupHotkeys(creatingTask: boolean, onSave: () => void, dispatch: Ap
       removeEditedTask(dispatch);
     },
     menu,
+    {
+      disableOnFormTags: true,
+    },
   );
 }
 

@@ -80,12 +80,15 @@ export function useHotkey(
   keycodes: string[],
   callback: (e: KeyboardEvent) => boolean | void,
   menu: Menu,
-  options?: { prioritize: boolean },
+  options?: { prioritize?: boolean; disableOnFormTags?: boolean },
 ): void {
   const handler = (e: KeyboardEvent) => {
     if (e.defaultPrevented) return;
 
     for (const keycode of keycodes) {
+      const onFormTag = ['input', 'textarea', 'select'].includes((e.target as HTMLElement).tagName.toLowerCase());
+      if (options?.disableOnFormTags && onFormTag) continue;
+
       if (compareKeyCodeToEvent(keycode, e)) {
         const menusWithKeycode = Array.from<Menu>(hotkeyMenuMap.get(keycode) ?? new Set());
         const higherPriorityOpen = menuWithHigherPriorityOpen(menu, menusWithKeycode);
