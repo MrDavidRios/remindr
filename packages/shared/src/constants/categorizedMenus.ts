@@ -35,3 +35,12 @@ export const MENU_TYPES = new Map<Menu, MenuType>([
   [Menu.UpdateNotification, MenuType.Floating],
   [Menu.UndoNotification, MenuType.Floating],
 ]);
+
+/**
+ * Stores a list of menus that are dependent on other menus being open.
+ * key: menu (Menu); value: dependents (Menu[])
+ */
+export const DEPENDENT_MENUS = new Map<Menu, Menu[]>([
+  [Menu.TaskCreateMenu, [Menu.ScheduledReminderEditMenu]],
+  [Menu.TaskEditMenu, [Menu.ScheduledReminderEditMenu]],
+]);

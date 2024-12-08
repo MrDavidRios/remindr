@@ -1,5 +1,13 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ContextMenuType, DialogProps, FloatingMenuPosition, Menu, MenuState, Task } from '@remindr/shared';
+import {
+  ContextMenuType,
+  DEPENDENT_MENUS,
+  DialogProps,
+  FloatingMenuPosition,
+  Menu,
+  MenuState,
+  Task,
+} from '@remindr/shared';
 import { isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
 
@@ -25,11 +33,15 @@ export const menuStateSlice = createSlice({
 
       if (state.openMenus.includes(menu)) return;
 
-      if (isPrimaryMenu(menu)) state.openMenus = state.openMenus.filter((openMenu) => !isPrimaryMenu(openMenu));
+      if (isPrimaryMenu(menu)) {
+        state.openMenus = closePrimaryMenus(state.openMenus);
+      }
 
       state.openMenus.push(menu);
     },
     hideMenu: (state, action: PayloadAction<{ menu: Menu; fromEscKeypress?: boolean }>) => {
+      // Close all menus dependent on menu that will be closed
+      state.openMenus = closeDependents(action.payload.menu, state.openMenus);
       _.remove(state.openMenus, (menu) => menu === action.payload.menu);
     },
     toggleMenu: (state, action: PayloadAction<Menu>) => {
@@ -86,6 +98,29 @@ export const menuStateSlice = createSlice({
     },
   },
 });
+
+const closePrimaryMenus = (openMenus: Menu[]): Menu[] => {
+  let updatedOpenMenus = [...openMenus];
+
+  for (const menu of openMenus) {
+    if (!isPrimaryMenu(menu)) continue;
+
+    updatedOpenMenus = closeDependents(menu, updatedOpenMenus);
+    _.remove(updatedOpenMenus, (openMenu) => isPrimaryMenu(openMenu));
+  }
+
+  return updatedOpenMenus;
+};
+
+const closeDependents = (menu: Menu, openMenus: Menu[]): Menu[] => {
+  const dependentMenus = DEPENDENT_MENUS.get(menu) ?? [];
+
+  for (const dependentMenu of dependentMenus) {
+    _.remove(openMenus, (openMenu) => openMenu === dependentMenu);
+  }
+
+  return openMenus;
+};
 
 export default menuStateSlice.reducer;
 export const {
