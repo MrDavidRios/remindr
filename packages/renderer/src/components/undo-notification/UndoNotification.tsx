@@ -1,21 +1,21 @@
 import closeButtonIcon from '@assets/icons/close-button.png';
 import openIcon from '@assets/icons/open.svg';
 import { getTaskListActionVerb, Menu } from '@remindr/shared';
+import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import {
   removeSelectedTask,
   selectLastModifiedTask,
   undoTaskListChange,
 } from '@renderer/features/task-list/taskListSlice';
-import { useAppSelector } from '@renderer/hooks';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 let hideNotificationTimeout: NodeJS.Timeout;
 export const UndoNotification: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const [showUndoNotification, setShowUndoNotification] = useState(false);
@@ -32,6 +32,8 @@ export const UndoNotification: FC = () => {
   useHotkey(['mod+o'], () => openTask(), Menu.None);
   useHotkey(['mod+z'], () => undoTaskAction(), Menu.None);
 
+  useHotkey(['esc'], () => setShowUndoNotification(false), Menu.None, { prioritize: true });
+
   useEffect(() => {
     if (hideNotificationTimeout) clearTimeout(hideNotificationTimeout);
 
@@ -46,6 +48,12 @@ export const UndoNotification: FC = () => {
       setShowUndoNotification(false);
     }, 5000);
   }, [undoState]);
+
+  // Keep undo notification state updated in Redux to maintain correct menu closing priority
+  useEffect(() => {
+    if (showUndoNotification) dispatch(showMenu(Menu.UndoNotification));
+    else dispatch(hideMenu({ menu: Menu.UndoNotification }));
+  }, [showUndoNotification]);
 
   function undoTaskAction() {
     if (undoState?.task !== undefined) dispatch(removeSelectedTask(undoState?.task));

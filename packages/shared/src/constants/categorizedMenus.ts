@@ -33,4 +33,5 @@ export const MENU_TYPES = new Map<Menu, MenuType>([
   [Menu.HamburgerMenu, MenuType.Floating],
   [Menu.AddExistingReminderMenu, MenuType.Floating],
   [Menu.UpdateNotification, MenuType.Floating],
+  [Menu.UndoNotification, MenuType.Floating],
 ]);

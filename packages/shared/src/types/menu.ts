@@ -17,6 +17,7 @@ export enum Menu {
   MessageModal,
   HamburgerMenu,
   UpdateNotification,
+  UndoNotification,
   AddExistingReminderMenu,
   /** Used in cases where a `Menu` type needs to be specified but no `Menu` values qualify. */
   None,
