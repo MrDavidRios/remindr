@@ -39,7 +39,15 @@ export const menuStateSlice = createSlice({
 
       state.openMenus.push(menu);
     },
-    hideMenu: (state, action: PayloadAction<{ menu: Menu; fromEscKeypress?: boolean }>) => {
+    /**
+     *
+     * @param state
+     * @param action checkForUnsavedWork is listened to by unsavedTaskDialogMiddleware
+     */
+    hideMenu: (
+      state,
+      action: PayloadAction<{ menu: Menu; checkForUnsavedWork?: boolean; fromEscKeypress?: boolean }>,
+    ) => {
       // Close all menus dependent on menu that will be closed
       state.openMenus = closeDependents(action.payload.menu, state.openMenus);
       _.remove(state.openMenus, (menu) => menu === action.payload.menu);

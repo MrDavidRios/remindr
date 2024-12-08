@@ -4,7 +4,11 @@ import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { isMenuOpen } from '../menuutils';
 import { useHotkey } from './usehotkey';
 
-export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
+export function useEscToClose(
+  dispatch: AppDispatch,
+  menu: Menu,
+  hideMenuOptions?: { checkForUnsavedWork: boolean },
+): void {
   useHotkey(
     ['esc'],
     () => {
@@ -14,7 +18,7 @@ export function useEscToClose(dispatch: AppDispatch, menu: Menu): void {
       if (menuHasOpenDropdowns) return false;
       if (!isMenuOpen(store.getState().menuState, menu)) return false;
 
-      dispatch(hideMenu({ menu, fromEscKeypress: true }));
+      dispatch(hideMenu({ menu, fromEscKeypress: true, checkForUnsavedWork: hideMenuOptions?.checkForUnsavedWork }));
 
       return true;
     },

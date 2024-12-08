@@ -79,6 +79,6 @@ function closeTaskModificationMenu(menuState: MenuState, dispatch: AppDispatch) 
   }
 
   if (isMenuOpen(menuState, Menu.TaskCreateMenu)) {
-    dispatch(hideMenu({ menu: Menu.TaskCreateMenu /*, checkForUnsavedWork: true*/ }));
+    dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true }));
   }
 }

@@ -48,10 +48,10 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
       }
     : { style: { height: '520px' } };
 
-  useEscToClose(dispatch, Menu.TaskCreateMenu); /* checkForUnsavedWork: true */
+  useEscToClose(dispatch, Menu.TaskCreateMenu, { checkForUnsavedWork: true });
 
   const ref = useClickOutside(async () => {
-    dispatch(hideMenu({ menu: Menu.TaskCreateMenu })); /* checkForUnsavedWork: true */
+    dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: true }));
   }, ['#taskCreateButton', '#scheduledReminderEditMenu', '#linkMenu']);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export const TaskCreateMenu: FC<TaskCreateMenuProps> = () => {
           if (animationsEnabled && !animationComplete) return;
 
           dispatch(addTask(task));
-          dispatch(hideMenu({ menu: Menu.TaskCreateMenu /*checkForUnsavedWork: false*/ }));
+          dispatch(hideMenu({ menu: Menu.TaskCreateMenu, checkForUnsavedWork: false }));
         }}
       />
     </motion.div>
