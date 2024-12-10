@@ -53,12 +53,7 @@ function isLoading(connected: boolean, connCheckStatus: string, userDataGetStatu
   if (connCheckStatus === 'succeeded' && !connected) return false;
 
   const connCheckStatusInFlux = connCheckStatus === 'idle' || connCheckStatus === 'pending';
-  // userDataGetStatus can fail momentarily while the user is being logged in — what can't fail is connection checking
-  const userDataGetStatusInFlux = userDataGetStatus === 'failed' || userDataGetStatus === 'pending';
-
-  console.log('userDataGetStatus', userDataGetStatus);
-
-  if (!connCheckStatusInFlux && userDataGetStatus === 'failed') return false;
+  const userDataGetStatusInFlux = userDataGetStatus === 'pending';
 
   if (connCheckStatusInFlux || userDataGetStatusInFlux) return true;
 
