@@ -76,8 +76,8 @@ async function continueButtonHandler(name: string, dispatch: AppDispatch) {
   setUserData(user);
 
   // Save user data to firebase
-  await window.data.saveData('user');
-  await window.data.saveData('tasks', JSON.stringify(new TaskCollection()));
+  await window.data.saveUserData();
+  await window.data.saveTaskData(JSON.stringify(new TaskCollection()));
 
   // Update global state
   dispatch(updateUserData({ user: JSON.parse(JSON.stringify(user)) }));

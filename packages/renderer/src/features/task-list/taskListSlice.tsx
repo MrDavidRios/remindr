@@ -33,7 +33,7 @@ import {
 import { initializeTaskListSyncListener } from './taskListSync';
 
 function saveTaskData(taskList: Task[]) {
-  window.data.saveData('tasks', JSON.stringify(taskList));
+  window.data.saveTaskData(JSON.stringify(taskList));
 }
 
 export interface TaskListState {
@@ -59,7 +59,7 @@ const initialState: TaskListState = {
 };
 
 export const getTaskList = createAsyncThunk('taskList/getTaskList', async () => {
-  const taskListCollection: TaskCollection = await window.data.loadData('tasks');
+  const taskListCollection: TaskCollection = await window.data.loadTaskData();
 
   // using JSON.stringify makes sure that we're putting the serializable version of the class into state
   return JSON.parse(JSON.stringify(taskListCollection.taskList));

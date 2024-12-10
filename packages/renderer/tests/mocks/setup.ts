@@ -56,7 +56,8 @@ vi.mock('@renderer/scripts/utils/hooks/usedetectwheel', () => {
 window.scrollTo = vi.fn();
 
 (window as any).data = {
-  saveData: vi.fn(),
+  saveTaskData: vi.fn(),
+  saveUserData: vi.fn(),
 };
 
 (window as any).userState = {

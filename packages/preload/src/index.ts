@@ -214,11 +214,17 @@ const firebaseHandler = {
 };
 
 const dataHandler = {
-  saveData: (scope: 'user' | 'tasks', stringifiedTaskList?: string) => {
-    return ipcRenderer.invoke('save-data', scope, stringifiedTaskList);
+  saveUserData: () => {
+    return ipcRenderer.invoke('save-user-data');
   },
-  loadData: (scope: 'user' | 'tasks' | 'all') => {
-    return ipcRenderer.invoke('load-data', scope);
+  saveTaskData: (stringifiedTaskList: string) => {
+    return ipcRenderer.invoke('save-task-data', stringifiedTaskList);
+  },
+  loadUserData: () => {
+    return ipcRenderer.invoke('load-user-data');
+  },
+  loadTaskData: () => {
+    return ipcRenderer.invoke('load-task-data');
   },
   deleteAccountData: () => {
     return ipcRenderer.invoke('delete-account-data');

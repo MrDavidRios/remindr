@@ -25,7 +25,9 @@ export const initialUserState: UserState = {
 };
 
 export const getUserData = createAsyncThunk('userState/getUserData', async () => {
-  const userData: User = await window.data.loadData('user');
+  console.log('attempting to get user data...');
+
+  const userData: User = await window.data.loadUserData();
 
   // using JSON.stringify makes sure that we're putting the serializable version of the class into state
   return JSON.parse(JSON.stringify(userData));
@@ -38,7 +40,7 @@ function saveUserData(state: UserState) {
   setUserData(state.user);
 
   // Save the user data online
-  window.data.saveData('user');
+  window.data.saveUserData();
 }
 
 export const userStateSlice = createSlice({
@@ -84,6 +86,8 @@ export const userStateSlice = createSlice({
     });
     builder.addCase(getUserData.rejected, (state) => {
       if (state.userDataGetStatus === 'pending') {
+        console.log('user data acquisition attempt failed');
+
         state.userDataGetStatus = 'failed';
       }
     });

@@ -1,4 +1,4 @@
-import { AppMode } from '@remindr/shared';
+import { AppMode, ErrorCodes } from '@remindr/shared';
 import type { AppDispatch } from '@renderer/app/store';
 import { setAppMode } from '@renderer/features/app-mode/appModeSlice';
 import { getUserData, updateEmailVerifiedState, updateUserState } from '@renderer/features/user-state/userSlice';
@@ -68,10 +68,14 @@ async function initUserState(dispatch: AppDispatch) {
     return;
   }
 
-  const errCode = (dispatchInfo as any).error.message.match(/ERR\d+/)?.[0];
-  if (errCode === 'ERR001') {
-    // User data doc doesn't exist. Go to intro page
-    dispatch(updateUserState({ authenticated: true, initialized: false }));
+  if (dispatchInfo.type.includes('rejected')) {
+    const errCode = (dispatchInfo as any).error.message.match(/ERR\d+/)?.[0];
+    if (errCode === `ERR${ErrorCodes.MISSING_USER_DATA_FIRESTORE}`) {
+      // User data doc doesn't exist. Go to intro page
+      console.log('going to intro page');
+
+      dispatch(updateUserState({ authenticated: true, initialized: false }));
+    }
   }
 }
 

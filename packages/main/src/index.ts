@@ -11,7 +11,14 @@ import { readFile } from 'fs/promises';
 import { platform } from 'node:process';
 import path from 'path';
 import { initAutoUpdaterEventHandlers } from './appUpdater.js';
-import { deleteAccountData, isSaving, loadData, saveData } from './dataFunctions.js';
+import {
+  deleteAccountData,
+  isSaving,
+  loadTaskData,
+  loadUserData,
+  saveTaskData,
+  saveUserData,
+} from './dataFunctions.js';
 import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
 import { initAppStateListeners } from './utils/appState.js';
@@ -245,12 +252,20 @@ ipcMain.handle('show-message-box', (_event, options: MessageBoxOptions) => {
 // #endregion
 
 // #region Data
-ipcMain.handle('save-data', (_event, scope: 'user' | 'tasks', stringifiedTaskList: string) => {
-  saveData(scope, stringifiedTaskList);
+ipcMain.handle('save-user-data', () => {
+  saveUserData();
 });
 
-ipcMain.handle('load-data', (_event, scope: 'user' | 'tasks' | 'all') => {
-  return loadData(scope);
+ipcMain.handle('save-task-data', (_event, stringifiedTaskList: string) => {
+  saveTaskData(stringifiedTaskList);
+});
+
+ipcMain.handle('load-user-data', () => {
+  return loadUserData();
+});
+
+ipcMain.handle('load-task-data', () => {
+  return loadTaskData();
 });
 
 ipcMain.handle('delete-account-data', () => {

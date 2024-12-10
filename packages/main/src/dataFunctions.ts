@@ -1,5 +1,12 @@
 import type { CompleteAppData, Settings, Task } from '@remindr/shared';
-import { AppMode, User as RemindrUser, TaskCollection, createDefaultSettings, waitUntil } from '@remindr/shared';
+import {
+  AppMode,
+  ErrorCodes,
+  User as RemindrUser,
+  TaskCollection,
+  createDefaultSettings,
+  waitUntil,
+} from '@remindr/shared';
 import { ipcMain } from 'electron';
 import log from 'electron-log';
 import Store from 'electron-store';
@@ -163,8 +170,8 @@ ipcMain.handle('restart-firestore', async (_event, stringifiedAppData: string) =
 
   const appData: CompleteAppData = JSON.parse(stringifiedAppData);
 
-  await saveData('user', JSON.stringify(appData.userData));
-  await saveData('tasks', JSON.stringify(appData.taskData.taskList));
+  await saveUserData();
+  await saveTaskData(JSON.stringify(appData.taskData.taskList));
 
   log.info('[restart-firestore]: firestore instance restarted.');
   return 'success: firestore instance restarted';
@@ -317,278 +324,262 @@ function removeSaveCall() {
  */
 const saveCallDurations = new Map<number, number>();
 let saveCallsMade = 0;
-export async function saveData(scope: 'user' | 'tasks', stringifiedTaskList?: string): Promise<string | void> {
-  addSaveCall();
-
-  const uid = getUserUID();
-
-  // If firestore hasn't yet been initialized, wait until it is. If saveData has been called, then this means the app
-  // knows that it's online and has already called initializeDataListeners.
-  const isOnline = getAppMode() === AppMode.Online;
-  if (isOnline && !firestore) await waitUntil(() => firestore !== undefined);
-  if (restartingFirestore) await waitUntil(() => !restartingFirestore);
-
-  const saveCallIdx = saveCallsMade;
-  saveCallsMade++;
-
-  saveCallDurations.set(saveCallIdx, Date.now());
-
-  if (isOnline) {
-    setTimeout(() => {
-      if (restartingFirestore) return;
-
-      if (saveCallDurations.has(saveCallIdx)) {
-        log.info(`(saveData) save call #${saveCallIdx} took too long to complete. Restarting Firestore...`);
-        const appWindow = getMainWindow();
-        appWindow?.webContents.send('restart-firestore');
-      }
-    }, 5000);
-  }
-
-  switch (scope) {
-    case 'user': {
-      const userProfile: RemindrUser = JSON.parse(getUserProfile());
-      const settingsProfile: Settings = JSON.parse(getSettingsProfile());
-
-      if (getAppMode() !== AppMode.Online) {
-        userProfile.settings = settingsProfile;
-
-        store.set('userData', userProfile);
-
-        store.set('last-offline-data-update-time', new Date());
-
-        log.info('%cUser data saved locally.', 'color: green; font-style: bold');
-        break;
-      }
-
-      if (!firestore) throw new Error('saveData: Firestore instance does not exist.');
-
-      // Global 'user' class
-      const userRef = doc(collection(firestore, 'users'), uid);
-
-      // Convert user data and settings data to objects to dynamically upload to firestore
-      const userDataToUpdate = {};
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [key, value] of Object.entries(userProfile)) {
-        if (key !== 'settings') {
-          (userDataToUpdate[key as keyof object] as any) = value;
-        }
-      }
-
-      const settingsToUpdate = {};
-      // eslint-disable-next-line no-restricted-syntax
-      for (const [key, value] of Object.entries(settingsProfile)) {
-        (settingsToUpdate[key as keyof object] as any) = value;
-      }
-
-      // Check if user document exists
-      if (userDataExists) {
-        await updateDoc(userRef, {
-          userData: userDataToUpdate,
-          settings: settingsToUpdate,
-          lastUpdatedFrom: deviceID,
-        });
-
-        log.info('%cUser data saved.', 'color: green; font-style: bold');
-      } else {
-        await setDoc(userRef, {
-          userData: userDataToUpdate,
-          settings: settingsToUpdate,
-        });
-
-        userDataExists = true;
-
-        log.info('%cUser data document created.', 'color: green; font-style: bold');
-      }
-      break;
-    }
-    case 'tasks':
-      {
-        if (!stringifiedTaskList) {
-          throw new Error('(saveData) tasks: stringifiedTaskList is undefined.');
-        }
-
-        const reminderListCopy = JSON.parse(stringifiedTaskList) as Task[];
-
-        if (getAppMode() !== AppMode.Online) {
-          store.set('reminders', reminderListCopy);
-          log.info('(saveData) Task data saved locally.');
-          break;
-        }
-
-        if (!firestore) throw new Error('saveData: Firestore instance does not exist.');
-
-        Object.keys(reminderListCopy).forEach((reminder: any) => {
-          // Get each reminder
-          Object.keys(reminderListCopy[reminder]).forEach((key) => {
-            if (key === 'scheduledTime') {
-              if (reminderListCopy[reminder][key as keyof Task] === undefined)
-                (reminderListCopy[reminder][key as keyof Task] as any) = null;
-            }
-
-            if (key === 'scheduledReminders' || key === 'subtasks') {
-              // Convert the scheduledReminders object to a default js object for firestore to handle
-              (reminderListCopy[reminder][key as keyof Task] as any) = reminderListCopy[reminder][key].map(
-                (obj: object) => ({
-                  ...obj,
-                }),
-              );
-            }
-          });
-        });
-
-        let newReminderList: Task[] = [];
-
-        // Convert custom objects into js objects for firestore to handle
-        if (reminderListCopy.length > 0) newReminderList = reminderListCopy.map((obj) => ({ ...obj }));
-
-        if (taskDataExists) {
-          // If reminder file exists, then update it
-          await updateDoc(taskDocRef, {
-            reminderList: newReminderList,
-          });
-
-          log.info('(saveData) Task data saved.');
-        } else {
-          // If reminder file doesn't exist, then create it
-          await setDoc(taskDocRef, {
-            reminderList: newReminderList,
-          });
-
-          log.info('(saveData) Task data entry created.');
-        }
-      }
-      break;
-    default:
-      9;
-      throw new Error(`(saveData): Invalid data scope: ${scope}`);
-  }
-
-  saveCallDurations.delete(saveCallIdx);
-
-  removeSaveCall();
-}
-
-let userData: RemindrUser | undefined;
-export async function loadData(
-  scope: 'user' | 'tasks' | 'all',
-): Promise<string | RemindrUser | TaskCollection | CompleteAppData | void> {
-  let taskData: TaskCollection;
-
-  const uid = getUserUID();
-
-  // If firestore hasn't yet been initialized, wait until it is. If saveData has been called, then this means the app
+const waitUntilFirestoreInitialized = async () => {
+  // If firestore hasn't yet been initialized, wait until it is. If a save function has been called, then this means the app
   // knows that it's online and has already called initializeDataListeners.
   if (getAppMode() === AppMode.Online && !firestore) await waitUntil(() => firestore !== undefined);
   if (restartingFirestore) await waitUntil(() => !restartingFirestore);
+};
 
-  switch (scope) {
-    case 'user': {
-      userData = new RemindrUser();
+const setRestartFirestoreTimeout = (saveCallIdx: number) => {
+  setTimeout(() => {
+    if (restartingFirestore) return;
 
-      log.info('(loadData) Loading user data... app mode:', getAppMode());
-
-      if (getAppMode() !== AppMode.Online) {
-        userData = (store.get('userData') as RemindrUser) ?? new RemindrUser().getDefault();
-
-        return userData;
-      }
-
-      if (!firestore) throw new Error('(loadData) Firestore instance does not exist.');
-
-      const userRef = doc(collection(firestore, 'users'), uid);
-
-      const docData = await documentExists(userRef);
-
-      if (!userData) {
-        throw new Error('(loadData) Local user data does not exist.');
-      }
-
-      if (!docData.exists || !docData.docSnapshot) {
-        userDataExists = false;
-        throw new Error('(loadData) User data file does not exist.');
-      }
-
-      userDataExists = true;
-
-      const data = docData.docSnapshot.data();
-
-      // Loop through every variable. If the variable is undefined, then set it to the current value stored in settings.
-      userData.settings = createDefaultSettings();
-
-      if (data?.settings !== undefined) {
-        Object.keys(data?.settings).forEach((key) => {
-          if (data.settings[key] !== undefined) (userData!.settings[key as keyof Settings] as any) = data.settings[key];
-        });
-      }
-
-      if (data?.userData !== undefined)
-        Object?.keys(data?.userData).forEach((key) => {
-          if (data.userData === undefined) {
-            if (data[key] !== undefined) (userData![key as keyof RemindrUser] as any) = data[key];
-          } else if (data.userData[key] !== undefined) {
-            (userData![key as keyof RemindrUser] as any) = data.userData[key];
-          } else if (data[key] !== undefined) (userData![key as keyof RemindrUser] as any) = data[key];
-        });
-
-      // Load in background image if stored
-      log.info('(loadData) User data loaded.');
-
-      return userData;
+    if (saveCallDurations.has(saveCallIdx)) {
+      log.info(
+        `(setRestartFirestoreTimeout) save call #${saveCallIdx} took too long to complete. Restarting Firestore...`,
+      );
+      const appWindow = getMainWindow();
+      appWindow?.webContents.send('restart-firestore');
     }
-    case 'tasks': {
-      if (getAppMode() !== AppMode.Online) {
-        taskData = new TaskCollection();
-        taskData.taskList = (store.get('reminders') as Task[]) ?? [];
+  }, 5000);
+};
 
-        return taskData;
-      }
+function initializeSaveCall(): number {
+  addSaveCall();
+  const saveCallIdx = saveCallsMade;
+  saveCallsMade++;
+  saveCallDurations.set(saveCallIdx, Date.now());
 
-      if (!firestore) throw new Error('(loadData) Firestore instance does not exist.');
+  return saveCallIdx;
+}
 
-      log.info('(loadData) Loading task data...');
+export async function saveUserData(): Promise<string | void> {
+  await waitUntilFirestoreInitialized();
 
-      taskData = new TaskCollection();
-
-      const docData = await documentExists(taskDocRef);
-
-      if (!docData.exists || !docData.docSnapshot) {
-        taskDataExists = false;
-
-        // if task data doesn't exist, try to create a new document with an empty task list.
-        await saveData('tasks', JSON.stringify(new TaskCollection()));
-
-        return loadData('tasks');
-      }
-
-      taskDataExists = true;
-
-      const loadedTaskList = docData.docSnapshot.data()!.reminderList;
-
-      const instantiatedTaskList: Task[] = [];
-
-      for (let i = 0; i < loadedTaskList.length; i++) {
-        const task = loadedTaskList[i];
-        instantiatedTaskList.push(task);
-      }
-
-      taskData.taskList = instantiatedTaskList;
-
-      return taskData;
-    }
-    case 'all': {
-      [userData, taskData] = await Promise.all([
-        loadData('user') as Promise<RemindrUser>,
-        loadData('tasks') as Promise<TaskCollection>,
-      ]);
-
-      if (userData && taskData) return { userData, taskData };
-
-      throw new Error('loadData (all): unable to load data');
-    }
-    default:
-      throw new Error(`loadData: Invalid data scope: ${scope}`);
+  const saveCallIdx = initializeSaveCall();
+  if (getAppMode() === AppMode.Online) {
+    setRestartFirestoreTimeout(saveCallIdx);
   }
+
+  const uid = getUserUID();
+
+  const userProfile: RemindrUser = JSON.parse(getUserProfile());
+  const settingsProfile: Settings = JSON.parse(getSettingsProfile());
+
+  if (getAppMode() !== AppMode.Online) {
+    userProfile.settings = settingsProfile;
+
+    store.set('userData', userProfile);
+    store.set('last-offline-data-update-time', new Date());
+
+    log.info('%cUser data saved locally.', 'color: green; font-style: bold');
+    return;
+  }
+
+  if (!firestore) throw new Error('(saveUserData) Firestore instance does not exist.');
+
+  // Global 'user' class
+  const userRef = doc(collection(firestore, 'users'), uid);
+
+  // Convert user data and settings data to objects to dynamically upload to firestore
+  const userDataToUpdate = {};
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(userProfile)) {
+    if (key !== 'settings') {
+      (userDataToUpdate[key as keyof object] as any) = value;
+    }
+  }
+
+  const settingsToUpdate = {};
+  // eslint-disable-next-line no-restricted-syntax
+  for (const [key, value] of Object.entries(settingsProfile)) {
+    (settingsToUpdate[key as keyof object] as any) = value;
+  }
+
+  // Check if user document exists
+  if (userDataExists) {
+    await updateDoc(userRef, {
+      userData: userDataToUpdate,
+      settings: settingsToUpdate,
+      lastUpdatedFrom: deviceID,
+    });
+
+    log.info('%cUser data saved.', 'color: green; font-style: bold');
+  } else {
+    await setDoc(userRef, {
+      userData: userDataToUpdate,
+      settings: settingsToUpdate,
+    });
+
+    userDataExists = true;
+
+    log.info('%cUser data document created.', 'color: green; font-style: bold');
+  }
+
+  saveCallDurations.delete(saveCallIdx);
+  removeSaveCall();
+}
+
+export async function saveTaskData(stringifiedTaskList: string): Promise<string | void> {
+  if (!stringifiedTaskList) {
+    throw new Error('(saveTaskData) tasks: no task list provided.');
+  }
+
+  await waitUntilFirestoreInitialized();
+
+  const saveCallIdx = initializeSaveCall();
+  if (getAppMode() === AppMode.Online) {
+    setRestartFirestoreTimeout(saveCallIdx);
+  }
+
+  const reminderListCopy = JSON.parse(stringifiedTaskList) as Task[];
+
+  if (getAppMode() !== AppMode.Online) {
+    store.set('reminders', reminderListCopy);
+    log.info('(saveTaskData) Task data saved locally.');
+    return;
+  }
+
+  if (!firestore) throw new Error('saveTaskData: Firestore instance does not exist.');
+
+  Object.keys(reminderListCopy).forEach((reminder: any) => {
+    // Get each reminder
+    Object.keys(reminderListCopy[reminder]).forEach((key) => {
+      if (key === 'scheduledTime') {
+        if (reminderListCopy[reminder][key as keyof Task] === undefined)
+          (reminderListCopy[reminder][key as keyof Task] as any) = null;
+      }
+
+      if (key === 'scheduledReminders' || key === 'subtasks') {
+        // Convert the scheduledReminders object to a default js object for firestore to handle
+        (reminderListCopy[reminder][key as keyof Task] as any) = reminderListCopy[reminder][key].map((obj: object) => ({
+          ...obj,
+        }));
+      }
+    });
+  });
+
+  let newReminderList: Task[] = [];
+
+  // Convert custom objects into js objects for firestore to handle
+  if (reminderListCopy.length > 0) newReminderList = reminderListCopy.map((obj) => ({ ...obj }));
+
+  if (taskDataExists) {
+    // If reminder file exists, then update it
+    await updateDoc(taskDocRef, {
+      reminderList: newReminderList,
+    });
+
+    log.info('(saveTaskData) Task data saved.');
+  } else {
+    // If reminder file doesn't exist, then create it
+    await setDoc(taskDocRef, {
+      reminderList: newReminderList,
+    });
+
+    log.info('(saveTaskData) Task data entry created.');
+  }
+
+  saveCallDurations.delete(saveCallIdx);
+  removeSaveCall();
+}
+
+export async function loadUserData(): Promise<RemindrUser | string> {
+  await waitUntilFirestoreInitialized();
+  const uid = getUserUID();
+  const userData = new RemindrUser();
+
+  log.info('(loadUserData) Loading user data... app mode:', getAppMode());
+
+  if (getAppMode() !== AppMode.Online) {
+    return (store.get('userData') as RemindrUser) ?? new RemindrUser().getDefault();
+  }
+
+  if (!firestore) throw new Error('(loadUserData) Firestore instance does not exist.');
+
+  const userRef = doc(collection(firestore, 'users'), uid);
+  const docData = await documentExists(userRef);
+
+  if (!userData) {
+    throw new Error('(loadUserData) Local user data does not exist.');
+  }
+
+  if (!docData.exists || !docData.docSnapshot) {
+    userDataExists = false;
+    throw new Error(`(loadUserData) ERR${ErrorCodes.MISSING_USER_DATA_FIRESTORE}: User data file does not exist.`);
+  }
+
+  userDataExists = true;
+
+  const data = docData.docSnapshot.data();
+
+  // Loop through every variable. If the variable is undefined, then set it to the current value stored in settings.
+  userData.settings = createDefaultSettings();
+
+  if (data?.settings !== undefined) {
+    Object.keys(data?.settings).forEach((key) => {
+      if (data.settings[key] !== undefined) (userData!.settings[key as keyof Settings] as any) = data.settings[key];
+    });
+  }
+
+  if (data?.userData !== undefined)
+    Object?.keys(data?.userData).forEach((key) => {
+      if (data.userData === undefined) {
+        if (data[key] !== undefined) (userData![key as keyof RemindrUser] as any) = data[key];
+      } else if (data.userData[key] !== undefined) {
+        (userData![key as keyof RemindrUser] as any) = data.userData[key];
+      } else if (data[key] !== undefined) (userData![key as keyof RemindrUser] as any) = data[key];
+    });
+
+  // Load in background image if stored
+  log.info('(loadData) User data loaded.');
+
+  return userData;
+}
+
+export async function loadTaskData(): Promise<TaskCollection | string> {
+  await waitUntilFirestoreInitialized();
+
+  let taskData: TaskCollection;
+
+  if (getAppMode() !== AppMode.Online) {
+    taskData = new TaskCollection();
+    taskData.taskList = (store.get('reminders') as Task[]) ?? [];
+
+    return taskData;
+  }
+
+  if (!firestore) throw new Error('(loadTaskData) Firestore instance does not exist.');
+
+  log.info('(loadTaskData) Loading task data...');
+
+  taskData = new TaskCollection();
+
+  const docData = await documentExists(taskDocRef);
+
+  if (!docData.exists || !docData.docSnapshot) {
+    taskDataExists = false;
+
+    // if task data doesn't exist, try to create a new document with an empty task list.
+    await saveTaskData(JSON.stringify(new TaskCollection()));
+
+    return loadTaskData();
+  }
+
+  taskDataExists = true;
+
+  const loadedTaskList = docData.docSnapshot.data()!.reminderList;
+  const instantiatedTaskList: Task[] = [];
+
+  for (let i = 0; i < loadedTaskList.length; i++) {
+    const task = loadedTaskList[i];
+    instantiatedTaskList.push(task);
+  }
+
+  taskData.taskList = instantiatedTaskList;
+
+  return taskData;
 }
 
 // #region Helper Functions
