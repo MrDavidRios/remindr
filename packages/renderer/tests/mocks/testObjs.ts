@@ -25,6 +25,7 @@ export const getMockTaskListState = (tasks: Task[]): TaskListState => {
 
 export const mockMenuState: MenuState = {
   openMenus: [],
+  openDropdowns: {},
   dialogInfo: { title: undefined, message: '', options: [], result: undefined },
   openContextMenus: [],
   contextMenuPositions: {

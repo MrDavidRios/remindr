@@ -2,12 +2,12 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 interface ConnectionState {
   connected: boolean;
-  connCheckStatus: 'idle' | 'pending' | 'succeeded' | 'failed';
+  connCheckStatus: 'pending' | 'succeeded' | 'failed';
 }
 
 const initialState: ConnectionState = {
   connected: false,
-  connCheckStatus: 'idle',
+  connCheckStatus: 'pending',
 };
 
 export const getConnectionStatus = createAsyncThunk('connectionState/getConnectionStatus', async () => {
@@ -25,9 +25,7 @@ export const connectionStateSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getConnectionStatus.pending, (state, action) => {
-      if (state.connCheckStatus === 'idle') {
-        state.connCheckStatus = 'pending';
-      }
+      state.connCheckStatus = 'pending';
     });
     builder.addCase(getConnectionStatus.fulfilled, (state, action) => {
       state.connected = action.payload;

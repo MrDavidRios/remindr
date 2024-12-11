@@ -21,8 +21,8 @@ export const ChosenPage = () => {
   const { connected, connCheckStatus } = useAppSelector((state) => state.connectionState);
 
   useEffect(() => {
-    if (connCheckStatus === 'idle') dispatch(getConnectionStatus());
-  });
+    dispatch(getConnectionStatus());
+  }, []);
 
   // correction: if the computer isn't connected to the internet (connCheckStatus is successful and connected = false), proceed as normal. The following logic should handle this case correctly.
   // If the computer has internet access and user data is still pending, wait for 15 seconds. If it's still pending after, suggest offline mode.
@@ -52,10 +52,7 @@ export const ChosenPage = () => {
 function isLoading(connected: boolean, connCheckStatus: string, userDataGetStatus: string) {
   if (connCheckStatus === 'succeeded' && !connected) return false;
 
-  const connCheckStatusInFlux = connCheckStatus === 'idle' || connCheckStatus === 'pending';
-  const userDataGetStatusInFlux = userDataGetStatus === 'pending';
-
-  if (connCheckStatusInFlux || userDataGetStatusInFlux) return true;
+  if (connCheckStatus === 'pending' || userDataGetStatus === 'pending') return true;
 
   return false;
 }

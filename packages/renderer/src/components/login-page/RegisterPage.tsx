@@ -11,25 +11,13 @@ export function RegisterPage(props: RegisterPageProps) {
 
   return (
     <>
-      <button
-        type="button"
-        id="backBtn"
-        onClick={() => setPage('login')}
-      >
-        <img
-          src={angelRightIcon}
-          className="svg-filter"
-          draggable="false"
-          alt=""
-        />
+      <button type="button" id="backBtn" onClick={() => setPage('login')}>
+        <img src={angelRightIcon} className="svg-filter" draggable="false" alt="" />
         <p>Back</p>
       </button>
       <div id="loginPage">
         <h1 id="loginPageHeader">Create Account</h1>
-        <AuthInput
-          onComplete={(email, password) => attemptRegister(email, password, setPage)}
-          buttonText="Register"
-        />
+        <AuthInput onComplete={(email, password) => attemptRegister(email, password, setPage)} buttonText="Register" />
       </div>
     </>
   );
@@ -40,12 +28,10 @@ async function attemptRegister(
   password: string,
   setPage: Dispatch<SetStateAction<AuthPageType>>,
 ): Promise<string | undefined> {
-  const createUserResult: string = await window.firebase.auth.createUserWithEmailAndPassword(
-    email,
-    password,
-  );
+  const createUserResult: string = await window.firebase.auth.createUserWithEmailAndPassword(email, password);
 
-  if (typeof createUserResult !== 'boolean') return createUserResult;
+  const isError = typeof createUserResult === 'string' && createUserResult.includes('auth/');
+  if (isError) return createUserResult;
 
   setPage('login');
   return undefined;
