@@ -1,4 +1,5 @@
 import { DateFormat } from '../dateformat.js';
+import { Page } from '../page.js';
 import { Theme } from '../theme.js';
 import { Timeframe } from '../timeframe.js';
 import { AppMode } from './appMode.js';
@@ -9,6 +10,8 @@ export type Settings = {
   hideOnStartup: boolean;
 
   startupMode: AppMode;
+
+  startupView: Page;
 
   autoUpdate: boolean;
 
@@ -79,6 +82,7 @@ export function createDefaultSettings(overrides: Partial<Settings> = {}): Settin
     autoUpdate: true,
     hideOnStartup: false,
     startupMode: AppMode.Online,
+    startupView: Page.ColumnView,
     background: '#121212',
     stretchBackground: true,
     theme: Theme.Dark,

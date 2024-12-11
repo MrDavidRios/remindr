@@ -1,5 +1,16 @@
-import { AppMode, appModeLabels, DateFormat, dateFormatDisplayNames, getDayNameFromIdx, Menu } from '@remindr/shared';
+import carouselIcon from '@assets/icons/carousel.svg';
+import listIcon from '@assets/icons/list.svg';
+import {
+  AppMode,
+  appModeLabels,
+  DateFormat,
+  dateFormatDisplayNames,
+  getDayNameFromIdx,
+  Menu,
+  Page,
+} from '@remindr/shared';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
+import { LargeIconButton } from '@renderer/components/large-icon-button/LargeIconButton';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 
@@ -98,6 +109,23 @@ export function GeneralSettingsPage() {
           }}
           scrollParentId="settings"
         />
+      </div>
+      <div id="startupViewSettingWrapper">
+        <p>Startup view:</p>
+        <div>
+          <LargeIconButton
+            label={'List'}
+            icon={listIcon}
+            onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.ListView }))}
+            selected={settings.startupView === Page.ListView}
+          />
+          <LargeIconButton
+            label={'3-Day'}
+            icon={carouselIcon}
+            onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.ColumnView }))}
+            selected={settings.startupView === Page.ColumnView}
+          />
+        </div>
       </div>
       <p className="subheading" style={{ marginTop: 16 }}>
         Date & Time

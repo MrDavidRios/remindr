@@ -1,7 +1,7 @@
 import { Menu, Page, Timeframe } from '@remindr/shared';
 import { AppDispatch } from '@renderer/app/store';
 import { clearSelectedTasks, getTaskList, setTaskDisplayOutdated } from '@renderer/features/task-list/taskListSlice';
-import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
+import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { getAccentColor } from '@renderer/scripts/systems/stylemanager';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { motion } from 'framer-motion';
@@ -18,7 +18,6 @@ interface TaskListDisplayProps {
 
 export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, taskMenuShown }) => {
   const dispatch = useAppDispatch();
-  const store = useAppStore();
 
   const taskListGetStatus = useAppSelector((state) => state.taskList.taskListGetStatus);
   const taskView = useAppSelector((state) => state.pageState.currentPage);

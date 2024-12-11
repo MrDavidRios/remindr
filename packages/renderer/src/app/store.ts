@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { AppMode } from '@remindr/shared';
+import { AppMode, Page } from '@remindr/shared';
 import { unsavedTaskDialogMiddleware } from '../features/menu-state/middleware/unsavedTaskDialogMiddleware';
 import { initialSettingsState } from '../features/settings/settingsSlice';
 import { notificationEventMiddleware } from '../features/task-list/middleware/notificationEventMiddleware';
@@ -13,7 +13,7 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
     reducer: rootReducer,
     preloadedState,
-    middleware: getDefaultMiddleware =>
+    middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
         .prepend(unsavedTaskDialogMiddleware.middleware)
         .concat(taskListStoreMiddleware)
@@ -31,6 +31,9 @@ const preloadedState = {
     ...initialUserState,
     authenticated: window.firebase.auth.authCredentialExists(),
     emailVerified: getEmailVerifiedValue(window.firebase.auth.emailVerified()),
+  },
+  pageState: {
+    currentPage: initialSettingsState.value.startupView ?? Page.ColumnView,
   },
 };
 const store = setupStore(preloadedState);
