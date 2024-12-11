@@ -147,6 +147,8 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
               className="notes-editor"
               placeholder="Enter notes here..."
               defaultValue={editedTask?.notes ?? ''}
+              taskId={editedTask.creationTime}
+              saveOnChange={creating}
               onSave={(value) => {
                 const editedTaskClone = JSON.parse(JSON.stringify(editedTask));
                 editedTaskClone.notes = value;

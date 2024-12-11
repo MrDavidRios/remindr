@@ -1,20 +1,23 @@
 import { Menu } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import React, { FC, useEffect } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 interface NotesEditorProps extends React.HTMLProps<HTMLTextAreaElement> {
+  taskId: number;
   onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   onSave?: (value: React.HTMLProps<HTMLTextAreaElement>['value']) => void;
+  saveOnChange?: boolean;
 }
 
 export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
-  const { id, className, placeholder, maxLength, onSave, defaultValue } = props;
+  const { id, className, placeholder, maxLength, onSave, defaultValue, saveOnChange, taskId } = props;
 
   const spellCheckEnabled = useAppSelector((state) => state.settings.value.spellcheck);
-  const [value, setValue] = React.useState(defaultValue);
+  const [value, setValue] = useState(defaultValue);
+  const [showButtons, setShowButtons] = useState(false);
 
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (!textareaRef.current) return;
@@ -23,12 +26,19 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
 
   useEffect(() => {
     setValue(defaultValue);
-  }, [defaultValue]);
+    setShowButtons(false);
+  }, [taskId]);
 
   const save = () => {
     const trimmedNotes = cleanupText(value);
-
     onSave?.(trimmedNotes);
+
+    setShowButtons(false);
+  };
+
+  const cancel = () => {
+    setValue(defaultValue);
+    setShowButtons(false);
   };
 
   useHotkey(
@@ -43,7 +53,7 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
     ['esc'],
     () => {
       const canCancel = value !== defaultValue;
-      setValue(defaultValue);
+      cancel();
 
       return canCancel;
     },
@@ -59,26 +69,23 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
         value={value}
         style={{ minHeight: '100px' }}
         onChange={(e) => {
+          if (e.currentTarget.value !== defaultValue) setShowButtons(true);
+
           setValue(e.currentTarget.value);
+
+          if (saveOnChange) save();
         }}
         id={id}
         className={className}
         placeholder={placeholder}
         maxLength={maxLength}
       />
-      {value !== defaultValue && (
+      {!saveOnChange && showButtons && (
         <div className="notes-editor-buttons">
-          <button
-            className="accent-button"
-            onClick={() => {
-              const trimmedNotes = cleanupText(value);
-
-              onSave?.(trimmedNotes);
-            }}
-          >
+          <button className="accent-button" onClick={save}>
             Save
           </button>
-          <button className="secondary-button" onClick={() => setValue(defaultValue)}>
+          <button className="secondary-button" onClick={cancel}>
             Cancel
           </button>
         </div>
