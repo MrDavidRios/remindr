@@ -57,7 +57,6 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
       return canCancel;
     },
     Menu.None,
-    { prioritize: true },
   );
 
   return (

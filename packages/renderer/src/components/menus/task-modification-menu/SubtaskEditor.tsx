@@ -2,11 +2,12 @@ import angelRightIcon from '@assets/icons/angel-right.svg';
 import checkboxCheckedIcon from '@assets/icons/checkbox-checked.svg';
 import checkboxEmptyIcon from '@assets/icons/checkbox-empty.svg';
 import subtasksIcon from '@assets/icons/subtasks.svg';
-import { Subtask } from '@remindr/shared';
+import { Menu, Subtask } from '@remindr/shared';
 import { collapseButtonAnimationProps } from '@renderer/animation';
 import { SaveButtons } from '@renderer/components/save-buttons/SaveButtons';
 import { useAppSelector } from '@renderer/hooks';
 import { isCmdorCtrlPressed } from '@renderer/scripts/systems/hotkeys';
+import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { motion } from 'framer-motion';
 import _ from 'lodash';
 import type { FC, RefObject } from 'react';
@@ -62,6 +63,18 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ defaultSubtasks, onSave,
     setSubtasks(defaultSubtasks);
     setShowButtons(false);
   }, [taskId]);
+
+  useHotkey(
+    ['esc'],
+    () => {
+      const subtasksChanged = !_.isEqual(defaultSubtasks, subtasks) && !(!defaultSubtasks && !subtasks);
+
+      cancel();
+
+      return subtasksChanged;
+    },
+    Menu.None,
+  );
 
   const focusOnSubtask = (idx: number) => {
     setFocusIdx(idx);
@@ -199,7 +212,6 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ defaultSubtasks, onSave,
                     if (e.currentTarget.value.trim() === '') return;
 
                     const newSubtask = new Subtask('');
-
                     const updatedSubtasks = [...subtasks];
                     updatedSubtasks.splice(idx + 1, 0, newSubtask);
 
