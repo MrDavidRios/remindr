@@ -8,3 +8,8 @@
 
   @include task-menu-input();
 }
+
+.notes-editor-buttons {
+  display: flex;
+  gap: 12px;
+}

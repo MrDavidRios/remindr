@@ -99,7 +99,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
       <br />
       <button
         type="submit"
-        className="accent-button"
+        className="gradient-button"
         id="finalCreateAccountBtn"
         onClick={async () => {
           if (!isValid) return;

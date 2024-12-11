@@ -1,7 +1,8 @@
 // #region Variable Initialization
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
-import { Settings, Theme } from '@remindr/shared';
+import { DARK_THEME, LIGHT_THEME, Settings, Theme } from '@remindr/shared';
+import { getThemeColors } from '@remindr/shared/src';
 import store from '@renderer/app/store';
 import { FastAverageColorResult } from 'fast-average-color';
 import { Dispatch, SetStateAction } from 'react';
@@ -43,74 +44,31 @@ export function applyTheme(): void {
   const settings = store.getState().settings.value;
 
   const currentTheme = getCurrentTheme(settings.theme);
-  switch (currentTheme) {
-    case Theme.Dark:
-      // #252525 (gray 900)
-      root.style.setProperty('--surface-primary', `rgba(37, 37, 37, ${settings.enableTransparency ? '0.90' : '1.0'})`);
-      // #1A1A1A
-      root.style.setProperty(
-        '--surface-primary-dark',
-        `rgba(26, 26, 26, ${settings.enableTransparency ? '0.90' : '1.0'})`,
-      );
-      // #323232 (gray 800)
-      root.style.setProperty(
-        '--surface-secondary',
-        `rgba(50, 50, 50, ${settings.enableTransparency ? '0.85' : '1.0'})`,
-      );
-      // #3C3C3C (gray 700)
-      root.style.setProperty('--surface-active', `rgba(60, 60, 60, ${settings.enableTransparency ? '0.85' : '1.0'})`);
-      root.style.setProperty('--subtle-box-shadow', '0 2px 5px rgb(0 0 0 / 40%)');
-      root.style.setProperty(
-        '--svg-filter',
-        'invert(89%) sepia(0%) saturate(133%) hue-rotate(193deg) brightness(86%) contrast(93%)',
-      );
-      root.style.setProperty('--img-filter', '');
-      root.style.setProperty('--text-color-primary', 'white');
-      // gray 400
-      root.style.setProperty('--text-color-secondary', '#b5b5b5');
+  const themeColors = getThemeColors(currentTheme, settings.enableTransparency);
 
-      document.querySelectorAll('#window-controls .icon').forEach((el) => {
-        el.classList.remove('invert');
-      });
+  root.style.setProperty('--surface-primary', themeColors.surface.primary);
+  root.style.setProperty('--surface-primary-dark', themeColors.surface.primaryDark);
+  root.style.setProperty('--surface-secondary', themeColors.surface.secondary);
+  root.style.setProperty('--surface-active', themeColors.surface.active);
+  root.style.setProperty('--subtle-box-shadow', themeColors.boxShadow);
+  root.style.setProperty('--svg-filter', themeColors.svgFilter);
+  root.style.setProperty('--img-filter', themeColors.imgFilter);
+  root.style.setProperty('--text-color-primary', themeColors.text.primary);
+  root.style.setProperty('--text-color-secondary', themeColors.text.secondary);
 
-      document.querySelector('#hamburger-button img')?.setAttribute('style', 'filter: invert(0.9)');
-      break;
-    case Theme.Light:
-      // #FAFAFA (gray 100)
-      root.style.setProperty(
-        '--surface-primary',
-        `rgb(250, 250, 250, ${settings.enableTransparency ? '0.85' : '1.0'})`,
-      );
-      // #1A1A1A
-      root.style.setProperty(
-        '--surface-primary-dark',
-        `rgba(220, 220, 220, ${settings.enableTransparency ? '0.90' : '1.0'})`,
-      );
-      // #E6E6E6 (gray 200)
-      root.style.setProperty(
-        '--surface-secondary',
-        `rgb(230, 230, 230, ${settings.enableTransparency ? '0.85' : '1.0'})`,
-      );
-      // #D5D5D5 (gray 300)
-      root.style.setProperty('--surface-active', `rgb(213, 213, 213, ${settings.enableTransparency ? '0.85' : '1.0'})`);
-      root.style.setProperty('--subtle-box-shadow', '0 2px 5px rgb(0 0 0 / 20%)');
-      root.style.setProperty(
-        '--svg-filter',
-        'invert(19%) sepia(0%) saturate(1793%) hue-rotate(159deg) brightness(93%) contrast(79%)',
-      );
-      // gray 700
-      root.style.setProperty('--text-color-primary', '#3c3c3c');
-      root.style.setProperty('--img-filter', 'invert(0.6)');
-      // gray 500
-      root.style.setProperty('--text-color-secondary', '#808080');
-      document.querySelectorAll('#window-controls .icon').forEach((el) => {
-        el.classList.add('invert');
-      });
+  // Theme-specific logic
+  if (currentTheme === Theme.Dark) {
+    document.querySelectorAll('#window-controls .icon').forEach((el) => {
+      el.classList.remove('invert');
+    });
 
-      document.querySelector('#hamburger-button img')?.setAttribute('style', 'filter: invert(0.4)');
-      break;
-    default:
-      throw new Error(`Invalid theme: ${currentTheme}`);
+    document.querySelector('#hamburger-button img')?.setAttribute('style', 'filter: invert(0.9)');
+  } else {
+    document.querySelectorAll('#window-controls .icon').forEach((el) => {
+      el.classList.add('invert');
+    });
+
+    document.querySelector('#hamburger-button img')?.setAttribute('style', 'filter: invert(0.4)');
   }
 
   updateStyleVarsInMain();
@@ -120,7 +78,7 @@ window.electron.ipcRenderer.on('system-theme-changed', () => {
   applyTheme();
 });
 
-function getCurrentTheme(themeSetting: Theme): string {
+function getCurrentTheme(themeSetting: Theme): Theme {
   return themeSetting === Theme.System ? window.electron.theme.getSystemTheme() : themeSetting;
 }
 
@@ -197,6 +155,13 @@ function setAccentColors(color: FastAverageColorResult) {
 
   const darkAccentColorFilter = getColorFilter(darkAccentColorRGB);
   root.style.setProperty('--ui-accent-color-dark-filter', darkAccentColorFilter);
+
+  // Color for text to be rendered over accent color
+  const transparencyEnabled = store.getState().settings.value.enableTransparency;
+  const invertedTextColor = color.isDark
+    ? DARK_THEME(transparencyEnabled).text.primary
+    : LIGHT_THEME(transparencyEnabled).text.primary;
+  root.style.setProperty('--text-color-over-accent', invertedTextColor);
 }
 
 /**

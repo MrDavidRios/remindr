@@ -174,7 +174,7 @@ const getLinkEditor = (type: LinkType, updatedLink: Link, setUpdatedLink: (link:
       return (
         <div style={{ padding: '0 20px' }}>
           <button
-            className="secondary-button"
+            className="icon-button"
             onClick={async () => {
               const fileURL = await openFileSelectionDialog();
               if (!fileURL) return;

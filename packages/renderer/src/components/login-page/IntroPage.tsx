@@ -46,7 +46,7 @@ export function IntroPage() {
             <button
               type="button"
               id="introScreenContinueButton"
-              className="accent-button"
+              className="gradient-button"
               onClick={() => continueButtonHandler(name, dispatch)}
             >
               Continue

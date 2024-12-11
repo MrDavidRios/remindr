@@ -63,6 +63,9 @@ function useMenuHotkeys(dispatch: AppDispatch, appMode: AppMode, authenticated: 
       dispatch(showMenu(Menu.AccountMenu));
     },
     Menu.None,
+    {
+      disableOnFormTags: true,
+    },
   );
   useHotkey(
     ['mod+comma'],

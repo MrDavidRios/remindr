@@ -30,6 +30,9 @@ export const TaskListDisplay: React.FC<TaskListDisplayProps> = ({ timeframe, tas
       dispatch(clearSelectedTasks());
     },
     Menu.None,
+    {
+      disableOnFormTags: true,
+    },
   );
 
   useEffect(() => {

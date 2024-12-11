@@ -1,0 +1,47 @@
+.accent-button,
+.secondary-button,
+.icon-button {
+  margin: 0;
+  padding: 7px 16px;
+
+  font-size: 14px;
+  white-space: nowrap;
+
+  border-radius: 6px;
+}
+
+.accent-button {
+  background-color: var(--ui-accent-color);
+  color: var(--text-color-over-accent);
+}
+
+.secondary-button {
+  color: var(--text-color-secondary);
+
+  &:hover {
+    box-shadow: var(--subtle-box-shadow);
+    background-color: var(--surface-primary);
+  }
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+
+  padding: 6px 10px;
+  box-shadow: var(--subtle-box-shadow);
+
+  img {
+    width: 16px;
+    height: 16px;
+
+    filter: var(--svg-filter);
+  }
+
+  p {
+    line-height: 16px;
+    white-space: nowrap;
+  }
+}

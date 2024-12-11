@@ -35,6 +35,7 @@
 @use "./components/noteseditor";
 @use "./components/linkseditor";
 
+@use "./components/standardbuttons";
 @use "./components/largeiconbutton";
 
 // Pages
@@ -186,13 +187,6 @@ li:focus-visible {
     pointer-events: none;
     cursor: default;
   }
-}
-
-.secondary-button {
-  background-color: var(--surface-secondary);
-  padding: 4px 8px;
-  border-radius: var(--menu-border-radius);
-  box-shadow: var(--subtle-box-shadow);
 }
 
 label.required {

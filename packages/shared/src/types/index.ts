@@ -10,5 +10,6 @@ export * from './message.js';
 export * from './page.js';
 export * from './taskListAction.js';
 export * from './theme.js';
+export * from './themeColors.js';
 export * from './timeframe.js';
 export * from './updateStatus.js';

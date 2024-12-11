@@ -33,26 +33,6 @@
 
     min-height: inherit;
   }
-
-  .secondary-button {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    padding: 6px 10px;
-
-    img {
-      width: 16px;
-      height: 16px;
-
-      filter: var(--svg-filter);
-    }
-
-    p {
-      line-height: 16px;
-      white-space: nowrap;
-    }
-  }
 }
 
 .links-editor {

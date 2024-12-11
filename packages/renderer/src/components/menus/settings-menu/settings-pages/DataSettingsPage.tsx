@@ -10,10 +10,10 @@ export function DataSettingsPage() {
       <h3 className="settings-menu-header">Data</h3>
       <p>Storage & Recovery</p>
       <div id="dataTransferButtonWrapper">
-        <button type="button" className="data-transfer-button" onClick={() => dispatch(showMenu(Menu.BackupDataMenu))}>
+        <button type="button" className="accent-button" onClick={() => dispatch(showMenu(Menu.BackupDataMenu))}>
           Backup
         </button>
-        <button type="button" className="data-transfer-button" onClick={() => dispatch(showMenu(Menu.RestoreDataMenu))}>
+        <button type="button" className="accent-button" onClick={() => dispatch(showMenu(Menu.RestoreDataMenu))}>
           Restore
         </button>
       </div>

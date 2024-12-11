@@ -23,5 +23,6 @@
 
   &.selected {
     background-color: var(--surface-active);
+    box-shadow: var(--subtle-box-shadow);
   }
 }
