@@ -125,15 +125,16 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
           <RemindersEditor />
 
           <SubtaskEditor
-            subtasks={editedTask?.subtasks ?? []}
-            onChange={(subtasks: Subtask[]) => {
+            taskId={editedTask.creationTime}
+            defaultSubtasks={editedTask?.subtasks ?? []}
+            onSave={(subtasks: Subtask[]) => {
               const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
               editedTaskClone.subtasks = JSON.parse(JSON.stringify(subtasks));
               dispatch(setEditedTask({ creating, task: editedTaskClone }));
-            }}
-            onSaveableChange={() => {
+
               if (!creating) save();
             }}
+            saveOnChange={creating}
           />
 
           <LinksEditor />

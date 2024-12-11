@@ -4,24 +4,26 @@ import checkboxEmptyIcon from '@assets/icons/checkbox-empty.svg';
 import subtasksIcon from '@assets/icons/subtasks.svg';
 import { Subtask } from '@remindr/shared';
 import { collapseButtonAnimationProps } from '@renderer/animation';
+import { SaveButtons } from '@renderer/components/save-buttons/SaveButtons';
 import { useAppSelector } from '@renderer/hooks';
 import { isCmdorCtrlPressed } from '@renderer/scripts/systems/hotkeys';
 import { motion } from 'framer-motion';
+import _ from 'lodash';
 import type { FC, RefObject } from 'react';
 import { createRef, useEffect, useRef, useState } from 'react';
 import DynamicInput from '../../dynamic-text-area/DynamicInput';
 
 interface SubtaskEditorProps {
-  subtasks: Subtask[];
-  onChange: (subtasks: Subtask[]) => void;
-  /**
-   * Call when the subtasks are changed in a way that don't overload the app with save calls (e.g. subtask input element blur)
-   */
-  onSaveableChange: (subtasks: Subtask[]) => void;
+  taskId: number;
+  defaultSubtasks: Subtask[];
+  onSave?: (subtasks: Subtask[]) => void;
+  saveOnChange?: boolean;
 }
 
-export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSaveableChange }) => {
-  const modifiedSubtasks = JSON.parse(JSON.stringify(subtasks)) as Subtask[];
+export const SubtaskEditor: FC<SubtaskEditorProps> = ({ defaultSubtasks, onSave, saveOnChange, taskId }) => {
+  const [subtasks, setSubtaskState] = useState(defaultSubtasks);
+  const [showButtons, setShowButtons] = useState(false);
+
   const finalInputRef = useRef<HTMLInputElement>(null);
 
   const animationsEnabled = useAppSelector((state) => state.settings.value.enableAnimations);
@@ -30,12 +32,12 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
   const [focusIdx, setFocusIdx] = useState(-1);
 
   const inputRefs = useRef<RefObject<HTMLTextAreaElement>[]>([]);
-  inputRefs.current = modifiedSubtasks.map((_, i) => inputRefs.current[i] ?? createRef());
+  inputRefs.current = subtasks.map((_, i) => inputRefs.current[i] ?? createRef());
 
   const [hoveringOverHeader, setHoveringOverHeader] = useState(false);
   const [collapsed, setCollapsed] = useState(window.store.get('subtasksCollapsed') ?? false);
 
-  const completedSubtasks = modifiedSubtasks.filter((subtask) => subtask.complete).length;
+  const completedSubtasks = subtasks.filter((subtask) => subtask.complete).length;
   const subtaskProgressClasses = `${subtasks.length === 0 ? 'hidden' : ''} ${
     completedSubtasks === subtasks.length ? 'complete' : ''
   }`;
@@ -45,6 +47,8 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
     if (!updateFocus) return;
 
     // If focus idx is set to -1, focus on 'Add a subtask...' input
+    console.log('focus idx:', focusIdx);
+
     if (focusIdx === -1) {
       finalInputRef.current?.focus();
       return;
@@ -54,22 +58,40 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
     setUpdateFocus(false);
   }, [updateFocus, focusIdx]);
 
+  useEffect(() => {
+    setSubtasks(defaultSubtasks);
+    setShowButtons(false);
+  }, [taskId]);
+
   const focusOnSubtask = (idx: number) => {
     setFocusIdx(idx);
     setUpdateFocus(true);
   };
 
   const removeSubtask = (idx: number) => {
-    modifiedSubtasks.splice(idx, 1);
-    onChange(modifiedSubtasks);
+    const updatedSubtasks = [...subtasks];
+    updatedSubtasks.splice(idx, 1);
 
-    const otherSubtasksExist = modifiedSubtasks.length > 0;
+    const otherSubtasksExist = updatedSubtasks.length > 0;
     let nextIdx = idx === 0 ? 0 : idx - 1;
     if (!otherSubtasksExist) {
       nextIdx = -1;
     }
 
+    setSubtasks(updatedSubtasks);
     focusOnSubtask(nextIdx);
+  };
+
+  const setSubtasks = (subtasks: Subtask[]) => {
+    const subtasksChanged = !_.isEqual(defaultSubtasks, subtasks);
+
+    if (!defaultSubtasks && !subtasks) {
+      setShowButtons(false);
+    } else {
+      setShowButtons(subtasksChanged);
+    }
+
+    setSubtaskState(subtasks);
   };
 
   // If subtasks are collapsed, make sure no inputs/checkboxes are tabbable
@@ -78,6 +100,16 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
 
     ref.current.tabIndex = collapsed ? -1 : 0;
   });
+
+  const save = () => {
+    onSave?.(subtasks);
+    setShowButtons(false);
+  };
+
+  const cancel = () => {
+    setSubtasks(defaultSubtasks);
+    setShowButtons(false);
+  };
 
   return (
     <div id="subtasksWrapper">
@@ -115,8 +147,9 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
             <button
               type="button"
               onClick={() => {
-                modifiedSubtasks[idx].complete = !modifiedSubtasks[idx].complete;
-                onChange(modifiedSubtasks);
+                const updatedSubtasks = [...subtasks];
+                updatedSubtasks[idx] = { ...updatedSubtasks[idx], complete: !updatedSubtasks[idx].complete };
+                setSubtasks(updatedSubtasks);
               }}
               tabIndex={collapsed ? -1 : 0}
             >
@@ -132,27 +165,28 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
               {...subtaskInputProps()}
               value={subtask.name}
               onChange={(e) => {
-                modifiedSubtasks[idx].name = e.currentTarget.value;
-                onChange(modifiedSubtasks);
+                const updatedSubtasks = [...subtasks];
+                updatedSubtasks[idx] = { ...updatedSubtasks[idx], name: e.currentTarget.value };
+                setSubtasks(updatedSubtasks);
               }}
               onKeyDown={(e) => {
                 if (e.key === 'ArrowUp' && e.altKey && idx > 0) {
                   // move subtask up in array
-                  const updatedSubtasks = [...modifiedSubtasks];
+                  const updatedSubtasks = [...subtasks];
                   const subtaskToRelocate = updatedSubtasks.splice(idx, 1)[0];
                   updatedSubtasks.splice(idx - 1, 0, subtaskToRelocate);
 
-                  onChange(updatedSubtasks);
+                  setSubtasks(updatedSubtasks);
                   focusOnSubtask(idx - 1);
                 }
 
-                if (e.key === 'ArrowDown' && e.altKey && idx < modifiedSubtasks.length - 1) {
+                if (e.key === 'ArrowDown' && e.altKey && idx < subtasks.length - 1) {
                   // move subtask up in array
-                  const updatedSubtasks = [...modifiedSubtasks];
+                  const updatedSubtasks = [...subtasks];
                   const subtaskToRelocate = updatedSubtasks.splice(idx, 1)[0];
                   updatedSubtasks.splice(idx + 1, 0, subtaskToRelocate);
 
-                  onChange(updatedSubtasks);
+                  setSubtasks(updatedSubtasks);
                   focusOnSubtask(idx + 1);
                 }
 
@@ -165,9 +199,11 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
                     if (e.currentTarget.value.trim() === '') return;
 
                     const newSubtask = new Subtask('');
-                    modifiedSubtasks.splice(idx + 1, 0, newSubtask);
 
-                    onChange(modifiedSubtasks);
+                    const updatedSubtasks = [...subtasks];
+                    updatedSubtasks.splice(idx + 1, 0, newSubtask);
+
+                    setSubtasks(updatedSubtasks);
                     focusOnSubtask(idx + 1);
                     return;
                   }
@@ -201,14 +237,14 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
                   removeSubtask(idx);
                 }
 
-                onSaveableChange(modifiedSubtasks);
+                if (saveOnChange) save();
               }}
               onNavigateUp={() => {
                 if (idx === 0) return;
                 focusOnSubtask(idx - 1);
               }}
               onNavigateDown={() => {
-                if (idx === modifiedSubtasks.length - 1) {
+                if (idx === subtasks.length - 1) {
                   finalInputRef.current?.focus();
                   return;
                 }
@@ -233,22 +269,24 @@ export const SubtaskEditor: FC<SubtaskEditorProps> = ({ subtasks, onChange, onSa
               }
 
               const newSubtask = new Subtask(e.currentTarget.value);
-              modifiedSubtasks.push(newSubtask);
-              onChange(modifiedSubtasks);
+              const updatedSubtasks = [...subtasks];
+              updatedSubtasks.push(newSubtask);
+              setSubtasks(updatedSubtasks);
 
               e.currentTarget.value = '';
 
-              focusOnSubtask(modifiedSubtasks.length - 1);
+              focusOnSubtask(updatedSubtasks.length - 1);
             }}
             onKeyDown={(e) => {
               if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                focusOnSubtask(modifiedSubtasks.length - 1);
+                focusOnSubtask(subtasks.length - 1);
               }
             }}
           />
         </div>
       </div>
+      {!saveOnChange && showButtons && <SaveButtons onSave={save} onCancel={cancel} />}
     </div>
   );
 };

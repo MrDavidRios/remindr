@@ -1,11 +1,11 @@
 import { Menu } from '@remindr/shared';
+import { SaveButtons } from '@renderer/components/save-buttons/SaveButtons';
 import { useAppSelector } from '@renderer/hooks';
 import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { FC, useEffect, useRef, useState } from 'react';
 
 interface NotesEditorProps extends React.HTMLProps<HTMLTextAreaElement> {
   taskId: number;
-  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   onSave?: (value: React.HTMLProps<HTMLTextAreaElement>['value']) => void;
   saveOnChange?: boolean;
 }
@@ -32,7 +32,6 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
   const save = () => {
     const trimmedNotes = cleanupText(value);
     onSave?.(trimmedNotes);
-
     setShowButtons(false);
   };
 
@@ -80,16 +79,7 @@ export const NotesEditor: FC<NotesEditorProps> = (props: NotesEditorProps) => {
         placeholder={placeholder}
         maxLength={maxLength}
       />
-      {!saveOnChange && showButtons && (
-        <div className="notes-editor-buttons">
-          <button className="accent-button" onClick={save}>
-            Save
-          </button>
-          <button className="secondary-button" onClick={cancel}>
-            Cancel
-          </button>
-        </div>
-      )}
+      {!saveOnChange && showButtons && <SaveButtons onSave={save} onCancel={cancel} />}
     </>
   );
 };
