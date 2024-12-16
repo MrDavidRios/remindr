@@ -26,7 +26,7 @@ export const TaskColumns = memo(function TaskColumns() {
         <AnimatePresence mode="popLayout">
           {filteredTasks.map((task) => (
             <div key={task.creationTime}>
-              <TaskTileWrapper task={task} />
+              <TaskTileWrapper task={task} reorderable={false} />
             </div>
           ))}
         </AnimatePresence>

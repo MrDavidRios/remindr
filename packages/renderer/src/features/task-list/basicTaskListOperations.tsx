@@ -101,6 +101,7 @@ export const completeTaskReducer = (
     state.value[taskIdx].scheduledReminders.splice(0, 1);
     state.value[taskIdx].scheduledReminders.push(advancedScheduledReminder);
     state.value[taskIdx].scheduledReminders = sortReminders(state.value[taskIdx].scheduledReminders);
+    state.value[taskIdx].columnIdx = getTaskColumnIdx(state.value[taskIdx]);
   }
 
   /*

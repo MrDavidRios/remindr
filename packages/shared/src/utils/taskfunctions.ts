@@ -3,6 +3,7 @@ import { getReminderDate } from './datefunctions.js';
 import { generateUniqueID } from './idutils.js';
 import { getNextRepeatDate } from './repeatfunctions.js';
 import { getDate, setDate, sortReminders } from './scheduledreminderfunctions.js';
+import { getTaskColumnIdx } from './taskcolumnfunctions.js';
 
 export function taskHasReminders(task: Task): boolean {
   return task.scheduledReminders.length > 0;
@@ -21,7 +22,7 @@ export function isTaskSelected(task: Task, selectedTasks: Task[]): boolean {
 export function postponeTask(task: Task, minutes: number, idx = 0): Task {
   if (!task.scheduledReminders[idx]) return task;
 
-  const taskToReturn = JSON.parse(JSON.stringify(task));
+  const taskToReturn: Task = JSON.parse(JSON.stringify(task));
   const reminder = taskToReturn.scheduledReminders[idx];
 
   /**
@@ -35,6 +36,7 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
     snoozedDate.setMinutes(snoozedDate.getMinutes() + minutes);
     taskToReturn.scheduledReminders[idx] = setDate(taskToReturn.scheduledReminders[idx], snoozedDate);
     taskToReturn.scheduledReminders = sortReminders(taskToReturn.scheduledReminders);
+    taskToReturn.columnIdx = getTaskColumnIdx(taskToReturn);
 
     return taskToReturn;
   }
@@ -69,8 +71,8 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
 
   taskToReturn.scheduledReminders.push(duplicatedReminder);
 
-  // Sort reminders
   taskToReturn.scheduledReminders = sortReminders(taskToReturn.scheduledReminders);
+  taskToReturn.columnIdx = getTaskColumnIdx(taskToReturn);
 
   return taskToReturn;
 }
