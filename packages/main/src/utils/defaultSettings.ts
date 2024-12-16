@@ -1,3 +1,4 @@
+import { Page } from '@remindr/shared/src/types/page.js';
 import { AppMode } from '../../../shared/src/types/classes/appMode.js';
 import type { Settings } from '../../../shared/src/types/classes/settings.js';
 import { DateFormat } from '../../../shared/src/types/dateformat.js';
@@ -30,6 +31,7 @@ export function createDefaultSettings(overrides: Partial<Settings> = {}): Settin
     reorderableTodo: false,
     showCompletedTasks: true,
     enabledTaskColumns: [-1, 0, 1],
+    startupView: Page.ColumnView,
     ...overrides,
   };
 }

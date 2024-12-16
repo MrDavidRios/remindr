@@ -1,4 +1,4 @@
-import { ThemeColors } from 'src/types/index.js';
+import { ThemeColors } from '../types/index.js';
 
 export const LIGHT_THEME = (enableTransparency?: boolean): ThemeColors => {
   return {
