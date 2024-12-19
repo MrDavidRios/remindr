@@ -8,4 +8,5 @@ files:
   - packages/**/dist/**
 
 linux:
-  target: deb
+  target: [deb, AppImage]
+  category: Utility
