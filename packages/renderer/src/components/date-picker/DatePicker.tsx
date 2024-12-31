@@ -2,7 +2,7 @@ import doubleExpandArrowIcon from '@assets/icons/double-expand-arrow.png';
 import expandArrowIcon from '@assets/icons/expand-arrow.png';
 import { getDayNameFromIdx, getMonthName } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Day } from './Day';
 
 interface DatePickerProps {
@@ -21,11 +21,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
   const dayRefs = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => React.createRef<HTMLButtonElement>()),
   );
-
-  // If the date is updated from the parent component, refocus the calendar on the changed date.
-  useEffect(() => {
-    setDateView(date);
-  }, [date]);
 
   return (
     <div id="datePicker" className="dates">
