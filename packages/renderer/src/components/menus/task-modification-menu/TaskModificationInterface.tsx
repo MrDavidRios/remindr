@@ -31,7 +31,6 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
 
   const fallbackTask = JSON.parse(JSON.stringify(new Task(''))) as Task;
   const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState, creating)) ?? fallbackTask;
-
   const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
 
   /**

@@ -35,6 +35,9 @@ export const menuStateSlice = createSlice({
 
       // If the menu is lower priority than a modal, and there is an open modal, don't open it
       const menuType = MENU_TYPES.get(menu) ?? MenuType.None;
+
+      // TaskCreateMenu is a special case given that the unsaved task dialog modal logic conflicts with this check
+      // (we strictly want to keep the task creation menu open while the unsaved task dialog modal is open)
       if (menu !== Menu.TaskCreateMenu && menuType > MenuType.Modal && isModalOpen(state)) return;
 
       if (state.openMenus.includes(menu)) return;

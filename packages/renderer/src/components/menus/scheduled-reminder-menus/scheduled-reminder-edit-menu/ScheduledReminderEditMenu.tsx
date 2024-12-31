@@ -89,7 +89,10 @@ export const ScheduledReminderEditMenu: FC = () => {
     editedTaskClone.columnIdx = getTaskColumnIdx(editedTaskClone);
 
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
-    if (taskEditType === 'edit') dispatch(updateTask(editedTaskClone));
+    if (taskEditType === 'edit') {
+      console.log('(ScheduledReminderEditMenu) dispatching updateTask:', editedTaskClone);
+      dispatch(updateTask(editedTaskClone));
+    }
 
     dispatch(hideMenu({ menu: Menu.ScheduledReminderEditMenu }));
   }
@@ -103,7 +106,7 @@ export const ScheduledReminderEditMenu: FC = () => {
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
   };
 
-  useEscToClose(dispatch, Menu.ScheduledReminderEditMenu);
+  useEscToClose(dispatch, Menu.ScheduledReminderEditMenu, undefined, onMenuClose);
   useHotkey(['mod+s'], handleEditCompletion, Menu.ScheduledReminderEditMenu);
   useDetectWheel({
     element: document.querySelector('.task-modification-interface') as HTMLElement | undefined,
@@ -149,8 +152,6 @@ export const ScheduledReminderEditMenu: FC = () => {
   useEffect(() => {
     setMinuteInputState(formatMinute(updatedReminder.reminderMinute));
   }, [updatedReminder.reminderMinute]);
-
-  console.log('scheduled reminder edit menu re-render:', anchor, yOffset, gap);
 
   return (
     <FloatingMenu
