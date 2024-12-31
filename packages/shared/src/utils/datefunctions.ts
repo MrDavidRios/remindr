@@ -104,13 +104,31 @@ export function isCurrentMinute(reminderTime: ScheduledReminder): boolean {
  */
 export function addMonths(date: Date, months: number): Date {
   const d = date.getDate();
+  const modifiedDate = new Date(date);
 
-  date.setMonth(date.getMonth() + months);
-  if (date.getDate() !== d) {
-    date.setDate(0);
+  modifiedDate.setMonth(modifiedDate.getMonth() + months);
+  if (modifiedDate.getDate() !== d) {
+    modifiedDate.setDate(0);
   }
 
-  return date;
+  return modifiedDate;
+}
+
+/**
+ * Returns the inputted date with a fixed number of months subtracted from it.
+ * @param  {Date} date
+ * @param  {number} months
+ */
+export function subtractMonths(date: Date, months: number): Date {
+  const d = date.getDate();
+  const modifiedDate = new Date(date);
+
+  modifiedDate.setMonth(modifiedDate.getMonth() - months);
+  if (modifiedDate.getDate() !== d) {
+    modifiedDate.setDate(0);
+  }
+
+  return modifiedDate;
 }
 
 /**

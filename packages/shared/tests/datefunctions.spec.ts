@@ -1,5 +1,6 @@
 import {
   ScheduledReminder,
+  addMonths,
   getDaysBetweenDates,
   getReminderDate,
   isCurrentMinute,
@@ -213,5 +214,47 @@ describe('msUntilNextMinute', () => {
 
     const result = msUntilNextMinute();
     expect(result).toBeCloseTo(expectedMs, -2); // Allowing a small margin for execution time
+  });
+});
+
+describe('addMonths', () => {
+  it('should add the correct number of months to a date', () => {
+    const date = new Date(2023, 0, 1); // January 1, 2023
+    const result = addMonths(date, 1);
+    const expectedDate = new Date(2023, 1, 1); // February 1, 2023
+
+    expect(result).toEqual(expectedDate);
+  });
+
+  it('should handle adding months that result in a year change', () => {
+    const date = new Date(2023, 10, 1); // November 1, 2023
+    const result = addMonths(date, 3);
+    const expectedDate = new Date(2024, 1, 1); // February 1, 2024
+
+    expect(result).toEqual(expectedDate);
+  });
+
+  it('should handle adding months that result in a month with fewer days', () => {
+    const date = new Date(2023, 0, 31); // January 31, 2023
+    const result = addMonths(date, 1);
+    const expectedDate = new Date(2023, 1, 28); // February 28, 2023 (non-leap year)
+
+    expect(result).toEqual(expectedDate);
+  });
+
+  it('should handle adding months that result in a month with more days', () => {
+    const date = new Date(2023, 1, 28); // February 28, 2023
+    const result = addMonths(date, 1);
+    const expectedDate = new Date(2023, 2, 28); // March 28, 2023
+
+    expect(result).toEqual(expectedDate);
+  });
+
+  it('should handle adding months that result in a month with fewer days and set the date to the last day of the month', () => {
+    const date = new Date(2023, 0, 31); // January 31, 2023
+    const result = addMonths(date, 1);
+    const expectedDate = new Date(2023, 1, 28); // February 28, 2023 (non-leap year)
+
+    expect(result).toEqual(expectedDate);
   });
 });

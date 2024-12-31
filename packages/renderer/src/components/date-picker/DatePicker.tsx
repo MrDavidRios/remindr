@@ -1,8 +1,8 @@
 import doubleExpandArrowIcon from '@assets/icons/double-expand-arrow.png';
 import expandArrowIcon from '@assets/icons/expand-arrow.png';
-import { getDayNameFromIdx, getMonthName } from '@remindr/shared';
+import { addMonths, getDayNameFromIdx, getMonthName, subtractMonths } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Day } from './Day';
 
 interface DatePickerProps {
@@ -22,6 +22,35 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
     Array.from({ length: cols }, () => React.createRef<HTMLButtonElement>()),
   );
 
+  const changeMonthAndFocus = (newDate: Date, firstDay: boolean): void => {
+    const newDaysArray = getDaysArray(newDate, firstDayOfWeek);
+    const dayIdx = firstDay ? getFirstValidDayIdx(newDaysArray) : getLastValidDayIdx(newDaysArray);
+
+    setDateView(newDate);
+    setFocusedDayIdx(dayIdx);
+  };
+
+  const getLastValidDayIdx = (customDaysArray?: number[]) => {
+    const days = customDaysArray ?? daysArray;
+    return days.length - 1;
+  };
+
+  const getFirstValidDayIdx = (customDaysArray?: number[]) => {
+    const days = customDaysArray ?? daysArray;
+    return days.findIndex((day) => day !== -1);
+  };
+
+  const [focusedDayIdx, setFocusedDayIdx] = useState<number>(-1);
+
+  useEffect(() => {
+    if (focusedDayIdx === -1) return;
+
+    const i = Math.floor(focusedDayIdx / cols);
+    const j = focusedDayIdx % cols;
+
+    dayRefs[i][j].current?.focus();
+  }, [focusedDayIdx]);
+
   return (
     <div id="datePicker" className="dates">
       <div className="calendar-controls">
@@ -37,7 +66,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
         <button
           className="arrows prev-mth left"
           title="Previous month"
-          onClick={() => setDateView(new Date(dateView.getFullYear(), dateView.getMonth() - 1, 1))}
+          onClick={() => setDateView(subtractMonths(dateView, 1))}
           type="button"
           aria-label="Previous month"
         >
@@ -46,9 +75,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
         <button
           className="month-year"
           title="Reset to current month"
-          onClick={() => {
-            setDateView(new Date());
-          }}
+          onClick={() => setDateView(new Date())}
           type="button"
           aria-label="Reset to current month"
         >
@@ -57,7 +84,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
         <button
           className="arrows next-mth right"
           title="Next month"
-          onClick={() => setDateView(new Date(dateView.getFullYear(), dateView.getMonth() + 1, 1))}
+          onClick={() => setDateView(addMonths(dateView, 1))}
           type="button"
           aria-label="Next month"
         >
@@ -112,14 +139,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                   const atBottomBorder = i === rows - 1;
                   const atLeftBorder = j === 0;
 
-                  const validDays = daysArray.filter((dayCandidate) => dayCandidate !== -1).length;
-                  const invalidBeginningDays = daysArray.filter(
-                    (dayCandidate, idx) => dayCandidate === -1 && idx < cols,
-                  ).length;
-                  const invalidEndingDays = rows * cols - validDays - invalidBeginningDays;
-
-                  const onFirstDay = atTopBorder && j === invalidBeginningDays;
-                  const onLastDay = dayIdx === daysArray.length - 1;
+                  const onFirstDay = dayIdx === getFirstValidDayIdx();
+                  const onLastDay = dayIdx === getLastValidDayIdx();
 
                   if (e.key === 'ArrowUp' || e.key === 'w') {
                     newI = i > 0 ? i - 1 : i;
@@ -129,6 +150,12 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                     // Going left
                     newJ = j > 0 ? j - 1 : j;
 
+                    if (onFirstDay) {
+                      const newDate = subtractMonths(dateView, 1);
+                      changeMonthAndFocus(newDate, false);
+                      return;
+                    }
+
                     if (atLeftBorder) {
                       newJ = cols - 1;
                       newI = i - 1;
@@ -137,14 +164,15 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                         newI = rows - 1;
                       }
                     }
-
-                    if (onFirstDay) {
-                      newI = rows - 1;
-                      newJ = cols - invalidEndingDays - 1;
-                    }
                   } else if (e.key === 'ArrowRight' || e.key === 'd') {
                     // Going right
                     newJ = j < cols - 1 ? j + 1 : j;
+
+                    if (onLastDay) {
+                      const newDate = addMonths(dateView, 1);
+                      changeMonthAndFocus(newDate, true);
+                      return;
+                    }
 
                     if (atRightBorder) {
                       newJ = 0;
@@ -154,20 +182,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                         newI = 0;
                       }
                     }
-
-                    if (onLastDay) {
-                      newI = 0;
-                      newJ = invalidBeginningDays;
-                    }
                   }
 
                   const newDayIdx = newI * cols + newJ;
                   const newDayValue = daysArray[newDayIdx];
                   if (newDayValue === -1 || newDayValue === undefined) return;
 
-                  if (!dayRefs[newI][newJ].current) return;
-
-                  dayRefs[newI][newJ].current?.focus();
+                  setFocusedDayIdx(newDayIdx);
                 }}
               />
             );
