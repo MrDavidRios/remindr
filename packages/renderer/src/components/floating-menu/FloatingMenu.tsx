@@ -27,7 +27,6 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
   onKeyDown,
 }) => {
   const [position, setPosition] = useState({ x: -1, y: -1 });
-
   const ref = useClickOutside(() => onClickOutside?.(), clickOutsideExceptions);
 
   useEffect(() => {
@@ -59,6 +58,8 @@ export const FloatingMenu: FC<FloatingMenuProps> = ({
     }
 
     const borderAdjustedYPos = posYTopAnchored + rect.height > innerHeight ? posYBottomAnchored : posYTopAnchored;
+
+    console.log('borderAdjustedXPos', borderAdjustedXPos);
 
     setPosition({ x: borderAdjustedXPos, y: borderAdjustedYPos });
   }, [anchor, yOffset, gap, ref]);

@@ -6,16 +6,12 @@ import { resetUserState } from '@renderer/features/user-state/userSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { deleteAccount, reauthenticateUser } from '@renderer/scripts/systems/authentication';
 import showMessageBox from '@renderer/scripts/utils/messagebox';
-import type { Dispatch, FC, SetStateAction } from 'react';
+import type { FC } from 'react';
 import { useState } from 'react';
 import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 
-interface AccountDeleteMenuProps {
-  setShowAccountDeleteMenu: Dispatch<SetStateAction<boolean>>;
-}
-
-export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDeleteMenu }) => {
+export const AccountDeleteMenu: FC = () => {
   const dispatch = useAppDispatch();
 
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -27,7 +23,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
     const passwordValue = password.trim();
 
     if (emailValue === store.getState().userState.user?.email) {
-      await showDeleteAccountPrompt(emailValue, passwordValue, setShowAccountDeleteMenu, dispatch);
+      await showDeleteAccountPrompt(emailValue, passwordValue, dispatch);
     } else {
       await showMessageBox(
         'Login Error - Invalid Email',
@@ -88,12 +84,7 @@ export const AccountDeleteMenu: FC<AccountDeleteMenuProps> = ({ setShowAccountDe
   );
 };
 
-async function showDeleteAccountPrompt(
-  emailValue: string,
-  passwordValue: string,
-  setShowAccountDeleteMenu: Dispatch<SetStateAction<boolean>>,
-  dispatch: AppDispatch,
-) {
+async function showDeleteAccountPrompt(emailValue: string, passwordValue: string, dispatch: AppDispatch) {
   try {
     const error = await reauthenticateUser(emailValue, passwordValue);
 
@@ -116,7 +107,6 @@ async function showDeleteAccountPrompt(
 
       showMessageBox('Account Deleted', 'Your account has been deleted.', 'info', []);
 
-      setShowAccountDeleteMenu(false);
       dispatch(hideMenu({ menu: Menu.AccountMenu }));
       dispatch(resetUserState());
     }

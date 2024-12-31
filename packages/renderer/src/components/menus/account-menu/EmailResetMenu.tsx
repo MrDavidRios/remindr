@@ -5,17 +5,13 @@ import { updateEmail } from '@renderer/features/user-state/userSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { resetEmail, signOut } from '@renderer/scripts/systems/authentication';
 import showMessageBox from '@renderer/scripts/utils/messagebox';
-import type { Dispatch, FC, SetStateAction } from 'react';
+import type { FC } from 'react';
 import { useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';
 import { FullScreenMenu } from '../fullscreen-menu/FullScreenMenu';
 
-interface EmailResetMenuProps {
-  setShowEmailResetMenu: Dispatch<SetStateAction<boolean>>;
-}
-
-export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu }) => {
+export const EmailResetMenu: FC = () => {
   const dispatch = useAppDispatch();
 
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -92,8 +88,6 @@ export const EmailResetMenu: FC<EmailResetMenuProps> = ({ setShowEmailResetMenu 
       );
 
       resetDialog();
-      setShowEmailResetMenu(false);
-
       dispatch(hideMenu({ menu: Menu.AccountMenu }));
       signOut(dispatch);
       return;

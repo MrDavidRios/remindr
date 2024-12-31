@@ -21,6 +21,10 @@ export function isContextMenuOpen(state: MenuState, contextMenu: ContextMenuType
   return state.openContextMenus.includes(contextMenu);
 }
 
+export function isModalOpen(state: MenuState) {
+  return state.openMenus.some((menu) => MENU_TYPES.get(menu) === MenuType.Modal);
+}
+
 export const isPrimaryMenu = (menu: Menu) => MENU_TYPES.get(menu) === MenuType.Primary;
 
 export const convertDOMRectToMenuRect = (rect?: DOMRect): MenuRect | undefined => {

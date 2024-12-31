@@ -12,10 +12,9 @@ import { EmailResetMenu } from './EmailResetMenu';
 
 export const AccountMenu = () => {
   const userData = useAppSelector((state) => state.userState.user);
-
+  const showEmailResetMenu = useAppSelector((state) => state.menuState.openMenus.includes(Menu.EmailResetMenu));
+  const showAccountDeleteMenu = useAppSelector((state) => state.menuState.openMenus.includes(Menu.AccountDeleteMenu));
   const [showAccountActionsMenu, setShowAccountActionsMenu] = useState(false);
-  const [showEmailResetMenu, setShowEmailResetMenu] = useState(false);
-  const [showAccountDeleteMenu, setShowAccountDeleteMenu] = useState(false);
 
   return (
     <FullScreenMenu menuType={Menu.AccountMenu} id="accountMenu">
@@ -35,20 +34,10 @@ export const AccountMenu = () => {
       </div>
       <AccountDetails userData={userData} />
       <AnimatePresence>
-        {showAccountActionsMenu && (
-          <AccountActionsMenu
-            setShowAccountActionsMenu={setShowAccountActionsMenu}
-            setShowEmailResetMenu={setShowEmailResetMenu}
-            setShowAccountDeleteMenu={setShowAccountDeleteMenu}
-          />
-        )}
+        {showAccountActionsMenu && <AccountActionsMenu setShowAccountActionsMenu={setShowAccountActionsMenu} />}
       </AnimatePresence>
-      <AnimatePresence>
-        {showEmailResetMenu && <EmailResetMenu setShowEmailResetMenu={setShowEmailResetMenu} />}
-      </AnimatePresence>
-      <AnimatePresence>
-        {showAccountDeleteMenu && <AccountDeleteMenu setShowAccountDeleteMenu={setShowAccountDeleteMenu} />}
-      </AnimatePresence>
+      <AnimatePresence>{showEmailResetMenu && <EmailResetMenu />}</AnimatePresence>
+      <AnimatePresence>{showAccountDeleteMenu && <AccountDeleteMenu />}</AnimatePresence>
     </FullScreenMenu>
   );
 };

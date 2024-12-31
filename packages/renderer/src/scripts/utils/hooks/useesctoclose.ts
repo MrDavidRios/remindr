@@ -15,6 +15,8 @@ export function useEscToClose(
       const menuDropdownState = store.getState().menuState.openDropdowns[menu] ?? [];
       const menuHasOpenDropdowns = menuDropdownState.length > 0;
 
+      console.log('useEscToClose', menu, Menu[menu], menuHasOpenDropdowns);
+
       if (menuHasOpenDropdowns) return false;
       if (!isMenuOpen(store.getState().menuState, menu)) return false;
 

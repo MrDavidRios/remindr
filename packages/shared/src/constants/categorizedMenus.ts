@@ -43,4 +43,5 @@ export const MENU_TYPES = new Map<Menu, MenuType>([
 export const DEPENDENT_MENUS = new Map<Menu, Menu[]>([
   [Menu.TaskCreateMenu, [Menu.ScheduledReminderEditMenu]],
   [Menu.TaskEditMenu, [Menu.ScheduledReminderEditMenu]],
+  [Menu.AccountMenu, [Menu.AccountDeleteMenu, Menu.EmailResetMenu]],
 ]);

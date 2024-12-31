@@ -1,14 +1,16 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   ContextMenuType,
   DEPENDENT_MENUS,
   DialogProps,
   FloatingMenuPosition,
   Menu,
+  MENU_TYPES,
   MenuState,
+  MenuType,
   Task,
 } from '@remindr/shared';
-import { isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
+import { isModalOpen, isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
 import _ from 'lodash';
 
 export const initialMenuState: MenuState = {
@@ -31,6 +33,10 @@ export const menuStateSlice = createSlice({
     showMenu: (state, action: PayloadAction<Menu>) => {
       const menu = action.payload;
 
+      // If the menu is lower priority than a modal, and there is an open modal, don't open it
+      const menuType = MENU_TYPES.get(menu) ?? MenuType.None;
+      if (menuType > MenuType.Modal && isModalOpen(state)) return;
+
       if (state.openMenus.includes(menu)) return;
 
       if (isPrimaryMenu(menu)) {
@@ -48,8 +54,11 @@ export const menuStateSlice = createSlice({
       state,
       action: PayloadAction<{ menu: Menu; checkForUnsavedWork?: boolean; fromEscKeypress?: boolean }>,
     ) => {
-      // Close all menus dependent on menu that will be closed
+      // Close all menus dependent on the menu that will be closed
       state.openMenus = closeDependents(action.payload.menu, state.openMenus);
+
+      console.log('hideMenu', action.payload.menu, Menu[action.payload.menu]);
+
       _.remove(state.openMenus, (menu) => menu === action.payload.menu);
     },
     toggleMenu: (state, action: PayloadAction<Menu>) => {

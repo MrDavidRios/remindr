@@ -1,5 +1,5 @@
 import { Menu } from '@remindr/shared';
-import { hideMenu } from '@renderer/features/menu-state/menuSlice';
+import { closeDropdown, hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { showResetPasswordPrompt } from '@renderer/scripts/systems/authentication';
 import type { Dispatch, FC, SetStateAction } from 'react';
@@ -7,15 +7,9 @@ import { DropdownMenu } from '../dropdown-menu/DropdownMenu';
 
 interface AccountActionsMenuProps {
   setShowAccountActionsMenu: Dispatch<SetStateAction<boolean>>;
-  setShowEmailResetMenu: Dispatch<SetStateAction<boolean>>;
-  setShowAccountDeleteMenu: Dispatch<SetStateAction<boolean>>;
 }
 
-export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
-  setShowAccountActionsMenu,
-  setShowEmailResetMenu,
-  setShowAccountDeleteMenu,
-}) => {
+export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({ setShowAccountActionsMenu }) => {
   const dispatch = useAppDispatch();
 
   const email = useAppSelector((state) => state.userState.user?.email);
@@ -24,6 +18,11 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
     dispatch(hideMenu({ menu: Menu.AccountMenu }));
     window.electron.ipcRenderer.sendMessage('action-on-save', 'sign-out');
   }
+
+  const closeFromOutsideDropdown = () => {
+    dispatch(closeDropdown({ menu: Menu.AccountMenu, dropdownName: 'accountActionsMenu' }));
+    setShowAccountActionsMenu(false);
+  };
 
   return (
     <DropdownMenu
@@ -42,7 +41,7 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
           className="account-action-choice"
           onClick={() => {
             showResetPasswordPrompt(email);
-            setShowAccountActionsMenu(false);
+            closeFromOutsideDropdown();
           }}
         >
           Reset Password
@@ -52,8 +51,8 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
         id="resetEmailMenuButton"
         className="account-action-choice"
         onClick={() => {
-          setShowEmailResetMenu(true);
-          setShowAccountActionsMenu(false);
+          dispatch(showMenu(Menu.EmailResetMenu));
+          closeFromOutsideDropdown();
         }}
       >
         Reset Email
@@ -62,8 +61,8 @@ export const AccountActionsMenu: FC<AccountActionsMenuProps> = ({
         id="deleteAccountMenuButton"
         className="account-action-choice menu-top-border"
         onClick={() => {
-          setShowAccountDeleteMenu(true);
-          setShowAccountActionsMenu(false);
+          dispatch(showMenu(Menu.AccountDeleteMenu));
+          closeFromOutsideDropdown();
         }}
       >
         Delete Account
