@@ -35,7 +35,7 @@ export const menuStateSlice = createSlice({
 
       // If the menu is lower priority than a modal, and there is an open modal, don't open it
       const menuType = MENU_TYPES.get(menu) ?? MenuType.None;
-      if (menuType > MenuType.Modal && isModalOpen(state)) return;
+      if (menu !== Menu.TaskCreateMenu && menuType > MenuType.Modal && isModalOpen(state)) return;
 
       if (state.openMenus.includes(menu)) return;
 
@@ -56,8 +56,6 @@ export const menuStateSlice = createSlice({
     ) => {
       // Close all menus dependent on the menu that will be closed
       state.openMenus = closeDependents(action.payload.menu, state.openMenus);
-
-      console.log('hideMenu', action.payload.menu, Menu[action.payload.menu]);
 
       _.remove(state.openMenus, (menu) => menu === action.payload.menu);
     },

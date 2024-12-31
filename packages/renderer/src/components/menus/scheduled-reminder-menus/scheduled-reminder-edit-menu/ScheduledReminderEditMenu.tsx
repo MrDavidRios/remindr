@@ -150,6 +150,8 @@ export const ScheduledReminderEditMenu: FC = () => {
     setMinuteInputState(formatMinute(updatedReminder.reminderMinute));
   }, [updatedReminder.reminderMinute]);
 
+  console.log('scheduled reminder edit menu re-render:', anchor, yOffset, gap);
+
   return (
     <FloatingMenu
       anchor={anchor}
