@@ -179,6 +179,7 @@ li:focus-visible {
 
 .primary-button {
   background-color: var(--ui-accent-color);
+  color: var(--text-color-over-accent);
   padding: 4px 8px;
   border-radius: var(--menu-border-radius);
 
