@@ -3,7 +3,7 @@ import type { AppDispatch } from '@renderer/app/store';
 import { setAppMode } from '@renderer/features/app-mode/appModeSlice';
 import { getUserData, updateEmailVerifiedState, updateUserState } from '@renderer/features/user-state/userSlice';
 import isEmail from 'validator/lib/isEmail';
-import showMessageBox from '../utils/messagebox';
+import { showMessageBox } from '../utils/messagebox';
 
 // Auth hook (sets up auth-state-changed listener)
 let authInitialized = false;

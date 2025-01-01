@@ -249,3 +249,27 @@ export const msUntilNextMinute = () => {
 
   return nextMinute.getTime() - now.getTime();
 };
+
+/**
+ * Gets the number of days in a month.
+ * @param date
+ */
+export function getDaysInMonth(date: Date) {
+  const month = date.getMonth();
+  const year = date.getFullYear();
+
+  switch (month) {
+    // If month is February
+    case 1:
+      const leapYear = year % 4 === 0 || year % 400 === 0;
+      return leapYear ? 29 : 28;
+    case 3:
+    case 5:
+    case 8:
+    case 10:
+      // If month is April, June, September, or November, set the day amount to 30.
+      return 30;
+    default:
+      return 31;
+  }
+}

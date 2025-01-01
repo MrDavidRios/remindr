@@ -291,8 +291,6 @@ input::-webkit-inner-spin-button {
   }
 
   .text-wrapper {
-    // 50px from toolbar, 40 px from close button + undo button, 8px from gap between close button & undo button
-    // max-width: calc(100vw - 198px);
     display: flex;
 
     span {

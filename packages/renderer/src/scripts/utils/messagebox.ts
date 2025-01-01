@@ -5,7 +5,7 @@
  * @param type error or info (string) (optional, defaults to 'info')
  * @param buttons array of buttons (optional)
  */
-export default function showMessageBox(title: string, message: string, type = 'info', buttons: string[] = []) {
+export function showMessageBox(title: string, message: string, type = 'info', buttons: string[] = []) {
   switch (type) {
     case 'info':
       return window.dialog.showMessageDialog({
@@ -28,7 +28,7 @@ export default function showMessageBox(title: string, message: string, type = 'i
 }
 
 window.electron.ipcRenderer.on('show-message-box', async (stringifiedOptions: string, id: any) => {
-  const { title, message, type, buttons } = JSON.parse(stringifiedOptions as string);
+  const { title, message, type, buttons } = JSON.parse(stringifiedOptions);
 
   const response = await showMessageBox(title, message, type, buttons);
 

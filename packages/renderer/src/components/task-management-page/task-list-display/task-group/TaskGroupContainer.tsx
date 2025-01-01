@@ -60,7 +60,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({ name }: Tas
 
     if (!_.isEqual(tasks, orderedTasks) || !tasksInSameOrder(tasks, orderedTasks)) {
       setOrderedTasks(tasks);
-      return;
     }
   }, [tasks]);
 

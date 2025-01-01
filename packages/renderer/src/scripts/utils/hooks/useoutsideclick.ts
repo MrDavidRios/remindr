@@ -46,5 +46,5 @@ export function useClickOutside(
     };
   });
 
-  return domNodeRef as RefObject<HTMLElement>;
+  return domNodeRef;
 }

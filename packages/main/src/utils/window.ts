@@ -5,7 +5,7 @@ import { getMainWindow } from './getMainWindow.js';
  * Sets up window event listeners (e.g. minimize, maximize, close, hide, show, etc.)
  * @param mainWindow
  */
-export default function initWindowEventListeners() {
+export function initWindowEventListeners() {
   const mainWindow = getMainWindow();
 
   mainWindow?.on('minimize', () => {

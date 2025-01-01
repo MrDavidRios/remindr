@@ -1,6 +1,6 @@
 import doubleExpandArrowIcon from '@assets/icons/double-expand-arrow.png';
 import expandArrowIcon from '@assets/icons/expand-arrow.png';
-import { addMonths, getDayNameFromIdx, getMonthName, subtractMonths } from '@remindr/shared';
+import { addMonths, getDayNameFromIdx, getDaysInMonth, getMonthName, subtractMonths } from '@remindr/shared';
 import { useAppSelector } from '@renderer/hooks';
 import React, { useEffect, useState } from 'react';
 import { Day } from './Day';
@@ -222,37 +222,4 @@ function getDaysArray(date: Date, firstDayOfWeek: number) {
   }
 
   return daysArray;
-}
-
-/**
- * Gets the number of days in a month.
- * @param date
- */
-function getDaysInMonth(date: Date) {
-  const month = date.getMonth();
-  const year = date.getFullYear();
-
-  let dayAmount = 31;
-  let leapYear = false;
-
-  if (year % 4 === 0 || year % 400 === 0) leapYear = true;
-
-  switch (month) {
-    // If month is February
-    case 1:
-      if (leapYear) dayAmount = 29;
-      else dayAmount = 28;
-      break;
-    case 3:
-    case 5:
-    case 8:
-    case 10:
-      // If month is April, June, September, or November, set the day amount to 30.
-      dayAmount = 30;
-      break;
-    default:
-      dayAmount = 31;
-  }
-
-  return dayAmount;
 }

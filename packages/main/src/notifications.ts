@@ -225,7 +225,7 @@ function updateNotificationPositions() {
 /**
  * Initializes screen event listeners for notification display (e.g. display-added, display-removed)
  */
-export default function initializeNotificationScreenListeners() {
+export function initializeNotificationScreenListeners() {
   screen.addListener('display-added', () => {
     // Workaround to properly display notifications on new (primary) screen (waiting a second to make sure the primary display properly updates)
     setTimeout(() => {

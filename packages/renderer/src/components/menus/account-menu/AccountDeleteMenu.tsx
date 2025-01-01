@@ -5,7 +5,7 @@ import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { resetUserState } from '@renderer/features/user-state/userSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { deleteAccount, reauthenticateUser } from '@renderer/scripts/systems/authentication';
-import showMessageBox from '@renderer/scripts/utils/messagebox';
+import { showMessageBox } from '@renderer/scripts/utils/messagebox';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { CloseMenuButton } from '../../close-menu-button/CloseMenuButton';

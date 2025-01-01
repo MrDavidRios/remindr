@@ -4,7 +4,7 @@ import type { AppDispatch } from '@renderer/app/store';
 import { setAppMode } from '@renderer/features/app-mode/appModeSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { showResetPasswordPrompt, signOut } from '@renderer/scripts/systems/authentication';
-import type { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
 import { useState } from 'react';
 import { AuthInput } from './AuthInput';
 
@@ -12,9 +12,7 @@ interface LoginPageProps {
   setPage: Dispatch<SetStateAction<AuthPageType>>;
 }
 
-export function LoginPage(props: LoginPageProps) {
-  const { setPage } = props;
-
+export const LoginPage: FC<LoginPageProps> = ({ setPage }) => {
   const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState('');
@@ -52,7 +50,7 @@ export function LoginPage(props: LoginPageProps) {
       </button>
     </div>
   );
-}
+};
 
 async function attemptSignIn(dispatch: AppDispatch, email: string, password: string): Promise<string | undefined> {
   if (window.firebase.auth.currentlySignedIn()) await window.firebase.auth.signOutUser();

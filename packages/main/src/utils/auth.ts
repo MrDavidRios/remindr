@@ -20,7 +20,7 @@ let auth: Auth | undefined;
  * Sets up authentication event listeners (e.g. sign in, sign out, create user, etc.) — Dependent on Firebase already being set up!
  * @param mainWindow
  */
-export default function initAuthEventListeners() {
+export function initAuthEventListeners() {
   auth = getAuth();
 
   onAuthStateChanged(auth, (/* user */) => {

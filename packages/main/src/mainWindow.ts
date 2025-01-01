@@ -1,4 +1,4 @@
-import initializeNotificationScreenListeners from '@main/notifications.js';
+import { initializeNotificationScreenListeners } from '@main/notifications.js';
 import { initializeTaskLoop } from '@main/taskLoop.js';
 import { isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
 import { app, BrowserWindow } from 'electron';

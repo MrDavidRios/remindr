@@ -1,6 +1,6 @@
 import { Task, getReminderDate } from '@remindr/shared';
 import { isValidSearchString, searchTasks } from '@renderer/scripts/utils/searchutils';
-import categorizeTaskByDate from '@renderer/scripts/utils/taskcategorization';
+import { categorizeTaskByDate } from '@renderer/scripts/utils/taskcategorization';
 
 export function groupTasks(taskList: Task[]): Map<string, Task[]> {
   const taskGroups = new Map<string, Task[]>();

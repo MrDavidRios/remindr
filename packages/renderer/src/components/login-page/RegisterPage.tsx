@@ -1,14 +1,13 @@
 import angelRightIcon from '@assets/icons/angel-right.svg';
 import type { AuthPageType } from '@remindr/shared';
-import type { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
 import { AuthInput } from './AuthInput';
 
 interface RegisterPageProps {
   setPage: Dispatch<SetStateAction<AuthPageType>>;
 }
-export function RegisterPage(props: RegisterPageProps) {
-  const { setPage } = props;
 
+export const RegisterPage: FC<RegisterPageProps> = ({ setPage }) => {
   return (
     <>
       <button type="button" id="backBtn" onClick={() => setPage('login')}>
@@ -21,7 +20,7 @@ export function RegisterPage(props: RegisterPageProps) {
       </div>
     </>
   );
-}
+};
 
 async function attemptRegister(
   email: string,

@@ -40,10 +40,10 @@ export function getIdxInTaskList(task: Task, taskList: Task[]) {
   let idx = 0;
   const taskReminderDate = getDate(getEarliestReminder(task));
 
-  for (let i = 0; i < taskList.length; i++) {
-    if (taskList[i].scheduledReminders.length === 0) continue;
+  for (const taskCandidate of taskList) {
+    if (taskCandidate.scheduledReminders.length === 0) continue;
 
-    const earliestReminder = getEarliestReminder(taskList[i]);
+    const earliestReminder = getEarliestReminder(taskCandidate);
 
     if (getDate(earliestReminder) >= taskReminderDate) return idx;
 

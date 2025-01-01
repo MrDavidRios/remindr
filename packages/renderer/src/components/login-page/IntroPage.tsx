@@ -4,7 +4,7 @@ import type { AppDispatch } from '@renderer/app/store';
 import { updateUserData, updateUserState } from '@renderer/features/user-state/userSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { signOut } from '@renderer/scripts/systems/authentication';
-import showMessageBox from '@renderer/scripts/utils/messagebox';
+import { showMessageBox } from '@renderer/scripts/utils/messagebox';
 import { setUserData } from '@renderer/scripts/utils/userData';
 import type { ChangeEvent } from 'react';
 import { useState } from 'react';

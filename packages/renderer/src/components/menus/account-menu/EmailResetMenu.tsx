@@ -4,7 +4,7 @@ import { hideMenu } from '@renderer/features/menu-state/menuSlice';
 import { updateEmail } from '@renderer/features/user-state/userSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { resetEmail, signOut } from '@renderer/scripts/systems/authentication';
-import showMessageBox from '@renderer/scripts/utils/messagebox';
+import { showMessageBox } from '@renderer/scripts/utils/messagebox';
 import type { FC } from 'react';
 import { useState } from 'react';
 import isEmail from 'validator/lib/isEmail';

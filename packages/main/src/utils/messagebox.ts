@@ -2,7 +2,7 @@ import { ipcMain } from 'electron';
 import { getMainWindow } from './getMainWindow.js';
 
 let mainMsgBoxId = 0;
-export default function showMessageBox(
+export function showMessageBox(
   title: string,
   message: string,
   type = 'info',

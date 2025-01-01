@@ -3,6 +3,7 @@ import { getTimeframeDisplayName, Menu, Page, Timeframe } from '@remindr/shared'
 import { toggleMenu } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { isValidSearchString } from '@renderer/scripts/utils/searchutils';
+import { FC } from 'react';
 import { shallowEqual } from 'react-redux';
 import { SearchBar } from './SearchBar';
 import { TaskSelectionBar } from './TaskSelectionBar';
@@ -11,9 +12,7 @@ interface TaskListHeaderProps {
   timeframe: Timeframe;
 }
 
-export function TaskListHeader(props: TaskListHeaderProps) {
-  const { timeframe } = props;
-
+export const TaskListHeader: FC<TaskListHeaderProps> = ({ timeframe }) => {
   const dispatch = useAppDispatch();
 
   const selectedTasks = useAppSelector((state) => state.taskList.selectedTasks, shallowEqual);
@@ -59,7 +58,7 @@ export function TaskListHeader(props: TaskListHeaderProps) {
       )}
     </div>
   );
-}
+};
 
 function getHeaderWrapperHeight(timeframe: Timeframe) {
   return timeframe === Timeframe.Today ? '65px' : '50px';

@@ -1,6 +1,6 @@
 import { AppMode } from '@remindr/shared';
 import { useEffect } from 'react';
-import LoadingScreen from './components/loading-screen/LoadingScreen';
+import { LoadingScreen } from './components/loading-screen/LoadingScreen';
 import { AuthPage } from './components/login-page/AuthPage';
 import { IntroPage } from './components/login-page/IntroPage';
 import { OfflinePage } from './components/offline-page/OfflinePage';

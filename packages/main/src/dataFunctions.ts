@@ -28,7 +28,7 @@ import { quitApp, restartAndUpdateApp, restartApp } from './index.js';
 import { getAppMode } from './utils/appState.js';
 import { deleteFirebaseUser, getUserUID, signOutUser } from './utils/auth.js';
 import { getMainWindow } from './utils/getMainWindow.js';
-import showMessageBox from './utils/messagebox.js';
+import { showMessageBox } from './utils/messagebox.js';
 import { getSettingsProfile, getUserProfile } from './utils/storeUserData.js';
 import { hideWindow } from './utils/window.js';
 
@@ -572,8 +572,7 @@ export async function loadTaskData(): Promise<TaskCollection | string> {
   const loadedTaskList = docData.docSnapshot.data()!.reminderList;
   const instantiatedTaskList: Task[] = [];
 
-  for (let i = 0; i < loadedTaskList.length; i++) {
-    const task = loadedTaskList[i];
+  for (const task of loadedTaskList) {
     instantiatedTaskList.push(task);
   }
 

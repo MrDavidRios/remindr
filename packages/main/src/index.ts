@@ -1,5 +1,5 @@
 import { restoreOrCreateWindow } from '@main/mainWindow.js';
-import initUserDataListeners, { isAutoStartupEnabled, isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
+import { initUserDataListeners, isAutoStartupEnabled, isHideOnStartupEnabled } from '@main/utils/storeUserData.js';
 import type { BadgeInfo, Task } from '@remindr/shared';
 import type { MessageBoxOptions } from 'electron';
 import { app, dialog, ipcMain, nativeImage, nativeTheme, session, shell } from 'electron';
@@ -22,14 +22,14 @@ import {
 import { initNotificationEventListeners } from './notifications.js';
 import './security-restrictions';
 import { initAppStateListeners } from './utils/appState.js';
-import initAuthEventListeners from './utils/auth.js';
+import { initAuthEventListeners } from './utils/auth.js';
 import { initFirebase } from './utils/firebase.js';
 import { getExtensionPath } from './utils/getExtensionPath.js';
 import { getMainAssetPath } from './utils/getMainAssetPath.js';
 import { getMainWindow } from './utils/getMainWindow.js';
 import { getPageTitle } from './utils/getPageTitle.js';
-import hasNetworkConnection from './utils/hasNetworkConnection.js';
-import initWindowEventListeners from './utils/window.js';
+import { hasNetworkConnection } from './utils/hasNetworkConnection.js';
+import { initWindowEventListeners } from './utils/window.js';
 
 const { autoUpdater } = updater;
 

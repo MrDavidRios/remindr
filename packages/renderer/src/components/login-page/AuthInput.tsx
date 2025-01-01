@@ -1,6 +1,6 @@
 import visibilityOffIcon from '@assets/icons/visibility-off.svg';
 import visibilityOnIcon from '@assets/icons/visibility-on.svg';
-import showMessageBox from '@renderer/scripts/utils/messagebox';
+import { showMessageBox } from '@renderer/scripts/utils/messagebox';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';

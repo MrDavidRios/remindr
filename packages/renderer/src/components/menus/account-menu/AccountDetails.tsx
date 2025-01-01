@@ -1,18 +1,23 @@
 import type { User } from '@remindr/shared';
+import { FC } from 'react';
 
-export function AccountDetails(props: { userData?: User }) {
-  const { userData } = props;
+interface AccountDetailsProps {
+  userData?: User;
+}
 
+export const AccountDetails: FC<AccountDetailsProps> = ({ userData }) => {
   if (!userData) return <p>Loading user data...</p>;
 
   return (
     <div id="accountDetailsWrapper">
       <div id="accountDetails">
-        <p id="profileName" title="Edit Name">
-          {userData?.name ?? 'Placeholder name'}
-        </p>
-        <p id="profileEmail">{userData?.email ?? 'placeholder@placeholder.com'}</p>
+        {userData?.name && (
+          <p id="profileName" title="Edit Name">
+            {userData.name}
+          </p>
+        )}
+        {userData?.email && <p id="profileEmail">{userData.email}</p>}
       </div>
     </div>
   );
-}
+};

@@ -12,7 +12,7 @@ interface DropdownOptionsProps<T> extends DropdownProps<T> {
   closeDropdown: () => void;
 }
 
-export function DropdownOptions<T>(props: DropdownOptionsProps<T>) {
+export function DropdownOptions<T>(props: Readonly<DropdownOptionsProps<T>>) {
   const { name, options, optionLabels, topAnchorY, onSelect, closeDropdown } = props;
   const optionRefs = options.map(() => useRef(null));
   const animationsEnabled = useAnimationsEnabled();

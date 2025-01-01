@@ -64,7 +64,7 @@ export const TaskContextMenu: React.FC = () => {
       return;
     }
 
-    for (let selectedTask of selectedTasks) {
+    for (const selectedTask of selectedTasks) {
       action(selectedTask);
     }
 
@@ -73,9 +73,8 @@ export const TaskContextMenu: React.FC = () => {
   }
 
   const showPinButtons = inListView;
-
   const showRemoveFromColumnBtn =
-    inColumnView && task && task.columnIdx !== undefined && task.scheduledReminders.length === 0;
+    inColumnView && task?.columnIdx !== undefined && task?.scheduledReminders.length === 0;
   const showWide = showRemoveFromColumnBtn;
 
   return (

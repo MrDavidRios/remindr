@@ -18,6 +18,30 @@
     align-items: center;
   }
 
+  #min-button {
+    grid-column: 1;
+  }
+
+  #max-button,
+  #restore-button {
+    grid-column: 2;
+  }
+  #close-button {
+    grid-column: 3;
+
+    &:hover {
+      background: #c34550 !important;
+    }
+
+    &:active {
+      background: #a03840 !important;
+
+      .icon {
+        filter: invert(1);
+      }
+    }
+  }
+
   .active {
     height: calc(2 * 25px + 10px) !important;
     padding-top: 5px;
@@ -41,7 +65,7 @@
 #hamburger-menu {
   grid-column: 1;
   overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   font-size: 14px;
   width: 32px;
 
@@ -139,7 +163,7 @@
   text-align: center;
   margin-left: 8px;
   overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   font-size: 12px;
 
   #window-controls .button:hover {
@@ -196,32 +220,6 @@
 
   #max-button {
     display: none;
-  }
-}
-
-#titlebar {
-  #min-button {
-    grid-column: 1;
-  }
-
-  #max-button,
-  #restore-button {
-    grid-column: 2;
-  }
-  #close-button {
-    grid-column: 3;
-
-    &:hover {
-      background: #c34550 !important;
-    }
-
-    &:active {
-      background: #a03840 !important;
-
-      .icon {
-        filter: invert(1);
-      }
-    }
   }
 }
 

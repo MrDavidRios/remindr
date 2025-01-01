@@ -6,12 +6,12 @@ const store = new Store();
 /**
  * Initializes listeners that handle user data (e.g. get/set user profile, get/set settings profile)
  */
-export default function initUserDataListeners() {
+export function initUserDataListeners() {
   ipcMain.handle('set-user-profile', (_event, stringifiedUserProfile: string) => {
     store.set('user-profile', stringifiedUserProfile);
   });
 
-  ipcMain.on('get-user-profile', event => {
+  ipcMain.on('get-user-profile', (event) => {
     event.returnValue = getUserProfile();
   });
 
@@ -19,7 +19,7 @@ export default function initUserDataListeners() {
     store.set('settings-profile', stringifiedSettings);
   });
 
-  ipcMain.on('get-settings-profile', event => {
+  ipcMain.on('get-settings-profile', (event) => {
     event.returnValue = getSettingsProfile();
   });
 }

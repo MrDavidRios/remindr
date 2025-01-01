@@ -19,8 +19,9 @@ interface TaskColumnProps {
 
 const getOrderedIncompleteTasks = (tasks: Task[]) => {
   const filtered = tasks.filter((task) => !task.completed);
-  const sorted = filtered.sort((a, b) => a.orderInTaskColumn - b.orderInTaskColumn);
-  return sorted;
+  filtered.sort((a, b) => a.orderInTaskColumn - b.orderInTaskColumn);
+
+  return filtered;
 };
 
 export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
@@ -37,7 +38,6 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
     if (!_.isEqual(tasks, orderedIncompleteTasks) || !tasksInSameOrder(tasks, orderedIncompleteTasks)) {
       const filteredTasks = getOrderedIncompleteTasks(tasks);
       setOrderedIncompleteTasks(filteredTasks);
-      return;
     }
   }, [tasks]);
 
