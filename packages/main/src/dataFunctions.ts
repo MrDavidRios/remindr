@@ -519,17 +519,17 @@ export async function loadUserData(): Promise<RemindrUser | string> {
 
   if (data?.settings !== undefined) {
     Object.keys(data?.settings).forEach((key) => {
-      if (data.settings[key] !== undefined) (userData!.settings[key as keyof Settings] as any) = data.settings[key];
+      if (data.settings[key] !== undefined) (userData.settings[key as keyof Settings] as any) = data.settings[key];
     });
   }
 
   if (data?.userData !== undefined)
     Object?.keys(data?.userData).forEach((key) => {
       if (data.userData === undefined) {
-        if (data[key] !== undefined) (userData![key as keyof RemindrUser] as any) = data[key];
+        if (data[key] !== undefined) (userData[key as keyof RemindrUser] as any) = data[key];
       } else if (data.userData[key] !== undefined) {
-        (userData![key as keyof RemindrUser] as any) = data.userData[key];
-      } else if (data[key] !== undefined) (userData![key as keyof RemindrUser] as any) = data[key];
+        (userData[key as keyof RemindrUser] as any) = data.userData[key];
+      } else if (data[key] !== undefined) (userData[key as keyof RemindrUser] as any) = data[key];
     });
 
   // Load in background image if stored
