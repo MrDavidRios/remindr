@@ -30,8 +30,6 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ initialColor, onUpdate
     setPickerVisible(true);
   }
 
-  console.log('parent client rect:');
-
   useDetectWheel({
     element: document.getElementById('settings') as HTMLElement | undefined,
     callback: () => setPickerVisible(false),
