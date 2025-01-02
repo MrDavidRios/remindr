@@ -1,5 +1,6 @@
 import carouselIcon from '@assets/icons/carousel.svg';
 import listIcon from '@assets/icons/list.svg';
+import pathIcon from '@assets/icons/path.svg';
 import {
   AppMode,
   appModeLabels,
@@ -124,6 +125,14 @@ export function GeneralSettingsPage() {
             icon={carouselIcon}
             onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.ColumnView }))}
             selected={settings.startupView === Page.ColumnView}
+          />
+          <LargeIconButton
+            label={'Stream'}
+            icon={pathIcon}
+            iconSize={28}
+            gap={6}
+            onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.StreamEditor }))}
+            selected={settings.startupView === Page.StreamEditor}
           />
         </div>
       </div>

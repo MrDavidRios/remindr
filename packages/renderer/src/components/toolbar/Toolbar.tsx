@@ -6,6 +6,7 @@ import { ColumnsViewButton } from './toolbar-buttons/ColumnsViewButton';
 import { ListViewButton } from './toolbar-buttons/ListViewButton';
 import { ReturnToMainMenuButton } from './toolbar-buttons/ReturnToMainMenuButton';
 import { SettingsButton } from './toolbar-buttons/SettingsButton';
+import { StreamEditorButton } from './toolbar-buttons/StreamEditorButton';
 import { TaskCreateButton } from './toolbar-buttons/TaskCreateButton';
 
 export function Toolbar() {
@@ -20,6 +21,7 @@ export function Toolbar() {
         <TaskCreateButton />
         <ListViewButton />
         <ColumnsViewButton />
+        <StreamEditorButton />
       </div>
       <div>
         <SyncIndicator />

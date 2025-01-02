@@ -55,6 +55,8 @@ export const LoginPage: FC<LoginPageProps> = ({ setPage }) => {
 async function attemptSignIn(dispatch: AppDispatch, email: string, password: string): Promise<string | undefined> {
   if (window.firebase.auth.currentlySignedIn()) await window.firebase.auth.signOutUser();
 
+  console.log('attempt sign in');
+
   const signinResult = await window.firebase.auth.signInWithEmailAndPassword(email, password);
 
   // Automatically fires log in event that is caught by the auth listener. (onAuthStateChanged)

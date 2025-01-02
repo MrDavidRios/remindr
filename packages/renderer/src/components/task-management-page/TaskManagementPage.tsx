@@ -7,8 +7,6 @@ import { useEffect } from 'react';
 import { shallowEqual } from 'react-redux';
 import { TaskCreateMenu } from '../menus/task-create-menu/TaskCreateMenu';
 import { TaskEditMenu } from '../menus/task-edit-menu/TaskEditMenu';
-import { Toolbar } from '../toolbar/Toolbar';
-import { UndoNotification } from '../undo-notification/UndoNotification';
 import { TaskListDisplay } from './task-list-display/TaskListContainer';
 
 export function TaskManagementPage() {
@@ -48,16 +46,10 @@ export function TaskManagementPage() {
   );
 
   return (
-    <div id="appMainPageContainer">
-      <Toolbar />
-
-      <div id="mainContainer">
-        <TaskListDisplay timeframe={timeframe} taskMenuShown={showTaskEditMenu} />
-        <AnimatePresence>{showTaskEditMenu ? <TaskEditMenu selectedTask={selectedTasks[0]} /> : null}</AnimatePresence>
-        <AnimatePresence>{showTaskCreateMenu && <TaskCreateMenu id="taskCreationWindow" />}</AnimatePresence>
-      </div>
-
-      <UndoNotification />
-    </div>
+    <>
+      <TaskListDisplay timeframe={timeframe} taskMenuShown={showTaskEditMenu} />
+      <AnimatePresence>{showTaskEditMenu ? <TaskEditMenu selectedTask={selectedTasks[0]} /> : null}</AnimatePresence>
+      <AnimatePresence>{showTaskCreateMenu && <TaskCreateMenu id="taskCreationWindow" />}</AnimatePresence>
+    </>
   );
 }
