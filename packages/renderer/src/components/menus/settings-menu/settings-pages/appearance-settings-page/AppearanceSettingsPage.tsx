@@ -26,15 +26,15 @@ export function AppearanceSettingsPage() {
 
   const [backgroundImg, setBackgroundImg] = useState<string | undefined>(undefined);
 
+  const updateBackgroundImgPreview = async () => {
+    const imgUrl = getImgUrlFromData(await window.data.getBackgroundImage());
+    setBackgroundImg(imgUrl);
+  };
+
   useEffect(() => {
     if (isBackgroundColor) return;
 
-    const getBackgroundImg = async () => {
-      const imgUrl = getImgUrlFromData(await window.data.getBackgroundImage());
-      setBackgroundImg(imgUrl);
-    };
-
-    getBackgroundImg();
+    updateBackgroundImgPreview();
   }, [settings.background]);
 
   return (
@@ -100,7 +100,10 @@ export function AppearanceSettingsPage() {
                 id="customImageSelectButton"
                 className="accent-button"
                 title="Pick a background image"
-                onClick={() => openCustomImageDialog(settings.background, dispatch)}
+                onClick={async () => {
+                  await openCustomImageDialog(settings.background, dispatch);
+                  updateBackgroundImgPreview();
+                }}
               >
                 <img src={uploadIcon} draggable="false" alt="" />
                 <p>{`Upload ${!isBackgroundColor ? 'new' : ''} background image`}</p>

@@ -55,3 +55,16 @@ export function rgbaToHex(rgba: string): string | undefined {
   // eslint-disable-next-line no-bitwise
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
+
+// https://stackoverflow.com/a/12043228/5750490
+export function isDark(hexColor: string): boolean {
+  const c = hexColor.substring(1); // strip #
+  const rgb = parseInt(c, 16); // convert rrggbb to decimal
+  const r = (rgb >> 16) & 0xff; // extract red
+  const g = (rgb >> 8) & 0xff; // extract green
+  const b = (rgb >> 0) & 0xff; // extract blue
+
+  const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+
+  return luma < 128;
+}

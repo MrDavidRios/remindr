@@ -10,6 +10,7 @@ import { BackgroundProps, getDefaultBackgroundProps, isBackgroundAnImage } from 
 import {
   darkenColor,
   getColorFilter,
+  isDark,
   lightenColor,
   rgbArrToString,
   rgbStringToArr,
@@ -109,6 +110,8 @@ export async function setLoadedStyles(settings: Settings): Promise<void> {
     setAccentColors(dominantColor);
   }
 
+  setOverlayColors();
+
   updateStyleVarsInMain();
 }
 
@@ -155,13 +158,24 @@ function setAccentColors(color: FastAverageColorResult) {
 
   const darkAccentColorFilter = getColorFilter(darkAccentColorRGB);
   root.style.setProperty('--ui-accent-color-dark-filter', darkAccentColorFilter);
+}
+
+/**
+ * Sets the color of the text/svg accent overlay colors. Based off of the current accent color.
+ * @returns
+ */
+function setOverlayColors() {
+  const color = getAccentColor();
+  if (!color) return;
+
+  const isColorDark = isDark(color);
 
   // Color for text to be rendered over accent color
   const transparencyEnabled = store.getState().settings.value.enableTransparency;
-  const invertedTextColor = color.isDark
+  const invertedTextColor = isColorDark
     ? DARK_THEME(transparencyEnabled).text.primary
     : LIGHT_THEME(transparencyEnabled).text.primary;
-  const invertedSvgFilter = color.isDark
+  const invertedSvgFilter = isColorDark
     ? DARK_THEME(transparencyEnabled).svgFilter
     : LIGHT_THEME(transparencyEnabled).svgFilter;
 
@@ -197,6 +211,7 @@ export const updateBackground = async (
 
   const dominantColor = await getDominantColor(imgUrl);
   setAccentColors(dominantColor);
+  setOverlayColors();
 
   updateStyleVarsInMain();
 };
