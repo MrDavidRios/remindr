@@ -1,11 +1,9 @@
-#colorPickerWrapper {
+#colorPickerModal {
   position: absolute;
   top: -30px;
-  left: 190px;
+  left: 146px;
   z-index: 2;
-  box-shadow:
-    rgba(0, 0, 0, 0.3) 0px 0px 2px,
-    rgba(0, 0, 0, 0.3) 0px 4px 8px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 2px, rgba(0, 0, 0, 0.3) 0px 4px 8px;
   background-color: var(--surface-primary) !important;
   border-radius: 4px;
 
@@ -56,13 +54,42 @@
   }
 }
 
-#colorPickerBtn {
-  border-radius: 20px;
-  width: 30px;
-  height: 30px;
+#colorPickerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  margin-right: 10px;
-  cursor: pointer;
+#colorBackgroundInfo {
+  display: inherit;
+  align-items: inherit;
+  gap: inherit;
+
+  margin-right: 8px;
+
+  > p {
+    color: var(--text-color-secondary);
+    font-size: 14px;
+  }
+}
+
+#colorBackgroundPreview {
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
 
   background-color: white;
+  border: 1px solid var(--text-color-secondary);
+}
+
+#colorPickerBtn {
+  display: flex;
+  align-items: center;
+  padding: 7px 10px;
+  gap: 8px;
+
+  > img {
+    width: 16px;
+    height: 16px;
+  }
 }

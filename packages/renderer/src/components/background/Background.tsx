@@ -2,7 +2,7 @@ import { useAppSelector } from '@renderer/hooks';
 import { updateBackground } from '@renderer/scripts/systems/stylemanager';
 import type { BackgroundProps } from '@renderer/scripts/utils/backgroundprops';
 import { getDefaultBackgroundProps, getStyleFromProps } from '@renderer/scripts/utils/backgroundprops';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 export function Background() {
   const background = useAppSelector((state) => state.settings.value.background);
@@ -32,7 +32,7 @@ export function Background() {
   );
 }
 
-const BackgroundOverlay = () => {
+const BackgroundOverlay: FC = () => {
   const backgroundOpacity = useAppSelector((state) => state.settings.value.backgroundOpacity);
 
   return <div id="backgroundOverlay" className="backdrop" style={{ opacity: backgroundOpacity }} />;

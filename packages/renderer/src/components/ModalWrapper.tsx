@@ -30,6 +30,7 @@ export const ModalWrapper: React.FC<ModalWrapperProps> = ({
   closeOnClickOutside,
   clickOutsideExceptions,
   ignoreGlobalClickOutsideExceptions,
+  style,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -56,7 +57,7 @@ export const ModalWrapper: React.FC<ModalWrapperProps> = ({
 
   return (
     <ReactFocusLock returnFocus>
-      <div id={id} className={className} ref={ref as unknown as React.RefObject<HTMLDivElement>}>
+      <div id={id} className={className} ref={ref as unknown as React.RefObject<HTMLDivElement>} style={style}>
         {children}
       </div>
     </ReactFocusLock>

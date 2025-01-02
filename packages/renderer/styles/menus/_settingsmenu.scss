@@ -228,14 +228,14 @@ hr {
   z-index: 2;
 }
 
-#reminderPageThemeSettings {
+#backgroundSettingWrapper {
+  margin-bottom: 24px;
+}
+
+#backgroundTypeSelector {
+  margin: 12px 0;
   display: flex;
-
-  justify-content: left;
-  align-items: center;
-
-  height: 60px;
-  width: 100%;
+  gap: 12px;
 }
 
 .reminder-page-theme {
@@ -245,25 +245,40 @@ hr {
   border: 1px solid white;
 }
 
-#customImageSelectButton {
-  width: 60px;
-  height: 50px;
+#currentBackgroundImagePreview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
+  color: var(--text-color-secondary);
+
+  button {
+    height: min-content;
+  }
+
+  > img {
+    width: 120px;
+    height: 80px;
+    border-radius: var(--menu-border-radius);
+
+    box-shadow: var(--subtle-box-shadow);
+  }
+}
+
+#customImageSelectButton {
   display: flex;
   justify-content: center;
   align-items: center;
 
+  gap: 12px;
+
   margin-right: 10px;
-  border-radius: 10px;
 
   border: none;
-  background: none;
 
   img {
-    width: 40px;
-    height: 40px;
-
-    filter: var(--svg-filter);
+    width: 18px;
+    height: 18px;
   }
 
   &:hover {

@@ -5,12 +5,18 @@ interface LargeIconButtonProps {
   label: string;
   onClick: () => void;
   selected?: boolean;
+  gap?: number;
 }
 
-export const LargeIconButton: FC<LargeIconButtonProps> = ({ icon, label, onClick, selected }) => {
+export const LargeIconButton: FC<LargeIconButtonProps> = ({ icon, label, onClick, selected, gap }) => {
   return (
-    <button className={`large-icon-button ${selected ? 'selected' : ''}`} aria-label={label} onClick={() => onClick()}>
-      <img src={icon}></img>
+    <button
+      className={`large-icon-button ${selected ? 'selected' : ''}`}
+      style={{ gap }}
+      aria-label={label}
+      onClick={() => onClick()}
+    >
+      <img src={icon} alt={label} draggable={false} />
       <p>{label}</p>
     </button>
   );

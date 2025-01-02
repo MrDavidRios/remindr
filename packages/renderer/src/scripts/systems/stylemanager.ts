@@ -161,7 +161,12 @@ function setAccentColors(color: FastAverageColorResult) {
   const invertedTextColor = color.isDark
     ? DARK_THEME(transparencyEnabled).text.primary
     : LIGHT_THEME(transparencyEnabled).text.primary;
+  const invertedSvgFilter = color.isDark
+    ? DARK_THEME(transparencyEnabled).svgFilter
+    : LIGHT_THEME(transparencyEnabled).svgFilter;
+
   root.style.setProperty('--text-color-over-accent', invertedTextColor);
+  root.style.setProperty('--svg-filter-over-accent', invertedSvgFilter);
 }
 
 /**

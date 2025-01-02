@@ -13,6 +13,10 @@
 .accent-button {
   background-color: var(--ui-accent-color);
   color: var(--text-color-over-accent);
+
+  > img {
+    filter: var(--svg-filter-over-accent);
+  }
 }
 
 .secondary-button {

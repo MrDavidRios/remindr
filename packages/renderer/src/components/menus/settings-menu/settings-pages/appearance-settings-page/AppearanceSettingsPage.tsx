@@ -1,11 +1,16 @@
+import eyedropperIcon from '@assets/icons/eyedropper.svg';
 import imageIcon from '@assets/icons/image.svg';
+import uploadIcon from '@assets/icons/upload.svg';
 import { Menu, Theme, themeLabels } from '@remindr/shared';
 import type { AppDispatch } from '@renderer/app/store';
 import { ColorPicker } from '@renderer/components/color-picker/ColorPicker';
 import { Dropdown } from '@renderer/components/dropdown/Dropdown';
+import { LargeIconButton } from '@renderer/components/large-icon-button/LargeIconButton';
 import { updateSetting } from '@renderer/features/settings/settingsSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { applyTheme } from '@renderer/scripts/systems/stylemanager';
+import { getImgUrlFromData } from '@renderer/scripts/utils/imgutils';
+import { useEffect, useState } from 'react';
 import isHexColor from 'validator/lib/isHexColor';
 import { BackgroundOpacitySlider } from './BackgroundOpacitySlider';
 
@@ -15,12 +20,45 @@ export function AppearanceSettingsPage() {
   const settings = useAppSelector((state) => state.settings.value);
   const isBackgroundColor = isHexColor(settings.background);
 
+  const [selectedBackgroundOption, setSelectedBackgroundOption] = useState<'color' | 'image'>(
+    isBackgroundColor ? 'color' : 'image',
+  );
+
+  const [backgroundImg, setBackgroundImg] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (isBackgroundColor) return;
+
+    const getBackgroundImg = async () => {
+      const imgUrl = getImgUrlFromData(await window.data.getBackgroundImage());
+      setBackgroundImg(imgUrl);
+    };
+
+    getBackgroundImg();
+  }, [settings.background]);
+
   return (
     <div id="appearanceSettings">
       <h3 className="settings-menu-header">Appearance</h3>
       <p className="subheading">Background</p>
-      <div id="reminderPageThemeSettingWrapper">
-        <div id="reminderPageThemeSettings">
+      <div id="backgroundSettingWrapper">
+        <div id="backgroundTypeSelector">
+          <LargeIconButton
+            label={'Color'}
+            icon={eyedropperIcon}
+            onClick={() => setSelectedBackgroundOption('color')}
+            selected={selectedBackgroundOption === 'color'}
+            gap={6}
+          />
+          <LargeIconButton
+            label={'Image'}
+            icon={imageIcon}
+            onClick={() => setSelectedBackgroundOption('image')}
+            selected={selectedBackgroundOption === 'image'}
+            gap={6}
+          />
+        </div>
+        {selectedBackgroundOption === 'color' && (
           <ColorPicker
             initialColor={isBackgroundColor ? settings.background : '#00BD97'}
             onUpdate={(color) => {
@@ -33,36 +71,44 @@ export function AppearanceSettingsPage() {
             }}
             title="Pick a background color"
           />
-          <button
-            type="button"
-            id="customImageSelectButton"
-            className="after-first"
-            title="Pick a background image"
-            onClick={() => openCustomImageDialog(settings.background, dispatch)}
-          >
-            <img src={imageIcon} draggable="false" alt="" />
-          </button>
-        </div>
+        )}
+        {selectedBackgroundOption === 'image' && (
+          <div>
+            {!isBackgroundColor && (
+              <div className="settings-checkbox child" style={{ margin: '12px 0' }}>
+                <input
+                  type="checkbox"
+                  tabIndex={0}
+                  className="settings-checkbox"
+                  checked={settings.stretchBackground}
+                  onChange={(e) => {
+                    dispatch(
+                      updateSetting({
+                        key: 'stretchBackground',
+                        value: e.currentTarget.checked,
+                      }),
+                    );
+                  }}
+                />
+                <p className="input-label">Stretch background image to fit window</p>
+              </div>
+            )}
+            <div id="currentBackgroundImagePreview">
+              {!isBackgroundColor && backgroundImg && <img src={backgroundImg} alt="Background" />}
+              <button
+                type="button"
+                id="customImageSelectButton"
+                className="accent-button"
+                title="Pick a background image"
+                onClick={() => openCustomImageDialog(settings.background, dispatch)}
+              >
+                <img src={uploadIcon} draggable="false" alt="" />
+                <p>{`Upload ${!isBackgroundColor ? 'new' : ''} background image`}</p>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-      {!isBackgroundColor && (
-        <div className="settings-checkbox child">
-          <input
-            type="checkbox"
-            tabIndex={0}
-            className="settings-checkbox"
-            checked={settings.stretchBackground}
-            onChange={(e) => {
-              dispatch(
-                updateSetting({
-                  key: 'stretchBackground',
-                  value: e.currentTarget.checked,
-                }),
-              );
-            }}
-          />
-          <p className="input-label">Stretch background image to fit window</p>
-        </div>
-      )}
       <p style={{ marginTop: '10px' }}>Background brightness:</p>
       <BackgroundOpacitySlider
         initialOpacity={1 - settings.backgroundOpacity}
