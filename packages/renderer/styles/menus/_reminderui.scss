@@ -360,17 +360,6 @@ input::-webkit-inner-spin-button {
   }
 }
 
-#mainToolbar.expanded ~ #undoActionNotification {
-  left: calc(50% + 50px);
-}
-
-/*When the main toolbar is expanded but the window is not wide enough for it to show as expanded, properly re-center the delete notification.*/
-@media only screen and (max-width: 900px) {
-  #mainToolbar.expanded ~ #undoActionNotification {
-    left: calc(50% + 25px) !important;
-  }
-}
-
 #rotatedPinnedIcon {
   height: 20px;
 
