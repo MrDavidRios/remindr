@@ -220,11 +220,17 @@ const dataHandler = {
   saveTaskData: (stringifiedTaskList: string) => {
     return ipcRenderer.invoke('save-task-data', stringifiedTaskList);
   },
+  saveStreamsData: (stringifiedStreamList: string) => {
+    return ipcRenderer.invoke('save-streams-data', stringifiedStreamList);
+  },
   loadUserData: () => {
     return ipcRenderer.invoke('load-user-data');
   },
   loadTaskData: () => {
     return ipcRenderer.invoke('load-task-data');
+  },
+  loadStreamsData: () => {
+    return ipcRenderer.invoke('load-streams-data');
   },
   deleteAccountData: () => {
     return ipcRenderer.invoke('delete-account-data');

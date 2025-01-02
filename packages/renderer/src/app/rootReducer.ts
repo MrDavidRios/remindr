@@ -5,6 +5,7 @@ import databaseReducer from '../features/database/databaseSlice';
 import menuStateReducer from '../features/menu-state/menuSlice';
 import pageStateReducer from '../features/page-state/pageState';
 import settingsReducer from '../features/settings/settingsSlice';
+import streamListReducer from '../features/stream-list/streamListSlice';
 import taskColumnReducer from '../features/task-columns/taskColumnSlice';
 import taskListReducer from '../features/task-list/taskListSlice';
 import taskModificationReducer from '../features/task-modification/taskModificationSlice';
@@ -13,6 +14,7 @@ import userStateReducer from '../features/user-state/userSlice';
 
 export const rootReducer = combineReducers({
   taskList: taskListReducer,
+  streamList: streamListReducer,
   taskColumns: taskColumnReducer,
   appMode: appModeReducer,
   settings: settingsReducer,

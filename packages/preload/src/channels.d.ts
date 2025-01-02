@@ -21,6 +21,7 @@ export type DataEvent =
   | 'sync-save-calls'
   | 'is-saving'
   | 'server-task-list-update'
+  | 'server-stream-list-update'
   | 'restart-firestore';
 export type AppAction =
   | 'update-tray-icon'

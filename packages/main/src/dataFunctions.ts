@@ -1,10 +1,12 @@
-import type { CompleteAppData, Settings, Task } from '@remindr/shared';
+import type { CompleteAppData, Settings, Stream, Task } from '@remindr/shared';
 import {
   AppMode,
   ErrorCodes,
   User as RemindrUser,
   TaskCollection,
   createDefaultSettings,
+  serializeStream,
+  serializeTask,
   waitUntil,
 } from '@remindr/shared';
 import { ipcMain } from 'electron';
@@ -38,6 +40,7 @@ let firestore: Firestore | undefined;
 let restartingFirestore = false;
 
 let taskDocRef: DocumentReference<DocumentData>;
+let streamsDocRef: DocumentReference<DocumentData>;
 let userDocRef: DocumentReference<DocumentData>;
 
 let saveCalls = 0;
@@ -45,12 +48,14 @@ let canQuit = true;
 
 let userDataExists = false;
 let taskDataExists = false;
+let streamsDataExists = false;
 
 const deviceID = `_${Math.random().toString(36).substring(2, 9)}`;
 
 // #region Data Listeners
 let userDataListener: Unsubscribe | undefined;
 let taskDataListener: Unsubscribe | undefined;
+let streamsDataListener: Unsubscribe | undefined;
 
 async function initializeDataListeners() {
   dataListenersRemoved = false;
@@ -61,9 +66,9 @@ async function initializeDataListeners() {
   const uid = getUserUID();
 
   taskDocRef = doc(firestore, `users/${uid}/reminders/reminders`);
+  streamsDocRef = doc(firestore, `users/${uid}/streams/streams`);
   userDocRef = doc(collection(firestore, 'users'), uid);
 
-  // #region User Info
   const userDocInfo = await documentExists(userDocRef);
   if (userDocInfo.exists) {
     await setDoc(
@@ -119,6 +124,20 @@ async function initializeDataListeners() {
 
     const appWindow = getMainWindow();
     appWindow?.webContents.send('server-task-list-update', loadedTaskData);
+  });
+
+  streamsDataListener = onSnapshot(streamsDocRef, (docSnapshot) => {
+    if (dataListenersRemoved) return;
+
+    const loadedStreamsData = docSnapshot.data();
+    // if the loaded streams data doesn't exist, an account is likely being created
+    if (!loadedStreamsData) return;
+
+    const source = docSnapshot.metadata.hasPendingWrites ? 'Local' : 'Server';
+    if (source !== 'Server') return;
+
+    const appWindow = getMainWindow();
+    appWindow?.webContents.send('server-stream-list-update', loadedStreamsData);
   });
 }
 
@@ -423,7 +442,7 @@ export async function saveUserData(): Promise<string | void> {
 
 export async function saveTaskData(stringifiedTaskList: string): Promise<string | void> {
   if (!stringifiedTaskList) {
-    throw new Error('(saveTaskData) tasks: no task list provided.');
+    throw new Error('(saveTaskData) no task list provided.');
   }
 
   await waitUntilFirestoreInitialized();
@@ -433,52 +452,76 @@ export async function saveTaskData(stringifiedTaskList: string): Promise<string 
     setRestartFirestoreTimeout(saveCallIdx);
   }
 
-  const reminderListCopy = JSON.parse(stringifiedTaskList) as Task[];
+  const taskListCopy = JSON.parse(stringifiedTaskList) as Task[];
 
   if (getAppMode() !== AppMode.Online) {
-    store.set('reminders', reminderListCopy);
+    store.set('reminders', taskListCopy);
     log.info('(saveTaskData) Task data saved locally.');
     return;
   }
 
-  if (!firestore) throw new Error('saveTaskData: Firestore instance does not exist.');
+  if (!firestore) throw new Error('(saveTaskData) Firestore instance does not exist.');
 
-  Object.keys(reminderListCopy).forEach((reminder: any) => {
-    // Get each reminder
-    Object.keys(reminderListCopy[reminder]).forEach((key) => {
-      if (key === 'scheduledTime') {
-        if (reminderListCopy[reminder][key as keyof Task] === undefined)
-          (reminderListCopy[reminder][key as keyof Task] as any) = null;
-      }
-
-      if (key === 'scheduledReminders' || key === 'subtasks') {
-        // Convert the scheduledReminders object to a default js object for firestore to handle
-        (reminderListCopy[reminder][key as keyof Task] as any) = reminderListCopy[reminder][key].map((obj: object) => ({
-          ...obj,
-        }));
-      }
-    });
-  });
-
-  let newReminderList: Task[] = [];
-
-  // Convert custom objects into js objects for firestore to handle
-  if (reminderListCopy.length > 0) newReminderList = reminderListCopy.map((obj) => ({ ...obj }));
+  const serializedTaskList = taskListCopy.map(serializeTask);
 
   if (taskDataExists) {
-    // If reminder file exists, then update it
+    // If task file exists, then update it
     await updateDoc(taskDocRef, {
-      reminderList: newReminderList,
+      reminderList: serializedTaskList,
     });
 
     log.info('(saveTaskData) Task data saved.');
   } else {
-    // If reminder file doesn't exist, then create it
+    // If task file doesn't exist, then create it
     await setDoc(taskDocRef, {
-      reminderList: newReminderList,
+      reminderList: serializedTaskList,
     });
 
     log.info('(saveTaskData) Task data entry created.');
+  }
+
+  saveCallDurations.delete(saveCallIdx);
+  removeSaveCall();
+}
+
+export async function saveStreamsData(stringifiedStreamList: string): Promise<string | void> {
+  if (!stringifiedStreamList) {
+    throw new Error('(saveStreamsData) no stream list provided.');
+  }
+
+  await waitUntilFirestoreInitialized();
+
+  const saveCallIdx = initializeSaveCall();
+  if (getAppMode() === AppMode.Online) {
+    setRestartFirestoreTimeout(saveCallIdx);
+  }
+
+  const streamListCopy = JSON.parse(stringifiedStreamList) as Stream[];
+
+  if (getAppMode() !== AppMode.Online) {
+    store.set('streams', streamListCopy);
+    log.info('(saveStreamsData) Streams data saved locally.');
+    return;
+  }
+
+  if (!firestore) throw new Error('(saveStreamsData) Firestore instance does not exist.');
+
+  const serializedStreamList = streamListCopy.map(serializeStream);
+
+  if (streamsDataExists) {
+    // If streams doc exists, update it
+    await updateDoc(streamsDocRef, {
+      streams: serializedStreamList,
+    });
+
+    log.info('(saveStreamsData) Streams data saved.');
+  } else {
+    // If streams doc doesn't exist, create it
+    await setDoc(streamsDocRef, {
+      streams: serializedStreamList,
+    });
+
+    log.info('(saveStreamsData) Streams doc created.');
   }
 
   saveCallDurations.delete(saveCallIdx);
@@ -579,6 +622,45 @@ export async function loadTaskData(): Promise<TaskCollection | string> {
   taskData.taskList = instantiatedTaskList;
 
   return taskData;
+}
+
+export async function loadStreamsData(): Promise<Stream[] | string> {
+  await waitUntilFirestoreInitialized();
+
+  let streamsList: Stream[];
+
+  if (getAppMode() !== AppMode.Online) {
+    streamsList = (store.get('streamList') as Stream[]) ?? [];
+    return streamsList;
+  }
+
+  if (!firestore) throw new Error('(loadStreamsData) Firestore instance does not exist.');
+
+  log.info('(loadStreamsData) Loading task data...');
+
+  streamsList = [];
+
+  const docData = await documentExists(taskDocRef);
+
+  if (!docData.exists || !docData.docSnapshot) {
+    streamsDataExists = false;
+
+    // if task data doesn't exist, try to create a new document with an empty task list.
+    await saveStreamsData(JSON.stringify([]));
+
+    return loadStreamsData();
+  }
+
+  streamsDataExists = true;
+
+  const loadedStreamList = docData.docSnapshot.data()!.streams;
+  const instantiatedStreamList: Stream[] = [];
+
+  for (const stream of loadedStreamList) {
+    instantiatedStreamList.push(stream);
+  }
+
+  return instantiatedStreamList;
 }
 
 // #region Helper Functions

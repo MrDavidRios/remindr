@@ -18,6 +18,7 @@ export function Toolbar() {
   return (
     <div id="mainToolbar" className={`frosted ${scheduledReminderEditMenuOpen ? 'submenu-open' : ''}`}>
       <div>
+        {}
         <TaskCreateButton />
         <ListViewButton />
         <ColumnsViewButton />
