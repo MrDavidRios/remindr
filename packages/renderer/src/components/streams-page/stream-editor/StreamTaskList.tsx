@@ -5,35 +5,42 @@ import { StreamTaskTile } from '../StreamTaskTile';
 
 interface StreamTaskListProps {
   showNewTaskTile: boolean;
-  orderedTasks: StreamTask[];
+  tasks: StreamTask[];
   currentStream: Stream;
+  onChange: (tasks: StreamTask[]) => void;
   onReorder: (reorderedTasks: StreamTask[]) => void;
   onReorderComplete: () => void;
-  onToggleCompleteTask: (task: StreamTask) => void;
 }
 
 export const StreamTaskList: FC<StreamTaskListProps> = ({
   showNewTaskTile,
-  orderedTasks,
+  tasks,
   currentStream,
+  onChange,
   onReorder,
   onReorderComplete,
-  onToggleCompleteTask,
 }) => {
-  if (orderedTasks.length === 0 && !showNewTaskTile) return <p className="text-secondary">The world's your oyster.</p>;
-
+  if (tasks.length === 0 && !showNewTaskTile) return <p className="text-secondary">The world's your oyster.</p>;
   const activeOrComplete = currentStream.state === StreamState.Active || currentStream.state === StreamState.Completed;
 
+  const onChangeTask = (task: StreamTask) => {
+    const taskIdx = tasks.findIndex((t) => t.creationTime === task.creationTime);
+    const updatedTasks = [...tasks];
+    updatedTasks[taskIdx] = task;
+
+    onChange(updatedTasks);
+  };
+
   return (
-    <Reorder.Group id="streamTaskList" values={orderedTasks} axis="y" onReorder={onReorder}>
+    <Reorder.Group id="streamTaskList" values={tasks} layoutScroll axis="y" onReorder={onReorder}>
       <AnimatePresence mode="popLayout">
-        {orderedTasks.map((task, idx) => (
+        {tasks.map((task, idx) => (
           <div key={task.creationTime}>
             <StreamTaskTile
               streamTask={task}
-              onToggleCompleteTask={onToggleCompleteTask}
+              onChange={onChangeTask}
               onReorderComplete={onReorderComplete}
-              showConnector={!activeOrComplete || idx !== orderedTasks.length - 1}
+              showConnector={!activeOrComplete || idx !== tasks.length - 1}
             />
           </div>
         ))}

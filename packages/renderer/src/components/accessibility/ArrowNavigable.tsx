@@ -169,6 +169,10 @@ const keydownEventListener = (
 
   if (disableNavigation ?? false) return;
 
+  const activeElementIsInput =
+    document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
+  if (activeElementIsInput) return;
+
   switch (e.key) {
     case 'ArrowDown':
       e.preventDefault();

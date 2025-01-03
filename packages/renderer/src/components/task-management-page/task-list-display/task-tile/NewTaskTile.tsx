@@ -29,7 +29,7 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
       onBlur={onEscape}
     >
       <DynamicTextArea
-        aria-label="task-title"
+        aria-label="task title input"
         placeholder="Enter a title"
         maxLength={255}
         value={taskName}

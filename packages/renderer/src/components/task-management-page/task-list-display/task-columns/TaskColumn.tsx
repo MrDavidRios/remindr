@@ -73,7 +73,13 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
       <h2>{name}</h2>
       <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" className="tasks" id={name}>
         {showNoTasksMessage && <p className="no-tasks-message">All done here!</p>}
-        <Reorder.Group className="task-group" values={orderedIncompleteTasks} axis="y" onReorder={onReorder}>
+        <Reorder.Group
+          className="task-group"
+          values={orderedIncompleteTasks}
+          layoutScroll
+          axis="y"
+          onReorder={onReorder}
+        >
           <AnimatePresence mode="popLayout">
             {orderedIncompleteTasks.map((task) => (
               <div key={task.creationTime}>

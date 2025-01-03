@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppMode, Stream, StreamTask } from '@remindr/shared';
+import _ from 'lodash';
 import { setAppMode } from '../app-mode/appModeSlice';
 import { updateUserState } from '../user-state/userSlice';
 import { initializeStreamListSyncListener } from './streamListSync';
@@ -53,6 +54,9 @@ export const streamListSlice = createSlice({
 
       // Update stream
       const streamIdx = state.value.findIndex((stream) => stream.creationTime === action.payload.creationTime);
+
+      if (_.isEqual(state.value[streamIdx], action.payload)) return;
+
       state.value[streamIdx] = action.payload;
       saveStreamsData(state.value);
     },

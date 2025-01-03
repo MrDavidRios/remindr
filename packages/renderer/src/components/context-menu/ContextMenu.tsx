@@ -10,18 +10,9 @@ interface ContextMenuProps extends HTMLAttributes<HTMLDivElement> {
   x: number;
   y: number;
   hideMenu: (fromEscKeypress: boolean) => void;
-  parentContainerId?: string;
 }
 
-export const ContextMenu: FC<ContextMenuProps> = ({
-  x,
-  y,
-  id,
-  className,
-  children,
-  hideMenu,
-  parentContainerId = 'taskListContainer',
-}) => {
+export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, className, children, hideMenu }) => {
   const openMenus = useAppSelector((state) => state.menuState.openMenus);
 
   const [position, setPosition] = useState({ x, y });
@@ -33,7 +24,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({
 
   // Hide menu when scrolling on task list container
   useDetectWheel({
-    element: document.getElementById(parentContainerId) as HTMLElement | undefined,
+    element: document.getElementById('mainContainer') as HTMLElement | undefined,
     callback: () => hideMenu(false),
   });
 

@@ -35,12 +35,7 @@ export const StreamEditor: FC = () => {
     dispatch(setCurrentStream({ ...currentStream, tasks: orderedTasks }));
   };
 
-  const onToggleCompleteTask = (task: StreamTask) => {
-    const taskIdx = orderedTasks.findIndex((t) => t.creationTime === task.creationTime);
-    const updatedTasks = [...orderedTasks];
-    updatedTasks[taskIdx] = { ...task, completed: !task.completed };
-    setOrderedTasks(updatedTasks);
-
+  const onChange = (updatedTasks: StreamTask[]) => {
     const updatedStream: Stream = { ...currentStream, tasks: updatedTasks };
     dispatch(updateStream(updatedStream));
     dispatch(setCurrentStream(updatedStream));
@@ -65,11 +60,11 @@ export const StreamEditor: FC = () => {
       >
         <StreamTaskList
           showNewTaskTile={showNewTaskTile}
-          orderedTasks={orderedTasks}
+          tasks={orderedTasks}
           currentStream={currentStream}
           onReorder={onReorder}
           onReorderComplete={onReorderComplete}
-          onToggleCompleteTask={onToggleCompleteTask}
+          onChange={onChange}
         />
         {showNewTaskTile && <NewStreamTaskTile onEscape={() => setShowNewTaskTile(false)} createTask={addTask} />}
         {!showNewTaskTile && isStreamPlayable && (

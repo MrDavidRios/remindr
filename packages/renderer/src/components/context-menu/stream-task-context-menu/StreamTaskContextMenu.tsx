@@ -36,7 +36,7 @@ export const StreamTaskContextMenu: React.FC = () => {
   }
 
   return (
-    <ContextMenu id="streamTaskContextMenu" x={x} y={y} hideMenu={hideMenu} parentContainerId="streamTaskList">
+    <ContextMenu id="streamTaskContextMenu" x={x} y={y} hideMenu={hideMenu}>
       <ReactFocusLock>
         <ArrowNavigable className="menu frosted" query=":scope > li:not(.hidden)" asUl autoFocus waitForChildAnimation>
           <li

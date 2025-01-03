@@ -24,7 +24,7 @@ export const TaskGroup: FC<TaskGroupProps> = ({ tasks, reorderable, onReorder, o
           // eslint-disable-next-line react/jsx-no-useless-fragment
           <>
             {reorderable && reoderableTodoTasksEnabled ? (
-              <Reorder.Group className="task-group" values={tasks} axis="y" onReorder={onReorder}>
+              <Reorder.Group className="task-group" values={tasks} layoutScroll axis="y" onReorder={onReorder}>
                 <AnimatePresence mode="popLayout">
                   {tasks.map((task) => (
                     <div key={task.creationTime}>
