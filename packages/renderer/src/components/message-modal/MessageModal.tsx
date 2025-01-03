@@ -5,6 +5,8 @@ import { FC } from 'react';
 import { FullScreenMenu } from '../menus/fullscreen-menu/FullScreenMenu';
 import { DismissButton } from './DismissButton';
 
+const primaryOptions = ['continue', 'delete'];
+
 export const MessageModal: FC = () => {
   const dispatch = useAppDispatch();
   const { title, message, options } = useAppSelector((state) => state.menuState.dialogInfo);
@@ -19,7 +21,7 @@ export const MessageModal: FC = () => {
         <div className="action-buttons">
           {options?.map((option) => {
             const lowercasedOption = option.toLowerCase();
-            const buttonClasses = `${lowercasedOption !== 'discard' ? 'primary-button' : 'secondary'}`;
+            const buttonClasses = `${primaryOptions.includes(lowercasedOption) ? 'primary-button' : 'secondary'}`;
 
             return (
               <button

@@ -84,6 +84,27 @@
         bottom: 15px;
       }
     }
+
+    #deleteStreamButton {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+
+      padding: 6px 8px;
+
+      img {
+        filter: invert(9%) sepia(77%) saturate(6607%) hue-rotate(9deg) brightness(94%) contrast(116%);
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      &:active {
+        top: initial;
+        bottom: 11px;
+      }
+    }
   }
 
   .header {

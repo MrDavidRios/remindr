@@ -75,6 +75,10 @@ export const streamListSlice = createSlice({
         (task) => task.creationTime !== action.payload.creationTime,
       );
     },
+    deleteStream: (state, action: PayloadAction<Stream>) => {
+      state.value = state.value.filter((stream) => stream.creationTime !== action.payload.creationTime);
+      saveStreamsData(state.value);
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getStreamList.pending, (state) => {
@@ -115,5 +119,11 @@ function resetStreamListState(state: StreamListState) {
 initializeStreamListSyncListener();
 
 export default streamListSlice.reducer;
-export const { setStreamList, updateStream, setCurrentStream, addTaskToCurrentStream, removeTaskFromStream } =
-  streamListSlice.actions;
+export const {
+  setStreamList,
+  updateStream,
+  setCurrentStream,
+  addTaskToCurrentStream,
+  removeTaskFromStream,
+  deleteStream,
+} = streamListSlice.actions;

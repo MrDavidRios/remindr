@@ -35,14 +35,20 @@ export const StreamEditor: FC = () => {
     dispatch(setCurrentStream({ ...currentStream, tasks: orderedTasks }));
   };
 
+  const initialize = (stream: Stream) => {
+    if (stream.state !== StreamState.Uninitialized) return stream;
+
+    return { ...stream, state: StreamState.Initialized };
+  };
+
   const onChange = (updatedTasks: StreamTask[]) => {
-    const updatedStream: Stream = { ...currentStream, tasks: updatedTasks };
+    const updatedStream: Stream = { ...initialize(currentStream), tasks: updatedTasks };
     dispatch(updateStream(updatedStream));
     dispatch(setCurrentStream(updatedStream));
   };
 
   const onNameChange = (newName: string) => {
-    const updatedStream: Stream = { ...currentStream, name: newName };
+    const updatedStream: Stream = { ...initialize(currentStream), name: newName };
     dispatch(updateStream(updatedStream));
     dispatch(setCurrentStream(updatedStream));
   };
@@ -54,7 +60,9 @@ export const StreamEditor: FC = () => {
   }, [currentStream.tasks]);
 
   const isStreamPlayable =
-    currentStream.state === StreamState.Uninitialized || currentStream.state === StreamState.Paused;
+    currentStream.state === StreamState.Uninitialized ||
+    currentStream.state === StreamState.Initialized ||
+    currentStream.state === StreamState.Paused;
 
   return (
     <div id="streamEditor" className="menu frosted">

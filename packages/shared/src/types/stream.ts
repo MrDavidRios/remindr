@@ -11,6 +11,8 @@ export type StreamTask = {
 
 export enum StreamState {
   Uninitialized,
+  /** Initialized, but not yet started */
+  Initialized,
   Active,
   Paused,
   Completed,
