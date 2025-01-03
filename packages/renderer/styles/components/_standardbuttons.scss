@@ -17,6 +17,19 @@
   > img {
     filter: var(--svg-filter-over-accent);
   }
+
+  &:disabled {
+    background-color: var(--text-color-secondary);
+
+    &:hover {
+      box-shadow: none;
+      cursor: default;
+    }
+
+    &:active {
+      position: static;
+    }
+  }
 }
 
 .secondary-button {

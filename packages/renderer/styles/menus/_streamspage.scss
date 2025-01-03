@@ -1,0 +1,129 @@
+#streamsPage {
+  width: calc(100vw - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#streamsDashboard,
+#streamEditor {
+  max-width: 1096px;
+  background-color: var(--surface-primary-dark);
+
+  width: 80%;
+  height: 80%;
+
+  padding: 16px 20px;
+
+  display: grid;
+  grid-template-rows: min-content auto min-content;
+
+  .header {
+    padding: 6px 0 12px 0;
+  }
+}
+
+#streamsDashboard {
+  #emptyStreamListMessage {
+    margin-top: 12px;
+  }
+}
+
+#streamEditor {
+  .back-button {
+    position: fixed;
+    left: 12px;
+    top: 12px;
+
+    padding: 8px 10px 6px 8px;
+    border-radius: var(--menu-border-radius);
+
+    img {
+      filter: var(--svg-filter);
+    }
+
+    &:active {
+      top: 13px;
+    }
+
+    &:hover {
+      background-color: var(--surface-active);
+    }
+  }
+
+  #streamTaskListWrapper {
+    padding: 16px;
+    overflow-y: auto;
+
+    .text-secondary {
+      margin-bottom: 16px;
+    }
+  }
+
+  .action-bar {
+    margin-top: 16px;
+
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+.new-stream-task-tile {
+  border-radius: 5px;
+  padding: 8px;
+
+  .dynamic-text-area {
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+
+    font-size: 16px;
+    border: none;
+  }
+}
+
+.stream-task-tile {
+  border-radius: 5px;
+  min-height: 60px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  text-align: left;
+
+  background-color: var(--surface-primary);
+
+  position: relative;
+  margin-bottom: 12px;
+
+  &:hover {
+    &,
+    .stream-task-connector {
+      background-color: var(--surface-secondary);
+    }
+  }
+
+  &.completed {
+    border: 2px solid var(--ui-accent-color);
+
+    .stream-task-connector {
+      bottom: -14px;
+
+      background-color: var(--ui-accent-color);
+      color: var(--ui-accent-color);
+    }
+  }
+
+  .stream-task-connector {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 3px;
+    height: 12px;
+    background-color: var(--surface-primary);
+  }
+}

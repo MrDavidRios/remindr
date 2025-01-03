@@ -3,7 +3,7 @@ import { useAppSelector } from '@renderer/hooks';
 import { AnimatePresence } from 'framer-motion';
 import { FC } from 'react';
 import { TaskCreateMenu } from '../menus/task-create-menu/TaskCreateMenu';
-import { StreamEditorPage } from '../stream-editor-page/StreamEditorPage';
+import { StreamsPage } from '../streams-page/StreamsPage';
 import { TaskManagementPage } from '../task-management-page/TaskManagementPage';
 import { Toolbar } from '../toolbar/Toolbar';
 import { UndoNotification } from '../undo-notification/UndoNotification';
@@ -19,7 +19,7 @@ export const MainView: FC = () => {
 
       <div id="mainContainer">
         {onTaskViewPage && <TaskManagementPage />}
-        {currentTaskPage === Page.StreamEditor && <StreamEditorPage />}
+        {currentTaskPage === Page.StreamEditor && <StreamsPage />}
         <AnimatePresence>{showTaskCreateMenu && <TaskCreateMenu id="taskCreationWindow" />}</AnimatePresence>
       </div>
 

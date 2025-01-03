@@ -1,8 +1,20 @@
-import { TaskReference } from './classes/index.js';
+export type StreamTask = {
+  creationTime: number;
+  name: string;
+  completed: boolean;
+  /**
+   * If true, this task is a reference to a task in the user's task list. The creation time will be treated as a
+   * reference to the task rather than the creation time for the `StreamTask`.
+   */
+  isTaskReference: boolean;
+};
 
-export type StreamTask = string | TaskReference;
-
-export type StreamState = 'uninitialized' | 'active' | 'paused' | 'stopped';
+export enum StreamState {
+  Uninitialized,
+  Active,
+  Paused,
+  Ended,
+}
 
 export class Stream {
   name: string;
@@ -17,7 +29,7 @@ export class Stream {
     this.name = name;
     this.tasks = tasks ?? [];
 
-    this.state = 'uninitialized';
+    this.state = StreamState.Uninitialized;
     this.creationTime = new Date().getTime();
   }
 }

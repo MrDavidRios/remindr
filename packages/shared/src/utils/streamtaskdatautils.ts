@@ -9,13 +9,7 @@ import { Stream, StreamTask } from '../types/stream.js';
 export const serializeStream = (stream: Stream): object => {
   const serializedStream: Stream = { ..._.omit(stream, 'tasks'), tasks: [] };
 
-  const serializedTasks = stream.tasks.map((task: StreamTask) => {
-    if (typeof task === 'string') {
-      return task;
-    }
-
-    return { ...task };
-  });
+  const serializedTasks = stream.tasks.map((task: StreamTask) => ({ ...task }));
 
   serializedStream.tasks = serializedTasks;
 

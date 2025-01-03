@@ -41,8 +41,10 @@
 // Pages
 @use "./menus/_login";
 @use "./menus/_intropage";
+@use "./menus/streamspage";
 
 // Base
+@use "./base/text";
 @use "./base/svg";
 @use "./base/frosted_background";
 @use "./base/mixins";

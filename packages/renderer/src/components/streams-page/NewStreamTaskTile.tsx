@@ -1,23 +1,23 @@
 import { DynamicTextArea } from '@renderer/components/dynamic-text-area/DynamicTextArea';
 import React from 'react';
 
-interface NewTaskTileProps {
+interface NewStreamTaskTileProps {
   onEscape: () => void;
   createTask: (name: string) => void;
 }
 
-export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }) => {
-  const [taskName, setTaskName] = React.useState('');
+export const NewStreamTaskTile: React.FC<NewStreamTaskTileProps> = ({ createTask, onEscape }) => {
+  const [name, setName] = React.useState('');
 
   return (
     <div
-      className="new-task-tile frosted"
+      className="new-stream-task-tile frosted"
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
 
           onEscape();
-          createTask(taskName);
+          createTask(name);
         }
 
         if (e.key === 'Escape') {
@@ -32,14 +32,14 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
         aria-label="task-title"
         placeholder="Enter a title"
         maxLength={255}
-        value={taskName}
+        value={name}
         autoFocus
         allowNewLine={false}
         onChange={(e) => {
           // If there's no change, don't re-render
-          if (taskName === e.currentTarget.value) return;
+          if (name === e.currentTarget.value) return;
 
-          setTaskName(e.currentTarget.value);
+          setName(e.currentTarget.value);
         }}
       />
     </div>
