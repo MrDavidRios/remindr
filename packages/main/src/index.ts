@@ -14,8 +14,10 @@ import { initAutoUpdaterEventHandlers } from './appUpdater.js';
 import {
   deleteAccountData,
   isSaving,
+  loadStreamsData,
   loadTaskData,
   loadUserData,
+  saveStreamsData,
   saveTaskData,
   saveUserData,
 } from './dataFunctions.js';
@@ -260,12 +262,20 @@ ipcMain.handle('save-task-data', (_event, stringifiedTaskList: string) => {
   saveTaskData(stringifiedTaskList);
 });
 
+ipcMain.handle('save-streams-data', (_event, stringifiedStreamList: string) => {
+  saveStreamsData(stringifiedStreamList);
+});
+
 ipcMain.handle('load-user-data', () => {
   return loadUserData();
 });
 
 ipcMain.handle('load-task-data', () => {
   return loadTaskData();
+});
+
+ipcMain.handle('load-streams-data', () => {
+  return loadStreamsData();
 });
 
 ipcMain.handle('delete-account-data', () => {

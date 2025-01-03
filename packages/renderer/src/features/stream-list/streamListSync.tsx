@@ -3,14 +3,14 @@ import store from '@renderer/app/store';
 import { setStreamList } from './streamListSlice';
 
 export function initializeStreamListSyncListener() {
-  window.electron.ipcRenderer.on('server-stream-list-update', (streamListObj: { streamList: Stream[] }) => {
-    const { streamList } = streamListObj;
+  window.electron.ipcRenderer.on('server-stream-list-update', (streamListObj: { streams: Stream[] }) => {
+    const { streams } = streamListObj;
 
-    if (!streamList) {
+    if (!streams) {
       console.error('Received invalid stream list update from server', streamListObj);
       return;
     }
 
-    store.dispatch(setStreamList(streamList));
+    store.dispatch(setStreamList(streams));
   });
 }

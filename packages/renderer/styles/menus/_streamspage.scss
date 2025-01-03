@@ -23,7 +23,19 @@
   }
 }
 
+#streamList,
+#streamTaskListWrapper {
+  padding: 16px;
+  overflow-y: auto;
+}
+
 #streamsDashboard {
+  #streamList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
   #emptyStreamListMessage {
     margin-top: 12px;
   }
@@ -51,13 +63,8 @@
     }
   }
 
-  #streamTaskListWrapper {
-    padding: 16px;
-    overflow-y: auto;
-
-    .text-secondary {
-      margin-bottom: 16px;
-    }
+  #streamTaskListWrapper .text-secondary {
+    margin-bottom: 16px;
   }
 
   .action-bar {
@@ -66,6 +73,17 @@
     display: flex;
     justify-content: center;
     gap: 12px;
+
+    #saveStreamButton {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+
+      &:active {
+        top: initial;
+        bottom: 15px;
+      }
+    }
   }
 }
 

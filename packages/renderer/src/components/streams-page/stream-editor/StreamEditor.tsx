@@ -1,6 +1,6 @@
-import { StreamState, StreamTask } from '@remindr/shared';
+import { Stream, StreamState, StreamTask } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
-import { addTaskToCurrentStream, setCurrentStream } from '@renderer/features/stream-list/streamListSlice';
+import { addTaskToCurrentStream, setCurrentStream, updateStream } from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
@@ -39,9 +39,11 @@ export const StreamEditor: FC = () => {
     const taskIdx = orderedTasks.findIndex((t) => t.creationTime === task.creationTime);
     const updatedTasks = [...orderedTasks];
     updatedTasks[taskIdx] = { ...task, completed: !task.completed };
-
     setOrderedTasks(updatedTasks);
-    dispatch(setCurrentStream({ ...currentStream, tasks: updatedTasks }));
+
+    const updatedStream: Stream = { ...currentStream, tasks: updatedTasks };
+    dispatch(updateStream(updatedStream));
+    dispatch(setCurrentStream(updatedStream));
   };
 
   useEffect(() => {

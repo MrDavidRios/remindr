@@ -22,6 +22,8 @@ export const StreamTaskList: FC<StreamTaskListProps> = ({
 }) => {
   if (orderedTasks.length === 0 && !showNewTaskTile) return <p className="text-secondary">The world's your oyster.</p>;
 
+  const activeOrComplete = currentStream.state === StreamState.Active || currentStream.state === StreamState.Completed;
+
   return (
     <Reorder.Group id="streamTaskList" values={orderedTasks} axis="y" onReorder={onReorder}>
       <AnimatePresence mode="popLayout">
@@ -31,7 +33,7 @@ export const StreamTaskList: FC<StreamTaskListProps> = ({
               streamTask={task}
               onToggleCompleteTask={onToggleCompleteTask}
               onReorderComplete={onReorderComplete}
-              showConnector={currentStream.state !== StreamState.Active || idx !== orderedTasks.length - 1}
+              showConnector={!activeOrComplete || idx !== orderedTasks.length - 1}
             />
           </div>
         ))}

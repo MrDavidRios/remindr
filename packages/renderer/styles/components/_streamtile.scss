@@ -1,0 +1,41 @@
+.stream-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  padding: 12px;
+
+  background-color: var(--surface-primary);
+  border-radius: var(--menu-border-radius);
+  text-align: left;
+
+  .stream-info,
+  .indicator {
+    display: flex;
+    align-items: center;
+  }
+
+  .stream-info {
+    gap: 8px;
+  }
+
+  .indicator {
+    gap: 4px;
+
+    img {
+      width: 20px;
+      height: 20px;
+
+      filter: var(--svg-filter);
+    }
+  }
+
+  p {
+    word-break: break-word;
+  }
+
+  &:hover {
+    background-color: var(--surface-secondary);
+    box-shadow: var(--subtle-box-shadow);
+  }
+}

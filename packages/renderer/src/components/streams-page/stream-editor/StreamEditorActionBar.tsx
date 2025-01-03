@@ -1,5 +1,5 @@
 import { Stream, StreamState } from '@remindr/shared';
-import { setCurrentStreamState } from '@renderer/features/stream-list/streamListSlice';
+import { setCurrentStream, updateStream } from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { FC } from 'react';
 
@@ -14,37 +14,56 @@ export const StreamEditorActionBar: FC<StreamEditorActionBar> = ({ currentStream
     currentStream.state === StreamState.Uninitialized || currentStream.state === StreamState.Paused;
 
   const playStream = () => {
-    dispatch(setCurrentStreamState(StreamState.Active));
+    updateStreamAndSave({ ...currentStream, state: StreamState.Active });
   };
 
   const pauseStream = () => {
-    dispatch(setCurrentStreamState(StreamState.Paused));
+    updateStreamAndSave({ ...currentStream, state: StreamState.Paused });
   };
 
-  const endStream = () => {
-    dispatch(setCurrentStreamState(StreamState.Ended));
+  const markStreamComplete = () => {
+    updateStreamAndSave({ ...currentStream, state: StreamState.Completed });
+    dispatch(setCurrentStream(undefined));
+  };
+
+  const markStreamIncomplete = () => {
+    updateStreamAndSave({ ...currentStream, state: StreamState.Paused });
+    dispatch(setCurrentStream(undefined));
+  };
+
+  const updateStreamAndSave = (updatedStream: Stream) => {
+    dispatch(setCurrentStream(updatedStream));
+    dispatch(updateStream(updatedStream));
   };
 
   return (
     <div className="action-bar">
-      {isStreamPlayable ? (
-        <button
-          id="createStreamButton"
-          className="accent-button"
-          disabled={currentStream.tasks.length === 0}
-          onClick={playStream}
-        >
-          {currentStream.state === StreamState.Uninitialized ? 'Start' : 'Resume'}
-        </button>
-      ) : (
+      {currentStream.state !== StreamState.Completed ? (
         <>
-          <button id="pauseStreamButton" className="accent-button" onClick={pauseStream}>
-            Pause
-          </button>
-          <button id="endStreamButton" className="accent-button" onClick={endStream}>
-            End
-          </button>
+          {isStreamPlayable ? (
+            <button
+              id="createStreamButton"
+              className="accent-button"
+              disabled={currentStream.tasks.length === 0}
+              onClick={playStream}
+            >
+              {currentStream.state === StreamState.Uninitialized ? 'Start' : 'Resume'}
+            </button>
+          ) : (
+            <>
+              <button id="pauseStreamButton" className="accent-button" onClick={pauseStream}>
+                Pause
+              </button>
+              <button id="markStreamCompleteButton" className="accent-button" onClick={markStreamComplete}>
+                Mark Complete
+              </button>
+            </>
+          )}
         </>
+      ) : (
+        <button id="markStreamIncompleteButton" className="accent-button" onClick={markStreamIncomplete}>
+          Mark Incomplete
+        </button>
       )}
     </div>
   );

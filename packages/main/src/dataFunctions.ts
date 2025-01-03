@@ -636,11 +636,11 @@ export async function loadStreamsData(): Promise<Stream[] | string> {
 
   if (!firestore) throw new Error('(loadStreamsData) Firestore instance does not exist.');
 
-  log.info('(loadStreamsData) Loading task data...');
+  log.info('(loadStreamsData) Loading streams data...');
 
   streamsList = [];
 
-  const docData = await documentExists(taskDocRef);
+  const docData = await documentExists(streamsDocRef);
 
   if (!docData.exists || !docData.docSnapshot) {
     streamsDataExists = false;

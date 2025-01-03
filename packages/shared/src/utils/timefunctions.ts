@@ -94,3 +94,21 @@ export function getFormattedReminderTime(reminderTime: ScheduledReminder, milita
     reminderTime.reminderMeridiem
   }`;
 }
+
+/**
+ * Formats seconds into hr/min/second format.
+ * @param seconds
+ * @returns
+ */
+export function formatSeconds(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const _seconds = seconds % 60;
+
+  let formattedTime = '';
+  if (hours > 0) formattedTime += `${hours}h `;
+  if (minutes > 0) formattedTime += `${minutes}m `;
+  if (_seconds > 0) formattedTime += `${_seconds}s`;
+
+  return formattedTime;
+}

@@ -13,12 +13,8 @@ export const StreamEditorHeader: FC<StreamEditorHeaderProps> = ({ currentStream 
 
   return (
     <div className="header">
-      <button
-        className="back-button"
-        onClick={() => dispatch(setCurrentStream(undefined))}
-        title="Back to Streams Dashboard"
-      >
-        <img src={backIcon} alt="Back to Streams Dashboard" draggable={false} />
+      <button className="back-button" onClick={() => dispatch(setCurrentStream(undefined))} title="Back to dashboard">
+        <img src={backIcon} alt="Back to dashboard" draggable={false} />
       </button>
       <h2>{currentStream.name}</h2>
     </div>
