@@ -93,7 +93,7 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
     onChange(updatedTask);
   };
 
-  const ref = useClickOutside(() => setEditingName(false));
+  const ref = useClickOutside(cancelNameChange);
 
   return (
     <Reorder.Item
@@ -157,9 +157,7 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
             value={editedName}
             autoFocus
             allowNewLine={false}
-            onChange={(e) => {
-              setEditedName(e.currentTarget.value);
-            }}
+            onChange={(e) => setEditedName(e.currentTarget.value)}
           />
           <SaveButtons onSave={onChangeName} onCancel={cancelNameChange} />
         </div>

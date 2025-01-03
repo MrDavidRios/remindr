@@ -85,4 +85,79 @@
       }
     }
   }
+
+  .header {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+#streamHeaderWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  h2 {
+    cursor: pointer;
+  }
+
+  > button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding: 4px 6px 2px 6px;
+    border-radius: var(--menu-border-radius);
+    position: relative;
+
+    img {
+      display: none;
+
+      width: 24px;
+      height: 24px;
+
+      filter: var(--svg-filter);
+
+      position: absolute;
+      right: -32px;
+    }
+
+    &:hover {
+      background-color: transparent;
+      box-shadow: none;
+
+      img {
+        display: initial;
+      }
+    }
+  }
+}
+
+#streamTitleInputWrapper {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px 2px 6px;
+
+  .dynamic-text-area {
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+
+    padding: 0;
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    border: none;
+  }
+
+  .save-buttons .secondary-button:hover {
+    background-color: transparent;
+  }
 }

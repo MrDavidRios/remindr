@@ -41,6 +41,12 @@ export const StreamEditor: FC = () => {
     dispatch(setCurrentStream(updatedStream));
   };
 
+  const onNameChange = (newName: string) => {
+    const updatedStream: Stream = { ...currentStream, name: newName };
+    dispatch(updateStream(updatedStream));
+    dispatch(setCurrentStream(updatedStream));
+  };
+
   useEffect(() => {
     if (!_.isEqual(currentStream.tasks, orderedTasks)) {
       setOrderedTasks(currentStream.tasks);
@@ -52,7 +58,7 @@ export const StreamEditor: FC = () => {
 
   return (
     <div id="streamEditor" className="menu frosted">
-      <StreamEditorHeader currentStream={currentStream} />
+      <StreamEditorHeader currentStream={currentStream} onNameChange={onNameChange} />
       <ArrowNavigable
         waitForChildAnimation
         query=".stream-task-tile:not(.animating), #streamTaskList > button"
