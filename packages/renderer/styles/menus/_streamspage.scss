@@ -86,8 +86,10 @@
 .stream-task-tile {
   border-radius: 5px;
   min-height: 60px;
+  width: 100%;
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: min-content auto min-content;
   align-items: center;
   gap: 10px;
   padding: 10px;
@@ -98,15 +100,48 @@
   position: relative;
   margin-bottom: 12px;
 
+  p {
+    word-break: break-word;
+  }
+
+  .more-options-btn-wrapper {
+    width: 30px;
+    display: none;
+
+    button {
+      padding: 6px;
+      border-radius: var(--menu-border-radius);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        background-color: transparent;
+        box-shadow: none;
+      }
+    }
+
+    img {
+      filter: var(--svg-filter);
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   &:hover {
     &,
     .stream-task-connector {
       background-color: var(--surface-secondary);
     }
+
+    .more-options-btn-wrapper {
+      display: block;
+    }
   }
 
   &.completed {
-    border: 2px solid var(--ui-accent-color);
+    outline: 2px solid var(--ui-accent-color);
 
     .stream-task-connector {
       bottom: -14px;

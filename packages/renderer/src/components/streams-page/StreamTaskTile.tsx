@@ -1,4 +1,8 @@
-import { StreamTask } from '@remindr/shared';
+import extraMenuIcon from '@assets/icons/extra-menu.png';
+import { ContextMenuType, StreamTask } from '@remindr/shared';
+import store from '@renderer/app/store';
+import { hideContextMenu, showContextMenu } from '@renderer/features/menu-state/menuSlice';
+import { useAppDispatch } from '@renderer/hooks';
 import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
 import { Reorder, useMotionValue } from 'framer-motion';
 import React, { useEffect, useRef } from 'react';
@@ -8,15 +12,16 @@ interface StreamTaskTileProps {
   streamTask: StreamTask;
   onToggleCompleteTask: (task: StreamTask) => void;
   onReorderComplete?: () => void;
-  hideConnector?: boolean;
+  showConnector?: boolean;
 }
 
 export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
   streamTask,
   onToggleCompleteTask,
   onReorderComplete,
-  hideConnector,
+  showConnector,
 }) => {
+  const dispatch = useAppDispatch();
   const animationsEnabled = useAnimationsEnabled();
 
   const reorderableComponentRef = useRef<HTMLElement>(null);
@@ -42,6 +47,24 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
     return () => unsubscribe();
   }, [y]);
 
+  const moreOptionsBtnRef = useRef<HTMLButtonElement>(null);
+  const toggleContextMenu = () => {
+    const ctxMenuVisible = store.getState().menuState.openContextMenus.includes(ContextMenuType.StreamTaskContextMenu);
+
+    if (ctxMenuVisible) {
+      dispatch(hideContextMenu(ContextMenuType.StreamTaskContextMenu));
+    } else {
+      dispatch(
+        showContextMenu({
+          contextMenu: ContextMenuType.StreamTaskContextMenu,
+          x: moreOptionsBtnRef.current?.getBoundingClientRect().x ?? 0,
+          y: moreOptionsBtnRef.current?.getBoundingClientRect().bottom ?? 0,
+          streamTask,
+        }),
+      );
+    }
+  };
+
   return (
     <Reorder.Item
       className={`stream-task-tile ${streamTask.completed ? 'completed' : ''}`}
@@ -49,6 +72,16 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
       value={streamTask}
       style={{ y }}
       onPointerUp={onReorderComplete}
+      onContextMenu={(e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        dispatch(
+          showContextMenu({
+            contextMenu: ContextMenuType.StreamTaskContextMenu,
+            streamTask,
+            x: e.clientX,
+            y: e.clientY,
+          }),
+        );
+      }}
       onClick={(e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         // Detail is 0 when the click is triggered by a keyboard event (spacebar)
         if (e.detail === 0) return;
@@ -65,7 +98,12 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
     >
       <TaskCompleteButton task={streamTask} toggleComplete={() => onToggleCompleteTask(streamTask)} />
       <p>{streamTask.name}</p>
-      {!hideConnector && <div className="stream-task-connector" />}
+      <div className="more-options-btn-wrapper">
+        <button title="More options" ref={moreOptionsBtnRef} onClick={toggleContextMenu}>
+          <img src={extraMenuIcon} alt="More options" />
+        </button>
+      </div>
+      {showConnector && <div className="stream-task-connector" />}
     </Reorder.Item>
   );
 };

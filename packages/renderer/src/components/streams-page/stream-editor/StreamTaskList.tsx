@@ -31,7 +31,7 @@ export const StreamTaskList: FC<StreamTaskListProps> = ({
               streamTask={task}
               onToggleCompleteTask={onToggleCompleteTask}
               onReorderComplete={onReorderComplete}
-              hideConnector={currentStream.state === StreamState.Active && idx === orderedTasks.length - 1}
+              showConnector={currentStream.state !== StreamState.Active || idx !== orderedTasks.length - 1}
             />
           </div>
         ))}

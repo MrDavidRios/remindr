@@ -44,9 +44,16 @@ export const streamListSlice = createSlice({
 
       state.currentStream.tasks.push(action.payload);
     },
+    removeTaskFromStream: (state, action: PayloadAction<StreamTask>) => {
+      if (state.currentStream === undefined) return;
+
+      state.currentStream.tasks = state.currentStream.tasks.filter(
+        (task) => task.creationTime !== action.payload.creationTime,
+      );
+    },
   },
 });
 
 export default streamListSlice.reducer;
-export const { setStreamList, setCurrentStream, setCurrentStreamState, addTaskToCurrentStream } =
+export const { setStreamList, setCurrentStream, setCurrentStreamState, addTaskToCurrentStream, removeTaskFromStream } =
   streamListSlice.actions;

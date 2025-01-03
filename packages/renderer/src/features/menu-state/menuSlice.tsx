@@ -8,6 +8,7 @@ import {
   MENU_TYPES,
   MenuState,
   MenuType,
+  StreamTask,
   Task,
 } from '@remindr/shared';
 import { isModalOpen, isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
@@ -19,6 +20,7 @@ export const initialMenuState: MenuState = {
   contextMenuPositions: {
     [ContextMenuType.TaskContextMenu]: { x: 0, y: 0 },
     [ContextMenuType.GeneralContextMenu]: { x: 0, y: 0 },
+    [ContextMenuType.StreamTaskContextMenu]: { x: 0, y: 0 },
   },
   openDropdowns: {},
   dialogInfo: { title: undefined, message: '', options: [], result: undefined },
@@ -72,11 +74,23 @@ export const menuStateSlice = createSlice({
     },
     showContextMenu: (
       state,
-      action: PayloadAction<{ contextMenu: ContextMenuType; task?: Task; x: number; y: number }>,
+      action: PayloadAction<{
+        contextMenu: ContextMenuType;
+        task?: Task;
+        streamTask?: StreamTask;
+        x: number;
+        y: number;
+      }>,
     ) => {
       if (state.openContextMenus.includes(action.payload.contextMenu)) return;
 
+      if (action.payload.task && action.payload.streamTask) {
+        throw new Error('Cannot show both a task and stream task context menu at the same time');
+      }
+
       state.contextMenuTask = action.payload.task;
+      state.contextMenuStreamTask = action.payload.streamTask;
+
       state.contextMenuPositions[action.payload.contextMenu] = { x: action.payload.x, y: action.payload.y };
       state.openContextMenus.push(action.payload.contextMenu);
     },

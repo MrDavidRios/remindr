@@ -1,4 +1,5 @@
 import { StreamState, StreamTask } from '@remindr/shared';
+import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { addTaskToCurrentStream, setCurrentStream } from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import _ from 'lodash';
@@ -55,7 +56,11 @@ export const StreamEditor: FC = () => {
   return (
     <div id="streamEditor" className="menu frosted">
       <StreamEditorHeader currentStream={currentStream} />
-      <div id="streamTaskListWrapper">
+      <ArrowNavigable
+        waitForChildAnimation
+        query=".stream-task-tile:not(.animating), #streamTaskList > button"
+        id="streamTaskListWrapper"
+      >
         <StreamTaskList
           showNewTaskTile={showNewTaskTile}
           orderedTasks={orderedTasks}
@@ -70,7 +75,7 @@ export const StreamEditor: FC = () => {
             Add To-Do
           </button>
         )}
-      </div>
+      </ArrowNavigable>
       <StreamEditorActionBar currentStream={currentStream} />
     </div>
   );
