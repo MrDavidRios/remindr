@@ -92,7 +92,9 @@ export const StreamEditor: FC = () => {
           </button>
         )}
       </ArrowNavigable>
-      <StreamTimeDisplay active={currentStream.state === StreamState.Active} />
+      {currentStream.state !== StreamState.Uninitialized && (
+        <StreamTimeDisplay active={currentStream.state === StreamState.Active} />
+      )}
       <StreamEditorActionBar currentStream={currentStream} />
     </div>
   );

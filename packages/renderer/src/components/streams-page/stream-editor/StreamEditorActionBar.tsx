@@ -4,10 +4,11 @@ import store from '@renderer/app/store';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
 import {
   deleteStream,
+  markStreamComplete,
+  markStreamIncomplete,
   setCurrentStream,
   startCurrentStream,
   stopCurrentStream,
-  updateStream,
 } from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { FC } from 'react';
@@ -32,19 +33,15 @@ export const StreamEditorActionBar: FC<StreamEditorActionBar> = ({ currentStream
     dispatch(stopCurrentStream());
   };
 
-  const markStreamComplete = () => {
-    updateStreamAndSave({ ...currentStream, state: StreamState.Completed });
+  const markStreamAsComplete = () => {
+    dispatch(stopCurrentStream());
+    dispatch(markStreamComplete(currentStream.creationTime));
     dispatch(setCurrentStream(undefined));
   };
 
-  const markStreamIncomplete = () => {
-    updateStreamAndSave({ ...currentStream, state: StreamState.Paused });
-    dispatch(setCurrentStream(undefined));
-  };
-
-  const updateStreamAndSave = (updatedStream: Stream) => {
-    dispatch(setCurrentStream(updatedStream));
-    dispatch(updateStream(updatedStream));
+  const markStreamAsIncomplete = () => {
+    dispatch(setCurrentStream({ ...currentStream, state: StreamState.Initialized }));
+    dispatch(markStreamIncomplete(currentStream.creationTime));
   };
 
   const onDelete = async () => {
@@ -87,14 +84,14 @@ export const StreamEditorActionBar: FC<StreamEditorActionBar> = ({ currentStream
               <button id="pauseStreamButton" className="accent-button" onClick={pauseStream}>
                 Pause
               </button>
-              <button id="markStreamCompleteButton" className="accent-button" onClick={markStreamComplete}>
+              <button id="markStreamCompleteButton" className="accent-button" onClick={markStreamAsComplete}>
                 Mark Complete
               </button>
             </>
           )}
         </>
       ) : (
-        <button id="markStreamIncompleteButton" className="accent-button" onClick={markStreamIncomplete}>
+        <button id="markStreamIncompleteButton" className="accent-button" onClick={markStreamAsIncomplete}>
           Mark Incomplete
         </button>
       )}

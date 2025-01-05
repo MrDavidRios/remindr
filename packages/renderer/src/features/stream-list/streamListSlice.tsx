@@ -90,6 +90,18 @@ export const streamListSlice = createSlice({
 
       saveStreamsData(state.value);
     },
+    markStreamComplete: (state, action: PayloadAction<number>) => {
+      const streamIdx = state.value.findIndex((stream) => stream.creationTime === action.payload);
+      const stream = state.value[streamIdx];
+      state.value[streamIdx] = { ...stream, state: StreamState.Completed };
+      saveStreamsData(state.value);
+    },
+    markStreamIncomplete: (state, action: PayloadAction<number>) => {
+      const streamIdx = state.value.findIndex((stream) => stream.creationTime === action.payload);
+      const stream = state.value[streamIdx];
+      state.value[streamIdx] = { ...stream, state: StreamState.Initialized };
+      saveStreamsData(state.value);
+    },
     removeTaskFromStream: (state, action: PayloadAction<StreamTask>) => {
       if (state.currentStream === undefined) return;
 
@@ -149,5 +161,7 @@ export const {
   startCurrentStream,
   stopCurrentStream,
   removeTaskFromStream,
+  markStreamComplete,
+  markStreamIncomplete,
   deleteStream,
 } = streamListSlice.actions;

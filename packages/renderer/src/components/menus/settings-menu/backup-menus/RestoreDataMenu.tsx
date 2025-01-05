@@ -12,12 +12,15 @@ export const RestoreDataMenu: FC = () => {
   const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
 
   const [restoreTasks, setRestoreTasks] = useState(true);
+  const [restoreStreams, setRestoreStreams] = useState(true);
   const [restoreSettings, setRestoreSettings] = useState(true);
 
   const lastTaskBackupDate = getLastBackupDate('tasks');
+  const lastStreamsBackupDate = getLastBackupDate('streams');
   const lastSettingsBackupDate = getLastBackupDate('settings');
 
   const restoringTasks = restoreTasks && lastTaskBackupDate !== undefined;
+  const restoringStreams = restoreStreams && lastStreamsBackupDate !== undefined;
   const restoringSettings = restoreSettings && lastSettingsBackupDate !== undefined;
   const disableRestore = !restoringTasks && !restoringSettings;
 
@@ -46,6 +49,24 @@ export const RestoreDataMenu: FC = () => {
             {!lastTaskBackupDate
               ? 'No backup found.'
               : `Updated on ${formatDateAndTime(lastTaskBackupDate, dateFormat)}`}
+          </p>
+        </div>
+        <div>
+          <div className="settings-checkbox">
+            <input
+              type="checkbox"
+              checked={lastStreamsBackupDate !== undefined ? restoreStreams : false}
+              disabled={lastStreamsBackupDate === undefined}
+              onChange={(e) => {
+                setRestoreStreams(e.currentTarget.checked);
+              }}
+            />
+            <p>Streams</p>
+          </div>
+          <p className="last-updated-text">
+            {!lastStreamsBackupDate
+              ? 'No backup found.'
+              : `Updated on ${formatDateAndTime(lastStreamsBackupDate, dateFormat)}`}
           </p>
         </div>
         <div>

@@ -48,7 +48,7 @@
   .back-button {
     position: fixed;
     left: 12px;
-    top: 12px;
+    top: 24px;
 
     padding: 8px 10px 6px 8px;
     border-radius: var(--menu-border-radius);
@@ -58,7 +58,7 @@
     }
 
     &:active {
-      top: 13px;
+      top: 25px;
     }
 
     &:hover {
@@ -191,6 +191,12 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+
+  padding-top: 12px;
+
+  p {
+    line-height: 16px;
+  }
 
   img {
     filter: var(--svg-filter);

@@ -205,14 +205,15 @@ export function formatTime(date: Date): string {
 
 export function formatDateAndTime(date: Date, dateFormat: DateFormat, removeYearIfSame = true): string {
   let formattedDate = formatDate(date, dateFormat);
+
   const time = formatTime(date);
 
   const currentYear = new Date().getFullYear();
-  if (!removeYearIfSame || currentYear !== date.getFullYear()) {
-    return `${date} at ${time}`;
+  if (currentYear === date.getFullYear() && removeYearIfSame) {
+    formattedDate = formattedDate.replace(`, ${currentYear}`, '').replace(`/${currentYear}`, '');
+    return `${formattedDate} at ${time}`;
   }
 
-  formattedDate = formattedDate.replace(`, ${currentYear}`, '');
   return `${formattedDate} at ${time}`;
 }
 
