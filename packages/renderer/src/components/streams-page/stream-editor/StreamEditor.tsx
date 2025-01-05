@@ -1,3 +1,4 @@
+import plusIcon from '@assets/icons/plus.svg';
 import { Stream, StreamState, StreamTask } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
 import { setCurrentStream, updateStream } from '@renderer/features/stream-list/streamListSlice';
@@ -87,7 +88,8 @@ export const StreamEditor: FC = () => {
         />
         {showNewTaskTile && <NewStreamTaskTile onEscape={() => setShowNewTaskTile(false)} createTask={addTask} />}
         {!showNewTaskTile && isStreamPlayable && (
-          <button className="accent-button" onClick={() => setShowNewTaskTile(true)}>
+          <button className="icon-accent-button" onClick={() => setShowNewTaskTile(true)}>
+            <img src={plusIcon} alt="plus icon" draggable={false} />
             Add To-Do
           </button>
         )}

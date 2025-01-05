@@ -66,8 +66,22 @@
     }
   }
 
-  #streamTaskListWrapper .text-secondary {
-    margin-bottom: 16px;
+  #streamTaskListWrapper {
+    .text-secondary {
+      margin-bottom: 16px;
+    }
+
+    > button {
+      margin: auto;
+      gap: 4px;
+
+      > img {
+        padding-top: 1px;
+
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   .action-bar {

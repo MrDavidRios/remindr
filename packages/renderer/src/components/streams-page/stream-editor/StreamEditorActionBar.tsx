@@ -1,3 +1,5 @@
+import pauseIcon from '@assets/icons/pause.svg';
+import playIcon from '@assets/icons/play.svg';
 import trashcanIcon from '@assets/icons/trashcan.svg';
 import { Menu, Stream, StreamState, waitUntil } from '@remindr/shared';
 import store from '@renderer/app/store';
@@ -71,17 +73,19 @@ export const StreamEditorActionBar: FC<StreamEditorActionBar> = ({ currentStream
           {isStreamPlayable ? (
             <button
               id="createStreamButton"
-              className="accent-button"
+              className="icon-accent-button"
               disabled={currentStream.tasks.length === 0}
               onClick={playStream}
             >
+              <img src={playIcon} alt="play icon" draggable={false} />
               {currentStream.state === StreamState.Uninitialized || currentStream.state === StreamState.Initialized
                 ? 'Start'
                 : 'Resume'}
             </button>
           ) : (
             <>
-              <button id="pauseStreamButton" className="accent-button" onClick={pauseStream}>
+              <button id="pauseStreamButton" className="icon-accent-button" onClick={pauseStream}>
+                <img src={pauseIcon} alt="pause icon" draggable={false} />
                 Pause
               </button>
               <button id="markStreamCompleteButton" className="accent-button" onClick={markStreamAsComplete}>
