@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppMode, Stream, StreamTask } from '@remindr/shared';
+import { AppMode, Stream, StreamState, StreamTask } from '@remindr/shared';
 import _ from 'lodash';
 import { setAppMode } from '../app-mode/appModeSlice';
 import { updateUserState } from '../user-state/userSlice';
@@ -13,12 +13,14 @@ export interface StreamListState {
   value: Stream[];
   streamListGetStatus: 'idle' | 'pending' | 'succeeded' | 'failed';
   currentStream?: Stream;
+  streamStartTimestamp?: number;
 }
 
 const initialState: StreamListState = {
   value: [],
   streamListGetStatus: 'idle',
   currentStream: undefined,
+  streamStartTimestamp: undefined,
 };
 
 export const getStreamList = createAsyncThunk('streamList/getStreamList', async () => {
@@ -44,6 +46,9 @@ export const streamListSlice = createSlice({
      * @returns
      */
     updateStream: (state, action: PayloadAction<Stream>) => {
+      // Don't save uninitialized streams
+      if (action.payload.state === StreamState.Uninitialized) return;
+
       const newStream = !state.value.some((stream) => stream.creationTime === action.payload.creationTime);
       if (newStream) {
         state.value.push(action.payload);
@@ -63,10 +68,27 @@ export const streamListSlice = createSlice({
     setCurrentStream: (state, action: PayloadAction<Stream | undefined>) => {
       state.currentStream = action.payload;
     },
-    addTaskToCurrentStream: (state, action: PayloadAction<StreamTask>) => {
-      if (state.currentStream === undefined) return;
+    startCurrentStream: (state) => {
+      if (!state.currentStream) return;
 
-      state.currentStream.tasks.push(action.payload);
+      state.currentStream.state = StreamState.Active;
+      state.streamStartTimestamp = new Date().getTime();
+    },
+    stopCurrentStream: (state) => {
+      if (state.currentStream === undefined || state.streamStartTimestamp === undefined) return;
+
+      state.currentStream.state = StreamState.Paused;
+
+      const sessionTime = new Date().getTime() - state.streamStartTimestamp;
+      state.currentStream.elapsedTime += sessionTime;
+      state.streamStartTimestamp = undefined;
+
+      // update elapsed time in stored data
+      const streamCreationTime = state.currentStream.creationTime;
+      const streamIdx = state.value.findIndex((stream) => stream.creationTime === streamCreationTime);
+      state.value[streamIdx] = state.currentStream;
+
+      saveStreamsData(state.value);
     },
     removeTaskFromStream: (state, action: PayloadAction<StreamTask>) => {
       if (state.currentStream === undefined) return;
@@ -114,6 +136,7 @@ function resetStreamListState(state: StreamListState) {
   state.value = [];
   state.streamListGetStatus = 'idle';
   state.currentStream = undefined;
+  state.streamStartTimestamp = undefined;
 }
 
 initializeStreamListSyncListener();
@@ -123,7 +146,8 @@ export const {
   setStreamList,
   updateStream,
   setCurrentStream,
-  addTaskToCurrentStream,
+  startCurrentStream,
+  stopCurrentStream,
   removeTaskFromStream,
   deleteStream,
 } = streamListSlice.actions;

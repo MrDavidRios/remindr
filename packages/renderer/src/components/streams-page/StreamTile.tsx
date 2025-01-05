@@ -1,6 +1,6 @@
 import clockIcon from '@assets/icons/clock.svg';
 import subtasksIcon from '@assets/icons/subtasks.svg';
-import { formatDate, formatSeconds, Stream, StreamState } from '@remindr/shared';
+import { convertMsToSeconds, formatDate, formatSeconds, Stream } from '@remindr/shared';
 import { setCurrentStream } from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import { FC } from 'react';
@@ -15,8 +15,6 @@ export const StreamTile: FC<StreamTileProps> = ({ stream }) => {
 
   const completedTasks = stream.tasks.filter((task) => task.completed).length;
   const formattedDate = formatDate(new Date(stream.creationTime), dateFormat);
-
-  const formattedElapsedTime = formatSeconds(stream.elapsedTime);
 
   const handleClick = () => {
     dispatch(setCurrentStream(stream));
@@ -40,10 +38,10 @@ export const StreamTile: FC<StreamTileProps> = ({ stream }) => {
             {completedTasks}/{stream.tasks.length}
           </p>
         </div>
-        {stream.state !== StreamState.Uninitialized && (
-          <div className="indicator">
+        {stream.elapsedTime > 0 && (
+          <div className="indicator time-indicator">
             <img src={clockIcon} draggable={false} alt="clock icon" />
-            <p className="text-secondary">{`${formattedElapsedTime}`}</p>
+            <p className="text-secondary">{`${formatSeconds(convertMsToSeconds(stream.elapsedTime))}`}</p>
           </div>
         )}
       </div>

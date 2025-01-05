@@ -70,7 +70,7 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
     }
   };
 
-  const onChangeName = () => {
+  const onNameChange = () => {
     if (editedName.trim() === '') {
       dispatch(showDialog({ title: 'Invalid Name', message: 'Make sure your task has a name.' }));
       setEditedName(streamTask.name);
@@ -143,7 +143,7 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
               e.preventDefault();
               e.stopPropagation();
 
-              onChangeName();
+              onNameChange();
             }
             if (e.key === 'Escape') {
               cancelNameChange();
@@ -159,7 +159,7 @@ export const StreamTaskTile: React.FC<StreamTaskTileProps> = ({
             allowNewLine={false}
             onChange={(e) => setEditedName(e.currentTarget.value)}
           />
-          <SaveButtons onSave={onChangeName} onCancel={cancelNameChange} />
+          <SaveButtons onSave={onNameChange} onCancel={cancelNameChange} />
         </div>
       ) : (
         <p>{editedName}</p>

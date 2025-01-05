@@ -2,7 +2,13 @@ import trashcanIcon from '@assets/icons/trashcan.svg';
 import { Menu, Stream, StreamState, waitUntil } from '@remindr/shared';
 import store from '@renderer/app/store';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
-import { deleteStream, setCurrentStream, updateStream } from '@renderer/features/stream-list/streamListSlice';
+import {
+  deleteStream,
+  setCurrentStream,
+  startCurrentStream,
+  stopCurrentStream,
+  updateStream,
+} from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch } from '@renderer/hooks';
 import { FC } from 'react';
 
@@ -19,11 +25,11 @@ export const StreamEditorActionBar: FC<StreamEditorActionBar> = ({ currentStream
     currentStream.state === StreamState.Paused;
 
   const playStream = () => {
-    updateStreamAndSave({ ...currentStream, state: StreamState.Active });
+    dispatch(startCurrentStream());
   };
 
   const pauseStream = () => {
-    updateStreamAndSave({ ...currentStream, state: StreamState.Paused });
+    dispatch(stopCurrentStream());
   };
 
   const markStreamComplete = () => {

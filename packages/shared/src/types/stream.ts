@@ -27,7 +27,7 @@ export class Stream {
 
   state: StreamState;
 
-  /** Elapsed time in seconds */
+  /** Elapsed time in ms */
   elapsedTime: number;
 
   constructor(name: string, tasks?: StreamTask[]) {

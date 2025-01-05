@@ -1,6 +1,6 @@
 import { Stream, StreamState, StreamTask } from '@remindr/shared';
 import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
-import { addTaskToCurrentStream, setCurrentStream, updateStream } from '@renderer/features/stream-list/streamListSlice';
+import { setCurrentStream, updateStream } from '@renderer/features/stream-list/streamListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import _ from 'lodash';
 import { FC, useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { NewStreamTaskTile } from '../NewStreamTaskTile';
 import { StreamEditorActionBar } from './StreamEditorActionBar';
 import { StreamEditorHeader } from './StreamEditorHeader';
 import { StreamTaskList } from './StreamTaskList';
+import { StreamTimeDisplay } from './StreamTimeDisplay';
 
 export const StreamEditor: FC = () => {
   const dispatch = useAppDispatch();
@@ -25,8 +26,12 @@ export const StreamEditor: FC = () => {
       isTaskReference: false,
     };
 
-    setOrderedTasks([...orderedTasks, newStreamTask]);
-    dispatch(addTaskToCurrentStream(newStreamTask));
+    const updatedTasks = [...orderedTasks, newStreamTask];
+    const updatedStream: Stream = { ...initialize(currentStream), tasks: updatedTasks };
+
+    setOrderedTasks(updatedTasks);
+    dispatch(updateStream(updatedStream));
+    dispatch(setCurrentStream(updatedStream));
   };
 
   const onReorder = (reorderedTasks: StreamTask[]) => setOrderedTasks(reorderedTasks);
@@ -48,7 +53,7 @@ export const StreamEditor: FC = () => {
   };
 
   const onNameChange = (newName: string) => {
-    const updatedStream: Stream = { ...initialize(currentStream), name: newName };
+    const updatedStream: Stream = { ...currentStream, name: newName };
     dispatch(updateStream(updatedStream));
     dispatch(setCurrentStream(updatedStream));
   };
@@ -65,7 +70,7 @@ export const StreamEditor: FC = () => {
     currentStream.state === StreamState.Paused;
 
   return (
-    <div id="streamEditor" className="menu frosted">
+    <div id="streamEditor" className={`menu frosted`}>
       <StreamEditorHeader currentStream={currentStream} onNameChange={onNameChange} />
       <ArrowNavigable
         waitForChildAnimation
@@ -87,6 +92,7 @@ export const StreamEditor: FC = () => {
           </button>
         )}
       </ArrowNavigable>
+      <StreamTimeDisplay active={currentStream.state === StreamState.Active} />
       <StreamEditorActionBar currentStream={currentStream} />
     </div>
   );
