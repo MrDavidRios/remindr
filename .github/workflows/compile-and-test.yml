@@ -31,7 +31,7 @@ env:
   npm_config_fund: false
 
 jobs:
-  typeckeck:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +39,8 @@ jobs:
         name: Setup boilerplate
         with:
           renderer-template: ${{inputs.renderer-template}}
+      - run: cd packages/shared && npm run build
+      - run: npm i @remindr/shared
       - run: npm run typecheck --if-present
 
   compile:
@@ -69,8 +71,6 @@ jobs:
 
       - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- npm run test --if-present
         if: matrix.os == 'ubuntu-latest'
-        env:
-          NODE_ENV: "development"
 
       - uses: actions/attest-build-provenance@v2
         with:
