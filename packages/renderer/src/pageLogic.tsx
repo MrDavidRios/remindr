@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { LoadingScreen } from './components/loading-screen/LoadingScreen';
 import { AuthPage } from './components/login-page/AuthPage';
 import { IntroPage } from './components/login-page/IntroPage';
+import { MainView } from './components/main-view/MainView';
 import { OfflinePage } from './components/offline-page/OfflinePage';
-import { TaskManagementPage } from './components/task-management-page/TaskManagementPage';
 import { getConnectionStatus } from './features/connection-state/connectionState';
 import { useAppDispatch, useAppSelector } from './hooks';
 
@@ -34,7 +34,7 @@ export const ChosenPage = () => {
     case AppMode.LoginScreen:
       return <AuthPage />;
     case AppMode.Offline:
-      return <TaskManagementPage />;
+      return <MainView />;
     case AppMode.Online:
       // If not connected to internet, show connection screen
       if (!connected) return <OfflinePage />;
@@ -45,7 +45,7 @@ export const ChosenPage = () => {
       // If user is logged in but hasn't been initialized, show intro page
       if (authenticated && !initialized) return <IntroPage />;
 
-      return <TaskManagementPage />;
+      return <MainView />;
   }
 };
 

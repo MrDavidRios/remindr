@@ -1,5 +1,4 @@
 import { DynamicTextArea } from '@renderer/components/dynamic-text-area/DynamicTextArea';
-import { motion } from 'framer-motion';
 import React from 'react';
 
 interface NewTaskTileProps {
@@ -11,7 +10,7 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
   const [taskName, setTaskName] = React.useState('');
 
   return (
-    <motion.div
+    <div
       className="new-task-tile frosted"
       onKeyDown={(e) => {
         if (e.key === 'Enter') {
@@ -30,7 +29,7 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
       onBlur={onEscape}
     >
       <DynamicTextArea
-        aria-label="task-title"
+        aria-label="task title input"
         placeholder="Enter a title"
         maxLength={255}
         value={taskName}
@@ -43,6 +42,6 @@ export const NewTaskTile: React.FC<NewTaskTileProps> = ({ createTask, onEscape }
           setTaskName(e.currentTarget.value);
         }}
       />
-    </motion.div>
+    </div>
   );
 };

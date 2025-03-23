@@ -1,4 +1,6 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow } from "electron";
 
 export const getMainWindow = () =>
-  BrowserWindow.getAllWindows().find((w) => !w.isDestroyed() && w.getParentWindow() === null);
+  BrowserWindow.getAllWindows().find(
+    (w) => !w.isDestroyed() && w.getParentWindow() === null
+  );

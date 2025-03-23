@@ -1,14 +1,14 @@
-import { ContextMenuType, MenuState, Task, Timeframe } from '@remindr/shared';
-import { TaskListState } from '@renderer/features/task-list/taskListSlice';
+import { ContextMenuType, MenuState, Task, Timeframe } from "@remindr/shared";
+import { TaskListState } from "@renderer/features/task-list/taskListSlice";
 
-export const testTask: Task = JSON.parse(JSON.stringify(new Task('Test Task')));
+export const testTask: Task = JSON.parse(JSON.stringify(new Task("Test Task")));
 
 export const mockTaskListState: TaskListState = {
   value: [],
-  taskListGetStatus: 'succeeded',
+  taskListGetStatus: "succeeded",
   timeframe: Timeframe.All,
   selectedTasks: [],
-  searchQuery: '',
+  searchQuery: "",
   taskListDisplayOutdated: false,
   lastSelectedTaskNoShift: undefined,
   lastTaskListAction: undefined,
@@ -26,11 +26,12 @@ export const getMockTaskListState = (tasks: Task[]): TaskListState => {
 export const mockMenuState: MenuState = {
   openMenus: [],
   openDropdowns: {},
-  dialogInfo: { title: undefined, message: '', options: [], result: undefined },
+  dialogInfo: { title: undefined, message: "", options: [], result: undefined },
   openContextMenus: [],
   contextMenuPositions: {
     [ContextMenuType.TaskContextMenu]: { x: 0, y: 0 },
     [ContextMenuType.GeneralContextMenu]: { x: 0, y: 0 },
+    [ContextMenuType.StreamTaskContextMenu]: { x: 0, y: 0 },
   },
   scheduledReminderEditorPosition: {
     anchor: { x: 0, y: 0, width: 0, height: 0 },

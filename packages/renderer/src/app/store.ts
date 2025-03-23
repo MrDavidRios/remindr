@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { AppMode, Page } from '@remindr/shared';
+import { unpausedStreamDialogMiddleware } from '@renderer/features/menu-state/middleware/unpausedStreamDialogMiddleware';
 import { unsavedTaskDialogMiddleware } from '../features/menu-state/middleware/unsavedTaskDialogMiddleware';
 import { initialSettingsState } from '../features/settings/settingsSlice';
 import { notificationEventMiddleware } from '../features/task-list/middleware/notificationEventMiddleware';
@@ -16,6 +17,7 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
         .prepend(unsavedTaskDialogMiddleware.middleware)
+        .prepend(unpausedStreamDialogMiddleware.middleware)
         .concat(taskListStoreMiddleware)
         .concat(overdueBadgeMiddleware)
         .concat(notificationEventMiddleware),

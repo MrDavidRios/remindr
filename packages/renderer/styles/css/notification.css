@@ -1,0 +1,264 @@
+* {
+  user-select: none;
+}
+
+html {
+  background: var(--surface-primary);
+  width: 100%;
+  height: 100%;
+  max-height: 130px;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  max-height: 130px;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-rows: 40px 40px auto;
+  text-align: left !important;
+  overflow: hidden;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  color: gray;
+}
+
+#titlebar {
+  display: grid;
+  grid-template-columns: auto 25px 40px;
+}
+
+#time {
+  margin-left: 10px;
+}
+
+#notificationTitle {
+  width: min-content;
+  max-width: calc(100vw - 25px - 40px);
+  box-sizing: border-box;
+  padding: 8px 0px 10px 10px;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text-color-primary);
+  font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#notificationCloseButton,
+#notificationReminderOpenButton {
+  width: 24px;
+  height: 24px;
+  margin: auto;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+#notificationCloseButton img,
+#notificationReminderOpenButton img {
+  width: 18px;
+  height: 18px;
+  filter: var(--svg-filter);
+}
+#notificationCloseButton img:hover,
+#notificationReminderOpenButton img:hover {
+  filter: var(--ui-accent-color-filter);
+}
+
+.notification-button {
+  width: 125px;
+  height: 25px;
+  padding-bottom: 2px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--surface-secondary);
+  color: var(--text-color-primary);
+  border: none;
+  outline: none;
+}
+.notification-button:hover {
+  background-color: var(--surface-secondary);
+  filter: brightness(1.1);
+}
+.notification-button:active {
+  transform: scale(0.95);
+}
+
+#actionBar {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+#actionBar #snoozeButton {
+  display: grid;
+  align-items: center;
+  position: relative;
+}
+#actionBar #snoozeButton:hover + .context-menu {
+  height: 100px;
+  visibility: visible;
+}
+#actionBar #snoozeButton p {
+  color: var(--text-color-primary) !important;
+}
+#actionBar #snoozeButton img {
+  position: absolute;
+  right: 5px;
+  width: 12px;
+  filter: var(--svg-filter);
+}
+
+#buttonSpacer {
+  width: 20px;
+}
+
+.context-menu {
+  position: absolute;
+  left: 125px;
+  bottom: 0px;
+  height: 80px;
+  width: 100px;
+  padding: 0;
+  background-color: var(--surface-active);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  display: block;
+  visibility: hidden;
+  overflow: hidden;
+}
+.context-menu:hover {
+  height: 100px;
+  visibility: visible;
+}
+.context-menu ul {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  backdrop-filter: blur(5px);
+}
+.context-menu ul li {
+  height: 25px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text-color-primary);
+  font-size: 13px;
+}
+.context-menu ul li:hover {
+  background-color: var(--surface-active);
+  filter: brightness(1.1);
+}
+.context-menu ul li.active {
+  position: relative;
+  top: 1px;
+}
+
+#snoozeButtonWrapper {
+  position: relative;
+}
+
+html,
+body {
+  min-height: 300px;
+  max-height: 300px;
+}
+
+div#groupNotification {
+  display: grid;
+  grid-template-rows: 42px auto;
+}
+div#groupNotification #titlebar {
+  grid-template-columns: auto;
+  border-bottom: 1px solid var(--surface-secondary);
+}
+div#groupNotification #titlebar #notificationCloseButton {
+  position: absolute;
+  top: 11px !important;
+  right: 15px !important;
+}
+div#groupNotification #notifsContainer {
+  min-height: calc(100vh - 42px);
+  max-height: calc(100vh - 42px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.notif-element {
+  width: 100%;
+  min-height: 56px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 30px;
+  align-items: center;
+  padding: 0px 9px 0px 10px;
+  border-bottom: 1px solid var(--surface-secondary);
+}
+.notif-element p {
+  font-family: "Segoe UI", sans-serif;
+  color: var(--text-color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notif-element p.title {
+  max-width: calc(100vw - 60px);
+}
+.notif-element p.date {
+  font-size: 14px;
+  color: gray;
+}
+.notif-element:hover {
+  background-color: var(--surface-active);
+}
+.notif-element .complete-task-button {
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+.notif-element .complete-task-button img {
+  width: 24px;
+  height: 24px;
+  filter: var(--svg-filter);
+}
+.notif-element .complete-task-button img:hover {
+  filter: var(--ui-accent-color-filter);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 7px;
+  /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--text-color-secondary);
+  /* color of the scroll thumb */
+  border-radius: 20px;
+  /* roundness of the scroll thumb */
+}
+
+/*# sourceMappingURL=notification.css.map */

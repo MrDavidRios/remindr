@@ -1,10 +1,13 @@
-import { Menu } from '@remindr/shared';
-import { closeDropdown, openDropdown } from '@renderer/features/menu-state/menuSlice';
-import { useAppDispatch } from '@renderer/hooks';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { useClickOutside } from '@renderer/scripts/utils/hooks/useoutsideclick';
-import React, { HTMLAttributes, useEffect } from 'react';
-import ReactFocusLock from 'react-focus-lock';
+import { Menu } from "@remindr/shared";
+import {
+  closeDropdown,
+  openDropdown,
+} from "@renderer/features/menu-state/menuSlice";
+import { useAppDispatch } from "@renderer/hooks";
+import { useHotkey } from "@renderer/scripts/utils/hooks/usehotkey";
+import { useClickOutside } from "@renderer/scripts/utils/hooks/useoutsideclick";
+import React, { HTMLAttributes, useEffect } from "react";
+import ReactFocusLock from "react-focus-lock";
 
 export interface ModalWrapperProps extends HTMLAttributes<HTMLDivElement> {
   parentMenu: Menu;
@@ -43,7 +46,7 @@ export const ModalWrapper: React.FC<ModalWrapperProps> = ({
     onClose?.();
   };
 
-  useHotkey(['esc'], () => onCloseModal(), Menu.None, { prioritize: true });
+  useHotkey(["esc"], () => onCloseModal(), Menu.None, { prioritize: true });
 
   const ref = useClickOutside(
     () => {
@@ -52,12 +55,17 @@ export const ModalWrapper: React.FC<ModalWrapperProps> = ({
       onClose();
     },
     clickOutsideExceptions,
-    ignoreGlobalClickOutsideExceptions,
+    ignoreGlobalClickOutsideExceptions
   );
 
   return (
     <ReactFocusLock returnFocus>
-      <div id={id} className={className} ref={ref as unknown as React.RefObject<HTMLDivElement>} style={style}>
+      <div
+        id={id}
+        className={className}
+        ref={ref as unknown as React.RefObject<HTMLDivElement>}
+        style={style}
+      >
         {children}
       </div>
     </ReactFocusLock>

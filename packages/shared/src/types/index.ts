@@ -8,6 +8,7 @@ export * from './menu.js';
 export * from './menuDropdownMap.js';
 export * from './message.js';
 export * from './page.js';
+export * from './stream.js';
 export * from './taskListAction.js';
 export * from './theme.js';
 export * from './themeColors.js';

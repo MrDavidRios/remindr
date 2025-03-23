@@ -1,6 +1,7 @@
 .accent-button,
 .secondary-button,
-.icon-button {
+.icon-button,
+.icon-accent-button {
   margin: 0;
   padding: 7px 16px;
 
@@ -10,12 +11,26 @@
   border-radius: 6px;
 }
 
-.accent-button {
+.accent-button,
+.icon-accent-button {
   background-color: var(--ui-accent-color);
   color: var(--text-color-over-accent);
 
   > img {
     filter: var(--svg-filter-over-accent);
+  }
+
+  &:disabled {
+    background-color: var(--text-color-secondary);
+
+    &:hover {
+      box-shadow: none;
+      cursor: default;
+    }
+
+    &:active {
+      position: static;
+    }
   }
 }
 
@@ -28,7 +43,8 @@
   }
 }
 
-.icon-button {
+.icon-button,
+.icon-accent-button {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -48,4 +64,8 @@
     line-height: 16px;
     white-space: nowrap;
   }
+}
+
+.icon-accent-button {
+  box-shadow: none;
 }

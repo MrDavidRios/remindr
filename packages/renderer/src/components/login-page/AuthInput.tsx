@@ -1,7 +1,7 @@
 import visibilityOffIcon from '@assets/icons/visibility-off.svg';
 import visibilityOnIcon from '@assets/icons/visibility-on.svg';
 import { showMessageBox } from '@renderer/scripts/utils/messagebox';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 
@@ -17,15 +17,57 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
 
   const [inputType, setInputType] = useState<'password' | 'text'>('password');
 
+  const attemptingSignIn = useRef(false);
+
   const {
     register,
     handleSubmit,
     clearErrors,
     setError,
-    formState: { isValid, errors },
+    formState: { errors },
   } = useForm();
+
+  const attemptSignIn = async () => {
+    if (attemptingSignIn.current) return;
+
+    attemptingSignIn.current = true;
+    const authResult = await onComplete(email, password);
+    attemptingSignIn.current = false;
+
+    if (!authResult) return;
+
+    // Ex: Firebase: Error (auth/wrong-password) - get what's inside the parentheses
+    const errorCode = /auth\/[^)\s]+/.exec(authResult)?.[0];
+    switch (errorCode) {
+      case 'auth/user-not-found':
+        setError('email', { type: 'manual', message: 'No user found with that email.' });
+        break;
+      case 'auth/too-many-requests':
+        setError('email', {
+          type: 'manual',
+          message: 'Too many requests. Please try again later.',
+        });
+        break;
+      case 'auth/email-already-in-use':
+        setError('email', { type: 'manual', message: 'Email already in use.' });
+        break;
+      case 'auth/wrong-password':
+        setError('password', { type: 'manual', message: 'Incorrect password.' });
+        break;
+      case 'auth/weak-password':
+        setError('password', {
+          type: 'manual',
+          message: 'Password must be at least 6 characters long.',
+        });
+        break;
+      default:
+        showMessageBox('Sign-In Error', authResult, 'error');
+        break;
+    }
+  };
+
   return (
-    <form className="login-form" onSubmit={handleSubmit(() => {})}>
+    <form className="login-form" onSubmit={handleSubmit(() => attemptSignIn())}>
       <input
         type="text"
         placeholder="Email"
@@ -68,9 +110,6 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
             setPassword(e.target.value);
             clearErrors('password');
           }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') onComplete(email, password);
-          }}
           aria-invalid={errors.password ? 'true' : 'false'}
         />
         <button
@@ -97,46 +136,7 @@ export const AuthInput: React.FC<AuthInputProps> = ({ buttonText, onComplete, on
         </p>
       )}
       <br />
-      <button
-        type="submit"
-        className="gradient-button"
-        id="finalCreateAccountBtn"
-        onClick={async () => {
-          if (!isValid) return;
-
-          const authResult = await onComplete(email, password);
-          if (!authResult) return;
-
-          // Ex: Firebase: Error (auth/wrong-password) - get what's inside the parentheses
-          const errorCode = /auth\/[^)\s]+/.exec(authResult)?.[0];
-          switch (errorCode) {
-            case 'auth/user-not-found':
-              setError('email', { type: 'manual', message: 'No user found with that email.' });
-              break;
-            case 'auth/too-many-requests':
-              setError('email', {
-                type: 'manual',
-                message: 'Too many requests. Please try again later.',
-              });
-              break;
-            case 'auth/email-already-in-use':
-              setError('email', { type: 'manual', message: 'Email already in use.' });
-              break;
-            case 'auth/wrong-password':
-              setError('password', { type: 'manual', message: 'Incorrect password.' });
-              break;
-            case 'auth/weak-password':
-              setError('password', {
-                type: 'manual',
-                message: 'Password must be at least 6 characters long.',
-              });
-              break;
-            default:
-              showMessageBox('Sign-In Error', authResult, 'error');
-              break;
-          }
-        }}
-      >
+      <button type="submit" className="gradient-button" id="finalCreateAccountBtn">
         {buttonText}
       </button>
     </form>

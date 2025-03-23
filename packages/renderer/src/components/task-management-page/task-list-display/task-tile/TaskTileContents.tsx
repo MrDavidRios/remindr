@@ -1,6 +1,4 @@
 import reminderIcon from '@assets/icons/bell.svg';
-import checkImg from '@assets/icons/check.png';
-import circle from '@assets/icons/circle.svg';
 import linkIcon from '@assets/icons/link.svg';
 import pencilIcon from '@assets/icons/pencil.svg';
 import repeatIcon from '@assets/icons/repeat.svg';
@@ -17,6 +15,7 @@ import {
 import { completeTask, markTaskIncomplete } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
 import type { FC } from 'react';
+import { TaskCompleteButton } from './TaskCompleteButton';
 
 interface TaskTileContentsProps {
   task: Task;
@@ -55,33 +54,9 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
     dispatch(completeTask(task));
   };
 
-  const toggleCompleteButtonTitle = task.completed ? 'Mark incomplete' : 'Mark complete';
-
   return (
     <>
-      <button
-        className={`task-complete-button-container ${task.completed ? 'complete' : ''}`}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.stopPropagation();
-
-            toggleComplete();
-          }
-        }}
-        onClick={(e) => {
-          // Stops the parent from taking credit for the click
-          e.stopPropagation();
-
-          toggleComplete();
-        }}
-        tabIndex={-1}
-        type="button"
-        aria-label={toggleCompleteButtonTitle}
-        title={toggleCompleteButtonTitle}
-      >
-        <img className="task-complete-button svg-filter" src={circle} draggable="false" alt="" />
-        <img className="task-complete-button-checkmark" src={checkImg} draggable="false" alt="" />
-      </button>
+      <TaskCompleteButton task={task} toggleComplete={toggleComplete} />
       <div>
         <p className="task-title">{task.name}</p>
         <div className={`reminder-time-container ${hasIndicators && 'contains-images'}`}>

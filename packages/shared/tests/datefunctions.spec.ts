@@ -1,6 +1,8 @@
 import {
+  DateFormat,
   ScheduledReminder,
   addMonths,
+  formatDateAndTime,
   getDaysBetweenDates,
   getReminderDate,
   isCurrentMinute,
@@ -256,5 +258,52 @@ describe('addMonths', () => {
     const expectedDate = new Date(2023, 1, 28); // February 28, 2023 (non-leap year)
 
     expect(result).toEqual(expectedDate);
+  });
+});
+
+describe('formatDateAndTime', () => {
+  it('should format the date and time correctly with year included', () => {
+    const date = new Date(2025, 0, 1, 10, 0, 0); // January 1, 2019 10:00:00
+    const dateFormat = DateFormat.MDYNumeric;
+    const result = formatDateAndTime(date, dateFormat, false);
+    const expected = '01/01/2025 at 10:00 AM';
+
+    expect(result).toBe(expected);
+  });
+
+  it('should format the date and time correctly without year if same year', () => {
+    const date = new Date(new Date().getFullYear(), 0, 1, 10, 0, 0); // January 1, 2025 10:00:00
+    const dateFormat = DateFormat.MDYNumeric;
+    const result = formatDateAndTime(date, dateFormat, true);
+    const expected = '01/01 at 10:00 AM';
+
+    expect(result).toBe(expected);
+  });
+
+  it('should format the date and time correctly with year if different year', () => {
+    const date = new Date(2022, 0, 1, 10, 0, 0); // January 1, 2022 10:00:00
+    const dateFormat = DateFormat.MDYNumeric;
+    const result = formatDateAndTime(date, dateFormat, true);
+    const expected = '01/01/2022 at 10:00 AM';
+
+    expect(result).toBe(expected);
+  });
+
+  it('should format the date and time correctly with different date format', () => {
+    const date = new Date(2023, 0, 1, 10, 0, 0); // January 1, 2023 10:00:00
+    const dateFormat = DateFormat.DMYNumeric;
+    const result = formatDateAndTime(date, dateFormat, false);
+    const expected = '01/01/2023 at 10:00 AM';
+
+    expect(result).toBe(expected);
+  });
+
+  it('should format the date and time correctly with long month name', () => {
+    const date = new Date(2023, 0, 1, 10, 0, 0); // January 1, 2023 10:00:00
+    const dateFormat = DateFormat.DMYText;
+    const result = formatDateAndTime(date, dateFormat, false);
+    const expected = '1 January 2023 at 10:00 AM';
+
+    expect(result).toBe(expected);
   });
 });

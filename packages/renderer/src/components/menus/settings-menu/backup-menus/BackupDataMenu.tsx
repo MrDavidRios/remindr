@@ -2,7 +2,12 @@ import { AppMode, Menu, formatDateAndTime } from '@remindr/shared';
 import { CloseMenuButton } from '@renderer/components/close-menu-button/CloseMenuButton';
 import { hideMenu, showDialog } from '@renderer/features/menu-state/menuSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
-import { backupSettingsData, backupTaskData, getLastBackupDate } from '@renderer/scripts/systems/backup';
+import {
+  backupSettingsData,
+  backupStreamsData,
+  backupTaskData,
+  getLastBackupDate,
+} from '@renderer/scripts/systems/backup';
 import { FC, useEffect, useState } from 'react';
 import { FullScreenMenu } from '../../fullscreen-menu/FullScreenMenu';
 
@@ -13,17 +18,20 @@ export const BackupDataMenu: FC = () => {
   const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
 
   const [backupTasks, setBackupTasks] = useState(true);
+  const [backupStreams, setBackupStreams] = useState(true);
   const [backupSettings, setBackupSettings] = useState(true);
 
   const [dataBackedUp, setDataBackedUp] = useState(false);
 
   const lastTaskBackupDate = getLastBackupDate('tasks');
+  const lastStreamsBackupDate = getLastBackupDate('streams');
   const lastSettingsBackupDate = getLastBackupDate('settings');
 
-  const disableButton = !backupTasks && (appMode !== AppMode.Online || !backupSettings);
+  const disableButton = !backupTasks && !backupStreams && (appMode !== AppMode.Online || !backupSettings);
 
   function handleBackupClick() {
     if (backupTasks) backupTaskData();
+    if (backupStreams) backupStreamsData();
     if (backupSettings) backupSettingsData();
 
     setDataBackedUp(true);
@@ -32,7 +40,7 @@ export const BackupDataMenu: FC = () => {
     dispatch(showDialog({ message: 'Data backed up successfully!' }));
   }
 
-  // Helps to trigger a re-render when the 'backup' button is pressed
+  // Triggers a re-render when the 'backup' button is pressed
   useEffect(() => {
     if (dataBackedUp) setDataBackedUp(false);
   }, [dataBackedUp]);
@@ -61,6 +69,23 @@ export const BackupDataMenu: FC = () => {
             {!lastTaskBackupDate
               ? 'No backup found'
               : `Updated on ${formatDateAndTime(lastTaskBackupDate, dateFormat)}`}
+          </p>
+        </div>
+        <div>
+          <div className="settings-checkbox">
+            <input
+              type="checkbox"
+              checked={backupStreams}
+              onChange={(e) => {
+                setBackupStreams(e.currentTarget.checked);
+              }}
+            />
+            <p>Streams</p>
+          </div>
+          <p className="last-updated-text">
+            {!lastStreamsBackupDate
+              ? 'No backup found'
+              : `Updated on ${formatDateAndTime(lastStreamsBackupDate, dateFormat)}`}
           </p>
         </div>
         <div>

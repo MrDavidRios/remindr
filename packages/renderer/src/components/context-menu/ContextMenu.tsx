@@ -24,7 +24,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({ x, y, id, className, childre
 
   // Hide menu when scrolling on task list container
   useDetectWheel({
-    element: document.getElementById('taskListContainer') as HTMLElement | undefined,
+    element: document.getElementById('mainContainer') as HTMLElement | undefined,
     callback: () => hideMenu(false),
   });
 

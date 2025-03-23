@@ -6,9 +6,10 @@ interface LargeIconButtonProps {
   onClick: () => void;
   selected?: boolean;
   gap?: number;
+  iconSize?: number;
 }
 
-export const LargeIconButton: FC<LargeIconButtonProps> = ({ icon, label, onClick, selected, gap }) => {
+export const LargeIconButton: FC<LargeIconButtonProps> = ({ icon, label, onClick, selected, gap, iconSize }) => {
   return (
     <button
       className={`large-icon-button ${selected ? 'selected' : ''}`}
@@ -16,7 +17,7 @@ export const LargeIconButton: FC<LargeIconButtonProps> = ({ icon, label, onClick
       aria-label={label}
       onClick={() => onClick()}
     >
-      <img src={icon} alt={label} draggable={false} />
+      <img src={icon} alt={label} draggable={false} style={{ width: iconSize, height: iconSize }} />
       <p>{label}</p>
     </button>
   );

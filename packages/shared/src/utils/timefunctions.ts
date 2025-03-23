@@ -94,3 +94,31 @@ export function getFormattedReminderTime(reminderTime: ScheduledReminder, milita
     reminderTime.reminderMeridiem
   }`;
 }
+
+export function singleToDoubleDigit(num: number): string {
+  return num < 10 ? `0${num}` : `${num}`;
+}
+
+/**
+ * Formats seconds into hr/min/second format.
+ * @param seconds
+ * @returns
+ */
+export function formatSeconds(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  let formattedTime = '';
+  if (hours > 0) formattedTime += `${singleToDoubleDigit(hours)}:`;
+  formattedTime += `${singleToDoubleDigit(minutes)}:`;
+  formattedTime += `${singleToDoubleDigit(remainingSeconds)}`;
+
+  return formattedTime;
+}
+
+export function convertMsToSeconds(ms: number): number {
+  const unroundedSeconds = ms / 1000;
+
+  return Math.round(unroundedSeconds);
+}

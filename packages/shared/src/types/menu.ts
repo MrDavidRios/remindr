@@ -1,5 +1,5 @@
 import { Task } from './classes/index.js';
-import { MenuDropdownMap } from './index.js';
+import { MenuDropdownMap, StreamTask } from './index.js';
 
 export enum Menu {
   TimeframeMenu,
@@ -46,6 +46,7 @@ export interface MenuState {
   openContextMenus: ContextMenuType[];
   contextMenuPositions: Record<ContextMenuType, MenuPosition>;
   contextMenuTask?: Task;
+  contextMenuStreamTask?: StreamTask;
   openDropdowns: MenuDropdownMap;
   dialogInfo: DialogState;
   scheduledReminderEditorPosition: FloatingMenuPosition;
@@ -55,6 +56,7 @@ export interface MenuState {
 export enum ContextMenuType {
   TaskContextMenu = 'taskContextMenu',
   GeneralContextMenu = 'generalContextMenu',
+  StreamTaskContextMenu = 'streamTaskContextMenu',
 }
 
 export interface DialogState extends DialogProps {

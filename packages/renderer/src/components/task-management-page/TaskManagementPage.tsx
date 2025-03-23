@@ -5,10 +5,7 @@ import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect } from 'react';
 import { shallowEqual } from 'react-redux';
-import { TaskCreateMenu } from '../menus/task-create-menu/TaskCreateMenu';
 import { TaskEditMenu } from '../menus/task-edit-menu/TaskEditMenu';
-import { Toolbar } from '../toolbar/Toolbar';
-import { UndoNotification } from '../undo-notification/UndoNotification';
 import { TaskListDisplay } from './task-list-display/TaskListContainer';
 
 export function TaskManagementPage() {
@@ -18,7 +15,6 @@ export function TaskManagementPage() {
   const timeframe = useAppSelector((state) => state.taskList.timeframe);
 
   const showTaskEditMenu = useAppSelector((state) => state.menuState.openMenus.includes(Menu.TaskEditMenu));
-  const showTaskCreateMenu = useAppSelector((state) => state.menuState.openMenus.includes(Menu.TaskCreateMenu));
 
   useEffect(() => {
     if (selectedTasks.length === 1 && !showTaskEditMenu) {
@@ -48,16 +44,9 @@ export function TaskManagementPage() {
   );
 
   return (
-    <div id="appMainPageContainer">
-      <Toolbar />
-
-      <div id="mainContainer">
-        <TaskListDisplay timeframe={timeframe} taskMenuShown={showTaskEditMenu} />
-        <AnimatePresence>{showTaskEditMenu ? <TaskEditMenu selectedTask={selectedTasks[0]} /> : null}</AnimatePresence>
-        <AnimatePresence>{showTaskCreateMenu && <TaskCreateMenu id="taskCreationWindow" />}</AnimatePresence>
-      </div>
-
-      <UndoNotification />
-    </div>
+    <>
+      <TaskListDisplay timeframe={timeframe} taskMenuShown={showTaskEditMenu} />
+      <AnimatePresence>{showTaskEditMenu ? <TaskEditMenu selectedTask={selectedTasks[0]} /> : null}</AnimatePresence>
+    </>
   );
 }

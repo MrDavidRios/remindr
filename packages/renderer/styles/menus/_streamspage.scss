@@ -1,0 +1,222 @@
+#streamsPage {
+  width: calc(100vw - 50px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#streamsDashboard,
+#streamEditor {
+  max-width: 1096px;
+  background-color: var(--surface-primary-dark);
+
+  width: 80%;
+  height: 80%;
+
+  padding: 16px 20px;
+
+  display: grid;
+
+  .header {
+    padding: 6px 0 12px 0;
+  }
+}
+
+#streamList,
+#streamTaskListWrapper {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+#streamsDashboard {
+  grid-template-rows: min-content auto min-content;
+
+  #streamList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #emptyStreamListMessage {
+    margin-top: 12px;
+  }
+}
+
+#streamEditor {
+  grid-template-rows: min-content auto min-content min-content;
+
+  .back-button {
+    position: fixed;
+    left: 12px;
+    top: 24px;
+
+    padding: 8px 10px 6px 8px;
+    border-radius: var(--menu-border-radius);
+
+    img {
+      filter: var(--svg-filter);
+    }
+
+    &:active {
+      top: 25px;
+    }
+
+    &:hover {
+      background-color: var(--surface-active);
+    }
+  }
+
+  #streamTaskListWrapper {
+    .text-secondary {
+      margin-bottom: 16px;
+    }
+
+    > button {
+      margin: auto;
+      gap: 4px;
+
+      > img {
+        padding-top: 1px;
+
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .action-bar {
+    margin-top: 16px;
+
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    #saveStreamButton {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+
+      &:active {
+        top: initial;
+        bottom: 15px;
+      }
+    }
+
+    #deleteStreamButton {
+      position: fixed;
+      bottom: 12px;
+      right: 12px;
+
+      padding: 6px 8px;
+
+      img {
+        filter: invert(9%) sepia(77%) saturate(6607%) hue-rotate(9deg) brightness(94%) contrast(116%);
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      &:active {
+        top: initial;
+        bottom: 11px;
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+#streamHeaderWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+
+  h2 {
+    cursor: pointer;
+  }
+
+  > button {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    padding: 4px 6px 2px 6px;
+    border-radius: var(--menu-border-radius);
+    position: relative;
+
+    img {
+      display: none;
+
+      width: 24px;
+      height: 24px;
+
+      filter: var(--svg-filter);
+
+      position: absolute;
+      right: -32px;
+    }
+
+    &:hover {
+      background-color: transparent;
+      box-shadow: none;
+
+      img {
+        display: initial;
+      }
+    }
+  }
+}
+
+#streamTitleInputWrapper {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px 2px 6px;
+
+  .dynamic-text-area {
+    min-width: 100px;
+    max-width: 100%;
+    width: 100%;
+
+    padding: 0;
+    text-align: center;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    border: none;
+  }
+
+  .save-buttons .secondary-button:hover {
+    background-color: transparent;
+  }
+}
+
+.stream-time-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding-top: 12px;
+
+  p {
+    line-height: 16px;
+  }
+
+  img {
+    filter: var(--svg-filter);
+  }
+
+  &.inactive {
+    color: var(--text-secondary);
+  }
+}
