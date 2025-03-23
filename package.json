@@ -38,9 +38,9 @@
     "playwright": "1.51.1"
   },
   "dependencies": {
+    "@app/main": "*",
     "@remindr/shared": "workspace:*",
     "@testing-library/react": "^16.2.0",
-    "@app/main": "*",
     "vitest": "^3.0.9"
   }
 }
