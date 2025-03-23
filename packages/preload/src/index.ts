@@ -1,4 +1,4 @@
-import type { Settings } from "@remindr/shared/src/types";
+import type { Settings } from "@remindr/shared";
 import type {
   IpcRendererEvent,
   MessageBoxOptions,
