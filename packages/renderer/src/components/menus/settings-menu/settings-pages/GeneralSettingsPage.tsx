@@ -1,6 +1,6 @@
-import carouselIcon from '@assets/icons/carousel.svg';
-import listIcon from '@assets/icons/list.svg';
-import pathIcon from '@assets/icons/path.svg';
+import carouselIcon from "@assets/icons/carousel.svg";
+import listIcon from "@assets/icons/list.svg";
+import pathIcon from "@assets/icons/path.svg";
 import {
   AppMode,
   appModeLabels,
@@ -9,11 +9,12 @@ import {
   getDayNameFromIdx,
   Menu,
   Page,
-} from '@remindr/shared';
-import { Dropdown } from '@renderer/components/dropdown/Dropdown';
-import { LargeIconButton } from '@renderer/components/large-icon-button/LargeIconButton';
-import { updateSetting } from '@renderer/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from '@renderer/hooks';
+} from "@remindr/shared";
+import { Dropdown } from "@renderer/components/dropdown/Dropdown";
+import { LargeIconButton } from "@renderer/components/large-icon-button/LargeIconButton";
+import { updateSetting } from "@renderer/features/settings/settingsSlice";
+import { useAppDispatch, useAppSelector } from "@renderer/hooks";
+import { Gate, gate } from "@renderer/scripts/gates";
 
 export function GeneralSettingsPage() {
   const dispatch = useAppDispatch();
@@ -23,7 +24,9 @@ export function GeneralSettingsPage() {
   const appVersion = window.appState.getVersion();
 
   const openReleasePage = () => {
-    window.electron.shell.openExternal(`https://github.com/MrDavidRios/remindr/releases/tag/v${appVersion}`);
+    window.electron.shell.openExternal(
+      `https://github.com/MrDavidRios/remindr/releases/tag/v${appVersion}`
+    );
   };
 
   return (
@@ -42,12 +45,14 @@ export function GeneralSettingsPage() {
               onChange={(e) => {
                 dispatch(
                   updateSetting({
-                    key: 'autoStartup',
+                    key: "autoStartup",
                     value: e.currentTarget.checked,
-                  }),
+                  })
                 );
 
-                window.electron.ipcRenderer.sendMessage('startup-setting-updated');
+                window.electron.ipcRenderer.sendMessage(
+                  "startup-setting-updated"
+                );
               }}
             />
             <p className="input-label">Open Remindr on startup</p>
@@ -63,9 +68,9 @@ export function GeneralSettingsPage() {
               onChange={(e) => {
                 dispatch(
                   updateSetting({
-                    key: 'hideOnStartup',
+                    key: "hideOnStartup",
                     value: e.currentTarget.checked,
-                  }),
+                  })
                 );
               }}
             />
@@ -83,9 +88,9 @@ export function GeneralSettingsPage() {
           onChange={(e) => {
             dispatch(
               updateSetting({
-                key: 'militaryTime',
+                key: "militaryTime",
                 value: e.currentTarget.checked,
-              }),
+              })
             );
           }}
         />
@@ -103,9 +108,9 @@ export function GeneralSettingsPage() {
             const selectedAppMode = Object.values(AppMode)[idx];
             dispatch(
               updateSetting({
-                key: 'startupMode',
+                key: "startupMode",
                 value: selectedAppMode,
-              }),
+              })
             );
           }}
           scrollParentId="settings"
@@ -115,25 +120,42 @@ export function GeneralSettingsPage() {
         <p>Startup view:</p>
         <div>
           <LargeIconButton
-            label={'List'}
+            label={"List"}
             icon={listIcon}
-            onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.ListView }))}
+            onClick={() =>
+              dispatch(
+                updateSetting({ key: "startupView", value: Page.ListView })
+              )
+            }
             selected={settings.startupView === Page.ListView}
           />
           <LargeIconButton
-            label={'3-Day'}
+            label={"3-Day"}
             icon={carouselIcon}
-            onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.ColumnView }))}
+            onClick={() =>
+              dispatch(
+                updateSetting({ key: "startupView", value: Page.ColumnView })
+              )
+            }
             selected={settings.startupView === Page.ColumnView}
           />
-          <LargeIconButton
-            label={'Stream'}
-            icon={pathIcon}
-            iconSize={28}
-            gap={6}
-            onClick={() => dispatch(updateSetting({ key: 'startupView', value: Page.StreamEditor }))}
-            selected={settings.startupView === Page.StreamEditor}
-          />
+          {gate(Gate.Streams) && (
+            <LargeIconButton
+              label={"Stream"}
+              icon={pathIcon}
+              iconSize={28}
+              gap={6}
+              onClick={() =>
+                dispatch(
+                  updateSetting({
+                    key: "startupView",
+                    value: Page.StreamEditor,
+                  })
+                )
+              }
+              selected={settings.startupView === Page.StreamEditor}
+            />
+          )}
         </div>
       </div>
       <p className="subheading" style={{ marginTop: 16 }}>
@@ -145,14 +167,16 @@ export function GeneralSettingsPage() {
           parentMenu={Menu.SettingsMenu}
           name="weekStartDay"
           options={Array.from({ length: 7 }, (_, dayIdx) => dayIdx)}
-          optionLabels={Array.from({ length: 7 }, (_, dayIdx) => getDayNameFromIdx(dayIdx, 0, false))}
+          optionLabels={Array.from({ length: 7 }, (_, dayIdx) =>
+            getDayNameFromIdx(dayIdx, 0, false)
+          )}
           selectedIdx={settings.weekStartDay}
           onSelect={(idx: number) => {
             dispatch(
               updateSetting({
-                key: 'weekStartDay',
+                key: "weekStartDay",
                 value: idx,
-              }),
+              })
             );
           }}
           scrollParentId="settings"
@@ -163,15 +187,17 @@ export function GeneralSettingsPage() {
         <Dropdown
           parentMenu={Menu.SettingsMenu}
           name="dateFormat"
-          options={Object.keys(DateFormat).filter((key) => !Number.isNaN(Number(key)))}
+          options={Object.keys(DateFormat).filter(
+            (key) => !Number.isNaN(Number(key))
+          )}
           optionLabels={dateFormatDisplayNames}
           selectedIdx={settings.dateFormat ?? DateFormat.MDYText}
           onSelect={(idx: number) => {
             dispatch(
               updateSetting({
-                key: 'dateFormat',
+                key: "dateFormat",
                 value: idx,
-              }),
+              })
             );
           }}
           scrollParentId="settings"
@@ -181,7 +207,7 @@ export function GeneralSettingsPage() {
         Version & Updates
       </p>
       <p style={{ marginBottom: 8 }}>
-        Current version:{' '}
+        Current version:{" "}
         <button
           onClick={openReleasePage}
           type="button"
@@ -201,15 +227,19 @@ export function GeneralSettingsPage() {
             onChange={(e) => {
               dispatch(
                 updateSetting({
-                  key: 'autoUpdate',
+                  key: "autoUpdate",
                   value: e.currentTarget.checked,
-                }),
+                })
               );
 
-              window.electron.ipcRenderer.sendMessage('startup-setting-updated');
+              window.electron.ipcRenderer.sendMessage(
+                "startup-setting-updated"
+              );
             }}
           />
-          <p className="input-label">Download and install updates automatically</p>
+          <p className="input-label">
+            Download and install updates automatically
+          </p>
         </div>
       )}
     </div>
