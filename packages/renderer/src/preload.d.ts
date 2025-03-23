@@ -10,10 +10,9 @@ import type {
   NotificationHandler,
   StoreHandler,
   UserStateHandler,
-} from 'main/preload';
+} from "main/preload";
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
   interface Window {
     dev: DevHandler;
     electron: ElectronHandler;

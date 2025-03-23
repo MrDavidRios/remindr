@@ -1,25 +1,13 @@
 {
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-    "sourceMap": false,
-    "moduleResolution": "Bundler",
-    "skipLibCheck": true,
-    "strict": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "types": ["node", "@testing-library/jest-dom", "@testing-library/user-event"],
     "baseUrl": ".",
-    "paths": {
-      "#preload": ["../preload/src/index"],
-      "@renderer/*": ["./src/*"],
-      "@assets/*": ["./assets/*"],
-      "@hooks/*": ["./src/scripts/utils/hooks/*"],
-      "@mocks/*": ["./tests/mocks/*"],
-      "@renderer-types/*": ["./types/*"]
-    },
-    "lib": ["ESNext", "dom", "dom.iterable"]
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "types/**/*.d.ts", "../../types/**/*.d.ts"],
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+    "sourceMap": false,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  }
 }

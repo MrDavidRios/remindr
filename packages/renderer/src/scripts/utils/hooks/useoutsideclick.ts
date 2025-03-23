@@ -1,9 +1,12 @@
-import type { RefObject } from 'react';
-import { useEffect, useRef } from 'react';
+import type { RefObject } from "react";
+import { useEffect, useRef } from "react";
 
-const globalExceptions = ['.backdrop', '.full-window-container'];
+const globalExceptions = [".backdrop", ".full-window-container"];
 
-const elementsContainTarget = (elements: Element[], target: EventTarget | null) => {
+const elementsContainTarget = (
+  elements: Element[],
+  target: EventTarget | null
+) => {
   return elements.some((element) => element.contains(target as Node));
 };
 
@@ -17,9 +20,9 @@ const elementsContainTarget = (elements: Element[], target: EventTarget | null) 
 export function useClickOutside(
   callback: () => void,
   exceptions: string[] = [],
-  ignoreGlobalExceptions?: boolean,
-): RefObject<HTMLElement> {
-  const domNodeRef = useRef() as RefObject<HTMLElement>;
+  ignoreGlobalExceptions?: boolean
+): RefObject<HTMLElement | null> {
+  const domNodeRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handler = (event: MouseEvent) => {
@@ -27,11 +30,16 @@ export function useClickOutside(
       if (domNodeRef.current?.contains(event.target as Node)) return;
 
       // If the clicked element is an exception, ignore the click event
-      const allExceptions = ignoreGlobalExceptions ? exceptions : [...globalExceptions, ...exceptions];
+      const allExceptions = ignoreGlobalExceptions
+        ? exceptions
+        : [...globalExceptions, ...exceptions];
 
       if (
         allExceptions?.some((query) =>
-          elementsContainTarget(Array.from(document.querySelectorAll(query)), event.target),
+          elementsContainTarget(
+            Array.from(document.querySelectorAll(query)),
+            event.target
+          )
         )
       )
         return;
@@ -39,10 +47,10 @@ export function useClickOutside(
       callback();
     };
 
-    document.addEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
 
     return () => {
-      document.removeEventListener('mousedown', handler);
+      document.removeEventListener("mousedown", handler);
     };
   });
 

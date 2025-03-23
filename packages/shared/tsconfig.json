@@ -1,20 +1,19 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "module": "NodeNext",
     "target": "ESNext",
-    "sourceMap": false,
+    "sourceMap": true,
     "moduleResolution": "NodeNext",
     "skipLibCheck": true,
-    "composite": true,
     "strict": true,
-    "declaration": true,
-    "declarationMap": true,
     "isolatedModules": true,
     "types": ["node"],
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "outDir": "dist"
+    "outDir": "dist",
+    "declaration": true
   },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["./dist/**/*", "./tests/**/*"]
+  "include": ["src"]
 }
