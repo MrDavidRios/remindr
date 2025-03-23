@@ -19,11 +19,9 @@ const test = base.extend<TestFixtures>({
       /**
        * Executable path depends on root package name!
        */
-      let executablePattern = "dist/win-unpacked/Remindr.exe";
+      let executablePattern = "dist/*/Remindr{,.*}";
       if (platform === "darwin") {
-        executablePattern = "dist/mac*/*/Contents/MacOS/*";
-      } else if (platform === "linux") {
-        executablePattern = "dist/*-unpacked/*";
+        executablePattern += "/Contents/*/Remindr";
       }
 
       const [executablePath] = globSync(executablePattern);
