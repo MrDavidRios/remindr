@@ -5,30 +5,30 @@ on:
     branches:
       - main
     paths-ignore:
-      - '.github/**'
-      - '!.github/workflows/ci.yml'
-      - '!.github/workflows/typechecking.yml'
-      - '!.github/workflows/tests.yml'
-      - '!.github/workflows/release.yml'
-      - '!.github/workflows/sonarcloud.yml'
-      - '**.md'
+      - ".github/**"
+      - "!.github/workflows/ci.yml"
+      - "!.github/workflows/typechecking.yml"
+      - "!.github/workflows/tests.yml"
+      - "!.github/workflows/release.yml"
+      - "!.github/workflows/sonarcloud.yml"
+      - "**.md"
       - .editorconfig
       - .gitignore
-      - '.idea/**'
-      - '.vscode/**'
+      - ".idea/**"
+      - ".vscode/**"
   pull_request:
     paths-ignore:
-      - '.github/**'
-      - '!.github/workflows/ci.yml'
-      - '!.github/workflows/typechecking.yml'
-      - '!.github/workflows/tests.yml'
-      - '!.github/workflows/release.yml'
-      - '!.github/workflows/sonarcloud.yml'
-      - '**.md'
+      - ".github/**"
+      - "!.github/workflows/ci.yml"
+      - "!.github/workflows/typechecking.yml"
+      - "!.github/workflows/tests.yml"
+      - "!.github/workflows/release.yml"
+      - "!.github/workflows/sonarcloud.yml"
+      - "**.md"
       - .editorconfig
       - .gitignore
-      - '.idea/**'
-      - '.vscode/**'
+      - ".idea/**"
+      - ".vscode/**"
 
 concurrency:
   group: sonarcloud-${{ github.ref }}
@@ -43,16 +43,16 @@ jobs:
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
       - uses: actions/setup-node@v4
         with:
-          cache: 'npm'
+          cache: "npm"
       - run: npm ci
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       - run: npm run compile:sass --if-present
-      - run: npm run build:shared --if-present
-      - run: npm i @remindr/shared
+      - run: cd packages/shared && npm run build
+      - run: cd ../.. && npm i @remindr/shared
 
       - name: Generate Coverage
         run: |
@@ -61,5 +61,5 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
