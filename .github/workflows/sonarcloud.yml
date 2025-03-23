@@ -52,7 +52,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       - run: npm run compile:sass --if-present
       - run: cd packages/shared && npm run build
-      - run: cd ../.. && npm i @remindr/shared
+      - run: npm i @remindr/shared
 
       - name: Generate Coverage
         run: |
