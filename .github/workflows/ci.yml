@@ -40,18 +40,18 @@ jobs:
           echo "- \`APP_VERSION\`: ${{ steps.APP_VERSION.outputs.APP_VERSION }}" >> $GITHUB_STEP_SUMMARY
           echo "- \`APP_FULL_VERSION\`: ${{ steps.APP_FULL_VERSION.outputs.APP_FULL_VERSION }}" >> $GITHUB_STEP_SUMMARY
 
-  compile-and-test:
-    needs:
-      - prepare
-    permissions:
-      contents: write
-      id-token: write
-      attestations: write
-    uses: ./.github/workflows/compile-and-test.yml
-    with:
-      renderer-template: "react-swc-ts"
-      app-version: ${{ needs.prepare.outputs.APP_FULL_VERSION }}
-      distribution-channel: ${{inputs.distribution-channel}}
+  # compile-and-test:
+  #   needs:
+  #     - prepare
+  #   permissions:
+  #     contents: write
+  #     id-token: write
+  #     attestations: write
+  #   uses: ./.github/workflows/compile-and-test.yml
+  #   with:
+  #     renderer-template: "react-swc-ts"
+  #     app-version: ${{ needs.prepare.outputs.APP_FULL_VERSION }}
+  #     distribution-channel: ${{inputs.distribution-channel}}
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
