@@ -34,6 +34,7 @@ import {
 } from "./dataFunctions.js";
 import { createModuleRunner } from "./ModuleRunner.js";
 import { terminateAppOnLastWindowClose } from "./modules/ApplicationTerminatorOnLastWindowClose.js";
+import { AutoUpdater } from "./modules/AutoUpdater.js";
 import { allowInternalOrigins } from "./modules/BlockNotAllowdOrigins.js";
 import { allowExternalUrls } from "./modules/ExternalUrls.js";
 import { hardwareAccelerationMode } from "./modules/HardwareAccelerationModule.js";
@@ -53,7 +54,7 @@ import {
   isHideOnStartupEnabled,
 } from "./utils/storeUserData.js";
 
-// const autoUpdater: AutoUpdater = new AutoUpdater();
+const autoUpdater: AutoUpdater = new AutoUpdater();
 
 export async function initApp(initConfig: AppInitConfig) {
   log.info("[main.initApp] Initializing app");
@@ -69,7 +70,7 @@ export async function initApp(initConfig: AppInitConfig) {
     .init(disallowMultipleAppInstance())
     .init(terminateAppOnLastWindowClose())
     .init(hardwareAccelerationMode({ enable: false }))
-    // .init(autoUpdater)
+    .init(autoUpdater)
 
     // Security
     .init(
@@ -131,7 +132,7 @@ export function restartApp() {
 
 export function restartAndUpdateApp() {
   // TODO: Refactor this code to be in AutoUpdater class (maybe listen for an event instead?)
-  // autoUpdater.getAutoUpdater().quitAndInstall();
+  autoUpdater.getAutoUpdater().quitAndInstall();
 }
 
 /** Events / Functionality */
