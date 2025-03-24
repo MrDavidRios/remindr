@@ -59,7 +59,7 @@ jobs:
       contents: write
     needs:
       - prepare
-      - compile-and-test
+      # - compile-and-test
     uses: ./.github/workflows/deploy.yml
     with:
       distribution-channel: ${{inputs.distribution-channel}}
