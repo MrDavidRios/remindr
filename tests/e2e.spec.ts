@@ -21,7 +21,7 @@ const test = base.extend<TestFixtures>({
        */
       let executablePattern = "dist/*/Remindr{,.*}";
       if (platform === "darwin") {
-        executablePattern += "/Contents/*/Remindr";
+        executablePattern += "/Contents/*/Remindr{,.*}";
       }
 
       const [executablePath] = globSync(executablePattern);
