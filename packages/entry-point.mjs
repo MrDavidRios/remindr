@@ -25,15 +25,22 @@ if (
  * the main module remains simplistic and efficient
  * as it receives initialization instructions rather than direct module imports.
  */
-initApp({
-  renderer:
-    process.env.MODE === "development" && !!process.env.VITE_DEV_SERVER_URL
-      ? new URL(process.env.VITE_DEV_SERVER_URL)
-      : {
-          path: fileURLToPath(import.meta.resolve("@app/renderer")),
-        },
+try {
+  console.log("Starting app initialization...");
+  await initApp({
+    renderer:
+      process.env.MODE === "development" && !!process.env.VITE_DEV_SERVER_URL
+        ? new URL(process.env.VITE_DEV_SERVER_URL)
+        : {
+            path: fileURLToPath(import.meta.resolve("@app/renderer")),
+          },
 
-  preload: {
-    path: fileURLToPath(import.meta.resolve("@app/preload/exposed.mjs")),
-  },
-});
+    preload: {
+      path: fileURLToPath(import.meta.resolve("@app/preload/exposed.mjs")),
+    },
+  });
+  console.log("App initialization completed successfully");
+} catch (error) {
+  console.error("Error during app initialization:", error);
+  process.exit(1);
+}
