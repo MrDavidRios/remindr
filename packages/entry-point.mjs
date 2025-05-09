@@ -27,7 +27,7 @@ if (
  */
 try {
   console.log("Starting app initialization...");
-  await initApp({
+  initApp({
     renderer:
       process.env.MODE === "development" && !!process.env.VITE_DEV_SERVER_URL
         ? new URL(process.env.VITE_DEV_SERVER_URL)
@@ -39,7 +39,6 @@ try {
       path: fileURLToPath(import.meta.resolve("@app/preload/exposed.mjs")),
     },
   });
-  console.log("App initialization completed successfully");
 } catch (error) {
   console.error("Error during app initialization:", error);
   process.exit(1);
