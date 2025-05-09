@@ -95,6 +95,9 @@ export async function initApp(initConfig: AppInitConfig) {
   }
 
   await moduleRunner;
+
+  // Initialize auto updater event handlers after modules are enabled (even better, include this in the module itself)
+  initAutoUpdaterEventHandlers();
 }
 
 const store = new Store();
@@ -106,8 +109,6 @@ export const callSetupFunctions = () => {
   initNotificationEventListeners();
 
   // Listeners that aren't dependent on renderer to work
-  initAutoUpdaterEventHandlers();
-
   initAppStateListeners();
   initUserDataListeners();
 
