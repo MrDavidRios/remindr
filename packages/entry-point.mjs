@@ -1,4 +1,5 @@
 import { initApp } from "@app/main";
+import log from "electron-log";
 import { fileURLToPath } from "node:url";
 
 if (
