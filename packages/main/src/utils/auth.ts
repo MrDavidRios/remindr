@@ -1,7 +1,13 @@
-import { ipcMain } from 'electron';
-import type { Auth } from 'firebase/auth';
-import { EmailAuthCredential, getAuth, onAuthStateChanged, signInWithCredential } from 'firebase/auth';
-import { existsSync, unlinkSync } from 'fs';
+import { ipcMain } from "electron";
+import log from "electron-log";
+import type { Auth } from "firebase/auth";
+import {
+  EmailAuthCredential,
+  getAuth,
+  onAuthStateChanged,
+  signInWithCredential,
+} from "firebase/auth";
+import { existsSync, unlinkSync } from "fs";
 import {
   createUser,
   getAuthCredential,
@@ -12,8 +18,8 @@ import {
   sendVerificationEmail,
   signInUser,
   updateUserEmail,
-} from './firebase.js';
-import { getMainWindow } from './getMainWindow.js';
+} from "./firebase.js";
+import { getMainWindow } from "./getMainWindow.js";
 
 let auth: Auth | undefined;
 /**
@@ -21,50 +27,57 @@ let auth: Auth | undefined;
  * @param mainWindow
  */
 export function initAuthEventListeners() {
+  log.info("initializing auth event listeners...");
+
   auth = getAuth();
 
+  log.info("getAuth call successful...");
+
   onAuthStateChanged(auth, (/* user */) => {
-    getMainWindow()?.webContents.send('auth-state-changed');
+    getMainWindow()?.webContents.send("auth-state-changed");
   });
 
-  ipcMain.handle('create-user', (_event, email: string, password: string) => {
+  ipcMain.handle("create-user", (_event, email: string, password: string) => {
     return createUser(auth!, email, password);
   });
 
-  ipcMain.handle('delete-firebase-user', () => {
+  ipcMain.handle("delete-firebase-user", () => {
     return deleteFirebaseUser();
   });
 
-  ipcMain.handle('reauthenticate-user', (_event, email: string, password: string) => {
-    const user = auth!.currentUser;
+  ipcMain.handle(
+    "reauthenticate-user",
+    (_event, email: string, password: string) => {
+      const user = auth!.currentUser;
 
-    if (!user) return 'No user found';
+      if (!user) return "No user found";
 
-    return reauthenticateUser(user, email, password);
-  });
+      return reauthenticateUser(user, email, password);
+    }
+  );
 
-  ipcMain.handle('send-email-verification', () => {
+  ipcMain.handle("send-email-verification", () => {
     // sends email verification email to current user
     const user = auth!.currentUser;
 
-    if (!user) return 'No user found';
+    if (!user) return "No user found";
 
     return sendVerificationEmail(user);
   });
 
-  ipcMain.handle('send-password-reset-email', (_event, email: string) => {
+  ipcMain.handle("send-password-reset-email", (_event, email: string) => {
     return sendPassResetEmail(auth!, email);
   });
 
-  ipcMain.handle('sign-in-user', (_event, email: string, password: string) => {
+  ipcMain.handle("sign-in-user", (_event, email: string, password: string) => {
     return signInUser(auth!, email, password);
   });
 
-  ipcMain.handle('sign-out-user', () => {
+  ipcMain.handle("sign-out-user", () => {
     return signOutUser();
   });
 
-  ipcMain.handle('update-user-from-storage', () => {
+  ipcMain.handle("update-user-from-storage", () => {
     const authCredentialAsJSON = getAuthCredential();
 
     if (!authCredentialAsJSON) return;
@@ -76,39 +89,39 @@ export function initAuthEventListeners() {
     signInWithCredential(auth!, authCredential);
   });
 
-  ipcMain.handle('update-user-email', (_event, newEmail: string) => {
+  ipcMain.handle("update-user-email", (_event, newEmail: string) => {
     const user = auth!.currentUser;
 
-    if (!user) return 'No user found';
+    if (!user) return "No user found";
 
     return updateUserEmail(user, newEmail);
   });
 
-  ipcMain.on('auth-credential-exists', (event) => {
+  ipcMain.on("auth-credential-exists", (event) => {
     event.returnValue = existsSync(getAuthCredentialPath());
   });
 
-  ipcMain.handle('delete-auth-credential', () => {
+  ipcMain.handle("delete-auth-credential", () => {
     deleteAuthCredential();
   });
 
-  ipcMain.on('check-if-user-signed-in', (event) => {
+  ipcMain.on("check-if-user-signed-in", (event) => {
     event.returnValue = auth!.currentUser !== null;
   });
 
-  ipcMain.on('check-if-user-email-verified', (event) => {
-    event.returnValue = auth!.currentUser?.emailVerified ?? 'User not found.';
+  ipcMain.on("check-if-user-email-verified", (event) => {
+    event.returnValue = auth!.currentUser?.emailVerified ?? "User not found.";
   });
 
-  ipcMain.on('get-user-email', (event) => {
+  ipcMain.on("get-user-email", (event) => {
     event.returnValue = auth!.currentUser?.email ?? undefined;
   });
 
-  ipcMain.on('get-user-uid', (event) => {
+  ipcMain.on("get-user-uid", (event) => {
     event.returnValue = getUserUID();
   });
 
-  ipcMain.on('get-current-user', (event) => {
+  ipcMain.on("get-current-user", (event) => {
     if (!auth) {
       event.returnValue = undefined;
       return;
@@ -116,6 +129,8 @@ export function initAuthEventListeners() {
 
     event.returnValue = getCurrentUser(auth);
   });
+
+  log.info("(initAuthEventListeners) all handlers initialized.");
 }
 
 export function getUserUID(): string | undefined {
