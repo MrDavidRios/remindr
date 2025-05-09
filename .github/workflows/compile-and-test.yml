@@ -60,7 +60,6 @@ jobs:
           renderer-template: ${{inputs.renderer-template}}
 
       # --force allows setting the version even if it's the same as the current version
-      - run: npm version "${{inputs.app-version}}" --no-git-tag-version --force
       - run: cd packages/shared && npm run build
       - run: npm i @remindr/shared
       - run: npm run compile -- -p never
