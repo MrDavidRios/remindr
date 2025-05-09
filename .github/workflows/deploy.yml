@@ -42,6 +42,6 @@ jobs:
           echo "Contents of dist directory (detailed):"
           ls -la dist/
 
-      - run: gh release create v${{inputs.app-version}} dist/Remindr* dist/latest*.yml --draft --repo ${{github.repository}}
+      - run: gh release create v${{inputs.app-version}} dist/Remindr* dist/latest*.yml --draft --title "${{inputs.app-version}}" --repo ${{github.repository}}
         env:
           GH_TOKEN: ${{ github.token }}
