@@ -40,10 +40,8 @@ jobs:
       - name: List contents of dist directory
         run: |
           echo "Contents of dist directory (detailed):"
-          ls -laR dist/
-          echo -e "\nDirectory structure:"
-          find dist/ -type f -o -type d | sed -e "s/[^-][^\/]*\// |/g" -e "s/|\([^ ]\)/|-\1/"
+          ls -la dist/
 
-      - run: gh release create v${{inputs.app-version}} dist/remindr* dist/latest*.yml --repo ${{github.repository}}
+      - run: gh release create v${{inputs.app-version}} dist/Remindr* dist/latest*.yml --repo ${{github.repository}}
         env:
           GH_TOKEN: ${{ github.token }}
