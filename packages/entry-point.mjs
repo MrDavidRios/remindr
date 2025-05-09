@@ -40,6 +40,6 @@ try {
     },
   });
 } catch (error) {
-  console.error("Error during app initialization:", error);
+  log.error("Error during app initialization:", error);
   process.exit(1);
 }
