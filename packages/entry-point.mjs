@@ -26,7 +26,7 @@ if (
  * as it receives initialization instructions rather than direct module imports.
  */
 try {
-  console.log("Starting app initialization...");
+  log.info("Starting app initialization...");
   initApp({
     renderer:
       process.env.MODE === "development" && !!process.env.VITE_DEV_SERVER_URL
