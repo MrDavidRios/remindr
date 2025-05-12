@@ -37,7 +37,7 @@
     "electron": "36.2.0",
     "electron-builder": "26.0.12",
     "glob": "11.0.2",
-    "happy-dom": "^17.4.6",
+    "happy-dom": "^17.4.7",
     "playwright": "1.52.0",
     "typescript": "5.8.3",
     "vite": "6.3.5"
