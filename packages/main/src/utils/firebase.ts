@@ -1,6 +1,6 @@
-import { app } from 'electron';
-import { initializeApp } from 'firebase/app';
-import type { Auth, User, UserCredential } from 'firebase/auth';
+import { app } from "electron";
+import { initializeApp } from "firebase/app";
+import type { Auth, User, UserCredential } from "firebase/auth";
 import {
   EmailAuthProvider,
   createUserWithEmailAndPassword,
@@ -9,24 +9,32 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   updateEmail,
-} from 'firebase/auth';
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
+} from "firebase/auth";
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 
 export function initFirebase() {
+  if (!import.meta.env.VITE_FIREBASE_API_KEY) {
+    throw new Error("Firebase API key is missing");
+  }
+
   initializeApp({
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: 'remindr-8d249.firebaseapp.com',
-    databaseURL: 'https://remindr-8d249.firebaseio.com',
-    projectId: 'remindr-8d249',
-    storageBucket: 'remindr-8d249.appspot.com',
-    messagingSenderId: '287336375680',
-    appId: '1:287336375680:web:dfc310a200a08cf754cd65',
-    measurementId: 'G-VLSKBQE62S',
+    authDomain: "remindr-8d249.firebaseapp.com",
+    databaseURL: "https://remindr-8d249.firebaseio.com",
+    projectId: "remindr-8d249",
+    storageBucket: "remindr-8d249.appspot.com",
+    messagingSenderId: "287336375680",
+    appId: "1:287336375680:web:dfc310a200a08cf754cd65",
+    measurementId: "G-VLSKBQE62S",
   });
 }
 
 // If this returns a string, it's an error
-export function createUser(auth: Auth, email: string, password: string): Promise<string> {
+export function createUser(
+  auth: Auth,
+  email: string,
+  password: string
+): Promise<string> {
   return createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential: UserCredential) => {
       // User successfully created
@@ -36,7 +44,11 @@ export function createUser(auth: Auth, email: string, password: string): Promise
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
-export function reauthenticateUser(user: User, email: string, password: string): Promise<boolean | string> {
+export function reauthenticateUser(
+  user: User,
+  email: string,
+  password: string
+): Promise<boolean | string> {
   const credential = EmailAuthProvider.credential(email, password);
 
   return reauthenticateWithCredential(user, credential)
@@ -56,7 +68,10 @@ export function sendVerificationEmail(user: User): Promise<boolean | string> {
     .catch((err) => err);
 }
 
-export function sendPassResetEmail(auth: Auth, email: string): Promise<boolean | string> {
+export function sendPassResetEmail(
+  auth: Auth,
+  email: string
+): Promise<boolean | string> {
   return sendPasswordResetEmail(auth, email)
     .then(() => {
       return true;
@@ -64,7 +79,11 @@ export function sendPassResetEmail(auth: Auth, email: string): Promise<boolean |
     .catch((err) => err);
 }
 
-export function signInUser(auth: Auth, email: string, password: string): Promise<boolean | string> {
+export function signInUser(
+  auth: Auth,
+  email: string,
+  password: string
+): Promise<boolean | string> {
   return signInWithEmailAndPassword(auth, email, password)
     .then(() => {
       // automatically save user credential to local storage
@@ -88,11 +107,14 @@ export function getAuthCredential(): string | undefined {
 
   if (!existsSync(getAuthCredentialPath())) return undefined;
 
-  return readFileSync(getAuthCredentialPath(), 'utf8');
+  return readFileSync(getAuthCredentialPath(), "utf8");
 }
 
 // If this returns a string, it's an error. If it's a boolean, it's successful.
-export function updateUserEmail(user: User, newEmail: string): Promise<boolean | string> {
+export function updateUserEmail(
+  user: User,
+  newEmail: string
+): Promise<boolean | string> {
   return updateEmail(user, newEmail)
     .then(() => {
       // User re-authenticated
@@ -102,19 +124,19 @@ export function updateUserEmail(user: User, newEmail: string): Promise<boolean |
 }
 
 export function getUserObjPath(): string {
-  const userObjPath = `${app.getPath('userData')}\\userObj.json`;
+  const userObjPath = `${app.getPath("userData")}\\userObj.json`;
   return userObjPath;
 }
 
 export function getAuthCredentialPath(): string {
-  const authCredentialPath = `${app.getPath('userData')}\\authCredential.json`;
+  const authCredentialPath = `${app.getPath("userData")}\\authCredential.json`;
   return authCredentialPath;
 }
 
 export function getUserObj(): string | undefined {
   if (!existsSync(getUserObjPath())) return undefined;
 
-  return readFileSync(getUserObjPath(), 'utf8');
+  return readFileSync(getUserObjPath(), "utf8");
 }
 
 export function getCurrentUser(auth: Auth): string | undefined {
