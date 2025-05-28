@@ -1,4 +1,5 @@
 import { app } from "electron";
+import log from "electron-log";
 import { initializeApp } from "firebase/app";
 import type { Auth, User, UserCredential } from "firebase/auth";
 import {
@@ -14,6 +15,7 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 
 export function initFirebase() {
   if (!import.meta.env.VITE_FIREBASE_API_KEY) {
+    log.error("Firebase API key is missing");
     throw new Error("Firebase API key is missing");
   }
 
