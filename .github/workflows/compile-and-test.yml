@@ -65,6 +65,7 @@ jobs:
       - run: npm run compile -- -p never
         env:
           VITE_DISTRIBUTION_CHANNEL: ${{inputs.distribution-channel}}
+          VITE_FIREBASE_API_KEY: ${{secrets.VITE_FIREBASE_API_KEY}}
 
       # - run: npm run test --if-present
       #   if: matrix.os != 'ubuntu-latest'
