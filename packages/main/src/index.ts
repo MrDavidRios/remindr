@@ -9,7 +9,6 @@ import {
   shell,
   Task,
 } from "electron";
-import log from "electron-log";
 import Store from "electron-store";
 import { readFile } from "fs/promises";
 import {
@@ -57,9 +56,7 @@ import {
 const autoUpdater: AutoUpdater = new AutoUpdater();
 
 export async function initApp(initConfig: AppInitConfig) {
-  log.info("[main.initApp] Initializing app");
   callSetupFunctions();
-  log.info("[main.initApp] setup functions called");
 
   const moduleRunner = createModuleRunner()
     .init(
@@ -107,25 +104,15 @@ const store = new Store();
 export const callSetupFunctions = () => {
   initFirebase();
 
-  log.info("initialized firebase");
-
   initNotificationEventListeners();
-
-  log.info("initialized notification event listeners");
 
   // Listeners that aren't dependent on renderer to work
   initAppStateListeners();
 
-  log.info("initialized app state listeners");
-
   initUserDataListeners();
-
-  log.info("initialized user data listeners");
 
   // Dependent on Firebase
   initAuthEventListeners();
-
-  log.info("initialized auth event listeners");
 };
 
 // TODO: REFACTOR THESE INTO THEIR OWN SEPARATE SCRIPTS

@@ -56,7 +56,7 @@ jobs:
           # - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Check if secret exists
+      - name: Check if Firebase API key exists
         run: |
           if [ -z "${{ secrets.VITE_FIREBASE_API_KEY }}" ]; then
             echo "Secret is not set or is empty"

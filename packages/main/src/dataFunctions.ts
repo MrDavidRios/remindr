@@ -38,6 +38,7 @@ import { deleteFirebaseUser, getUserUID, signOutUser } from "./utils/auth.js";
 import { getMainWindow } from "./utils/getMainWindow.js";
 import { showMessageBox } from "./utils/messagebox.js";
 import { getSettingsProfile, getUserProfile } from "./utils/storeUserData.js";
+import { throwError } from "./utils/throwError.js";
 import { hideWindow } from "./utils/window.js";
 
 const store = new Store();
@@ -103,8 +104,10 @@ async function initializeDataListeners() {
     if (userDataSyncAmount === 1) return;
 
     const loadedUserData = docSnapshot.data();
-    if (!loadedUserData)
-      throw new Error("userDataListener: user data does not exist");
+    if (!loadedUserData) {
+      throwError("userDataListener: user data does not exist");
+      return;
+    }
 
     const duplicateData = !_.isEqual(
       userProfile.toString(),
@@ -153,8 +156,8 @@ async function initializeDataListeners() {
 
 let dataListenersRemoved = false;
 function removeDataListeners() {
-  if (userDataListener) userDataListener();
-  if (taskDataListener) taskDataListener();
+  userDataListener?.();
+  taskDataListener?.();
 
   saveCalls = 0;
 
@@ -237,7 +240,7 @@ function databaseInteractionFinished() {
       signOutUser();
       break;
     default:
-      throw new Error(`Invalid action: ${appAction}`);
+      throwError(`Invalid action: ${appAction}`);
   }
 }
 
@@ -313,7 +316,8 @@ export async function actionOnSave(action: string) {
       );
       break;
     default:
-      throw new Error(`action-on-save: invalid action - ${appAction}`);
+      throwError(`action-on-save: invalid action - ${appAction}`);
+      return;
   }
 
   quitOrRestartPostSaveActions(responseData.response);
@@ -412,8 +416,10 @@ export async function saveUserData(): Promise<string | void> {
     return;
   }
 
-  if (!firestore)
-    throw new Error("(saveUserData) Firestore instance does not exist.");
+  if (!firestore) {
+    throwError("(saveUserData) Firestore instance does not exist.");
+    return;
+  }
 
   // Global 'user' class
   const userRef = doc(collection(firestore, "users"), uid);
@@ -461,7 +467,7 @@ export async function saveTaskData(
   stringifiedTaskList: string
 ): Promise<string | void> {
   if (!stringifiedTaskList) {
-    throw new Error("(saveTaskData) no task list provided.");
+    throwError("(saveTaskData) no task list provided.");
   }
 
   await waitUntilFirestoreInitialized();
@@ -480,7 +486,7 @@ export async function saveTaskData(
   }
 
   if (!firestore)
-    throw new Error("(saveTaskData) Firestore instance does not exist.");
+    throwError("(saveTaskData) Firestore instance does not exist.");
 
   const serializedTaskList = taskListCopy.map(serializeTask);
 
@@ -508,7 +514,8 @@ export async function saveStreamsData(
   stringifiedStreamList: string
 ): Promise<string | void> {
   if (!stringifiedStreamList) {
-    throw new Error("(saveStreamsData) no stream list provided.");
+    throwError("(saveStreamsData) no stream list provided.");
+    return;
   }
 
   await waitUntilFirestoreInitialized();
@@ -526,8 +533,10 @@ export async function saveStreamsData(
     return;
   }
 
-  if (!firestore)
-    throw new Error("(saveStreamsData) Firestore instance does not exist.");
+  if (!firestore) {
+    throwError("(saveStreamsData) Firestore instance does not exist.");
+    return;
+  }
 
   const serializedStreamList = streamListCopy.map(serializeStream);
 
@@ -564,21 +573,25 @@ export async function loadUserData(): Promise<RemindrUser | string> {
     );
   }
 
-  if (!firestore)
-    throw new Error("(loadUserData) Firestore instance does not exist.");
+  if (!firestore) {
+    throwError("(loadUserData) Firestore instance does not exist.");
+    return "";
+  }
 
   const userRef = doc(collection(firestore, "users"), uid);
   const docData = await documentExists(userRef);
 
   if (!userData) {
-    throw new Error("(loadUserData) Local user data does not exist.");
+    throwError("(loadUserData) Local user data does not exist.");
+    return "";
   }
 
   if (!docData.exists || !docData.docSnapshot) {
     userDataExists = false;
-    throw new Error(
+    throwError(
       `(loadUserData) ERR${ErrorCodes.MISSING_USER_DATA_FIRESTORE}: User data file does not exist.`
     );
+    return "";
   }
 
   userDataExists = true;
@@ -624,8 +637,10 @@ export async function loadTaskData(): Promise<TaskCollection | string> {
     return taskData;
   }
 
-  if (!firestore)
-    throw new Error("(loadTaskData) Firestore instance does not exist.");
+  if (!firestore) {
+    throwError("(loadTaskData) Firestore instance does not exist.");
+    return "";
+  }
 
   log.info("(loadTaskData) Loading task data...");
 
@@ -666,8 +681,10 @@ export async function loadStreamsData(): Promise<Stream[] | string> {
     return streamsList;
   }
 
-  if (!firestore)
-    throw new Error("(loadStreamsData) Firestore instance does not exist.");
+  if (!firestore) {
+    throwError("(loadStreamsData) Firestore instance does not exist.");
+    return "";
+  }
 
   log.info("(loadStreamsData) Loading streams data...");
 
@@ -720,8 +737,10 @@ export async function deleteAccountData(): Promise<void> {
 
   // To delete a subcollection, the 'reminders' document needs to be deleted. Delete the 'reminders' document in the subcollection and THEN the subcollection should automatically be deleted.
   try {
-    if (!firestore)
-      throw new Error("deleteAccountData: Firestore instance does not exist.");
+    if (!firestore) {
+      throwError("deleteAccountData: Firestore instance does not exist.");
+      return;
+    }
 
     await deleteDoc(taskDocRef);
 
@@ -735,7 +754,7 @@ export async function deleteAccountData(): Promise<void> {
     // Mark operation as complete by removing the save call
     removeSaveCall();
   } catch (err) {
-    throw new Error(err as string);
+    throwError(err as string);
   }
 }
 // #endregion

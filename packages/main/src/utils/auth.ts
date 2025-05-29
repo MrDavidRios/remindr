@@ -27,19 +27,7 @@ let auth: Auth | undefined;
  * @param mainWindow
  */
 export function initAuthEventListeners() {
-  log.info("initializing auth event listeners...");
-
-  try {
-    log.info("about to call getAuth...");
-    auth = getAuth();
-    log.info("getAuth call successful...");
-  } catch (error) {
-    log.error("getAuth call failed:", error);
-    throw error; // or handle as needed
-  }
-
-  log.info("getAuth call successful...");
-
+  auth = getAuth();
   onAuthStateChanged(auth, (/* user */) => {
     getMainWindow()?.webContents.send("auth-state-changed");
   });
