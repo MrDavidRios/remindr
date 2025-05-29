@@ -2178,21 +2178,21 @@ input::-webkit-inner-spin-button {
   height: 15px;
 }
 
-#generalContextMenu {
+#taskGroupContextMenu {
   width: min-content;
 }
-#generalContextMenu img {
+#taskGroupContextMenu img {
   width: 20px;
   height: 20px;
 }
-#generalContextMenu.active {
+#taskGroupContextMenu.active {
   height: 30px;
 }
-#generalContextMenu li {
+#taskGroupContextMenu li {
   white-space: nowrap;
   padding: 0 6px;
 }
-#generalContextMenu li:hover {
+#taskGroupContextMenu li:hover {
   border-radius: 5px;
 }
 

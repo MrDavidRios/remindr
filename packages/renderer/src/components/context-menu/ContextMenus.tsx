@@ -11,7 +11,7 @@ export const ContextMenus: React.FC = () => {
 
   return (
     <>
-      {isContextMenuOpen(menuState, ContextMenuType.GeneralContextMenu) && (
+      {isContextMenuOpen(menuState, ContextMenuType.TaskGroupContextMenu) && (
         <TaskGroupContextMenu />
       )}
       {isContextMenuOpen(menuState, ContextMenuType.TaskContextMenu) && (

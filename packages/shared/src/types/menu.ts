@@ -1,5 +1,5 @@
-import { Task } from './classes/index.js';
-import { MenuDropdownMap, StreamTask } from './index.js';
+import { Task } from "./classes/index.js";
+import { MenuDropdownMap, StreamTask } from "./index.js";
 
 export enum Menu {
   TimeframeMenu,
@@ -54,9 +54,9 @@ export interface MenuState {
 }
 
 export enum ContextMenuType {
-  TaskContextMenu = 'taskContextMenu',
-  GeneralContextMenu = 'generalContextMenu',
-  StreamTaskContextMenu = 'streamTaskContextMenu',
+  TaskContextMenu = "taskContextMenu",
+  TaskGroupContextMenu = "taskGroupContextMenu",
+  StreamTaskContextMenu = "streamTaskContextMenu",
 }
 
 export interface DialogState extends DialogProps {

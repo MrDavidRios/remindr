@@ -74,7 +74,7 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
         onContextMenu={(e) =>
           dispatch(
             showContextMenu({
-              contextMenu: ContextMenuType.GeneralContextMenu,
+              contextMenu: ContextMenuType.TaskGroupContextMenu,
               x: e.clientX,
               y: e.clientY,
             })

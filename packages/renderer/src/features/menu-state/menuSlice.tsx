@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ContextMenuType,
   DEPENDENT_MENUS,
@@ -10,26 +10,34 @@ import {
   MenuType,
   StreamTask,
   Task,
-} from '@remindr/shared';
-import { isModalOpen, isPrimaryMenu } from '@renderer/scripts/utils/menuutils';
-import _ from 'lodash';
+} from "@remindr/shared";
+import { isModalOpen, isPrimaryMenu } from "@renderer/scripts/utils/menuutils";
+import _ from "lodash";
 
 export const initialMenuState: MenuState = {
   openMenus: [],
   openContextMenus: [],
   contextMenuPositions: {
     [ContextMenuType.TaskContextMenu]: { x: 0, y: 0 },
-    [ContextMenuType.GeneralContextMenu]: { x: 0, y: 0 },
+    [ContextMenuType.TaskGroupContextMenu]: { x: 0, y: 0 },
     [ContextMenuType.StreamTaskContextMenu]: { x: 0, y: 0 },
   },
   openDropdowns: {},
-  dialogInfo: { title: undefined, message: '', options: [], result: undefined },
-  scheduledReminderEditorPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
-  addExistingReminderMenuPosition: { anchor: undefined, yOffset: { bottomAnchored: 0, topAnchored: 0 }, gap: 0 },
+  dialogInfo: { title: undefined, message: "", options: [], result: undefined },
+  scheduledReminderEditorPosition: {
+    anchor: undefined,
+    yOffset: { bottomAnchored: 0, topAnchored: 0 },
+    gap: 0,
+  },
+  addExistingReminderMenuPosition: {
+    anchor: undefined,
+    yOffset: { bottomAnchored: 0, topAnchored: 0 },
+    gap: 0,
+  },
 };
 
 export const menuStateSlice = createSlice({
-  name: 'menuState',
+  name: "menuState",
   initialState: initialMenuState,
   reducers: {
     showMenu: (state, action: PayloadAction<Menu>) => {
@@ -40,7 +48,12 @@ export const menuStateSlice = createSlice({
 
       // TaskCreateMenu is a special case given that the unsaved task dialog modal logic conflicts with this check
       // (we strictly want to keep the task creation menu open while the unsaved task dialog modal is open)
-      if (menu !== Menu.TaskCreateMenu && menuType > MenuType.Modal && isModalOpen(state)) return;
+      if (
+        menu !== Menu.TaskCreateMenu &&
+        menuType > MenuType.Modal &&
+        isModalOpen(state)
+      )
+        return;
 
       if (state.openMenus.includes(menu)) return;
 
@@ -57,7 +70,11 @@ export const menuStateSlice = createSlice({
      */
     hideMenu: (
       state,
-      action: PayloadAction<{ menu: Menu; checkForUnsavedWork?: boolean; fromEscKeypress?: boolean }>,
+      action: PayloadAction<{
+        menu: Menu;
+        checkForUnsavedWork?: boolean;
+        fromEscKeypress?: boolean;
+      }>
     ) => {
       // Close all menus dependent on the menu that will be closed
       state.openMenus = closeDependents(action.payload.menu, state.openMenus);
@@ -80,23 +97,29 @@ export const menuStateSlice = createSlice({
         streamTask?: StreamTask;
         x: number;
         y: number;
-      }>,
+      }>
     ) => {
       if (state.openContextMenus.includes(action.payload.contextMenu)) return;
 
       if (action.payload.task && action.payload.streamTask) {
-        throw new Error('Cannot show both a task and stream task context menu at the same time');
+        throw new Error(
+          "Cannot show both a task and stream task context menu at the same time"
+        );
       }
 
       state.contextMenuTask = action.payload.task;
       state.contextMenuStreamTask = action.payload.streamTask;
 
-      state.contextMenuPositions[action.payload.contextMenu] = { x: action.payload.x, y: action.payload.y };
+      state.contextMenuPositions[action.payload.contextMenu] = {
+        x: action.payload.x,
+        y: action.payload.y,
+      };
       state.openContextMenus.push(action.payload.contextMenu);
     },
     hideContextMenu: (state, action: PayloadAction<ContextMenuType>) => {
       // Clear context menu task when closing a context menu
-      if (state.contextMenuTask !== undefined) state.contextMenuTask = undefined;
+      if (state.contextMenuTask !== undefined)
+        state.contextMenuTask = undefined;
 
       _.remove(state.openContextMenus, (menu) => menu === action.payload);
     },
@@ -107,24 +130,38 @@ export const menuStateSlice = createSlice({
     setDialogResult: (state, action: PayloadAction<string>) => {
       state.dialogInfo.result = action.payload;
     },
-    setFloatingMenuPosition: (state, action: PayloadAction<{ menu: Menu; positionInfo: FloatingMenuPosition }>) => {
+    setFloatingMenuPosition: (
+      state,
+      action: PayloadAction<{ menu: Menu; positionInfo: FloatingMenuPosition }>
+    ) => {
       if (action.payload.menu === Menu.ScheduledReminderEditMenu)
         state.scheduledReminderEditorPosition = action.payload.positionInfo;
 
       if (action.payload.menu === Menu.AddExistingReminderMenu)
         state.addExistingReminderMenuPosition = action.payload.positionInfo;
     },
-    openDropdown: (state, action: PayloadAction<{ menu: Menu; dropdownName: string }>) => {
-      const openDropdownsInMenu = state.openDropdowns[action.payload.menu] ?? [];
+    openDropdown: (
+      state,
+      action: PayloadAction<{ menu: Menu; dropdownName: string }>
+    ) => {
+      const openDropdownsInMenu =
+        state.openDropdowns[action.payload.menu] ?? [];
 
       if (openDropdownsInMenu.includes(action.payload.dropdownName)) return;
       openDropdownsInMenu.push(action.payload.dropdownName);
 
       state.openDropdowns[action.payload.menu] = openDropdownsInMenu;
     },
-    closeDropdown: (state, action: PayloadAction<{ menu: Menu; dropdownName: string }>) => {
-      const updatedDropdownState = state.openDropdowns[action.payload.menu] ?? [];
-      _.remove(updatedDropdownState, (dropdown) => dropdown === action.payload.dropdownName);
+    closeDropdown: (
+      state,
+      action: PayloadAction<{ menu: Menu; dropdownName: string }>
+    ) => {
+      const updatedDropdownState =
+        state.openDropdowns[action.payload.menu] ?? [];
+      _.remove(
+        updatedDropdownState,
+        (dropdown) => dropdown === action.payload.dropdownName
+      );
 
       state.openDropdowns[action.payload.menu] = updatedDropdownState;
     },

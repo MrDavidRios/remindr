@@ -30,7 +30,7 @@ export const mockMenuState: MenuState = {
   openContextMenus: [],
   contextMenuPositions: {
     [ContextMenuType.TaskContextMenu]: { x: 0, y: 0 },
-    [ContextMenuType.GeneralContextMenu]: { x: 0, y: 0 },
+    [ContextMenuType.TaskGroupContextMenu]: { x: 0, y: 0 },
     [ContextMenuType.StreamTaskContextMenu]: { x: 0, y: 0 },
   },
   scheduledReminderEditorPosition: {
