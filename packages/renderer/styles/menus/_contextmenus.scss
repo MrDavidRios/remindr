@@ -97,7 +97,7 @@
 }
 
 #generalContextMenu {
-  width: 140px;
+  width: min-content;
 
   img {
     width: 20px;
@@ -105,7 +105,16 @@
   }
 
   &.active {
-    height: 70px;
+    height: 30px;
+  }
+
+  li {
+    white-space: nowrap;
+    padding: 0 6px;
+
+    &:hover {
+      border-radius: 5px;
+    }
   }
 }
 

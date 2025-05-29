@@ -2179,14 +2179,21 @@ input::-webkit-inner-spin-button {
 }
 
 #generalContextMenu {
-  width: 140px;
+  width: min-content;
 }
 #generalContextMenu img {
   width: 20px;
   height: 20px;
 }
 #generalContextMenu.active {
-  height: 70px;
+  height: 30px;
+}
+#generalContextMenu li {
+  white-space: nowrap;
+  padding: 0 6px;
+}
+#generalContextMenu li:hover {
+  border-radius: 5px;
 }
 
 #streamTaskContextMenu {
