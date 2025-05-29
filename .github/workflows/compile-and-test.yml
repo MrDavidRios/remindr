@@ -14,6 +14,9 @@ on:
       distribution-channel:
         required: true
         type: string
+    secrets:
+      VITE_FIREBASE_API_KEY:
+        required: true
 
 defaults:
   run:
@@ -53,6 +56,15 @@ jobs:
           # - macos-latest
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Check if secret exists
+        run: |
+          if [ -z "${{ secrets.VITE_FIREBASE_API_KEY }}" ]; then
+            echo "Secret is not set or is empty"
+            exit 1
+          else
+            echo "Secret is available"
+          fi
+
       - uses: actions/checkout@v4
       - uses: ./.github/actions/init-template-with-renderer
         name: Setup boilerplate
@@ -65,7 +77,7 @@ jobs:
       - run: npm run compile -- -p never
         env:
           VITE_DISTRIBUTION_CHANNEL: ${{inputs.distribution-channel}}
-          VITE_FIREBASE_API_KEY: ${{secrets.VITE_FIREBASE_API_KEY}}
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
 
       # - run: npm run test --if-present
       #   if: matrix.os != 'ubuntu-latest'
