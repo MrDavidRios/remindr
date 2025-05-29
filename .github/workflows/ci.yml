@@ -52,6 +52,8 @@ jobs:
       renderer-template: "react-swc-ts"
       app-version: ${{ needs.prepare.outputs.APP_VERSION }}
       distribution-channel: ${{inputs.distribution-channel}}
+    secrets:
+      VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
 
   deploy:
     if: github.ref == 'refs/heads/main'
