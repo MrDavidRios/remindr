@@ -10,6 +10,13 @@ export default /** @type import('electron-builder').Configuration */
     output: 'dist',
     buildResources: 'buildResources',
   },
+  extraResources: [
+    {
+      from: "packages/main/public/",
+      to: "assets/",
+      filter: ["**/*"],
+    },
+  ],
   generateUpdatesFilesForAllChannels: true,
   linux: {
     target: ['deb'],
