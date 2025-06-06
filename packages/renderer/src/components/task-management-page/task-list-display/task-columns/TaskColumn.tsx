@@ -1,16 +1,20 @@
-import { columnTasksInDifferentOrder, Task } from '@remindr/shared';
-import { getColumnIdxFromName } from '@remindr/shared/src';
-import { ArrowNavigable } from '@renderer/components/accessibility/ArrowNavigable';
-import { addTask, updateTasks } from '@renderer/features/task-list/taskListSlice';
-import { useAppDispatch } from '@renderer/hooks';
-import { useAnimationsEnabled } from '@renderer/scripts/utils/hooks/useanimationsenabled';
-import { tasksInSameOrder } from '@renderer/scripts/utils/tasklistutils';
-import { AnimatePresence, motion, Reorder } from 'framer-motion';
-import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
-import { NewTaskTile } from '../task-tile/NewTaskTile';
-import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
-import { TaskColumnActionBar } from './TaskColumnActionBar';
+import { columnTasksInDifferentOrder, Task } from "@remindr/shared";
+import { getColumnIdxFromName } from "@remindr/shared/src";
+import { ArrowNavigable } from "@renderer/components/accessibility/ArrowNavigable";
+import {
+  addTask,
+  updateTasks,
+} from "@renderer/features/task-list/taskListSlice";
+import { useAppDispatch } from "@renderer/hooks";
+import { useAnimationsEnabled } from "@renderer/scripts/utils/hooks/useanimationsenabled";
+import { tasksInSameOrder } from "@renderer/scripts/utils/tasklistutils";
+import { AnimatePresence, motion, Reorder } from "framer-motion";
+import _ from "lodash";
+import React, { useEffect, useState } from "react";
+import { NewTaskTile } from "../task-tile/NewTaskTile";
+import { ReorderableTaskTileWrapper } from "../task-tile/ReorderableTaskTileWrapper";
+import { TaskTileWrapper } from "../task-tile/TaskTileWrapper";
+import { TaskColumnActionBar } from "./TaskColumnActionBar";
 
 interface TaskColumnProps {
   name: string;
@@ -31,11 +35,15 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
   const completeTasks = tasks.filter((task) => task.completed);
   const incompleteTasks = getOrderedIncompleteTasks(tasks);
 
-  const [orderedIncompleteTasks, setOrderedIncompleteTasks] = useState(incompleteTasks);
+  const [orderedIncompleteTasks, setOrderedIncompleteTasks] =
+    useState(incompleteTasks);
   const [showNewTaskTile, setShowNewTaskTile] = useState(false);
 
   useEffect(() => {
-    if (!_.isEqual(tasks, orderedIncompleteTasks) || !tasksInSameOrder(tasks, orderedIncompleteTasks)) {
+    if (
+      !_.isEqual(tasks, orderedIncompleteTasks) ||
+      !tasksInSameOrder(tasks, orderedIncompleteTasks)
+    ) {
       const filteredTasks = getOrderedIncompleteTasks(tasks);
       setOrderedIncompleteTasks(filteredTasks);
     }
@@ -50,7 +58,8 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
     dispatch(addTask(newTask));
   };
 
-  const onReorder = (reorderedTasks: Task[]) => setOrderedIncompleteTasks(reorderedTasks);
+  const onReorder = (reorderedTasks: Task[]) =>
+    setOrderedIncompleteTasks(reorderedTasks);
 
   const onReorderComplete = () => {
     const clonedIncompleteTasks: Task[] = [];
@@ -62,17 +71,31 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
     }
 
     // If sorting the column tasks puts them in the same order, don't re-save the list.
-    if (!columnTasksInDifferentOrder(orderedIncompleteTasks, clonedIncompleteTasks)) return;
+    if (
+      !columnTasksInDifferentOrder(
+        orderedIncompleteTasks,
+        clonedIncompleteTasks
+      )
+    )
+      return;
 
     dispatch(updateTasks(clonedIncompleteTasks));
   };
 
-  const showNoTasksMessage = orderedIncompleteTasks.length === 0 && !showNewTaskTile;
+  const showNoTasksMessage =
+    orderedIncompleteTasks.length === 0 && !showNewTaskTile;
   return (
     <div className="task-column frosted">
       <h2>{name}</h2>
-      <ArrowNavigable waitForChildAnimation query=".task-tile:not(.animating)" className="tasks" id={name}>
-        {showNoTasksMessage && <p className="no-tasks-message">All done here!</p>}
+      <ArrowNavigable
+        waitForChildAnimation
+        query=".task-tile:not(.animating)"
+        className="tasks"
+        id={name}
+      >
+        {showNoTasksMessage && (
+          <p className="no-tasks-message">All done here!</p>
+        )}
         <Reorder.Group
           className="task-group"
           values={orderedIncompleteTasks}
@@ -83,14 +106,20 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
           <AnimatePresence mode="popLayout">
             {orderedIncompleteTasks.map((task) => (
               <div key={task.creationTime}>
-                <TaskTileWrapper task={task} reorderable onReorderComplete={onReorderComplete} />
+                <ReorderableTaskTileWrapper
+                  task={task}
+                  onReorderComplete={onReorderComplete}
+                />
               </div>
             ))}
           </AnimatePresence>
         </Reorder.Group>
         {completeTasks.length > 0 && (
           <>
-            <motion.p className="complete-tasks-header" layout={animationsEnabled ? 'position' : false}>
+            <motion.p
+              className="complete-tasks-header"
+              layout={animationsEnabled ? "position" : false}
+            >
               Completed
             </motion.p>
             <AnimatePresence mode="popLayout">
@@ -103,7 +132,12 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({ name, tasks }) => {
           </>
         )}
       </ArrowNavigable>
-      {showNewTaskTile && <NewTaskTile createTask={createTask} onEscape={() => setShowNewTaskTile(false)} />}
+      {showNewTaskTile && (
+        <NewTaskTile
+          createTask={createTask}
+          onEscape={() => setShowNewTaskTile(false)}
+        />
+      )}
       <TaskColumnActionBar
         columnIdx={getColumnIdxFromName(name)}
         newTaskTileOpen={showNewTaskTile}

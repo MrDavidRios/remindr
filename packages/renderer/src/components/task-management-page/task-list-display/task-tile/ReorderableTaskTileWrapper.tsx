@@ -13,14 +13,16 @@ import {
   setSelectedTask,
 } from "@renderer/features/task-list/taskListSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
+import { useAnimationsEnabled } from "@renderer/scripts/utils/hooks/useanimationsenabled";
 import { getTaskIdx } from "@renderer/scripts/utils/tasklistutils";
-import { useMotionValue } from "framer-motion";
+import { Reorder, useMotionValue } from "framer-motion";
 import _ from "lodash";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { TaskTileContents } from "./TaskTileContents";
 
-interface TaskTileWrapperProps {
+interface ReorderableTaskTileWrapperProps {
   task: Task;
+  onReorderComplete: () => void;
 }
 
 /// Returns true if there was no change in task selection state (tells React to not re-render)
@@ -41,7 +43,9 @@ const taskSelectionChange = (
   return wasSelectedBefore === isSelectedAfter;
 };
 
-export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task }) => {
+export const ReorderableTaskTileWrapper: React.FC<
+  ReorderableTaskTileWrapperProps
+> = ({ task, onReorderComplete }) => {
   const dispatch = useAppDispatch();
 
   const selectedTasks = useAppSelector(
@@ -69,7 +73,7 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task }) => {
     hasSubtasks ||
     hasLinks;
 
-  const ref = useRef<HTMLLIElement>(null);
+  const animationsEnabled = useAnimationsEnabled();
 
   const opacity = task.completed ? 0.7 : 1;
   const y = useMotionValue(0);
@@ -80,6 +84,12 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task }) => {
     onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
       // Detail is 0 when the click is triggered by a keyboard event (spacebar)
       if (e.detail === 0) return;
+
+      if (ignorePointerEvents.current) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
 
       handleTaskTileClick(e, task, selectedTasks, dispatch);
     },
@@ -117,10 +127,40 @@ export const TaskTileWrapper: React.FC<TaskTileWrapperProps> = ({ task }) => {
       ),
   };
 
+  const ref = useRef<HTMLLIElement>(null);
+  const ignorePointerEvents = useRef<boolean>(false);
+
+  // Fixes this bug: https://github.com/framer/motion/issues/1404
+  // https://github.com/rashidshamloo/fem_034_todo-app/blob/main/src/components/Todo.tsx
+  // This disabled pointer events until the task tile reaches its destination
+  useEffect(() => {
+    const handleDragStyle = (yPos: number) => {
+      if (yPos === 0) {
+        ignorePointerEvents.current = false;
+        return;
+      }
+
+      ignorePointerEvents.current = true;
+      setTimeout(() => {
+        if (y.get() === yPos) y.set(0);
+      }, 50);
+    };
+    const unsubscribe = y.on("change", handleDragStyle);
+    return () => unsubscribe();
+  }, [y]);
+
   return (
-    <li {...taskTileProps} key={task.creationTime} ref={ref}>
+    <Reorder.Item
+      {...taskTileProps}
+      key={task.creationTime}
+      value={task}
+      onPointerUp={onReorderComplete}
+      ref={ref}
+      transition={animationsEnabled ? {} : { duration: 0, ease: "linear" }}
+      layout={animationsEnabled ? "position" : undefined}
+    >
       <TaskTileContents task={task} />
-    </li>
+    </Reorder.Item>
   );
 };
 

@@ -1,6 +1,5 @@
-import { waitUntil } from '@remindr/shared';
-import type { LegacyRef } from 'react';
-import React, { useEffect, useRef } from 'react';
+import { waitUntil } from "@remindr/shared";
+import React, { Ref, useEffect, useRef } from "react";
 
 interface ArrowNavigableProps {
   children: React.ReactNode;
@@ -38,7 +37,8 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
   const { signal } = controller;
 
   const lastFocusedIdx = useRef(initialFocusIdx);
-  const [waitingForChildAnimation, setWaitingForChildAnimation] = React.useState(waitForChildAnimation);
+  const [waitingForChildAnimation, setWaitingForChildAnimation] =
+    React.useState(waitForChildAnimation);
 
   function setFocusOnMenuItem(idx: number) {
     const itemsToNavigate = getItemsToNavigate(ref.current, query);
@@ -47,7 +47,9 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
 
     const item = itemsToNavigate[idx] as HTMLElement;
 
-    const lastFocusedItem = itemsToNavigate[lastFocusedIdx.current] as HTMLElement;
+    const lastFocusedItem = itemsToNavigate[
+      lastFocusedIdx.current
+    ] as HTMLElement;
     if (lastFocusedItem) lastFocusedItem.tabIndex = 0;
 
     lastFocusedIdx.current = idx;
@@ -79,10 +81,17 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
         if (i !== lastFocusedIdx.current) menuItem.tabIndex = -1;
 
         menuItem.addEventListener(
-          'keydown',
+          "keydown",
           (e: KeyboardEvent) =>
-            keydownEventListener(e, i, itemsToNavigate, setFocusOnMenuItem, disableNavigation, disableKeyboardClick),
-          { signal },
+            keydownEventListener(
+              e,
+              i,
+              itemsToNavigate,
+              setFocusOnMenuItem,
+              disableNavigation,
+              disableKeyboardClick
+            ),
+          { signal }
         );
       }
 
@@ -106,14 +115,21 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
     const updateOnChildAnimationStateChange = async () => {
       if (!ref.current || !waitForChildAnimation || !query) return;
 
-      const queryWithOnlyAnimating = query.replace(':not(.animating)', '.animating');
-      const animatingElements = ref.current.querySelectorAll(queryWithOnlyAnimating);
+      const queryWithOnlyAnimating = query.replace(
+        ":not(.animating)",
+        ".animating"
+      );
+      const animatingElements = ref.current.querySelectorAll(
+        queryWithOnlyAnimating
+      );
 
       if (animatingElements?.length === 0)
         await waitUntil(() => {
           if (!ref.current) return true;
 
-          return ref.current.querySelectorAll(queryWithOnlyAnimating).length > 0;
+          return (
+            ref.current.querySelectorAll(queryWithOnlyAnimating).length > 0
+          );
         });
 
       if (!ref.current) return;
@@ -121,8 +137,13 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
       await waitUntil(() => {
         if (!ref.current) return true;
 
-        const updatedAnimatingElements = ref.current.querySelectorAll(queryWithOnlyAnimating);
-        return (updatedAnimatingElements.length ?? 0) !== (animatingElements?.length ?? 0);
+        const updatedAnimatingElements = ref.current.querySelectorAll(
+          queryWithOnlyAnimating
+        );
+        return (
+          (updatedAnimatingElements.length ?? 0) !==
+          (animatingElements?.length ?? 0)
+        );
       });
 
       if (!ref.current) return;
@@ -131,23 +152,23 @@ export const ArrowNavigable: React.FC<ArrowNavigableProps> = ({
     };
 
     updateOnChildAnimationStateChange();
-  }, [children]);
+  }, [children, query, waitForChildAnimation]);
 
   return asUl ? (
     <ul
-      ref={ref as unknown as LegacyRef<HTMLUListElement> | undefined}
+      ref={ref as unknown as Ref<HTMLUListElement> | undefined}
       id={id}
       className={className}
-      style={{ width: '100%', height: '100%', ...style }}
+      style={{ width: "100%", height: "100%", ...style }}
     >
       {children}
     </ul>
   ) : (
     <div
-      ref={ref as unknown as LegacyRef<HTMLDivElement> | undefined}
+      ref={ref as unknown as Ref<HTMLDivElement> | undefined}
       id={id}
       className={className}
-      style={{ width: '100%', height: '100%', ...style }}
+      style={{ width: "100%", height: "100%", ...style }}
     >
       {children}
     </div>
@@ -160,7 +181,7 @@ const keydownEventListener = (
   itemsToNavigate: HTMLCollection | NodeList,
   setFocusOnMenuItem: (idx: number) => void,
   disableNavigation?: boolean,
-  disableKeyboardClick?: boolean,
+  disableKeyboardClick?: boolean
 ) => {
   const menuItem = itemsToNavigate[i] as HTMLElement;
 
@@ -170,11 +191,12 @@ const keydownEventListener = (
   if (disableNavigation ?? false) return;
 
   const activeElementIsInput =
-    document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA';
+    document.activeElement?.tagName === "INPUT" ||
+    document.activeElement?.tagName === "TEXTAREA";
   if (activeElementIsInput) return;
 
   switch (e.key) {
-    case 'ArrowDown':
+    case "ArrowDown":
       e.preventDefault();
       e.stopPropagation();
 
@@ -182,14 +204,14 @@ const keydownEventListener = (
 
       setFocusOnMenuItem(idxToFocusOn);
       break;
-    case 'ArrowUp':
+    case "ArrowUp":
       e.preventDefault();
       e.stopPropagation();
       idxToFocusOn = i === 0 ? lastElementIdx : i - 1;
       setFocusOnMenuItem(idxToFocusOn);
       break;
-    case ' ':
-    case 'Enter':
+    case " ":
+    case "Enter":
       e.preventDefault();
 
       if (disableKeyboardClick) break;
@@ -199,7 +221,10 @@ const keydownEventListener = (
   }
 };
 
-const waitForNavigableItems = async (element: HTMLSpanElement | null, query?: string) => {
+const waitForNavigableItems = async (
+  element: HTMLSpanElement | null,
+  query?: string
+) => {
   await waitUntil(() => {
     const itemsToNavigate = getItemsToNavigate(element, query);
     if (!itemsToNavigate) return false;
@@ -207,7 +232,10 @@ const waitForNavigableItems = async (element: HTMLSpanElement | null, query?: st
   });
 };
 
-function getItemsToNavigate(parent: HTMLSpanElement | null, query?: string): HTMLCollection | NodeList | undefined {
+function getItemsToNavigate(
+  parent: HTMLSpanElement | null,
+  query?: string
+): HTMLCollection | NodeList | undefined {
   if (!query) return parent?.children;
 
   return parent?.querySelectorAll(query);

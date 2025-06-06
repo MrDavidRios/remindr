@@ -1,10 +1,9 @@
 import pinIcon from "@assets/icons/pin.svg";
-import { ContextMenuType, isTaskInList, type Task } from "@remindr/shared";
+import { ContextMenuType, isTaskInList } from "@remindr/shared";
 import {
   setTaskGroupContextMenuGroup,
   showContextMenu,
 } from "@renderer/features/menu-state/menuSlice";
-import { updateTaskGroupOrder } from "@renderer/features/task-list/taskListSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
 import { getTaskListWithinTimeframe } from "@renderer/scripts/utils/getReminderListWithinTimeframe";
 import { useAnimationsEnabled } from "@renderer/scripts/utils/hooks/useanimationsenabled";
@@ -48,14 +47,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
 
   const [orderedTasks, setOrderedTasks] = useState(tasks);
   const groupTasks = reorderable ? orderedTasks : tasks;
-
-  // Reorderable group logic
-  const onReorder = (newOrder: Task[]) => setOrderedTasks(newOrder);
-  const onReorderComplete = () => {
-    if (tasksInSameOrder(tasks, orderedTasks)) return;
-
-    dispatch(updateTaskGroupOrder(orderedTasks));
-  };
 
   useEffect(() => {
     if (!reorderable) return;
@@ -104,14 +95,7 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
         <span>{name}</span>
         <span className="task-group-counter">{groupTasks.length}</span>
       </button>
-      <TaskGroup
-        tasks={groupTasks}
-        reorderable={reorderable}
-        onReorder={onReorder}
-        onReorderComplete={onReorderComplete}
-        expanded={expanded}
-        name={name}
-      />
+      <TaskGroup tasks={groupTasks} expanded={expanded} name={name} />
     </motion.div>
   );
 });

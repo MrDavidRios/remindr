@@ -1,23 +1,29 @@
-import { createDefaultSettings, TASK_COLUMNS } from '@remindr/shared';
-import { useAppSelector } from '@renderer/hooks';
-import { isValidSearchString, searchTasks } from '@renderer/scripts/utils/searchutils';
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
-import { memo } from 'react';
-import { shallowEqual } from 'react-redux';
-import { TaskTileWrapper } from '../task-tile/TaskTileWrapper';
-import { TaskColumn } from './TaskColumn';
+import { createDefaultSettings, TASK_COLUMNS } from "@remindr/shared";
+import { useAppSelector } from "@renderer/hooks";
+import {
+  isValidSearchString,
+  searchTasks,
+} from "@renderer/scripts/utils/searchutils";
+import { AnimatePresence, LayoutGroup } from "framer-motion";
+import { memo } from "react";
+import { shallowEqual } from "react-redux";
+import { TaskTileWrapper } from "../task-tile/TaskTileWrapper";
+import { TaskColumn } from "./TaskColumn";
 
 export const TaskColumns = memo(function TaskColumns() {
   const searchQuery = useAppSelector((state) => state.taskList.searchQuery);
   const enabledTaskColumns =
-    useAppSelector((state) => state.settings.value.enabledTaskColumns) ?? createDefaultSettings().enabledTaskColumns;
+    useAppSelector((state) => state.settings.value.enabledTaskColumns) ??
+    createDefaultSettings().enabledTaskColumns;
 
   const filteredTasks = useAppSelector((state) => {
     const tasks = state.taskList.value;
     const searchResults = searchTasks(tasks, searchQuery);
 
     const showCompleted = state.settings.value.showCompletedTasks ?? true;
-    return showCompleted ? searchResults : searchResults.filter((task) => !task.completed);
+    return showCompleted
+      ? searchResults
+      : searchResults.filter((task) => !task.completed);
   }, shallowEqual);
 
   if (isValidSearchString(searchQuery)) {
@@ -26,7 +32,7 @@ export const TaskColumns = memo(function TaskColumns() {
         <AnimatePresence mode="popLayout">
           {filteredTasks.map((task) => (
             <div key={task.creationTime}>
-              <TaskTileWrapper task={task} reorderable={false} />
+              <TaskTileWrapper task={task} />
             </div>
           ))}
         </AnimatePresence>
@@ -34,8 +40,8 @@ export const TaskColumns = memo(function TaskColumns() {
     );
   }
 
-  const taskColumnsToRender = Array.from(TASK_COLUMNS.keys()).filter((columnIdx) =>
-    enabledTaskColumns.includes(columnIdx),
+  const taskColumnsToRender = Array.from(TASK_COLUMNS.keys()).filter(
+    (columnIdx) => enabledTaskColumns.includes(columnIdx)
   );
 
   return (
@@ -46,8 +52,16 @@ export const TaskColumns = memo(function TaskColumns() {
           return null;
         }
 
-        const tasksInColumn = filteredTasks.filter((task) => task.columnIdx === columnIdx);
-        return <TaskColumn key={columnName} name={columnName} tasks={tasksInColumn} />;
+        const tasksInColumn = filteredTasks.filter(
+          (task) => task.columnIdx === columnIdx
+        );
+        return (
+          <TaskColumn
+            key={columnName}
+            name={columnName}
+            tasks={tasksInColumn}
+          />
+        );
       })}
     </div>
   );
