@@ -2689,6 +2689,11 @@ input::-webkit-inner-spin-button {
 .task-group-container .task-group-header::before {
   transform: rotateZ(0deg);
 }
+.task-group-container.all-tasks-selected .task-group-header,
+.task-group-container .task-group-header:hover {
+  background-color: var(--surface-secondary);
+  box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
+}
 .task-group-container.expanded .task-group-header {
   margin-bottom: 5px;
 }
@@ -2728,10 +2733,6 @@ input::-webkit-inner-spin-button {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-}
-.task-group-header:hover {
-  background-color: var(--surface-secondary);
-  box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
 }
 .task-group-header::before {
   background-image: url("@assets/icons/expand-arrow.png");

@@ -1,5 +1,5 @@
 import pinIcon from "@assets/icons/pin.svg";
-import { ContextMenuType, type Task } from "@remindr/shared";
+import { ContextMenuType, isTaskInList, type Task } from "@remindr/shared";
 import { showContextMenu } from "@renderer/features/menu-state/menuSlice";
 import { updateTaskGroupOrder } from "@renderer/features/task-list/taskListSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
@@ -33,6 +33,14 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
 
     return getTasksInGroup(taskListWithinTimeframe, name);
   }, shallowEqual);
+  const selectedTasks = useAppSelector((state) => state.taskList.selectedTasks);
+  const allTasksInGroupSelected = tasks.every((task) =>
+    isTaskInList(task, selectedTasks)
+  );
+  console.log(
+    `group: ${name}, all tasks selected: ${allTasksInGroupSelected}, selected tasks:`,
+    selectedTasks
+  );
 
   const [expanded, setExpanded] = useState(true);
 
@@ -63,7 +71,9 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
 
   return (
     <motion.div
-      className={`task-group-container ${expanded ? "expanded" : ""}`}
+      className={`task-group-container ${expanded ? "expanded" : ""} ${
+        allTasksInGroupSelected ? "all-tasks-selected" : ""
+      }`}
       layout={animationsEnabled ? "position" : false}
     >
       <button

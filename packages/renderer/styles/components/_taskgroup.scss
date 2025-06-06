@@ -9,6 +9,12 @@
     transform: rotateZ(0deg);
   }
 
+  &.all-tasks-selected .task-group-header,
+  .task-group-header:hover {
+    background-color: var(--surface-secondary);
+    box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
+  }
+
   &.expanded {
     .task-group-header {
       margin-bottom: 5px;
@@ -63,11 +69,6 @@
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
-  }
-
-  &:hover {
-    background-color: var(--surface-secondary);
-    box-shadow: 0px 6px 6px -6px rgba(0, 0, 0, 0.8);
   }
 
   &::before {

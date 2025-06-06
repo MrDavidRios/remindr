@@ -1,9 +1,14 @@
-import { Repeat, ScheduledReminder, type Task } from '../types/index.js';
-import { getReminderDate } from './datefunctions.js';
-import { generateUniqueID } from './idutils.js';
-import { getNextRepeatDate } from './repeatfunctions.js';
-import { getDate, setDate, sortReminders } from './scheduledreminderfunctions.js';
-import { getTaskColumnIdx } from './taskcolumnfunctions.js';
+import _ from "lodash";
+import { Repeat, ScheduledReminder, type Task } from "../types/index.js";
+import { getReminderDate } from "./datefunctions.js";
+import { generateUniqueID } from "./idutils.js";
+import { getNextRepeatDate } from "./repeatfunctions.js";
+import {
+  getDate,
+  setDate,
+  sortReminders,
+} from "./scheduledreminderfunctions.js";
+import { getTaskColumnIdx } from "./taskcolumnfunctions.js";
 
 export function taskHasReminders(task: Task): boolean {
   return task.scheduledReminders.length > 0;
@@ -34,8 +39,13 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
   if (reminder.repeat === Repeat["Don't Repeat"]) {
     const snoozedDate = getReminderDate(reminder);
     snoozedDate.setMinutes(snoozedDate.getMinutes() + minutes);
-    taskToReturn.scheduledReminders[idx] = setDate(taskToReturn.scheduledReminders[idx], snoozedDate);
-    taskToReturn.scheduledReminders = sortReminders(taskToReturn.scheduledReminders);
+    taskToReturn.scheduledReminders[idx] = setDate(
+      taskToReturn.scheduledReminders[idx],
+      snoozedDate
+    );
+    taskToReturn.scheduledReminders = sortReminders(
+      taskToReturn.scheduledReminders
+    );
     taskToReturn.columnIdx = getTaskColumnIdx(taskToReturn);
 
     return taskToReturn;
@@ -52,12 +62,19 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
    * 6. Return taskToReturn
    *
    */
-  let duplicatedReminder: ScheduledReminder = JSON.parse(JSON.stringify(taskToReturn.scheduledReminders[idx]));
+  let duplicatedReminder: ScheduledReminder = JSON.parse(
+    JSON.stringify(taskToReturn.scheduledReminders[idx])
+  );
   duplicatedReminder.repeat = Repeat["Don't Repeat"];
 
   // Set original reminder to next occurrence
-  let originalReminder = JSON.parse(JSON.stringify(taskToReturn.scheduledReminders[idx]));
-  originalReminder = setDate(originalReminder, getNextRepeatDate(originalReminder));
+  let originalReminder = JSON.parse(
+    JSON.stringify(taskToReturn.scheduledReminders[idx])
+  );
+  originalReminder = setDate(
+    originalReminder,
+    getNextRepeatDate(originalReminder)
+  );
   taskToReturn.scheduledReminders[idx] = originalReminder;
 
   // Snooze duplicated reminder date
@@ -67,26 +84,42 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
   duplicatedReminder.id = generateUniqueID();
 
   // If the duplicated reminder is at the same time of the original reminder's next occurrence, don't add it
-  if (getDate(duplicatedReminder).getTime() === getDate(originalReminder).getTime()) return taskToReturn;
+  if (
+    getDate(duplicatedReminder).getTime() ===
+    getDate(originalReminder).getTime()
+  )
+    return taskToReturn;
 
   taskToReturn.scheduledReminders.push(duplicatedReminder);
 
-  taskToReturn.scheduledReminders = sortReminders(taskToReturn.scheduledReminders);
+  taskToReturn.scheduledReminders = sortReminders(
+    taskToReturn.scheduledReminders
+  );
   taskToReturn.columnIdx = getTaskColumnIdx(taskToReturn);
 
   return taskToReturn;
 }
 
 export function taskHasRecurringReminders(task: Task): boolean {
-  return task.scheduledReminders.some((e) => e.repeat !== Repeat["Don't Repeat"]);
+  return task.scheduledReminders.some(
+    (e) => e.repeat !== Repeat["Don't Repeat"]
+  );
 }
 
 export function getEarliestReminder(task: Task): ScheduledReminder {
   if (task.scheduledReminders.length === 0) {
-    console.log('task:', JSON.parse(JSON.stringify(task)));
-    throw new Error('Task has no reminders');
+    console.log("task:", JSON.parse(JSON.stringify(task)));
+    throw new Error("Task has no reminders");
   }
 
   const sortedReminders = sortReminders(task.scheduledReminders);
   return sortedReminders[0];
+}
+
+export function isTaskInList(task: Task, taskList: Task[]) {
+  if (taskList.length === 0) return false;
+
+  return (
+    _.find(taskList, (t) => t.creationTime === task.creationTime) !== undefined
+  );
 }

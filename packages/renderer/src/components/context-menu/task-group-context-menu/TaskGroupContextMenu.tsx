@@ -1,5 +1,5 @@
 import expandIcon from "@assets/icons/expand.svg";
-import { ContextMenuType } from "@remindr/shared";
+import {ContextMenuType, isTaskInList} from '@remindr/shared';
 import { hideContextMenu } from "@renderer/features/menu-state/menuSlice";
 import { selectAllTasksInGroup } from "@renderer/features/task-list/taskListSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
@@ -7,6 +7,7 @@ import React from "react";
 import ReactFocusLock from "react-focus-lock";
 import { ArrowNavigable } from "../../accessibility/ArrowNavigable";
 import { ContextMenu } from "../ContextMenu";
+import {getTasksInGroup} from '@renderer/components/task-management-page/task-list-display/task-group/taskgroups';
 
 export const TaskGroupContextMenu: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +29,7 @@ export const TaskGroupContextMenu: React.FC = () => {
   const taskGroupName = document
     .elementsFromPoint(x, y)
     .find((el) => el.classList.contains("task-group-header"))
-    ?.querySelector("span")?.innerText;
+    ?.querySelector("span")?.innerText ?? '';
 
   return (
     <ContextMenu

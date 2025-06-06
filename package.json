@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "npm run build -ws --if-present",
+    "build:shared": "npm run build --workspace @remindr/shared",
     "compile": "npm run build && electron-builder build --config electron-builder.mjs",
     "test": "npx playwright test ./tests/e2e.spec.ts",
     "start": "node packages/dev-mode.js",
@@ -25,7 +26,8 @@
     "create-renderer": "cd packages && npm create vite@latest renderer",
     "integrate-renderer": "npm start --workspace @app/integrate-renderer",
     "init": "npm run create-renderer && npm run integrate-renderer && npm install",
-    "coverage": "npm run coverage --workspace @app/renderer"
+    "coverage": "npm run coverage --workspace @app/renderer",
+    "watch:sass": "npm run watch:sass --workspace @app/renderer"
   },
   "devDependencies": {
     "@npmcli/map-workspaces": "4.0.2",
