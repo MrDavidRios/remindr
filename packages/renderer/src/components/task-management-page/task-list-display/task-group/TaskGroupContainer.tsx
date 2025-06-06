@@ -1,6 +1,9 @@
 import pinIcon from "@assets/icons/pin.svg";
 import { ContextMenuType, isTaskInList, type Task } from "@remindr/shared";
-import { showContextMenu } from "@renderer/features/menu-state/menuSlice";
+import {
+  setTaskGroupContextMenuGroup,
+  showContextMenu,
+} from "@renderer/features/menu-state/menuSlice";
 import { updateTaskGroupOrder } from "@renderer/features/task-list/taskListSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
 import { getTaskListWithinTimeframe } from "@renderer/scripts/utils/getReminderListWithinTimeframe";
@@ -36,10 +39,6 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
   const selectedTasks = useAppSelector((state) => state.taskList.selectedTasks);
   const allTasksInGroupSelected = tasks.every((task) =>
     isTaskInList(task, selectedTasks)
-  );
-  console.log(
-    `group: ${name}, all tasks selected: ${allTasksInGroupSelected}, selected tasks:`,
-    selectedTasks
   );
 
   const [expanded, setExpanded] = useState(true);
@@ -81,15 +80,16 @@ export const TaskGroupContainer = memo(function TaskGroupContainer({
           animationsEnabled ? "animate" : ""
         }`}
         onClick={() => setExpanded(!expanded)}
-        onContextMenu={(e) =>
+        onContextMenu={(e) => {
           dispatch(
             showContextMenu({
               contextMenu: ContextMenuType.TaskGroupContextMenu,
               x: e.clientX,
               y: e.clientY,
             })
-          )
-        }
+          );
+          dispatch(setTaskGroupContextMenuGroup(name));
+        }}
         type="button"
       >
         {pinned && (

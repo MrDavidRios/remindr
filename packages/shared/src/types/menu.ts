@@ -47,6 +47,7 @@ export interface MenuState {
   contextMenuPositions: Record<ContextMenuType, MenuPosition>;
   contextMenuTask?: Task;
   contextMenuStreamTask?: StreamTask;
+  currentTaskGroupContextMenuGroup?: string;
   openDropdowns: MenuDropdownMap;
   dialogInfo: DialogState;
   scheduledReminderEditorPosition: FloatingMenuPosition;

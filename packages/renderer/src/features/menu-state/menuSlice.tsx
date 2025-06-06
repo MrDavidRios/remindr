@@ -121,7 +121,14 @@ export const menuStateSlice = createSlice({
       if (state.contextMenuTask !== undefined)
         state.contextMenuTask = undefined;
 
+      if (action.payload === ContextMenuType.TaskGroupContextMenu) {
+        state.currentTaskGroupContextMenuGroup = undefined;
+      }
+
       _.remove(state.openContextMenus, (menu) => menu === action.payload);
+    },
+    setTaskGroupContextMenuGroup: (state, action: PayloadAction<string>) => {
+      state.currentTaskGroupContextMenuGroup = action.payload;
     },
     showDialog: (state, action: PayloadAction<DialogProps>) => {
       state.openMenus.push(Menu.MessageModal);
@@ -198,6 +205,7 @@ export const {
   toggleMenu,
   showContextMenu,
   hideContextMenu,
+  setTaskGroupContextMenuGroup,
   showDialog,
   setDialogResult,
   setFloatingMenuPosition,

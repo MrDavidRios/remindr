@@ -227,6 +227,14 @@ export const taskListSlice = createSlice({
       const tasksInGroup = getTasksInGroup(state.value, action.payload);
       state.selectedTasks = tasksInGroup;
     },
+    deselectAllTasksInGroup(state, action: PayloadAction<string>) {
+      const tasksInGroupIds = getTasksInGroup(state.value, action.payload).map(
+        (task) => task.creationTime
+      );
+      state.selectedTasks = state.selectedTasks.filter(
+        (task) => !tasksInGroupIds.includes(task.creationTime)
+      );
+    },
     setTaskDisplayOutdated: (state, action: PayloadAction<boolean>) => {
       state.taskListDisplayOutdated = action.payload;
     },
@@ -414,6 +422,7 @@ export const {
   clearSelectedTasks,
   selectTasksBetween,
   selectAllTasksInGroup,
+  deselectAllTasksInGroup,
   setTaskDisplayOutdated,
   selectLastModifiedTask,
   undoTaskListChange,
