@@ -69,3 +69,59 @@
 .icon-accent-button {
   box-shadow: none;
 }
+
+.icon-text-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 6px 10px;
+  border-radius: var(--menu-border-radius);
+
+  img {
+    width: 16px;
+    height: 16px;
+
+    filter: var(--svg-filter);
+  }
+
+  p {
+    line-height: 16px;
+    white-space: nowrap;
+    color: var(--text-color-secondary);
+  }
+
+  &:hover {
+    background: transparent;
+
+    img {
+      filter: var(--ui-accent-color-filter);
+    }
+
+    p {
+      color: var(--ui-accent-color);
+    }
+  }
+}
+
+.accessible-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 40px;
+  width: 40px;
+
+  border-radius: 6px;
+
+  &:hover {
+    background: transparent;
+  }
+}
+
+.delete-button {
+  img,
+  &:hover img {
+    filter: var(--error-filter);
+  }
+}

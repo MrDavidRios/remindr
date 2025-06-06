@@ -152,7 +152,7 @@
     button:hover {
       cursor: pointer;
 
-      img {
+      &:not(.delete-button) img {
         filter: var(--ui-accent-color-filter);
       }
     }

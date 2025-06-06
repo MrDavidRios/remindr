@@ -76,11 +76,14 @@
   --ui-accent-color: #75dddd;
   --ui-accent-color-dark: #508991;
 
-  --ui-accent-color-filter: invert(86%) sepia(33%) saturate(534%) hue-rotate(123deg) brightness(89%) contrast(94%);
-  --ui-accent-color-dark-filter: invert(48%) sepia(43%) saturate(355%) hue-rotate(139deg) brightness(93%) contrast(92%);
+  --ui-accent-color-filter: invert(86%) sepia(33%) saturate(534%)
+    hue-rotate(123deg) brightness(89%) contrast(94%);
+  --ui-accent-color-dark-filter: invert(48%) sepia(43%) saturate(355%)
+    hue-rotate(139deg) brightness(93%) contrast(92%);
 
   --error-color: #f44336;
-  --error-filter: invert(34%) sepia(86%) saturate(2663%) hue-rotate(342deg) brightness(98%) contrast(95%);
+  --error-filter: invert(34%) sepia(86%) saturate(2663%) hue-rotate(342deg)
+    brightness(98%) contrast(95%);
 
   --menu-border-radius: 6px;
 }
@@ -153,21 +156,6 @@ p.error {
   margin-top: 6px;
   color: var(--error-color) !important;
   font-size: 14px;
-}
-
-.accessible-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  height: 40px;
-  width: 40px;
-
-  border-radius: 6px;
-
-  &:hover {
-    background: transparent;
-  }
 }
 
 div:focus-visible,

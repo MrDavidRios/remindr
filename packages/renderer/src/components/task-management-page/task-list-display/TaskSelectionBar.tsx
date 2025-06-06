@@ -1,24 +1,27 @@
-import duplicateIcon from '@assets/icons/duplicate.svg';
-import pinIcon from '@assets/icons/pin.svg';
-import trashcanIcon from '@assets/icons/trashcan.svg';
-import unpinIcon from '@assets/icons/unpin.svg';
-import { Menu, type Task } from '@remindr/shared';
+import closeIcon from "@assets/icons/close-button.svg";
+import duplicateIcon from "@assets/icons/duplicate.svg";
+import pinIcon from "@assets/icons/pin.svg";
+import trashcanIcon from "@assets/icons/trashcan.svg";
+import unpinIcon from "@assets/icons/unpin.svg";
+import { Menu, type Task } from "@remindr/shared";
 import {
   clearSelectedTasks,
   duplicateTasks,
   pinTasks,
   removeTasks,
   unpinTasks,
-} from '@renderer/features/task-list/taskListSlice';
-import { useAppDispatch } from '@renderer/hooks';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import type { FC } from 'react';
+} from "@renderer/features/task-list/taskListSlice";
+import { useAppDispatch } from "@renderer/hooks";
+import { useHotkey } from "@renderer/scripts/utils/hooks/usehotkey";
+import type { FC } from "react";
 
-export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks }) => {
+export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({
+  selectedTasks,
+}) => {
   const dispatch = useAppDispatch();
 
   const taskPinned = selectedTasks.find((t) => t.pinned) !== undefined;
-  setupHotkeys(onUnpin, onPin, taskPinned, onDuplicate, onDelete);
+  useSetupHotkeys(onUnpin, onPin, taskPinned, onDuplicate, onDelete);
 
   function onUnpin() {
     dispatch(unpinTasks(selectedTasks));
@@ -40,12 +43,39 @@ export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks 
     dispatch(clearSelectedTasks());
   }
 
+  function onSelectionClear() {
+    dispatch(clearSelectedTasks());
+  }
+
   return (
     <div id="multipleSelectionWrapper" className="frosted">
-      <h3 id="multipleSelectionCounter">{selectedTasks.length} Tasks Selected</h3>
+      <h3 id="multipleSelectionCounter">
+        {selectedTasks.length} Tasks Selected
+      </h3>
       <div id="multipleSelectionActionButtons">
+        <button
+          className="icon-text-button"
+          type="button"
+          onClick={onSelectionClear}
+          aria-label="Clear selected tasks"
+        >
+          <img
+            id="clearSelection"
+            src={closeIcon}
+            className="svg-filter"
+            draggable="false"
+            title="Escape (Esc)"
+            alt=""
+          />
+          <p>Clear selection</p>
+        </button>
         {taskPinned ? (
-          <button className="accessible-button" type="button" onClick={onUnpin} aria-label="Unpin selected tasks">
+          <button
+            className="accessible-button"
+            type="button"
+            onClick={onUnpin}
+            aria-label="Unpin selected tasks"
+          >
             <img
               id="unpinMultipleTasks"
               src={unpinIcon}
@@ -56,7 +86,12 @@ export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks 
             />
           </button>
         ) : (
-          <button className="accessible-button" type="button" onClick={onPin} aria-label="Pin selected tasks">
+          <button
+            className="accessible-button"
+            type="button"
+            onClick={onPin}
+            aria-label="Pin selected tasks"
+          >
             <img
               id="pinMultipleTasks"
               src={pinIcon}
@@ -67,7 +102,12 @@ export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks 
             />
           </button>
         )}
-        <button className="accessible-button" type="button" onClick={onDuplicate} aria-label="Duplicate selected tasks">
+        <button
+          className="accessible-button"
+          type="button"
+          onClick={onDuplicate}
+          aria-label="Duplicate selected tasks"
+        >
           <img
             id="duplicateMultipleTasks"
             src={duplicateIcon}
@@ -77,7 +117,12 @@ export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks 
             alt=""
           />
         </button>
-        <button className="accessible-button" type="button" onClick={onDelete} aria-label="Delete selected tasks">
+        <button
+          className="accessible-button delete-button"
+          type="button"
+          onClick={onDelete}
+          aria-label="Delete selected tasks"
+        >
           <img
             id="deleteMultipleTasks"
             src={trashcanIcon}
@@ -92,32 +137,26 @@ export const TaskSelectionBar: FC<{ selectedTasks: Task[] }> = ({ selectedTasks 
   );
 };
 
-function setupHotkeys(
+function useSetupHotkeys(
   onUnpin: () => void,
   onPin: () => void,
   taskPinned: boolean,
   onDuplicate: () => void,
-  onDelete: () => void,
+  onDelete: () => void
 ) {
   useHotkey(
-    ['mod+d'],
+    ["mod+d"],
     () => {
       onDuplicate();
     },
-    Menu.None,
+    Menu.None
   );
+  useHotkey(["mod+p"], () => (taskPinned ? onUnpin() : onPin()), Menu.None);
   useHotkey(
-    ['mod+p'],
-    () => {
-      taskPinned ? onUnpin() : onPin();
-    },
-    Menu.None,
-  );
-  useHotkey(
-    ['delete'],
+    ["delete"],
     () => {
       onDelete();
     },
-    Menu.None,
+    Menu.None
   );
 }

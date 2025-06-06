@@ -13,25 +13,6 @@ export const tasksInGroupSelector = createSelector(
   }
 );
 
-/**
- * Returns true only if selected tasks and tasks in a group are identical sets.
- */
-export const selectedTasksPerfectlyMatchGroupSelector = createSelector(
-  [
-    (state: RootState, groupName: string) =>
-      tasksInGroupSelector(state, groupName),
-    (state: RootState) => state.taskList.selectedTasks,
-  ],
-  (tasksInGroup, selectedTasks) => {
-    return (
-      tasksInGroup.length === selectedTasks.length &&
-      tasksInGroup.every((task) =>
-        selectedTasks.some((t) => t.creationTime === task.creationTime)
-      )
-    );
-  }
-);
-
 export const allTasksInGroupSelectedSelector = createSelector(
   [
     (state: RootState, groupName: string) =>
