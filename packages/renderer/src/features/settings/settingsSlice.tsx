@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { AppMode, createDefaultSettings, Settings, User } from '@remindr/shared';
 import { setAppMode } from '../app-mode/appModeSlice';
 import { getUserData } from '../user-state/userSlice';
@@ -25,14 +25,14 @@ export const settingsSlice = createSlice({
       (state.value[action.payload.key] as any) = action.payload.value;
       state.value.timestamp = Date.now();
 
-      const settingsClone = { ...state.value };
-      window.userState.saveSettings(settingsClone);
+      const settings = current(state.value);
+      window.userState.saveSettings(settings);
     },
     setSettings: (state, action: PayloadAction<Settings>) => {
       state.value = action.payload;
 
-      const settingsClone = { ...state.value };
-      window.userState.saveSettings(settingsClone);
+      const settings = current(state.value);
+      window.userState.saveSettings(settings);
     },
   },
   extraReducers: (builder) => {

@@ -82,7 +82,9 @@ export async function initApp(initConfig: AppInitConfig) {
       allowExternalUrls(new Set(initConfig.renderer instanceof URL ? [] : []))
     );
 
-  if (import.meta.env.DEV) {
+  // chromeDevToolsExtension is currently not working on linux. Further investigation is needed if
+  // linux is to be used as a development platform.
+  if (import.meta.env.DEV && process.platform !== "linux") {
     const { chromeDevToolsExtension } = await import(
       "./modules/ChromeDevToolsExtension.js"
     );

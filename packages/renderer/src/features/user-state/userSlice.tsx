@@ -1,5 +1,5 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, current } from '@reduxjs/toolkit';
 import type { Settings, User } from '@remindr/shared';
 import { setUserData } from '@renderer/scripts/utils/userData';
 import { setSettings, updateSetting } from '../settings/settingsSlice';
@@ -97,7 +97,7 @@ export const userStateSlice = createSlice({
       // If the setting is not changing, don't call firestore
       if (state.user.settings[action.payload.key] === action.payload.value) return;
 
-      const updatedSettings: Settings = { ...state.user.settings };
+      const updatedSettings: Settings = current(state.user.settings);
       state.user.settings = { ...updatedSettings, [action.payload.key]: action.payload.value };
 
       saveUserData(state);
