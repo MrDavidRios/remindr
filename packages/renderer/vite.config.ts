@@ -13,7 +13,7 @@ export default defineConfig({
       "@hooks": join(PACKAGE_ROOT, "src/scripts/utils/hooks"),
       "@assets": join(PACKAGE_ROOT, "assets"),
       "@shared": join(PROJECT_ROOT, "packages/shared/src"),
-      "@mocks/": join(PACKAGE_ROOT, "tests/mocks") + "/",
+      "@mocks": join(PACKAGE_ROOT, "tests/mocks"),
     },
   },
   base: "",

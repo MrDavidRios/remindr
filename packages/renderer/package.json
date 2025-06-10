@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build --base ./",
     "lint": "eslint .",
     "preview": "vite preview",
+    "test": "vitest",
     "coverage": "vitest run --coverage",
     "watch:sass": "sass --watch styles/main.scss:styles/css/main.css styles/notification.scss:styles/css/notification.css"
   },
