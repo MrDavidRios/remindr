@@ -1,7 +1,7 @@
 {
   "name": "remindr",
   "description": "General purpose and customizable to-do/reminder app",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "private": true,
   "type": "module",
   "author": {
@@ -23,6 +23,7 @@
     "compile": "npm run build && electron-builder build --config electron-builder.mjs",
     "test:vitest": "npx vitest",
     "test:e2e": "npx playwright test ./tests/e2e.spec.ts",
+    "coverage": "npx vitest run --coverage",
     "start": "node packages/dev-mode.js",
     "typecheck": "npm run typecheck -ws --if-present",
     "create-renderer": "cd packages && npm create vite@latest renderer",

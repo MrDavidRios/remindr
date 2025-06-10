@@ -9,9 +9,6 @@ export default mergeConfig(
       environment: "happy-dom",
       globals: true,
       setupFiles: ["./tests/mocks/setup.ts"],
-      coverage: {
-        reporter: ["text", "lcov"],
-      },
     },
   })
 );
