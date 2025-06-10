@@ -14,10 +14,14 @@ export async function getDominantColor(imgUrl: string): Promise<FastAverageColor
 }
 
 async function getBlobFromBase64String(imgData: string): Promise<Blob> {
+  if (!imgData) throw new Error('Image data is undefined or empty');
+
   return (await fetch(imgData)).blob();
 }
 
 export function getImgUrlFromData(imgData: string): string {
+  if (!imgData) throw new Error('Image data is undefined or empty');
+
   return `data:image/jpeg;base64,${imgData}`;
 }
 

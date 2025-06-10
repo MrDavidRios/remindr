@@ -104,6 +104,7 @@ export function AppearanceSettingsPage() {
               {!isBackgroundColor && backgroundImg && (
                 <img src={backgroundImg} alt="Background" />
               )}
+              {!isBackgroundColor && !backgroundImg && (<p>No background image found</p>)}
               <button
                 type="button"
                 id="customImageSelectButton"
