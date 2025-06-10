@@ -2,6 +2,7 @@ import _ from "lodash";
 import { Repeat, ScheduledReminder, type Task } from "../types/index.js";
 import { getReminderDate } from "./datefunctions.js";
 import { generateUniqueID } from "./idutils.js";
+import { getRepeatValue } from "./repeatcompatibility.js";
 import { getNextRepeatDate } from "./repeatfunctions.js";
 import {
   getDate,
@@ -36,7 +37,7 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
    * 1. Snooze reminder date
    * 2. Return taskToReturn
    */
-  if (reminder.repeat === Repeat["Don't Repeat"]) {
+  if (getRepeatValue(reminder.repeat) === Repeat.NoRepeat) {
     const snoozedDate = getReminderDate(reminder);
     snoozedDate.setMinutes(snoozedDate.getMinutes() + minutes);
     taskToReturn.scheduledReminders[idx] = setDate(
@@ -65,7 +66,7 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
   let duplicatedReminder: ScheduledReminder = JSON.parse(
     JSON.stringify(taskToReturn.scheduledReminders[idx])
   );
-  duplicatedReminder.repeat = Repeat["Don't Repeat"];
+  duplicatedReminder.repeat = Repeat.NoRepeat;
 
   // Set original reminder to next occurrence
   let originalReminder = JSON.parse(
@@ -101,9 +102,7 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
 }
 
 export function taskHasRecurringReminders(task: Task): boolean {
-  return task.scheduledReminders.some(
-    (e) => e.repeat !== Repeat["Don't Repeat"]
-  );
+  return task.scheduledReminders.some((e) => e.repeat !== Repeat.NoRepeat);
 }
 
 export function getEarliestReminder(task: Task): ScheduledReminder {

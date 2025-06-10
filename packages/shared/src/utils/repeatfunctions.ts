@@ -1,5 +1,6 @@
-import { Repeat, ScheduledReminder } from '../types/index.js';
-import { addMonths, getReminderDate } from './datefunctions.js';
+import { Repeat, ScheduledReminder } from "../types/index.js";
+import { addMonths, getReminderDate } from "./datefunctions.js";
+import { getRepeatValue } from "./repeatcompatibility.js";
 
 /**
  * Gets the next date for a reminder based on its repeat interval.
@@ -9,7 +10,7 @@ import { addMonths, getReminderDate } from './datefunctions.js';
 export function getNextRepeatDate(reminder: ScheduledReminder): Date {
   let reminderDate = getReminderDate(reminder);
 
-  switch (reminder.repeat) {
+  switch (getRepeatValue(reminder.repeat)) {
     case Repeat.Daily:
       reminderDate.setDate(reminderDate.getDate() + 1);
 
@@ -19,7 +20,8 @@ export function getNextRepeatDate(reminder: ScheduledReminder): Date {
       const dayIndex = reminderDate.getDay();
 
       // If day is Friday or Saturday, add (8 - dayIndex) days. For example, Friday would add 8 - 5 = 3 days, resulting in the next date being on Monday.
-      if (dayIndex === 5 || dayIndex === 6) reminderDate.setDate(reminderDate.getDate() + (8 - dayIndex));
+      if (dayIndex === 5 || dayIndex === 6)
+        reminderDate.setDate(reminderDate.getDate() + (8 - dayIndex));
       else reminderDate.setDate(reminderDate.getDate() + 1);
 
       return reminderDate;
@@ -36,7 +38,7 @@ export function getNextRepeatDate(reminder: ScheduledReminder): Date {
     case Repeat.Yearly:
       reminderDate.setFullYear(reminderDate.getFullYear() + 1);
       return reminderDate;
-    case Repeat["Don't Repeat"]:
+    case Repeat.NoRepeat:
     default:
       return reminderDate;
   }

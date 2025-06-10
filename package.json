@@ -21,14 +21,13 @@
     "build:shared": "npm run build --workspace @remindr/shared",
     "watch:shared": "npm run watch --workspace @remindr/shared",
     "compile": "npm run build && electron-builder build --config electron-builder.mjs",
-    "test": "npx playwright test ./tests/e2e.spec.ts",
+    "test:vitest": "npx vitest",
+    "test:e2e": "npx playwright test ./tests/e2e.spec.ts",
     "start": "node packages/dev-mode.js",
     "typecheck": "npm run typecheck -ws --if-present",
     "create-renderer": "cd packages && npm create vite@latest renderer",
     "integrate-renderer": "npm start --workspace @app/integrate-renderer",
     "init": "npm run create-renderer && npm run integrate-renderer && npm install",
-    "test:renderer": "npm run test --workspace @app/renderer",
-    "coverage:renderer": "npm run coverage --workspace @app/renderer",
     "watch:sass": "npm run watch:sass --workspace @app/renderer"
   },
   "devDependencies": {

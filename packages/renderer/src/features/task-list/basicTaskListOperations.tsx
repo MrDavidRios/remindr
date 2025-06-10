@@ -1,7 +1,8 @@
-import { PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction } from "@reduxjs/toolkit";
 import {
   generateUniqueID,
   getNextRepeatDate,
+  getRepeatValue,
   getTaskColumnIdx,
   Repeat,
   ScheduledReminder,
@@ -9,44 +10,55 @@ import {
   sortReminders,
   Task,
   taskHasRecurringReminders,
-} from '@remindr/shared';
-import { getIdxInTaskList, getTaskIdx } from '@renderer/scripts/utils/tasklistutils';
-import _ from 'lodash';
-import { TaskListState } from './taskListSlice';
+} from "@remindr/shared";
+import {
+  getIdxInTaskList,
+  getTaskIdx,
+} from "@renderer/scripts/utils/tasklistutils";
+import _ from "lodash";
+import { TaskListState } from "./taskListSlice";
 
 export const addTaskReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   // set task column idx
   const taskClone: Task = JSON.parse(JSON.stringify(action.payload));
   const incompleteTasksInColumn = state.value.filter(
-    (task) => task.columnIdx === getTaskColumnIdx(action.payload) && !task.completed,
+    (task) =>
+      task.columnIdx === getTaskColumnIdx(action.payload) && !task.completed
   );
-  taskClone.orderInTaskColumn = getIdxInTaskList(taskClone, incompleteTasksInColumn);
+  taskClone.orderInTaskColumn = getIdxInTaskList(
+    taskClone,
+    incompleteTasksInColumn
+  );
 
   state.value.push(taskClone);
-  state.lastTaskListAction = { type: 'add', task: taskClone, undone: false };
+  state.lastTaskListAction = { type: "add", task: taskClone, undone: false };
   saveData(state.value);
 };
 
 export const removeTaskReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   const taskIdx = getTaskIdx(action.payload, state.value);
   state.value.splice(taskIdx, 1);
 
-  state.lastTaskListAction = { type: 'remove', task: action.payload, undone: false };
+  state.lastTaskListAction = {
+    type: "remove",
+    task: action.payload,
+    undone: false,
+  };
   saveData(state.value);
 };
 
 export const updateTaskReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   const taskIdx = getTaskIdx(action.payload, state.value);
 
@@ -58,49 +70,63 @@ export const updateTaskReducer = (
   }
 
   state.value[taskIdx] = action.payload;
-  state.lastTaskListAction = { type: 'update', task: oldTaskState, undone: false };
+  state.lastTaskListAction = {
+    type: "update",
+    task: oldTaskState,
+    undone: false,
+  };
   saveData(state.value);
 };
 
 export const completeTaskReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   const taskIdx = getTaskIdx(action.payload, state.value);
   const task = action.payload;
   const hasRecurringReminders = taskHasRecurringReminders(task);
 
   // If the task is selected, de-select it
-  if (getTaskIdx(task, state.selectedTasks) > -1) _.remove(state.selectedTasks, task);
+  if (getTaskIdx(task, state.selectedTasks) > -1)
+    _.remove(state.selectedTasks, task);
 
   if (!hasRecurringReminders) {
     // If the task doesn't have recurring reminders, just remove it
     state.value[taskIdx].completed = true;
     state.value[taskIdx].completionTime = new Date().getTime();
-    state.lastTaskListAction = { type: 'complete', task, undone: false };
+    state.lastTaskListAction = { type: "complete", task, undone: false };
     saveData(state.value);
     return;
   }
 
   // Clone reminder
-  const scheduledReminderClone = JSON.parse(JSON.stringify(task.scheduledReminders[0])) as ScheduledReminder;
+  const scheduledReminderClone = JSON.parse(
+    JSON.stringify(task.scheduledReminders[0])
+  ) as ScheduledReminder;
 
   // If the task has recurring reminders, advance the reminders and keep the task
 
   // Incomplete task
-  if (task.scheduledReminders[0].repeat === Repeat["Don't Repeat"]) {
+  if (getRepeatValue(task.scheduledReminders[0].repeat) === Repeat.NoRepeat) {
     // If the current reminder doesn't repeat, remove it from the uncompleted task
     state.value[taskIdx].scheduledReminders.splice(0, 1);
   } else {
-    const firstScheduledReminder = JSON.parse(JSON.stringify(task.scheduledReminders[0]));
-    const advancedScheduledReminder = setDate(firstScheduledReminder, getNextRepeatDate(firstScheduledReminder));
+    const firstScheduledReminder = JSON.parse(
+      JSON.stringify(task.scheduledReminders[0])
+    );
+    const advancedScheduledReminder = setDate(
+      firstScheduledReminder,
+      getNextRepeatDate(firstScheduledReminder)
+    );
     advancedScheduledReminder.id = generateUniqueID();
 
     // Advance recurring reminder
     state.value[taskIdx].scheduledReminders.splice(0, 1);
     state.value[taskIdx].scheduledReminders.push(advancedScheduledReminder);
-    state.value[taskIdx].scheduledReminders = sortReminders(state.value[taskIdx].scheduledReminders);
+    state.value[taskIdx].scheduledReminders = sortReminders(
+      state.value[taskIdx].scheduledReminders
+    );
     state.value[taskIdx].columnIdx = getTaskColumnIdx(state.value[taskIdx]);
   }
 
@@ -114,14 +140,14 @@ export const completeTaskReducer = (
    */
   const completedTask = JSON.parse(JSON.stringify(task)) as Task;
   completedTask.creationTime = new Date().getTime();
-  scheduledReminderClone.repeat = Repeat["Don't Repeat"];
+  scheduledReminderClone.repeat = Repeat.NoRepeat;
   completedTask.scheduledReminders = [scheduledReminderClone];
   completedTask.completed = true;
   completedTask.completionTime = new Date().getTime();
   state.value.push(completedTask);
 
   state.lastTaskListAction = {
-    type: 'complete-recurring',
+    type: "complete-recurring",
     task,
     undone: false,
     relatedTaskId: completedTask.creationTime,
@@ -132,39 +158,44 @@ export const completeTaskReducer = (
 export const markTaskIncompleteReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   const taskIdx = getTaskIdx(action.payload, state.value);
   const task = action.payload;
 
   // If the task is selected, de-select it
-  if (getTaskIdx(task, state.selectedTasks) > -1) _.remove(state.selectedTasks, task);
+  if (getTaskIdx(task, state.selectedTasks) > -1)
+    _.remove(state.selectedTasks, task);
 
   // It is assumed that recurring reminders won't need any special treatment when marking tasks as incomplete.
   state.value[taskIdx].completed = false;
   state.value[taskIdx].completionTime = -1;
-  state.lastTaskListAction = { type: 'markIncomplete', task, undone: false };
+  state.lastTaskListAction = { type: "markIncomplete", task, undone: false };
   saveData(state.value);
 };
 
 export const duplicateTaskReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   const clone = JSON.parse(JSON.stringify(action.payload));
   clone.creationTime = Date.now();
 
   state.value.push(clone);
 
-  state.lastTaskListAction = { type: 'duplicate', task: action.payload, undone: false };
+  state.lastTaskListAction = {
+    type: "duplicate",
+    task: action.payload,
+    undone: false,
+  };
   saveData(state.value);
 };
 
 export const removeTasksReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>[]>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   action.payload.forEach((task) => {
     const taskIdx = getTaskIdx(task, state.value);
@@ -177,7 +208,7 @@ export const removeTasksReducer = (
 export const duplicateTasksReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>[]>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   action.payload.forEach((task, idx) => {
     const clone = JSON.parse(JSON.stringify(task));
@@ -194,7 +225,7 @@ export const duplicateTasksReducer = (
 export const pinTasksReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>[]>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   action.payload.forEach((task) => {
     const taskIdx = getTaskIdx(task, state.value);
@@ -207,7 +238,7 @@ export const pinTasksReducer = (
 export const unpinTasksReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>[]>,
-  saveData: (taskList: Task[]) => void,
+  saveData: (taskList: Task[]) => void
 ) => {
   action.payload.forEach((task) => {
     const taskIdx = getTaskIdx(task, state.value);

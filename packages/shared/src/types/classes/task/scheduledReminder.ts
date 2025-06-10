@@ -1,4 +1,4 @@
-import { generateUniqueID } from '../../../utils/index.js';
+import { generateUniqueID } from "../../../utils/index.js";
 
 /**
  * Scheduled reminder time class.
@@ -23,7 +23,7 @@ export class ScheduledReminder {
 
   reminderMinute: number;
 
-  reminderMeridiem: 'AM' | 'PM';
+  reminderMeridiem: "AM" | "PM";
 
   repeat: Repeat;
 
@@ -35,26 +35,26 @@ export class ScheduledReminder {
     day?: number,
     hour?: number,
     minute?: number,
-    meridiem?: 'AM' | 'PM',
+    meridiem?: "AM" | "PM",
     repeat?: Repeat,
-    id?: number,
+    id?: number
   ) {
     this.reminderYear = year ?? -1; // Default values to signal that the task does not have a remind date
     this.reminderMonth = month ?? -1;
     this.reminderDay = day ?? -1;
     this.reminderHour = hour ?? -1;
     this.reminderMinute = minute ?? -1;
-    this.reminderMeridiem = meridiem ?? 'AM';
-    this.repeat = repeat ?? Repeat["Don't Repeat"];
+    this.reminderMeridiem = meridiem ?? "AM";
+    this.repeat = repeat ?? Repeat.NoRepeat;
     this.id = id ?? generateUniqueID();
   }
 }
 
 export enum Repeat {
-  "Don't Repeat",
-  'Daily',
-  'Weekdays',
-  'Weekly',
-  'Monthly',
-  'Yearly',
+  NoRepeat = "Don't Repeat",
+  Daily = "Daily",
+  Weekdays = "Weekdays",
+  Weekly = "Weekly",
+  Monthly = "Monthly",
+  Yearly = "Yearly",
 }

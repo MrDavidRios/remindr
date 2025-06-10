@@ -1,8 +1,11 @@
-import { DateFormat } from '../types/dateformat.js';
-import { Repeat, ScheduledReminder } from '../types/index.js';
-import { formatDate, getReminderDate } from './datefunctions.js';
+import { DateFormat } from "../types/dateformat.js";
+import { Repeat, ScheduledReminder } from "../types/index.js";
+import { formatDate, getReminderDate } from "./datefunctions.js";
+import { getRepeatValue } from "./repeatcompatibility.js";
 
-export function getScheduledReminderClone(scheduledReminder: ScheduledReminder): ScheduledReminder {
+export function getScheduledReminderClone(
+  scheduledReminder: ScheduledReminder
+): ScheduledReminder {
   return JSON.parse(JSON.stringify(scheduledReminder));
 }
 
@@ -11,20 +14,30 @@ export function getReminderDisplayDate(
   dateFormat: DateFormat,
   shortenMonth = true,
   includeYearIfSame = false,
-  lowercaseImproperNoun = false,
+  lowercaseImproperNoun = false
 ): string {
   const reminderDate = getReminderDate(scheduledReminder);
 
-  const readableDate = `${formatDate(reminderDate, dateFormat, shortenMonth, includeYearIfSame)}`;
+  const readableDate = `${formatDate(
+    reminderDate,
+    dateFormat,
+    shortenMonth,
+    includeYearIfSame
+  )}`;
 
-  const { reminderToday, adjacentDay } = isReminderToday(scheduledReminder, true) as {
+  const { reminderToday, adjacentDay } = isReminderToday(
+    scheduledReminder,
+    true
+  ) as {
     reminderToday: boolean;
     adjacentDay: string;
   };
 
-  if (reminderToday) return lowercaseImproperNoun ? 'today' : 'Today';
-  if (adjacentDay === 'yesterday') return lowercaseImproperNoun ? 'yesterday' : 'Yesterday';
-  if (adjacentDay === 'tomorrow') return lowercaseImproperNoun ? 'tomorrow' : 'Tomorrow';
+  if (reminderToday) return lowercaseImproperNoun ? "today" : "Today";
+  if (adjacentDay === "yesterday")
+    return lowercaseImproperNoun ? "yesterday" : "Yesterday";
+  if (adjacentDay === "tomorrow")
+    return lowercaseImproperNoun ? "tomorrow" : "Tomorrow";
 
   return readableDate;
 }
@@ -34,7 +47,9 @@ export function getReminderDisplayDate(
  * @param date The date to get the next half hour from. Defaults to the current date.
  * @returns a ScheduledReminder with its date set for the next half hour (e.g. 05:25 -> 05:30, 05:30 -> 06:00)
  */
-export function getDefaultScheduledReminder(date = new Date()): ScheduledReminder {
+export function getDefaultScheduledReminder(
+  date = new Date()
+): ScheduledReminder {
   const minutes = date.getMinutes();
   const minutesUntilNextHalfHour = 30 - (minutes % 30);
 
@@ -65,7 +80,11 @@ export function isOverdue(reminderTime: ScheduledReminder): boolean {
   return false;
 }
 
-export function setDate(scheduledReminder: ScheduledReminder, date: Date, setTime = true): ScheduledReminder {
+export function setDate(
+  scheduledReminder: ScheduledReminder,
+  date: Date,
+  setTime = true
+): ScheduledReminder {
   scheduledReminder.reminderYear = date.getFullYear();
   scheduledReminder.reminderMonth = date.getMonth() + 1;
   scheduledReminder.reminderDay = date.getDate();
@@ -74,7 +93,7 @@ export function setDate(scheduledReminder: ScheduledReminder, date: Date, setTim
 
   scheduledReminder.reminderHour = date.getHours();
   scheduledReminder.reminderMinute = date.getMinutes();
-  scheduledReminder.reminderMeridiem = date.getHours() >= 12 ? 'PM' : 'AM';
+  scheduledReminder.reminderMeridiem = date.getHours() >= 12 ? "PM" : "AM";
 
   return scheduledReminder;
 }
@@ -85,28 +104,45 @@ export function getDate(reminder: ScheduledReminder): Date {
     reminder.reminderMonth - 1,
     reminder.reminderDay,
     reminder.reminderHour,
-    reminder.reminderMinute,
+    reminder.reminderMinute
   );
 }
 
-export const getSerializableScheduledReminder = (scheduledReminder: ScheduledReminder) =>
-  JSON.parse(JSON.stringify(scheduledReminder));
+export const getSerializableScheduledReminder = (
+  scheduledReminder: ScheduledReminder
+) => JSON.parse(JSON.stringify(scheduledReminder));
 
 export function reminderRepeats(scheduledReminder: ScheduledReminder): boolean {
-  return scheduledReminder.repeat !== Repeat["Don't Repeat"];
+  return getRepeatValue(scheduledReminder.repeat) !== Repeat.NoRepeat;
 }
 
-export function sortReminders(reminderList: ScheduledReminder[]): ScheduledReminder[] {
-  const reminderListClone = JSON.parse(JSON.stringify(reminderList)) as ScheduledReminder[];
-  return reminderListClone.sort((a, b) => getReminderDate(a).getTime() - getReminderDate(b).getTime());
+export function sortReminders(
+  reminderList: ScheduledReminder[]
+): ScheduledReminder[] {
+  const reminderListClone = JSON.parse(
+    JSON.stringify(reminderList)
+  ) as ScheduledReminder[];
+  return reminderListClone.sort(
+    (a, b) => getReminderDate(a).getTime() - getReminderDate(b).getTime()
+  );
 }
 
-export function isBetweenDates(reminder: ScheduledReminder, startDate: Date, endDate: Date): boolean {
+export function isBetweenDates(
+  reminder: ScheduledReminder,
+  startDate: Date,
+  endDate: Date
+): boolean {
   const reminderDate = getDate(reminder);
 
-  return reminderDate.getTime() > startDate.getTime() && reminderDate.getTime() < endDate.getTime();
+  return (
+    reminderDate.getTime() > startDate.getTime() &&
+    reminderDate.getTime() < endDate.getTime()
+  );
 }
-export function getCalculableDate(comparableDate: Date, scheduledReminderTime: ScheduledReminder): Date {
+export function getCalculableDate(
+  comparableDate: Date,
+  scheduledReminderTime: ScheduledReminder
+): Date {
   comparableDate.setHours(scheduledReminderTime.reminderHour);
   comparableDate.setMinutes(scheduledReminderTime.reminderMinute);
   comparableDate.setSeconds(0);
@@ -116,7 +152,7 @@ export function getCalculableDate(comparableDate: Date, scheduledReminderTime: S
 
 export function isReminderToday(
   reminderTime: ScheduledReminder,
-  requestAdjacentDays = false,
+  requestAdjacentDays = false
 ): boolean | { reminderToday: boolean; adjacentDay: string } {
   if (reminderTime === undefined) return false;
 
@@ -134,7 +170,7 @@ export function isReminderToday(
     ) {
       return {
         reminderToday: true,
-        adjacentDay: 'none',
+        adjacentDay: "none",
       };
     }
     if (
@@ -144,7 +180,7 @@ export function isReminderToday(
     ) {
       return {
         reminderToday: false,
-        adjacentDay: 'yesterday',
+        adjacentDay: "yesterday",
       };
     }
     if (
@@ -154,12 +190,12 @@ export function isReminderToday(
     ) {
       return {
         reminderToday: false,
-        adjacentDay: 'tomorrow',
+        adjacentDay: "tomorrow",
       };
     }
     return {
       reminderToday: false,
-      adjacentDay: 'none',
+      adjacentDay: "none",
     };
   }
 

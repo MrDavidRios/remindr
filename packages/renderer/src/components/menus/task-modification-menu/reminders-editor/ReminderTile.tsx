@@ -1,18 +1,18 @@
-import calendarIcon from '@assets/icons/calendar-time.svg';
-import deleteIcon from '@assets/icons/plus-thin.svg';
-import repeatIcon from '@assets/icons/repeat.svg';
-import type { DateFormat, MenuRect, ScheduledReminder } from '@remindr/shared';
+import calendarIcon from "@assets/icons/calendar-time.svg";
+import deleteIcon from "@assets/icons/plus-thin.svg";
+import repeatIcon from "@assets/icons/repeat.svg";
+import type { DateFormat, MenuRect, ScheduledReminder } from "@remindr/shared";
 import {
   delay,
   getFormattedReminderTime,
   getReminderDisplayDate,
+  getRepeatValue,
   isOverdue,
   reminderRepeats,
-  Repeat,
-} from '@remindr/shared';
-import { convertDOMRectToMenuRect } from '@renderer/scripts/utils/menuutils';
-import type { FC } from 'react';
-import { useEffect, useRef, useState } from 'react';
+} from "@remindr/shared";
+import { convertDOMRectToMenuRect } from "@renderer/scripts/utils/menuutils";
+import type { FC } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ReminderTileProps {
   reminder: ScheduledReminder;
@@ -30,19 +30,24 @@ export const ReminderTile: FC<ReminderTileProps> = ({
   onDeleteReminder,
 }) => {
   const tileRef = useRef<HTMLLIElement>(null);
-  const tileRect = convertDOMRectToMenuRect(tileRef.current?.getBoundingClientRect());
+  const tileRect = convertDOMRectToMenuRect(
+    tileRef.current?.getBoundingClientRect()
+  );
 
-  const displayText = `${getReminderDisplayDate(reminder, dateFormat, false)} at ${getFormattedReminderTime(
+  const displayText = `${getReminderDisplayDate(
     reminder,
-    militaryTime,
-  )}`;
+    dateFormat,
+    false
+  )} at ${getFormattedReminderTime(reminder, militaryTime)}`;
 
   const [showActionButtons, setShowActionButtons] = useState(false);
   const actionButtonsRef = useRef<HTMLDivElement>(null);
   const [actionButtonsWidth, setActionButtonsWidth] = useState(0);
 
   useEffect(() => {
-    setActionButtonsWidth(actionButtonsRef.current?.getBoundingClientRect().width ?? 0);
+    setActionButtonsWidth(
+      actionButtonsRef.current?.getBoundingClientRect().width ?? 0
+    );
   }, [showActionButtons]);
 
   return (
@@ -51,7 +56,7 @@ export const ReminderTile: FC<ReminderTileProps> = ({
       className="reminder-tile"
       onClick={() => onEditReminder(tileRect)}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') onEditReminder(tileRect);
+        if (e.key === "Enter" || e.key === " ") onEditReminder(tileRect);
       }}
       onMouseEnter={() => setShowActionButtons(true)}
       onFocusCapture={() => setShowActionButtons(true)}
@@ -59,7 +64,7 @@ export const ReminderTile: FC<ReminderTileProps> = ({
       style={{
         gridTemplateColumns: showActionButtons
           ? `calc(100% - ${actionButtonsWidth}px) ${actionButtonsWidth}px`
-          : '100%',
+          : "100%",
       }}
       onBlur={async () => {
         await delay(0);
@@ -72,14 +77,16 @@ export const ReminderTile: FC<ReminderTileProps> = ({
     >
       <div>
         <img src={calendarIcon} alt="" draggable={false} />
-        <p className={`${isOverdue(reminder) ? 'overdue' : ''}`}>{displayText}</p>
+        <p className={`${isOverdue(reminder) ? "overdue" : ""}`}>
+          {displayText}
+        </p>
         {/* Repeat indicator */}
         {reminderRepeats(reminder) && (
           <img
             className="repeat-indicator svg-filter"
             src={repeatIcon}
             draggable="false"
-            title={`Repeats ${Repeat[reminder.repeat]}`}
+            title={`Repeats ${getRepeatValue(reminder.repeat)}`}
             style={{ paddingRight: 6 }}
             alt=""
           />
@@ -90,14 +97,14 @@ export const ReminderTile: FC<ReminderTileProps> = ({
           ref={actionButtonsRef}
           className="action-buttons"
           // Prevents a flicker when transitioning from invisible to visible action buttons
-          style={{ visibility: actionButtonsWidth > 0 ? 'visible' : 'hidden' }}
+          style={{ visibility: actionButtonsWidth > 0 ? "visible" : "hidden" }}
         >
           <button
             className="action-button accessible-button"
             onKeyDown={(e) => {
               e.stopPropagation();
 
-              if (e.key === 'Enter' || e.key === ' ') onDeleteReminder();
+              if (e.key === "Enter" || e.key === " ") onDeleteReminder();
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -112,7 +119,7 @@ export const ReminderTile: FC<ReminderTileProps> = ({
               draggable={false}
               title="Delete Reminder"
               alt="Delete Reminder"
-              style={{ transform: 'rotate(45deg)' }}
+              style={{ transform: "rotate(45deg)" }}
             />
           </button>
         </div>

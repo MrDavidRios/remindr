@@ -273,7 +273,7 @@ export const taskListSlice = createSlice({
         case "complete-recurring": {
           state.value[taskIdx] = state.lastTaskListAction.task;
 
-          // Here, the related task id is the completed task created when marking the task w/ recurring reminders as complete
+          // Here, the related task is the completed task created when marking the task w/ recurring reminders as complete
           const relatedTaskId = state.lastTaskListAction.relatedTaskId;
           if (relatedTaskId === undefined) {
             throw new Error(
@@ -315,7 +315,7 @@ export const taskListSlice = createSlice({
 
       state.value[taskIdx].scheduledReminders[
         action.payload.reminderIdx
-      ].repeat = Repeat["Don't Repeat"];
+      ].repeat = Repeat.NoRepeat;
       state.value[taskIdx].scheduledReminders.push(advancedScheduledReminder);
     },
     updateTaskGroupOrder: (
