@@ -20,6 +20,8 @@ export default /** @type import('electron-builder').Configuration */
   generateUpdatesFilesForAllChannels: true,
   linux: {
     target: ['deb'],
+    icon: 'icons/icon256x256.png',
+    category: 'Utility',
   },
   /**
    * It is recommended to avoid using non-standard characters such as spaces in artifact names,

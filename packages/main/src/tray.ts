@@ -63,7 +63,7 @@ export default class TrayBuilder {
       if (badgeNumber === 0) tray?.setImage(icon);
       else {
         const iconWithAlertBadge = nativeImage.createFromPath(
-          getMainAssetPath("alert-overlays/tray-icon-alert.png")
+          getMainAssetPath("tray-icon-alert.png")
         );
         tray.setImage(iconWithAlertBadge);
       }
