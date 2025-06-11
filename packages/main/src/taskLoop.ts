@@ -1,4 +1,3 @@
-import { notify } from "@main/notifications.js";
 import {
   getDaysBetweenDates,
   getRepeatValue,
@@ -11,6 +10,7 @@ import {
   type Task,
 } from "@remindr/shared";
 import Store from "electron-store";
+import { notify } from "./notifications.js";
 import { getMainWindow } from "./utils/getMainWindow.js";
 
 const store = new Store();
@@ -64,6 +64,10 @@ function checkForReminders(): void {
   }
 
   // TODO: Possible optimization: Only loop through reminders that are set for today (this list should be updated every time we make a call to midnight operations)
+  console.log(
+    "(taskLoop) checked for notifications at",
+    new Date().toLocaleTimeString()
+  );
 
   // Check for reminders
   const taskList: Task[] = (store.get("task-list-current") as Task[]) ?? [];

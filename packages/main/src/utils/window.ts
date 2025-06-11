@@ -24,7 +24,6 @@ export function initWindowEventListeners(mainWindow: BrowserWindow) {
     mainWindow?.webContents.send("window-unmaximized")
   );
   ipcMain.on("minimize-window", () => {
-    console.log("minimize-window");
     mainWindow?.minimize();
   });
   ipcMain.on("maximize-window", () => mainWindow?.maximize());

@@ -57,3 +57,6 @@ thumbs.db
 
 # Code Coverage (Sonar)
 **/coverage/
+
+# Test results (Playwright)
+**/test-results/

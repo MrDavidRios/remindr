@@ -40,6 +40,7 @@ import { hardwareAccelerationMode } from "./modules/HardwareAccelerationModule.j
 import { disallowMultipleAppInstance } from "./modules/SingleInstanceApp.js";
 import { createWindowManagerModule } from "./modules/WindowManager.js";
 import { initNotificationEventListeners } from "./notifications.js";
+import { initializeTaskLoop } from "./taskLoop.js";
 import { initAppStateListeners } from "./utils/appState.js";
 import { initAuthEventListeners } from "./utils/auth.js";
 import { initFirebase } from "./utils/firebase.js";
@@ -95,6 +96,9 @@ export async function initApp(initConfig: AppInitConfig) {
   }
 
   await moduleRunner;
+
+  // TODO: convert to module
+  initializeTaskLoop();
 
   // Initialize auto updater event handlers after modules are enabled (even better, include this in the module itself)
   initAutoUpdaterEventHandlers();
