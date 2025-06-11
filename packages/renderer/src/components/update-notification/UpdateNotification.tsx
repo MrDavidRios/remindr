@@ -39,7 +39,7 @@ export const UpdateNotification: FC = () => {
       break;
     case UpdateStatus.CheckingForUpdates:
     default:
-      message = "Checking for updates... " + UpdateStatus[updateStatus];
+      message = "Checking for updates... ";
       break;
   }
 

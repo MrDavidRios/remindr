@@ -1,7 +1,7 @@
 {
   "name": "remindr",
   "description": "General purpose and customizable to-do/reminder app",
-  "version": "2.2.3",
+  "version": "2.2.2",
   "private": true,
   "type": "module",
   "author": {

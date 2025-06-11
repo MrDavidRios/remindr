@@ -53,7 +53,10 @@ export class AutoUpdater implements AppModule {
       updater.logger = log;
 
       // If auto update is not defined in settings, treat it as enabled by default
-      if (isAutoUpdateEnabled() ?? true) updater.checkForUpdates();
+      if (isAutoUpdateEnabled() ?? true) {
+        updater.checkForUpdates();
+        log.info("(AutoUpdater) Auto update is enabled. Check for updates...");
+      }
 
       updater.addListener("error", (error: Error) => {
         getMainWindow()?.webContents.send("update-error", error.message);
@@ -63,7 +66,6 @@ export class AutoUpdater implements AppModule {
 
       updater.addListener("checking-for-update", () => {
         getMainWindow()?.webContents.send("checking-for-update");
-
         log.info("(AutoUpdater) Checking for update...");
       });
 
@@ -102,7 +104,7 @@ export class AutoUpdater implements AppModule {
         }
       });
 
-      return await updater.checkForUpdatesAndNotify(this.#notification);
+      await updater.checkForUpdates();
     } catch (error) {
       if (error instanceof Error) {
         if (error.message.includes("No published versions")) {
