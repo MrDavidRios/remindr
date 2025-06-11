@@ -51,6 +51,6 @@
     "@app/main": "*",
     "@remindr/shared": "workspace:*",
     "@testing-library/react": "^16.3.0",
-    "vitest": "^3.2.2"
+    "vitest": "^3.2.3"
   }
 }
