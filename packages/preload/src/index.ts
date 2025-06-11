@@ -286,8 +286,6 @@ const appStateHandler = {
 
 const userStateHandler = {
   setUserProfile: (stringifiedUser: string) => {
-    console.debug("[preload.userStateHandler] Setting user profile");
-
     ipcRenderer.invoke("set-user-profile", stringifiedUser);
   },
   getUserProfile: (): string => {

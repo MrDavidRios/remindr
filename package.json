@@ -23,6 +23,7 @@
     "compile": "npm run build && electron-builder build --config electron-builder.mjs",
     "test:vitest": "npx vitest",
     "test:e2e": "npx playwright test ./tests/e2e.spec.ts",
+    "test:e2e:debug": "npx playwright test ./tests/e2e.spec.ts --debug",
     "coverage": "npx vitest run --coverage",
     "start": "node packages/dev-mode.js",
     "typecheck": "npm run typecheck -ws --if-present",

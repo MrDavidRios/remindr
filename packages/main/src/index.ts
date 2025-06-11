@@ -96,6 +96,8 @@ export async function initApp(initConfig: AppInitConfig) {
 
   await moduleRunner;
 
+  console.log("App initialized!!!!");
+
   // TODO: convert to module
   initializeTaskLoop();
 }

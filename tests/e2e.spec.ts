@@ -1,12 +1,15 @@
 import { test as base, expect } from "@playwright/test";
 import type { BrowserWindow } from "electron";
 import { globSync } from "glob";
-import path from "node:path";
 import { platform } from "node:process";
 import type { ElectronApplication, JSHandle } from "playwright";
 import { _electron as electron } from "playwright";
 
 process.env.PLAYWRIGHT_TEST = "true";
+
+// Settings
+process.env.AUTO_UPDATE = "false";
+process.env.OFFLINE = "true";
 
 // Declare the types of your fixtures.
 type TestFixtures = {
@@ -33,11 +36,6 @@ const test = base.extend<TestFixtures>({
         throw new Error("App Executable path not found");
       }
 
-      console.log(
-        "Launching app with executable path: ",
-        path.resolve(executablePath)
-      );
-
       const electronApp = await electron.launch({
         executablePath: executablePath,
         args: ["--no-sandbox"],
@@ -51,6 +49,14 @@ const test = base.extend<TestFixtures>({
         if (msg.type() === "error") {
           console.error(`[electron][${msg.type()}] ${msg.text()}`);
         }
+
+        // if (msg.type() === "log") {
+        //   console.log(`[electron][${msg.type()}] ${msg.text()}`);
+        // }
+
+        // if (msg.type() === "info") {
+        //   console.log(`[electron][${msg.type()}] ${msg.text()}`);
+        // }
       });
 
       await use(electronApp);
@@ -120,9 +126,11 @@ test("Main window state", async ({ electronApp, page }) => {
   );
 });
 
-test.describe("Main window web content", async () => {
-  test("The main window has an interactive button", async ({ page }) => {
-    const element = page.getByRole("button");
-    await expect(element).toBeVisible();
+test.describe("Offline Mode", async () => {
+  test("Shows 'exit to main menu' button in toolbar", async ({ page }) => {
+    // get button by title "Return to Main Menu"
+    const button = page.getByTitle("Return to Main Menu");
+    await expect(button).toBeVisible();
+    expect(button).toHaveAttribute("aria-label", "Return to Main Menu");
   });
 });

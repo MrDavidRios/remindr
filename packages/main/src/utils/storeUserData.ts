@@ -1,5 +1,6 @@
 import { ipcMain } from "electron";
 import Store from "electron-store";
+import { getTestingSettings } from "./getTestingSettings.js";
 
 const store = new Store();
 
@@ -37,6 +38,10 @@ export function getUserProfile(): string {
 }
 
 export function getSettingsProfile(): string {
+  if (process.env.PLAYWRIGHT_TEST) {
+    return JSON.stringify(getTestingSettings());
+  }
+
   return (store.get("settings-profile") as string) ?? JSON.stringify({});
 }
 
