@@ -1,6 +1,7 @@
 import { test as base, expect } from "@playwright/test";
 import type { BrowserWindow } from "electron";
 import { globSync } from "glob";
+import path from "node:path";
 import { platform } from "node:process";
 import type { ElectronApplication, JSHandle } from "playwright";
 import { _electron as electron } from "playwright";
@@ -31,6 +32,11 @@ const test = base.extend<TestFixtures>({
       if (!executablePath) {
         throw new Error("App Executable path not found");
       }
+
+      console.log(
+        "Launching app with executable path: ",
+        path.resolve(executablePath)
+      );
 
       const electronApp = await electron.launch({
         executablePath: executablePath,

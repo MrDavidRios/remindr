@@ -1,16 +1,20 @@
-import { Menu, UpdateStatus } from '@remindr/shared';
-import { hideMenu } from '@renderer/features/menu-state/menuSlice';
-import { useAppDispatch, useAppSelector } from '@renderer/hooks';
-import { useEscToClose } from '@renderer/scripts/utils/hooks/useesctoclose';
-import { motion } from 'framer-motion';
-import { FC } from 'react';
+import { Menu, UpdateStatus } from "@remindr/shared";
+import { hideMenu } from "@renderer/features/menu-state/menuSlice";
+import { useAppDispatch, useAppSelector } from "@renderer/hooks";
+import { useEscToClose } from "@renderer/scripts/utils/hooks/useesctoclose";
+import { motion } from "framer-motion";
+import { FC } from "react";
 
 export const UpdateNotification: FC = () => {
   const dispatch = useAppDispatch();
 
   const updateStatus = useAppSelector((state) => state.updateState.status);
-  const downloadedReleaseName = useAppSelector((state) => state.updateState.downloadedReleaseName);
-  const enableAnimations = useAppSelector((state) => state.settings.value.enableAnimations);
+  const downloadedReleaseName = useAppSelector(
+    (state) => state.updateState.downloadedReleaseName
+  );
+  const enableAnimations = useAppSelector(
+    (state) => state.settings.value.enableAnimations
+  );
 
   useEscToClose(dispatch, Menu.UpdateNotification);
 
@@ -19,21 +23,23 @@ export const UpdateNotification: FC = () => {
 
   switch (updateStatus) {
     case UpdateStatus.UpdateAvailable:
-      message = 'A new update is available. Downloading now...';
+      message = "A new update is available. Downloading now...";
       break;
     case UpdateStatus.UpdateDownloaded:
       if (downloadedReleaseName)
         message = `Version ${downloadedReleaseName} downloaded! It will be installed when Remindr restarts. Restart now?`;
-      else message = 'Update Downloaded! It will be installed when Remindr restarts. Restart now?';
+      else
+        message =
+          "Update Downloaded! It will be installed when Remindr restarts. Restart now?";
 
       showRestartButton = true;
       break;
     case UpdateStatus.NoUpdates:
-      message = 'There are currently no new updates.';
+      message = "There are currently no new updates.";
       break;
     case UpdateStatus.CheckingForUpdates:
     default:
-      message = 'Checking for updates...';
+      message = "Checking for updates... " + UpdateStatus[updateStatus];
       break;
   }
 
@@ -46,7 +52,12 @@ export const UpdateNotification: FC = () => {
     : {};
 
   return (
-    <motion.div id="update-notification" className="frosted" layout="position" {...animationProps}>
+    <motion.div
+      id="update-notification"
+      className="frosted"
+      layout="position"
+      {...animationProps}
+    >
       <p id="message">{message}</p>
       <div id="notification-buttons">
         <button
@@ -63,7 +74,12 @@ export const UpdateNotification: FC = () => {
             type="button"
             className="notification-button"
             id="restart-button"
-            onClick={() => window.electron.ipcRenderer.sendMessage('action-on-save', 'restart-and-update')}
+            onClick={() =>
+              window.electron.ipcRenderer.sendMessage(
+                "action-on-save",
+                "restart-and-update"
+              )
+            }
           >
             Restart
           </button>

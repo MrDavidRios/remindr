@@ -20,7 +20,6 @@ import {
 } from "node:fs";
 import path from "node:path";
 import type { AppInitConfig } from "./AppInitConfig.js";
-import { initAutoUpdaterEventHandlers } from "./appUpdater.js";
 import {
   deleteAccountData,
   isSaving,
@@ -99,9 +98,6 @@ export async function initApp(initConfig: AppInitConfig) {
 
   // TODO: convert to module
   initializeTaskLoop();
-
-  // Initialize auto updater event handlers after modules are enabled (even better, include this in the module itself)
-  initAutoUpdaterEventHandlers();
 }
 
 const store = new Store();

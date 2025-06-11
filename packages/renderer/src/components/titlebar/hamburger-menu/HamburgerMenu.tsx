@@ -1,8 +1,10 @@
 import expandArrow from "@assets/icons/expand-arrow.png";
 import hamburgerIcon from "@assets/icons/hamburger.svg";
 import { useClickOutside } from "@hooks/useoutsideclick";
-import { AppMode, delay, Menu } from "@remindr/shared";
+import { AppMode, delay, Menu, UpdateStatus } from "@remindr/shared";
+import { AppDispatch } from "@renderer/app/store";
 import { hideMenu, showMenu } from "@renderer/features/menu-state/menuSlice";
+import { setUpdateState } from "@renderer/features/update-state/updateState";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
 import { rgbaToHex } from "@renderer/scripts/utils/colorutils";
 import { useEscToClose } from "@renderer/scripts/utils/hooks/useesctoclose";
@@ -200,10 +202,12 @@ export function HamburgerMenu() {
                         id="checkForUpdatesButton"
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === "")
-                            handleUpdateCheckButton(() => closeMenu());
+                            handleUpdateCheckButton(dispatch, () =>
+                              closeMenu()
+                            );
                         }}
                         onClick={() =>
-                          handleUpdateCheckButton(() => closeMenu())
+                          handleUpdateCheckButton(dispatch, () => closeMenu())
                         }
                       >
                         Check For Updates
@@ -243,11 +247,11 @@ function handleReportBugButton(_hideMenu: () => void) {
   _hideMenu();
 }
 
-function handleUpdateCheckButton(_hideMenu: () => void) {
+function handleUpdateCheckButton(dispatch: AppDispatch, _hideMenu: () => void) {
   window.electron.ipcRenderer.sendMessage("check-for-updates");
 
-  // main doesn't send check-for-updates event, so this is specifically for the update notification to show
-  window.mainWindow.webContents.sendMessage("check-for-updates");
+  dispatch(setUpdateState({ status: UpdateStatus.CheckingForUpdates }));
+  dispatch(showMenu(Menu.UpdateNotification));
 
   _hideMenu();
 }
