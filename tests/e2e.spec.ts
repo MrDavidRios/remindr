@@ -54,9 +54,9 @@ const test = base.extend<TestFixtures>({
         //   console.log(`[electron][${msg.type()}] ${msg.text()}`);
         // }
 
-        // if (msg.type() === "info") {
-        //   console.log(`[electron][${msg.type()}] ${msg.text()}`);
-        // }
+        if (msg.type() === "info") {
+          console.log(`[electron][${msg.type()}] ${msg.text()}`);
+        }
       });
 
       await use(electronApp);
@@ -128,9 +128,8 @@ test("Main window state", async ({ electronApp, page }) => {
 
 test.describe("Offline Mode", async () => {
   test("Shows 'exit to main menu' button in toolbar", async ({ page }) => {
-    // get button by title "Return to Main Menu"
     const button = page.getByTitle("Return to Main Menu");
     await expect(button).toBeVisible();
-    expect(button).toHaveAttribute("aria-label", "Return to Main Menu");
+    await expect(button).toHaveAttribute("aria-label", "Return to Main Menu");
   });
 });
