@@ -182,6 +182,8 @@ export const duplicateTasksReducer = (
   action: PayloadAction<InstanceType<typeof Task>[]>,
   saveData: (taskList: Task[]) => void
 ) => {
+  const duplicates: Task[] = [];
+
   action.payload.forEach((task, idx) => {
     const clone = JSON.parse(JSON.stringify(task));
 
@@ -189,11 +191,12 @@ export const duplicateTasksReducer = (
     clone.creationTime = Date.now() + idx;
 
     state.value.push(clone);
+    duplicates.push(clone);
   });
 
   state.lastTaskListAction = {
     type: "duplicate",
-    tasks: action.payload,
+    tasks: duplicates,
     undone: false,
   };
 

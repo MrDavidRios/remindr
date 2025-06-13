@@ -75,9 +75,11 @@ describe('Task List Reducers', () => {
                 { payload: [testTask], type: 'duplicateTasks' },
                 saveDataMock
             );
+
             taskListSlice.caseReducers.undoTaskListChange(state)
 
             expect(state.value).toHaveLength(1);
+            expect(state.value[0]).toEqual(testTask);
         })
     });
 });
