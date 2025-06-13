@@ -35,23 +35,7 @@ export const addTaskReducer = (
   );
 
   state.value.push(taskClone);
-  state.lastTaskListAction = { type: "add", task: taskClone, undone: false };
-  saveData(state.value);
-};
-
-export const removeTaskReducer = (
-  state: TaskListState,
-  action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void
-) => {
-  const taskIdx = getTaskIdx(action.payload, state.value);
-  state.value.splice(taskIdx, 1);
-
-  state.lastTaskListAction = {
-    type: "remove",
-    task: action.payload,
-    undone: false,
-  };
+  state.lastTaskListAction = { type: "add", tasks: [taskClone], undone: false };
   saveData(state.value);
 };
 
@@ -72,7 +56,7 @@ export const updateTaskReducer = (
   state.value[taskIdx] = action.payload;
   state.lastTaskListAction = {
     type: "update",
-    task: oldTaskState,
+    tasks: [oldTaskState],
     undone: false,
   };
   saveData(state.value);
@@ -95,7 +79,7 @@ export const completeTaskReducer = (
     // If the task doesn't have recurring reminders, just remove it
     state.value[taskIdx].completed = true;
     state.value[taskIdx].completionTime = new Date().getTime();
-    state.lastTaskListAction = { type: "complete", task, undone: false };
+    state.lastTaskListAction = { type: "complete", tasks: [task], undone: false };
     saveData(state.value);
     return;
   }
@@ -148,7 +132,7 @@ export const completeTaskReducer = (
 
   state.lastTaskListAction = {
     type: "complete-recurring",
-    task,
+    tasks: [task],
     undone: false,
     relatedTaskId: completedTask.creationTime,
   };
@@ -170,7 +154,7 @@ export const markTaskIncompleteReducer = (
   // It is assumed that recurring reminders won't need any special treatment when marking tasks as incomplete.
   state.value[taskIdx].completed = false;
   state.value[taskIdx].completionTime = -1;
-  state.lastTaskListAction = { type: "markIncomplete", task, undone: false };
+  state.lastTaskListAction = { type: "markIncomplete", tasks: [task], undone: false };
   saveData(state.value);
 };
 
@@ -186,7 +170,7 @@ export const duplicateTaskReducer = (
 
   state.lastTaskListAction = {
     type: "duplicate",
-    task: action.payload,
+    tasks: [action.payload],
     undone: false,
   };
   saveData(state.value);
@@ -201,6 +185,12 @@ export const removeTasksReducer = (
     const taskIdx = getTaskIdx(task, state.value);
     state.value.splice(taskIdx, 1);
   });
+
+  state.lastTaskListAction = {
+    type: "remove",
+    tasks: action.payload,
+    undone: false,
+  };
 
   saveData(state.value);
 };

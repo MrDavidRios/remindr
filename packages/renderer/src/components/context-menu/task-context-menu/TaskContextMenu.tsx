@@ -12,7 +12,7 @@ import {
   clearSelectedTasks,
   duplicateTask,
   removeFromColumn,
-  removeTask,
+  removeTasks,
   togglePinTask,
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
@@ -48,7 +48,7 @@ export const TaskContextMenu: React.FC = () => {
   );
   useHotkey(
     ['delete'],
-    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTask(t)))),
+    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(removeTasks([t])))),
     Menu.None,
   );
 
@@ -127,7 +127,7 @@ export const TaskContextMenu: React.FC = () => {
             className="menu-top-border"
             style={{ color: '#b72929' }}
             title="Delete task (Delete)"
-            onClick={() => dropdownAction(task, (t) => dispatch(removeTask(t)))}
+            onClick={() => dropdownAction(task, (t) => dispatch(removeTasks([t])))}
           >
             <img
               src={trashcanIcon}

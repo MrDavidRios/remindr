@@ -28,7 +28,6 @@ import {
   duplicateTasksReducer,
   markTaskIncompleteReducer,
   pinTasksReducer,
-  removeTaskReducer,
   removeTasksReducer,
   unpinTasksReducer,
   updateTaskReducer,
@@ -49,7 +48,7 @@ export interface TaskListState {
   lastSelectedTaskNoShift?: Task;
   lastTaskListAction?: {
     type: TaskListAction;
-    task: Task;
+    tasks: Task[];
     undone: boolean;
     relatedTaskId?: number;
   };
@@ -82,8 +81,6 @@ export const taskListSlice = createSlice({
   reducers: {
     addTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
       addTaskReducer(state, action, saveTaskData),
-    removeTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
-      removeTaskReducer(state, action, saveTaskData),
     updateTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
       updateTaskReducer(state, action, saveTaskData),
     duplicateTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
@@ -114,26 +111,26 @@ export const taskListSlice = createSlice({
     },
     togglePinTask(state, action: PayloadAction<InstanceType<typeof Task>>) {
       const taskIdx = getTaskIdx(action.payload, state.value);
-      const oldTaskState = JSON.parse(JSON.stringify(state.value[taskIdx]));
+      const oldTaskState: Task = JSON.parse(JSON.stringify(state.value[taskIdx]));
 
       state.value[taskIdx].pinned = !state.value[taskIdx].pinned;
 
       state.lastTaskListAction = {
         type: "update",
-        task: oldTaskState,
+        tasks: [oldTaskState],
         undone: false,
       };
       saveTaskData(state.value);
     },
     removeFromColumn(state, action: PayloadAction<InstanceType<typeof Task>>) {
       const taskIdx = getTaskIdx(action.payload, state.value);
-      const oldTaskState = JSON.parse(JSON.stringify(state.value[taskIdx]));
+      const oldTaskState: Task = JSON.parse(JSON.stringify(state.value[taskIdx]));
 
       state.value[taskIdx].columnIdx = undefined;
 
       state.lastTaskListAction = {
         type: "update",
-        task: oldTaskState,
+        tasks: [oldTaskState],
         undone: false,
       };
       saveTaskData(state.value);
@@ -240,8 +237,9 @@ export const taskListSlice = createSlice({
     },
     selectLastModifiedTask: (state) => {
       if (!state.lastTaskListAction) return;
+      if (state.lastTaskListAction.tasks.length !== 1) return;
 
-      const taskIdx = getTaskIdx(state.lastTaskListAction.task, state.value);
+      const taskIdx = getTaskIdx(state.lastTaskListAction.tasks[0], state.value);
       if (taskIdx === -1) return;
 
       state.selectedTasks = [state.value[taskIdx]];
@@ -250,44 +248,47 @@ export const taskListSlice = createSlice({
       if (!state.lastTaskListAction) return;
       if (state.lastTaskListAction.undone) return;
 
-      const selectedTaskIdx = getTaskIdx(
-        state.lastTaskListAction.task,
-        state.selectedTasks
-      );
-      if (selectedTaskIdx >= 0) state.selectedTasks.splice(selectedTaskIdx, 1);
+      // If the task we're modifying through undo is selected, de-select it before modifying it.
+      for (const task of state.lastTaskListAction.tasks) {
+        const selectedTaskIdx = getTaskIdx(
+          task,
+          state.selectedTasks
+        );
+        if (selectedTaskIdx >= 0) state.selectedTasks.splice(selectedTaskIdx, 1);
 
-      const taskIdx = getTaskIdx(state.lastTaskListAction.task, state.value);
-      switch (state.lastTaskListAction?.type) {
-        case "add":
-        case "duplicate":
-          state.value.splice(taskIdx, 1);
-          break;
-        case "remove":
-          state.value.push(state.lastTaskListAction.task);
-          break;
-        case "update":
-        case "complete":
-        case "markIncomplete":
-          state.value[taskIdx] = state.lastTaskListAction.task;
-          break;
-        case "complete-recurring": {
-          state.value[taskIdx] = state.lastTaskListAction.task;
+        const taskIdx = getTaskIdx(task, state.value);
+        switch (state.lastTaskListAction?.type) {
+          case "add":
+          case "duplicate":
+            state.value.splice(taskIdx, 1);
+            break;
+          case "remove":
+            state.value.push(task);
+            break;
+          case "update":
+          case "complete":
+          case "markIncomplete":
+            state.value[taskIdx] = task;
+            break;
+          case "complete-recurring": {
+            state.value[taskIdx] = task;
 
-          // Here, the related task is the completed task created when marking the task w/ recurring reminders as complete
-          const relatedTaskId = state.lastTaskListAction.relatedTaskId;
-          if (relatedTaskId === undefined) {
-            throw new Error(
-              "[undoTaskListChange - complete-recurring]: Related task ID not found"
+            // Here, the related task is the completed task created when marking the task w/ recurring reminders as complete
+            const relatedTaskId = state.lastTaskListAction.relatedTaskId;
+            if (relatedTaskId === undefined) {
+              throw new Error(
+                "[undoTaskListChange - complete-recurring]: Related task ID not found"
+              );
+            }
+
+            const relatedReminderIdx = state.value.findIndex(
+              (t) => t.creationTime === relatedTaskId
             );
+            if (relatedReminderIdx === -1) return;
+
+            state.value.splice(relatedReminderIdx, 1);
+            break;
           }
-
-          const relatedReminderIdx = state.value.findIndex(
-            (t) => t.creationTime === relatedTaskId
-          );
-          if (relatedReminderIdx === -1) return;
-
-          state.value.splice(relatedReminderIdx, 1);
-          break;
         }
       }
 
@@ -402,7 +403,6 @@ initializeTaskListSyncListener();
 export default taskListSlice.reducer;
 export const {
   addTask,
-  removeTask,
   updateTask,
   updateTasks,
   duplicateTask,

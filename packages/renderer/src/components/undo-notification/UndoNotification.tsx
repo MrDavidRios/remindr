@@ -3,7 +3,6 @@ import openIcon from '@assets/icons/open.svg';
 import { getTaskListActionVerb, Menu } from '@remindr/shared';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import {
-  removeSelectedTask,
   selectLastModifiedTask,
   undoTaskListChange,
 } from '@renderer/features/task-list/taskListSlice';
@@ -20,7 +19,7 @@ export const UndoNotification: FC = () => {
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const [showUndoNotification, setShowUndoNotification] = useState(false);
 
-  const canOpenTask = undoState?.type !== 'remove';
+  const canOpenTask = undoState?.type !== 'remove' && undoState?.tasks?.length === 1;
   const openTask = () => {
     // Don't open the task if the undo notification isn't showing
     if (!showUndoNotification) return;
@@ -56,17 +55,16 @@ export const UndoNotification: FC = () => {
   }, [showUndoNotification]);
 
   function undoTaskAction() {
-    if (undoState?.task !== undefined) dispatch(removeSelectedTask(undoState?.task));
     dispatch(undoTaskListChange());
   }
 
   const animate = useAnimationsEnabled();
   const animationProps = animate
     ? {
-        initial: { opacity: 0, y: 50 },
-        animate: { opacity: 1, y: 0 },
-        exit: { opacity: 0, y: 50 },
-      }
+      initial: { opacity: 0, y: 50 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, y: 50 },
+    }
     : {};
 
   const actionVerb = getTaskListActionVerb(undoState?.type ?? 'add');
@@ -74,17 +72,31 @@ export const UndoNotification: FC = () => {
   const visibleButtons = 1 + (canOpenTask ? 1 : 0);
   const buttonWidth = 40;
 
+  const undoNotificationCopy = undoState?.tasks.length === 1
+    ? `Task "${undoState?.tasks[0].name}" ${actionVerb}` : `${undoState?.tasks.length} tasks ${actionVerb}`;
+
+  console.log('undo notification copy:', undoNotificationCopy);
+
   return (
     <AnimatePresence>
       {showUndoNotification && (
         <motion.div id="undoActionNotification" className="frosted" {...animationProps}>
           <div
             className="text-wrapper"
-            title={`Task "${undoState?.task.name}" ${actionVerb}`}
+            title={undoNotificationCopy}
             style={{ maxWidth: `calc(100vw - ${158 + buttonWidth * visibleButtons}px)` }}
           >
-            <p>Task &quot;</p> <span>{`${undoState?.task.name}`}</span>
-            <p>{`" ${actionVerb}`}</p>
+            {
+              undoState?.tasks.length === 1 ?
+                (<>
+                  <p>Task &quot;</p>
+                  <span>{`${undoState?.tasks[0].name}`} </span>
+                  <p>{`" ${actionVerb}`}</p>
+                </>)
+                : (
+                  <p>{undoNotificationCopy}</p>
+                )
+            }
           </div>
           <button title="Undo Action (Ctrl + Z)" onClick={undoTaskAction} type="button">
             Undo

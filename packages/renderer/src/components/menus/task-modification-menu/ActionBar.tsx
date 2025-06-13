@@ -11,7 +11,7 @@ import store from '@renderer/app/store';
 import {
   clearSelectedTasks,
   duplicateTask,
-  removeTask,
+  removeTasks,
   togglePinTask,
 } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
@@ -165,7 +165,7 @@ function removeEditedTask(dispatch: AppDispatch) {
   const task = getEditedTask(store.getState().taskModificationState);
   if (!task) return;
 
-  dispatch(removeTask(task));
+  dispatch(removeTasks([task]));
   dispatch(clearSelectedTasks());
 }
 
