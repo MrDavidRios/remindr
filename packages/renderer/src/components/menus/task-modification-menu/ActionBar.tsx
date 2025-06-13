@@ -10,9 +10,9 @@ import type { AppDispatch } from '@renderer/app/store';
 import store from '@renderer/app/store';
 import {
   clearSelectedTasks,
-  duplicateTask,
+  duplicateTasks,
   removeTasks,
-  togglePinTask,
+  togglePinTask
 } from '@renderer/features/task-list/taskListSlice';
 import { getEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
 import { useAppDispatch } from '@renderer/hooks';
@@ -173,6 +173,6 @@ function duplicateEditedTask(dispatch: AppDispatch) {
   const task = getEditedTask(store.getState().taskModificationState);
   if (!task) return;
 
-  dispatch(duplicateTask(task));
+  dispatch(duplicateTasks([task]));
   dispatch(clearSelectedTasks());
 }

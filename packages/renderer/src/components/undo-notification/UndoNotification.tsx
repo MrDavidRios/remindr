@@ -3,7 +3,7 @@ import openIcon from '@assets/icons/open.svg';
 import { getTaskListActionVerb, Menu } from '@remindr/shared';
 import { hideMenu, showMenu } from '@renderer/features/menu-state/menuSlice';
 import {
-  selectLastModifiedTask,
+  setSelectedTasks,
   undoTaskListChange,
 } from '@renderer/features/task-list/taskListSlice';
 import { useAppDispatch, useAppSelector } from '@renderer/hooks';
@@ -19,12 +19,14 @@ export const UndoNotification: FC = () => {
   const undoState = useAppSelector((state) => state.taskList.lastTaskListAction);
   const [showUndoNotification, setShowUndoNotification] = useState(false);
 
-  const canOpenTask = undoState?.type !== 'remove' && undoState?.tasks?.length === 1;
+  const multipleTasksInLastAction = undoState?.tasks?.length !== undefined && undoState.tasks.length > 1;
+  const canOpenTask = undoState?.type !== 'remove';
   const openTask = () => {
     // Don't open the task if the undo notification isn't showing
     if (!showUndoNotification) return;
+    if (undoState === undefined || undoState.tasks.length === 0) return;
 
-    dispatch(selectLastModifiedTask());
+    dispatch(setSelectedTasks(undoState.tasks));
     setShowUndoNotification(false);
   };
 
@@ -72,10 +74,9 @@ export const UndoNotification: FC = () => {
   const visibleButtons = 1 + (canOpenTask ? 1 : 0);
   const buttonWidth = 40;
 
-  const undoNotificationCopy = undoState?.tasks.length === 1
-    ? `Task "${undoState?.tasks[0].name}" ${actionVerb}` : `${undoState?.tasks.length} tasks ${actionVerb}`;
-
-  console.log('undo notification copy:', undoNotificationCopy);
+  const undoNotificationCopy = multipleTasksInLastAction
+    ? `${undoState?.tasks.length} tasks ${actionVerb}` : `Task "${undoState?.tasks[0].name}" ${actionVerb}`;
+  const openTasksCopy = multipleTasksInLastAction ? "Select tasks" : "Open task"
 
   return (
     <AnimatePresence>
@@ -87,15 +88,14 @@ export const UndoNotification: FC = () => {
             style={{ maxWidth: `calc(100vw - ${158 + buttonWidth * visibleButtons}px)` }}
           >
             {
-              undoState?.tasks.length === 1 ?
+              multipleTasksInLastAction ? (
+                <p>{undoNotificationCopy}</p>
+              ) :
                 (<>
                   <p>Task &quot;</p>
                   <span>{`${undoState?.tasks[0].name}`} </span>
                   <p>{`" ${actionVerb}`}</p>
                 </>)
-                : (
-                  <p>{undoNotificationCopy}</p>
-                )
             }
           </div>
           <button title="Undo Action (Ctrl + Z)" onClick={undoTaskAction} type="button">
@@ -106,10 +106,10 @@ export const UndoNotification: FC = () => {
               <button
                 type="button"
                 className="open-button view-task-button"
-                title="Open task (Ctrl + O)"
+                title={`${openTasksCopy} (Ctrl + O)`}
                 onClick={openTask}
               >
-                <img src={openIcon} alt="Open task" className="ignore-cursor svg-filter" draggable="false" />
+                <img src={openIcon} alt={openTasksCopy} className="ignore-cursor svg-filter" draggable="false" />
               </button>
             )}
             <button

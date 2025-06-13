@@ -10,7 +10,7 @@ import store from '@renderer/app/store';
 import { hideContextMenu } from '@renderer/features/menu-state/menuSlice';
 import {
   clearSelectedTasks,
-  duplicateTask,
+  duplicateTasks,
   removeFromColumn,
   removeTasks,
   togglePinTask,
@@ -43,7 +43,7 @@ export const TaskContextMenu: React.FC = () => {
   );
   useHotkey(
     ['mod+d'],
-    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))),
+    () => doIfTaskMenusAreClosed(() => dropdownAction(task, (t) => dispatch(duplicateTasks([t])))),
     Menu.None,
   );
   useHotkey(
@@ -111,7 +111,7 @@ export const TaskContextMenu: React.FC = () => {
           <li
             className={inListView || showRemoveFromColumnBtn ? 'menu-top-border' : ''}
             title="Duplicate task (Ctrl + D)"
-            onClick={() => dropdownAction(task, (t) => dispatch(duplicateTask(t)))}
+            onClick={() => dropdownAction(task, (t) => dispatch(duplicateTasks([t])))}
           >
             <img src={duplicateIcon} className="task-tile-image" draggable="false" alt="" />
             <p>Duplicate</p>

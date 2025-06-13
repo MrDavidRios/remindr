@@ -24,7 +24,6 @@ import { updateUserState } from "../user-state/userSlice";
 import {
   addTaskReducer,
   completeTaskReducer,
-  duplicateTaskReducer,
   duplicateTasksReducer,
   markTaskIncompleteReducer,
   pinTasksReducer,
@@ -83,8 +82,6 @@ export const taskListSlice = createSlice({
       addTaskReducer(state, action, saveTaskData),
     updateTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
       updateTaskReducer(state, action, saveTaskData),
-    duplicateTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
-      duplicateTaskReducer(state, action, saveTaskData),
     completeTask: (state, action: PayloadAction<InstanceType<typeof Task>>) =>
       completeTaskReducer(state, action, saveTaskData),
     markTaskIncomplete: (
@@ -155,6 +152,16 @@ export const taskListSlice = createSlice({
 
       state.lastSelectedTaskNoShift = action.payload;
       state.selectedTasks = [action.payload];
+    },
+    setSelectedTasks: (
+      state,
+      action: PayloadAction<InstanceType<typeof Task>[]>
+    ) => {
+      const tasksToAddToSelection = action.payload.filter(
+        (task) => getTaskIdx(task, state.value) !== -1
+      );
+
+      state.selectedTasks = tasksToAddToSelection;
     },
     addSelectedTask: (
       state,
@@ -235,15 +242,6 @@ export const taskListSlice = createSlice({
     setTaskDisplayOutdated: (state, action: PayloadAction<boolean>) => {
       state.taskListDisplayOutdated = action.payload;
     },
-    selectLastModifiedTask: (state) => {
-      if (!state.lastTaskListAction) return;
-      if (state.lastTaskListAction.tasks.length !== 1) return;
-
-      const taskIdx = getTaskIdx(state.lastTaskListAction.tasks[0], state.value);
-      if (taskIdx === -1) return;
-
-      state.selectedTasks = [state.value[taskIdx]];
-    },
     undoTaskListChange: (state) => {
       if (!state.lastTaskListAction) return;
       if (state.lastTaskListAction.undone) return;
@@ -268,6 +266,8 @@ export const taskListSlice = createSlice({
           case "update":
           case "complete":
           case "markIncomplete":
+          case "pin":
+          case "unpin":
             state.value[taskIdx] = task;
             break;
           case "complete-recurring": {
@@ -405,7 +405,6 @@ export const {
   addTask,
   updateTask,
   updateTasks,
-  duplicateTask,
   completeTask,
   markTaskIncomplete,
   removeTasks,
@@ -420,11 +419,11 @@ export const {
   addSelectedTask,
   removeSelectedTask,
   clearSelectedTasks,
+  setSelectedTasks,
   selectTasksBetween,
   selectAllTasksInGroup,
   deselectAllTasksInGroup,
   setTaskDisplayOutdated,
-  selectLastModifiedTask,
   undoTaskListChange,
   advanceRecurringReminder,
   updateTaskGroupOrder,

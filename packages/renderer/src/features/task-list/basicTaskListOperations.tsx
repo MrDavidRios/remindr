@@ -158,24 +158,6 @@ export const markTaskIncompleteReducer = (
   saveData(state.value);
 };
 
-export const duplicateTaskReducer = (
-  state: TaskListState,
-  action: PayloadAction<InstanceType<typeof Task>>,
-  saveData: (taskList: Task[]) => void
-) => {
-  const clone = JSON.parse(JSON.stringify(action.payload));
-  clone.creationTime = Date.now();
-
-  state.value.push(clone);
-
-  state.lastTaskListAction = {
-    type: "duplicate",
-    tasks: [action.payload],
-    undone: false,
-  };
-  saveData(state.value);
-};
-
 export const removeTasksReducer = (
   state: TaskListState,
   action: PayloadAction<InstanceType<typeof Task>[]>,
@@ -209,6 +191,12 @@ export const duplicateTasksReducer = (
     state.value.push(clone);
   });
 
+  state.lastTaskListAction = {
+    type: "duplicate",
+    tasks: action.payload,
+    undone: false,
+  };
+
   saveData(state.value);
 };
 
@@ -222,6 +210,12 @@ export const pinTasksReducer = (
     state.value[taskIdx].pinned = true;
   });
 
+  state.lastTaskListAction = {
+    type: "pin",
+    tasks: action.payload,
+    undone: false,
+  };
+
   saveData(state.value);
 };
 
@@ -234,6 +228,12 @@ export const unpinTasksReducer = (
     const taskIdx = getTaskIdx(task, state.value);
     state.value[taskIdx].pinned = false;
   });
+
+  state.lastTaskListAction = {
+    type: "unpin",
+    tasks: action.payload,
+    undone: false,
+  };
 
   saveData(state.value);
 };

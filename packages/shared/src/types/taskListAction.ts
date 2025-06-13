@@ -5,7 +5,9 @@ export type TaskListAction =
   | 'complete'
   | 'complete-recurring'
   | 'markIncomplete'
-  | 'duplicate';
+  | 'duplicate'
+  | 'pin'
+  | 'unpin';
 
 export function getTaskListActionVerb(action: TaskListAction): string {
   switch (action) {
@@ -22,6 +24,10 @@ export function getTaskListActionVerb(action: TaskListAction): string {
       return 'marked incomplete';
     case 'duplicate':
       return 'duplicated';
+    case 'pin':
+      return 'pinned';
+    case 'unpin':
+      return 'unpinned';
     default:
       throw new Error(`Invalid action type: ${action}`);
   }
