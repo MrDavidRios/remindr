@@ -1,4 +1,5 @@
-import { Repeat, ScheduledReminder } from "../types/index.js";
+import { Repeat } from "src/types/classes/task/repeatInfo.js";
+import { ScheduledReminder } from "../types/index.js";
 import { addMonths, getReminderDate } from "./datefunctions.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
 

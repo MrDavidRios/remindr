@@ -674,7 +674,7 @@ export async function loadTaskData(): Promise<TaskCollection | string> {
 export async function loadStreamsData(): Promise<Stream[] | string> {
   await waitUntilFirestoreInitialized();
 
-  let streamsList: Stream[];
+  let streamsList: Stream[] = [];
 
   if (getAppMode() !== AppMode.Online) {
     streamsList = (store.get("streamList") as Stream[]) ?? [];
@@ -687,8 +687,6 @@ export async function loadStreamsData(): Promise<Stream[] | string> {
   }
 
   log.info("(loadStreamsData) Loading streams data...");
-
-  streamsList = [];
 
   const docData = await documentExists(streamsDocRef);
 

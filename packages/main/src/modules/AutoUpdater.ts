@@ -1,9 +1,9 @@
 import { ipcMain } from "electron";
 import log from "electron-log";
-import type { UpdateDownloadedEvent } from "electron-updater";
 import electronUpdater, {
   type AppUpdater,
   type Logger,
+  type UpdateDownloadedEvent,
 } from "electron-updater";
 import { AppModule } from "../AppModule.js";
 import { getMainWindow } from "../utils/getMainWindow.js";
@@ -21,7 +21,7 @@ export class AutoUpdater implements AppModule {
     logger = null,
     downloadNotification = undefined,
   }: {
-    logger?: Logger | null | undefined;
+    logger?: Logger | null;
     downloadNotification?: DownloadNotification;
   } = {}) {
     this.#logger = logger;

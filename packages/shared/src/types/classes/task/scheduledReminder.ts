@@ -1,4 +1,5 @@
 import { generateUniqueID } from "../../../utils/index.js";
+import { FrequencyType, Repeat, RepeatInfo } from "./repeatInfo.js";
 
 /**
  * Scheduled reminder time class.
@@ -25,7 +26,12 @@ export class ScheduledReminder {
 
   reminderMeridiem: "AM" | "PM";
 
+  /**
+   * @deprecated replaced by repeatInfo. Kept for backwards compatibility.
+   */
   repeat: Repeat;
+
+  repeatInfo: RepeatInfo;
 
   id: number;
 
@@ -36,7 +42,11 @@ export class ScheduledReminder {
     hour?: number,
     minute?: number,
     meridiem?: "AM" | "PM",
+    /**
+     * @deprecated
+     */
     repeat?: Repeat,
+    repeatInfo?: RepeatInfo,
     id?: number
   ) {
     this.reminderYear = year ?? -1; // Default values to signal that the task does not have a remind date
@@ -46,15 +56,7 @@ export class ScheduledReminder {
     this.reminderMinute = minute ?? -1;
     this.reminderMeridiem = meridiem ?? "AM";
     this.repeat = repeat ?? Repeat.NoRepeat;
+    this.repeatInfo = repeatInfo ?? new RepeatInfo(FrequencyType.Never);
     this.id = id ?? generateUniqueID();
   }
-}
-
-export enum Repeat {
-  NoRepeat = "Don't Repeat",
-  Daily = "Daily",
-  Weekdays = "Weekdays",
-  Weekly = "Weekly",
-  Monthly = "Monthly",
-  Yearly = "Yearly",
 }

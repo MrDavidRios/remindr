@@ -1,13 +1,13 @@
 import {
   getDaysBetweenDates,
-  getRepeatValue,
   isBetweenDates,
   isCurrentMinute,
   isOverdue,
   msUntilNextMinute,
+  reminderRepeats,
   ScheduledReminder,
   taskHasReminders,
-  type Task,
+  type Task
 } from "@remindr/shared";
 import Store from "electron-store";
 import { notify } from "./notifications.js";
@@ -80,7 +80,7 @@ function checkForReminders(): void {
       const scheduledReminder = task.scheduledReminders[j];
 
       if (isCurrentMinute(scheduledReminder)) {
-        if (getRepeatValue(scheduledReminder.repeat)) {
+        if (reminderRepeats(scheduledReminder)) {
           advanceRecurringReminder(task, j);
         }
 
@@ -90,7 +90,7 @@ function checkForReminders(): void {
       else if (closedDuringReminderTime(scheduledReminder, wasIdle)) {
         notify(JSON.stringify(task), j);
 
-        if (getRepeatValue(scheduledReminder.repeat)) {
+        if (reminderRepeats(scheduledReminder)) {
           advanceRecurringReminder(task, j);
         }
       }

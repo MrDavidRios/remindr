@@ -1,8 +1,8 @@
-import { Repeat } from "../types/classes/task/scheduledReminder.js";
+import { Repeat } from "../types/classes/task/repeatInfo.js";
 
 /**
  * Backwards-compatible method of getting `Repeat` enum values. The enum type of `Repeat` was changed from `number`
- * to `string` in v2.2.3.
+ * to `string` in v2.2.3, and deprecated in v2.2.5.
  * @param repeat
  * @returns
  */

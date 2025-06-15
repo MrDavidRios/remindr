@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { Repeat, ScheduledReminder, type Task } from "../types/index.js";
+import { Repeat } from "src/types/classes/task/repeatInfo.js";
+import { ScheduledReminder, type Task } from "../types/index.js";
 import { getReminderDate } from "./datefunctions.js";
 import { generateUniqueID } from "./idutils.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
