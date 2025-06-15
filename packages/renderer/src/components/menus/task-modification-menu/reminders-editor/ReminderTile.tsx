@@ -5,10 +5,10 @@ import type { DateFormat, MenuRect, ScheduledReminder } from "@remindr/shared";
 import {
   delay,
   getFormattedReminderTime,
+  getReadableRepeatValue,
   getReminderDisplayDate,
-  getRepeatValue,
   isOverdue,
-  reminderRepeats,
+  reminderRepeats
 } from "@remindr/shared";
 import { convertDOMRectToMenuRect } from "@renderer/scripts/utils/menuutils";
 import type { FC } from "react";
@@ -86,7 +86,7 @@ export const ReminderTile: FC<ReminderTileProps> = ({
             className="repeat-indicator svg-filter"
             src={repeatIcon}
             draggable="false"
-            title={`Repeats ${getRepeatValue(reminder.repeat)}`}
+            title={getReadableRepeatValue(reminder, dateFormat)}
             style={{ paddingRight: 6 }}
             alt=""
           />

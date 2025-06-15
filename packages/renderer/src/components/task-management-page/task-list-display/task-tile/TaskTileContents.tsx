@@ -6,11 +6,11 @@ import subtasksIcon from "@assets/icons/subtasks.svg";
 import type { Task } from "@remindr/shared";
 import {
   getFormattedReminderTime,
+  getReadableRepeatValue,
   getReminderDisplayDate,
-  getRepeatValue,
   isOverdue,
   reminderRepeats,
-  taskHasNotes,
+  taskHasNotes
 } from "@remindr/shared";
 import {
   completeTask,
@@ -68,9 +68,8 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
       <div>
         <p className="task-title">{task.name}</p>
         <div
-          className={`reminder-time-container ${
-            hasIndicators && "contains-images"
-          }`}
+          className={`reminder-time-container ${hasIndicators && "contains-images"
+            }`}
         >
           {hasReminders && (
             <div className={timeDisplayClasses}>
@@ -99,9 +98,7 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
               className={`${indicatorClasses} repeat`}
               src={repeatIcon}
               draggable={false}
-              title={`Repeats ${getRepeatValue(
-                task.scheduledReminders[0].repeat
-              )}`}
+              title={getReadableRepeatValue(task.scheduledReminders[0], dateFormat)}
               alt=""
             />
           )}

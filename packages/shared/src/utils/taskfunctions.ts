@@ -1,10 +1,10 @@
 import _ from "lodash";
-import { Repeat } from "src/types/classes/task/repeatInfo.js";
+import { Repeat } from "../types/classes/task/repeatInfo.js";
 import { ScheduledReminder, type Task } from "../types/index.js";
 import { getReminderDate } from "./datefunctions.js";
 import { generateUniqueID } from "./idutils.js";
-import { getRepeatValue } from "./repeatcompatibility.js";
 import { getNextRepeatDate } from "./repeatfunctions.js";
+import { reminderRepeats } from "./repeatutils.js";
 import {
   getDate,
   setDate,
@@ -38,7 +38,7 @@ export function postponeTask(task: Task, minutes: number, idx = 0): Task {
    * 1. Snooze reminder date
    * 2. Return taskToReturn
    */
-  if (getRepeatValue(reminder.repeat) === Repeat.NoRepeat) {
+  if (!reminderRepeats(reminder)) {
     const snoozedDate = getReminderDate(reminder);
     snoozedDate.setMinutes(snoozedDate.getMinutes() + minutes);
     taskToReturn.scheduledReminders[idx] = setDate(
@@ -108,7 +108,6 @@ export function taskHasRecurringReminders(task: Task): boolean {
 
 export function getEarliestReminder(task: Task): ScheduledReminder {
   if (task.scheduledReminders.length === 0) {
-    console.log("task:", JSON.parse(JSON.stringify(task)));
     throw new Error("Task has no reminders");
   }
 

@@ -2,14 +2,14 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import {
   generateUniqueID,
   getNextRepeatDate,
-  getRepeatValue,
   getTaskColumnIdx,
+  reminderRepeats,
   Repeat,
   ScheduledReminder,
   setDate,
   sortReminders,
   Task,
-  taskHasRecurringReminders,
+  taskHasRecurringReminders
 } from "@remindr/shared";
 import {
   getIdxInTaskList,
@@ -92,7 +92,7 @@ export const completeTaskReducer = (
   // If the task has recurring reminders, advance the reminders and keep the task
 
   // Incomplete task
-  if (getRepeatValue(task.scheduledReminders[0].repeat) === Repeat.NoRepeat) {
+  if (!reminderRepeats(task.scheduledReminders[0])) {
     // If the current reminder doesn't repeat, remove it from the uncompleted task
     state.value[taskIdx].scheduledReminders.splice(0, 1);
   } else {

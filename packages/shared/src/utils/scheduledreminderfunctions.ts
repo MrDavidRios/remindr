@@ -1,8 +1,6 @@
-import { FrequencyType, Repeat } from "src/types/classes/task/repeatInfo.js";
 import { DateFormat } from "../types/dateformat.js";
 import { ScheduledReminder } from "../types/index.js";
 import { formatDate, getReminderDate } from "./datefunctions.js";
-import { getRepeatValue } from "./repeatcompatibility.js";
 
 export function getScheduledReminderClone(
   scheduledReminder: ScheduledReminder
@@ -112,14 +110,6 @@ export function getDate(reminder: ScheduledReminder): Date {
 export const getSerializableScheduledReminder = (
   scheduledReminder: ScheduledReminder
 ) => JSON.parse(JSON.stringify(scheduledReminder));
-
-export function reminderRepeats(scheduledReminder: ScheduledReminder): boolean {
-  if (scheduledReminder.repeatInfo === undefined) {
-    return getRepeatValue(scheduledReminder.repeat) !== Repeat.NoRepeat;
-  } else {
-    return scheduledReminder.repeatInfo.frequencyType !== FrequencyType.Never;
-  }
-}
 
 export function sortReminders(
   reminderList: ScheduledReminder[]

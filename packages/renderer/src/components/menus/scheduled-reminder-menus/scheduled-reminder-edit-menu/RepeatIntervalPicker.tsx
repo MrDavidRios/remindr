@@ -1,6 +1,6 @@
 import repeatIcon from "@assets/icons/repeat.svg";
-import type { ScheduledReminder } from "@remindr/shared";
-import { getRepeatValue, getScheduledReminderClone } from "@remindr/shared";
+import type { DateFormat, ScheduledReminder } from "@remindr/shared";
+import { getReadableRepeatValue, getScheduledReminderClone } from "@remindr/shared";
 import { AnimatePresence } from "framer-motion";
 import type { FC } from "react";
 import { useRef, useState } from "react";
@@ -9,11 +9,13 @@ import { RepeatIntervalsMenu } from "./RepeatIntervalsMenu";
 interface RepeatIntervalPickerProps {
   reminder: ScheduledReminder;
   updateReminder: (reminder: ScheduledReminder) => void;
+  dateFormat: DateFormat
 }
 
 export const RepeatIntervalPicker: FC<RepeatIntervalPickerProps> = ({
   reminder,
   updateReminder,
+  dateFormat
 }) => {
   const [showRepeatIntervalsMenu, setShowRepeatIntervalsMenu] = useState(false);
 
@@ -38,7 +40,7 @@ export const RepeatIntervalPicker: FC<RepeatIntervalPickerProps> = ({
         type="button"
       >
         <img src={repeatIcon} className="svg-filter" draggable="false" alt="" />
-        <p id="repeatIntervalInputLabel">{getRepeatValue(reminder.repeat)}</p>
+        <p id="repeatIntervalInputLabel">{getReadableRepeatValue(reminder, dateFormat)}</p>
         <AnimatePresence>
           {showRepeatIntervalsMenu && (
             <RepeatIntervalsMenu

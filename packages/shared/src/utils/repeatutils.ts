@@ -1,8 +1,20 @@
-import { FrequencyType, RepeatDurationType } from "src/types/classes/task/repeatInfo.js";
-import { ScheduledReminder } from "src/types/classes/task/scheduledReminder.js";
-import { DateFormat } from "src/types/dateformat.js";
+import { FrequencyType, Repeat, RepeatDurationType } from "../types/classes/task/repeatInfo.js";
+import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
+import { DateFormat } from "../types/dateformat.js";
 import { formatDate } from "./datefunctions.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
+
+export function reminderRepeats(scheduledReminder: ScheduledReminder): boolean {
+    if (scheduledReminder.repeatInfo === undefined) {
+        console.log('reminder repeats (old):', scheduledReminder)
+
+        return getRepeatValue(scheduledReminder.repeat) !== Repeat.NoRepeat;
+    } else {
+        console.log('reminder repeats (new):', scheduledReminder)
+
+        return scheduledReminder.repeatInfo.frequencyType !== FrequencyType.Never;
+    }
+}
 
 export function getReadableRepeatValue(scheduledReminder: ScheduledReminder, dateFormat: DateFormat) {
     if (scheduledReminder.repeat !== undefined) {
@@ -60,6 +72,10 @@ export function getReadableRepeatDurationValue(scheduledReminder: ScheduledRemin
     if (durationType === RepeatDurationType.FixedAmount) {
         const remindersLeft = scheduledReminder.repeatInfo.duration as number - scheduledReminder.repeatInfo.elapsedReminders;
         return remindersLeft > 1 ? `${remindersLeft} more times` : `${remindersLeft} more time`;
+    }
+
+    if (durationType !== RepeatDurationType.Date) {
+        throw new Error('Unexpected repeat duration type: ', durationType)
     }
 
     return `until ${formatDate(scheduledReminder.repeatInfo.duration as Date, dateFormat)}`
