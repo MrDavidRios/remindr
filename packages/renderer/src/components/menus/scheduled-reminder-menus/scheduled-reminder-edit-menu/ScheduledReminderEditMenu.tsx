@@ -77,9 +77,9 @@ export const ScheduledReminderEditMenu: FC = () => {
       parsedHour > 12
         ? parsedHour
         : standardToMilHour(
-          parsedHour,
-          updatedScheduledReminder.reminderMeridiem
-        );
+            parsedHour,
+            updatedScheduledReminder.reminderMeridiem
+          );
 
     updatedScheduledReminder.reminderHour = hourVal;
     updatedScheduledReminder.reminderMinute = parseInt(
@@ -306,7 +306,6 @@ export const ScheduledReminderEditMenu: FC = () => {
         <RepeatIntervalPicker
           reminder={updatedReminder}
           updateReminder={setUpdatedReminder}
-          dateFormat={dateFormat}
         />
 
         <button

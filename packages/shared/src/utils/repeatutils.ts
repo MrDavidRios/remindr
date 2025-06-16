@@ -1,7 +1,10 @@
 import {
   FrequencyType,
+  frequencyTypeToAdverb,
+  frequencyTypeToPluralNoun,
   Repeat,
   RepeatDurationType,
+  weekdays,
 } from "../types/classes/task/repeatInfo.js";
 import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
 import { DateFormat } from "../types/dateformat.js";
@@ -36,38 +39,43 @@ export function getReadableRepeatFrequencyValue(
     return `Repeats ${getRepeatValue(scheduledReminder.repeat)}`;
   }
 
-  const { frequencyType } = scheduledReminder.repeatInfo;
+  const { frequencyType, frequency } = scheduledReminder.repeatInfo;
   if (frequencyType === FrequencyType.Never) return "Does not repeat";
 
   if (frequencyType === FrequencyType.Weekdays) {
-    const weekdays = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
     const selectedDays = scheduledReminder.repeatInfo.frequency as boolean[];
-    const selectedDaysStr = selectedDays
-      .map((selected, idx) => (selected ? weekdays[idx] : null))
-      .filter((day) => day !== null)
-      .join(", ");
-    return `Repeats on: ${selectedDaysStr}`;
+    const selectedDayNames = weekdays.filter((_, idx) => selectedDays[idx]);
+    if (selectedDayNames.length === 7) {
+      return "Repeats daily";
+    }
+
+    // If all days except Saturday and Sunday are selected, return "Repeats weekdays"
+    if (
+      selectedDays.slice(0, 5).every(Boolean) && // Monday to Friday are true
+      !selectedDays[5] && // Saturday is false
+      !selectedDays[6] // Sunday is false
+    ) {
+      return "Repeats weekdays";
+    }
+
+    if (selectedDayNames.length === 1) {
+      return `Repeats every ${selectedDayNames[0]}`;
+    }
+
+    if (selectedDayNames.length === 2) {
+      return `Repeats every ${selectedDayNames[0]} and ${selectedDayNames[1]}`;
+    }
+
+    return `Repeats every ${selectedDayNames.slice(0, -1).join(", ")}, and ${
+      selectedDayNames[selectedDayNames.length - 1]
+    }`;
   }
 
-  const unitMap: Record<FrequencyType, string> = {
-    [FrequencyType.FixedIntervalDays]: "days",
-    [FrequencyType.FixedIntervalWeeks]: "weeks",
-    [FrequencyType.FixedIntervalMonths]: "months",
-    [FrequencyType.FixedIntervalHours]: "hours",
-    [FrequencyType.FixedIntervalMinutes]: "minutes",
-    [FrequencyType.Weekdays]: "",
-    [FrequencyType.Never]: "",
-  };
-  const unit = unitMap[scheduledReminder.repeatInfo.frequencyType];
-  return `Repeats every ${scheduledReminder.repeatInfo.frequency} ${unit}`;
+  if (frequency === 1) {
+    return `Repeats ${frequencyTypeToAdverb[frequencyType]}`;
+  }
+
+  return `Repeats every ${scheduledReminder.repeatInfo.frequency} ${frequencyTypeToPluralNoun[frequencyType]}`;
 }
 
 export function getReadableRepeatDurationValue(
@@ -80,13 +88,14 @@ export function getReadableRepeatDurationValue(
 
   const { durationType } = scheduledReminder.repeatInfo;
   if (durationType === RepeatDurationType.Forever) {
-    return "forever";
+    return "";
   }
 
   if (durationType === RepeatDurationType.FixedAmount) {
     const remindersLeft =
       (scheduledReminder.repeatInfo.duration as number) -
       scheduledReminder.repeatInfo.elapsedReminders;
+
     return remindersLeft > 1
       ? `${remindersLeft} more times`
       : `${remindersLeft} more time`;
@@ -100,4 +109,33 @@ export function getReadableRepeatDurationValue(
     scheduledReminder.repeatInfo.duration as Date,
     dateFormat
   )}`;
+}
+
+export function getSimplifiedReadableRepeatValue(
+  scheduledReminder: ScheduledReminder
+) {
+  if (scheduledReminder.repeatInfo === undefined) {
+    return getRepeatValue(scheduledReminder.repeat);
+  }
+
+  const { frequencyType, durationType } = scheduledReminder.repeatInfo;
+  if (frequencyType === FrequencyType.Never) return "Don't Repeat";
+  if (durationType === RepeatDurationType.Forever) {
+    switch (frequencyType) {
+      case FrequencyType.FixedIntervalDays:
+        return "Daily";
+      case FrequencyType.FixedIntervalWeeks:
+        return "Weekly";
+      case FrequencyType.FixedIntervalMonths:
+        return "Monthly";
+      case FrequencyType.FixedIntervalYears:
+        return "Yearly";
+      case FrequencyType.Weekdays:
+        return "Weekdays";
+      default:
+        return "Custom";
+    }
+  }
+
+  return "Custom";
 }

@@ -56,7 +56,8 @@ export class ScheduledReminder {
     this.reminderMinute = minute ?? -1;
     this.reminderMeridiem = meridiem ?? "AM";
     this.repeat = repeat ?? Repeat.NoRepeat;
-    this.repeatInfo = repeatInfo ?? new RepeatInfo(FrequencyType.Never);
+    this.repeatInfo =
+      repeatInfo ?? new RepeatInfo({ frequencyType: FrequencyType.Never });
     this.id = id ?? generateUniqueID();
   }
 }
