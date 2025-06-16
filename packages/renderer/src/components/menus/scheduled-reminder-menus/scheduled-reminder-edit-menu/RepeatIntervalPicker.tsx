@@ -48,10 +48,10 @@ export const RepeatIntervalPicker: FC<RepeatIntervalPickerProps> = ({
           {showRepeatIntervalsMenu && (
             <RepeatIntervalsMenu
               setShowRepeatIntervalsMenu={updateRepeatIntervalsMenuState}
-              updateRepeatInterval={(repeatInterval) => {
+              updateRepeatInfo={(repeatInfo) => {
                 const scheduledReminderClone =
                   getScheduledReminderClone(reminder);
-                scheduledReminderClone.repeat = repeatInterval;
+                scheduledReminderClone.repeatInfo = repeatInfo;
                 updateReminder(scheduledReminderClone);
               }}
             />

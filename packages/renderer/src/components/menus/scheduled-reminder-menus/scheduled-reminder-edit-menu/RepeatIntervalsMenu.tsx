@@ -1,23 +1,23 @@
-import { Menu, Repeat } from "@remindr/shared";
+import { FrequencyType, Menu, RepeatInfo } from "@remindr/shared";
 import { closeDropdown } from "@renderer/features/menu-state/menuSlice";
 import { useAppDispatch } from "@renderer/hooks";
 import React from "react";
 import { DropdownMenu } from "../../dropdown-menu/DropdownMenu";
 
 interface RepeatIntervalsMenuProps {
-  updateRepeatInterval: (interval: Repeat) => void;
+  updateRepeatInfo: (repeatInfo: RepeatInfo) => void;
   setShowRepeatIntervalsMenu: (show: boolean) => void;
 }
 
 export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
-  updateRepeatInterval,
+  updateRepeatInfo: updateRepeatInterval,
   setShowRepeatIntervalsMenu,
 }) => {
   const dispatch = useAppDispatch();
 
-  function handleRepeatIntervalClick(
+  function handleRepeatChoiceClick(
     e: React.MouseEvent<HTMLLIElement, MouseEvent>,
-    interval: Repeat
+    intervalType: FrequencyType | "custom"
   ) {
     // Make sure click events don't propogate to the dropdown open button
     e.stopPropagation();
@@ -30,7 +30,21 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
     );
 
     setShowRepeatIntervalsMenu(false);
-    updateRepeatInterval(interval);
+
+    if (intervalType === "custom") {
+      throw new Error("Custom repeat editor not yet implemented.");
+    }
+
+    const repeatInfo = new RepeatInfo({
+      frequencyType: intervalType,
+      frequency: 1, // Default to 1 for all intervals
+    });
+
+    if (intervalType === FrequencyType.Weekdays) {
+      repeatInfo.frequency = [true, true, true, true, true, false, false];
+    }
+
+    updateRepeatInterval(repeatInfo);
   }
 
   return (
@@ -41,21 +55,39 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
       clickOutsideExceptions={["#repeatIntervalInputButton"]}
       aria-label="Repeat Interval Menu"
     >
-      <li onClick={(e) => handleRepeatIntervalClick(e, Repeat.Daily)}>Daily</li>
-      <li onClick={(e) => handleRepeatIntervalClick(e, Repeat.Weekdays)}>
+      <li
+        onClick={(e) =>
+          handleRepeatChoiceClick(e, FrequencyType.FixedIntervalDays)
+        }
+      >
+        Daily
+      </li>
+      <li onClick={(e) => handleRepeatChoiceClick(e, FrequencyType.Weekdays)}>
         Weekdays
       </li>
-      <li onClick={(e) => handleRepeatIntervalClick(e, Repeat.Weekly)}>
+      <li
+        onClick={(e) =>
+          handleRepeatChoiceClick(e, FrequencyType.FixedIntervalWeeks)
+        }
+      >
         Weekly
       </li>
-      <li onClick={(e) => handleRepeatIntervalClick(e, Repeat.Monthly)}>
+      <li
+        onClick={(e) =>
+          handleRepeatChoiceClick(e, FrequencyType.FixedIntervalMonths)
+        }
+      >
         Monthly
       </li>
-      <li onClick={(e) => handleRepeatIntervalClick(e, Repeat.Yearly)}>
-        Yearly
+      <li
+        className="menu-top-border"
+        onClick={(e) => handleRepeatChoiceClick(e, "custom")}
+      >
+        Custom
       </li>
       <li
-        onClick={(e) => handleRepeatIntervalClick(e, Repeat.NoRepeat)}
+        className="menu-top-border"
+        onClick={(e) => handleRepeatChoiceClick(e, FrequencyType.Never)}
         style={{ color: "#bf5252" }}
       >
         Don&apos;t Repeat

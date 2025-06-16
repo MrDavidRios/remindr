@@ -49,6 +49,11 @@ export function getReadableRepeatFrequencyValue(
       return "Repeats daily";
     }
 
+    if (typeof selectedDays === "number") {
+      console.error("Frequency type is Weekdays but frequency is a number");
+      return "Repeats never";
+    }
+
     // If all days except Saturday and Sunday are selected, return "Repeats weekdays"
     if (
       selectedDays.slice(0, 5).every(Boolean) && // Monday to Friday are true
@@ -102,7 +107,8 @@ export function getReadableRepeatDurationValue(
   }
 
   if (durationType !== RepeatDurationType.Date) {
-    throw new Error("Unexpected repeat duration type: ", durationType);
+    console.error("Unexpected repeat duration type: ", durationType);
+    return "";
   }
 
   return `until ${formatDate(
