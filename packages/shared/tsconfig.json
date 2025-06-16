@@ -13,7 +13,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "declarationMap": true
   },
   "include": ["src"]
 }
