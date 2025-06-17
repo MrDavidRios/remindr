@@ -2571,8 +2571,12 @@ input::-webkit-inner-spin-button {
   background-color: transparent;
   box-shadow: none;
 }
-.select-box:active {
+.select-box.active {
   position: inherit;
+}
+.select-box.active > .selected-option {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .select-box,
 .select-box .options-container,

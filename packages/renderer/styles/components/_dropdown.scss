@@ -10,8 +10,13 @@
     box-shadow: none;
   }
 
-  &:active {
+  &.active {
     position: inherit;
+
+    > .selected-option {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 
   &,
