@@ -2471,7 +2471,7 @@ input::-webkit-inner-spin-button {
   cursor: pointer;
 }
 .dates .days .day.old {
-  color: rgb(148, 148, 148);
+  color: var(--text-color-secondary);
 }
 .dates .days .day.selected:focus-visible {
   outline: 2px solid var(--ui-accent-color);
@@ -2489,6 +2489,11 @@ input::-webkit-inner-spin-button {
   box-shadow: none;
   background-color: var(--ui-accent-color);
   color: var(--text-color-over-accent);
+}
+.dates .days .day:disabled {
+  background-color: transparent;
+  color: var(--text-color-secondary);
+  cursor: default;
 }
 .dates.active {
   display: block;

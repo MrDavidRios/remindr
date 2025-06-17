@@ -1,30 +1,45 @@
-import doubleExpandArrowIcon from '@assets/icons/double-expand-arrow.png';
-import expandArrowIcon from '@assets/icons/expand-arrow.png';
-import { addMonths, getDayNameFromIdx, getDaysInMonth, getMonthName, subtractMonths } from '@remindr/shared';
-import { useAppSelector } from '@renderer/hooks';
-import React, { useEffect, useState } from 'react';
-import { Day } from './Day';
+import doubleExpandArrowIcon from "@assets/icons/double-expand-arrow.png";
+import expandArrowIcon from "@assets/icons/expand-arrow.png";
+import {
+  addMonths,
+  getDayNameFromIdx,
+  getDaysInMonth,
+  getMonthName,
+  subtractMonths,
+} from "@remindr/shared";
+import { useAppSelector } from "@renderer/hooks";
+import React, { useEffect, useState } from "react";
+import { Day } from "./Day";
 
 interface DatePickerProps {
   date: Date;
   onChange: (date: Date) => void;
+  disablePastDays?: boolean;
 }
 
-export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
+export const DatePicker: React.FC<DatePickerProps> = ({
+  date,
+  onChange,
+  disablePastDays = false,
+}) => {
   const [dateView, setDateView] = useState(date);
-  const firstDayOfWeek = useAppSelector((state) => state.settings.value.weekStartDay ?? 0);
+  const firstDayOfWeek = useAppSelector(
+    (state) => state.settings.value.weekStartDay ?? 0
+  );
 
   const daysArray = getDaysArray(dateView, firstDayOfWeek);
   const cols = 7;
   const rows = Math.ceil(daysArray.length / cols);
 
   const dayRefs = Array.from({ length: rows }, () =>
-    Array.from({ length: cols }, () => React.createRef<HTMLButtonElement>()),
+    Array.from({ length: cols }, () => React.createRef<HTMLButtonElement>())
   );
 
   const changeMonthAndFocus = (newDate: Date, firstDay: boolean): void => {
     const newDaysArray = getDaysArray(newDate, firstDayOfWeek);
-    const dayIdx = firstDay ? getFirstValidDayIdx(newDaysArray) : getLastValidDayIdx(newDaysArray);
+    const dayIdx = firstDay
+      ? getFirstValidDayIdx(newDaysArray)
+      : getLastValidDayIdx(newDaysArray);
 
     setDateView(newDate);
     setFocusedDayIdx(dayIdx);
@@ -57,7 +72,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
         <button
           className="arrows prev-yr left"
           title="Previous year"
-          onClick={() => setDateView(new Date(dateView.getFullYear() - 1, dateView.getMonth(), 1))}
+          onClick={() =>
+            setDateView(
+              new Date(dateView.getFullYear() - 1, dateView.getMonth(), 1)
+            )
+          }
           type="button"
           aria-label="Previous year"
         >
@@ -93,7 +112,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
         <button
           className="arrows next-yr right"
           title="Next year"
-          onClick={() => setDateView(new Date(dateView.getFullYear() + 1, dateView.getMonth(), 1))}
+          onClick={() =>
+            setDateView(
+              new Date(dateView.getFullYear() + 1, dateView.getMonth(), 1)
+            )
+          }
           type="button"
           aria-label="Next year"
         >
@@ -124,9 +147,14 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                 viewDate={dateView}
                 selectedDate={date}
                 day={day}
+                disablePastDays={disablePastDays}
                 ref={ref}
                 onClick={() => {
-                  const newDate = new Date(dateView.getFullYear(), dateView.getMonth(), day);
+                  const newDate = new Date(
+                    dateView.getFullYear(),
+                    dateView.getMonth(),
+                    day
+                  );
 
                   onChange(newDate);
                 }}
@@ -142,11 +170,11 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                   const onFirstDay = dayIdx === getFirstValidDayIdx();
                   const onLastDay = dayIdx === getLastValidDayIdx();
 
-                  if (e.key === 'ArrowUp' || e.key === 'w') {
+                  if (e.key === "ArrowUp" || e.key === "w") {
                     newI = i > 0 ? i - 1 : i;
-                  } else if (e.key === 'ArrowDown' || e.key === 's') {
+                  } else if (e.key === "ArrowDown" || e.key === "s") {
                     newI = i < rows - 1 ? i + 1 : i;
-                  } else if (e.key === 'ArrowLeft' || e.key === 'a') {
+                  } else if (e.key === "ArrowLeft" || e.key === "a") {
                     // Going left
                     newJ = j > 0 ? j - 1 : j;
 
@@ -164,7 +192,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                         newI = rows - 1;
                       }
                     }
-                  } else if (e.key === 'ArrowRight' || e.key === 'd') {
+                  } else if (e.key === "ArrowRight" || e.key === "d") {
                     // Going right
                     newJ = j < cols - 1 ? j + 1 : j;
 
@@ -192,7 +220,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({ date, onChange }) => {
                 }}
               />
             );
-          }),
+          })
         )}
       </div>
     </div>
@@ -203,7 +231,11 @@ function getDaysArray(date: Date, firstDayOfWeek: number) {
   const daysInMonth = getDaysInMonth(date);
   const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   // prepend empty days
-  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  const firstDayOfMonth = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  ).getDay();
 
   if (firstDayOfMonth === firstDayOfWeek) return daysArray;
 

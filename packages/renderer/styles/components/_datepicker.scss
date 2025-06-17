@@ -118,7 +118,7 @@
       cursor: pointer;
 
       &.old {
-        color: rgb(148, 148, 148);
+        color: var(--text-color-secondary);
       }
 
       &.selected:focus-visible {
@@ -141,6 +141,12 @@
         box-shadow: none;
         background-color: var(--ui-accent-color);
         color: var(--text-color-over-accent);
+      }
+
+      &:disabled {
+        background-color: transparent;
+        color: var(--text-color-secondary);
+        cursor: default;
       }
     }
   }

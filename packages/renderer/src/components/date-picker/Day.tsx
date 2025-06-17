@@ -1,35 +1,52 @@
-import { getMonthName } from '@remindr/shared';
-import React from 'react';
+import { getMonthName } from "@remindr/shared";
+import React from "react";
 
 interface DayProps extends React.HTMLProps<HTMLButtonElement> {
   day: number;
   viewDate: Date;
   selectedDate: Date;
+  disablePastDays: boolean;
 }
 
 export const Day = React.forwardRef<HTMLButtonElement, DayProps>(
-  ({ day = -1, viewDate, selectedDate, onClick, onKeyDown }, ref) => {
-    const dateWithDay = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
+  (
+    { day = -1, viewDate, selectedDate, disablePastDays, onClick, onKeyDown },
+    ref
+  ) => {
+    const dateWithDay = new Date(
+      viewDate.getFullYear(),
+      viewDate.getMonth(),
+      day
+    );
     const isToday = dateWithDay.toDateString() === new Date().toDateString();
 
     // creates a new Date object representing the current date at midnight to compare
     const dateInPast = dateWithDay < new Date(new Date().setHours(0, 0, 0, 0));
     const selected = selectedDate.toDateString() === dateWithDay.toDateString();
     const uninteractable = day === -1;
+    const disabled = disablePastDays && dateInPast;
 
     // selected day in different month
-    const additionalClasses = `${dateInPast ? 'old' : 'new'} ${selected ? 'selected' : ''} ${isToday ? 'today' : ''}
+    const additionalClasses = `${dateInPast ? "old" : "new"} ${
+      selected ? "selected" : ""
+    } ${isToday ? "today" : ""}
     `;
-    const classes = `day ${uninteractable ? 'uninteractable' : additionalClasses}`;
+    const classes = `day ${
+      uninteractable ? "uninteractable" : additionalClasses
+    } ${disabled ? "disabled" : ""}`;
 
-    const diffMonthSelected = selectedDate.getMonth() !== dateWithDay.getMonth();
+    const diffMonthSelected =
+      selectedDate.getMonth() !== dateWithDay.getMonth();
     const tabbable = (diffMonthSelected && day === 1) || selected;
 
     return (
       <button
         ref={ref}
         className={classes}
-        aria-label={`${getMonthName(dateWithDay, false)} ${day}, ${dateWithDay.getFullYear()}`}
+        aria-label={`${getMonthName(
+          dateWithDay,
+          false
+        )} ${day}, ${dateWithDay.getFullYear()}`}
         onClick={(e) => {
           if (onClick && !uninteractable) onClick(e);
         }}
@@ -38,15 +55,16 @@ export const Day = React.forwardRef<HTMLButtonElement, DayProps>(
 
           // Enter is used as a key to save scheduled reminder changes.
           // Make sure that here, it's used for the date picker specifically, not to save the scheduled reminder edit changes.
-          if (e.key === 'Enter') e.stopPropagation();
+          if (e.key === "Enter") e.stopPropagation();
 
           onKeyDown(e);
         }}
         tabIndex={tabbable ? 0 : -1}
         type="button"
+        disabled={uninteractable || disabled}
       >
-        {uninteractable ? '' : day}
+        {uninteractable ? "" : day}
       </button>
     );
-  },
+  }
 );

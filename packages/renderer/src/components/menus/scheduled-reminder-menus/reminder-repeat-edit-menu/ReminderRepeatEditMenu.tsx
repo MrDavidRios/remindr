@@ -263,6 +263,7 @@ export const ReminderRepeatEditMenu: FC = () => {
               onChange={(date) => setRepeatEndDateTimestamp(date.getTime())}
               parentMenu={Menu.ReminderRepeatEditMenu}
               disabled={durationOption !== RepeatDurationType.Date}
+              disablePastDays
             />
           </label>
         </div>

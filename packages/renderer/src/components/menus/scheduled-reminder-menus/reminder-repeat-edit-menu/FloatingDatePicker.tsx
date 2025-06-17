@@ -10,6 +10,7 @@ type FloatingDatePickerProps = {
   onChange: (date: Date) => void;
   parentMenu: Menu;
   disabled: boolean;
+  disablePastDays?: boolean;
 };
 
 const FloatingDatePicker: React.FC<FloatingDatePickerProps> = ({
@@ -17,6 +18,7 @@ const FloatingDatePicker: React.FC<FloatingDatePickerProps> = ({
   onChange,
   parentMenu,
   disabled,
+  disablePastDays,
 }) => {
   const [datePickerVisible, setDatePickerVisible] = useState(false);
 
@@ -53,6 +55,7 @@ const FloatingDatePicker: React.FC<FloatingDatePickerProps> = ({
               onChange(date);
               setDatePickerVisible(false);
             }}
+            disablePastDays={disablePastDays}
           />
         </ModalWrapper>
       )}
