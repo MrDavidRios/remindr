@@ -143,11 +143,6 @@ button:active {
   width: 100%;
 }
 
-input:focus {
-  outline: none;
-  border-bottom: 2px solid var(--ui-accent-color);
-}
-
 #update-notification {
   position: fixed;
   z-index: 10;

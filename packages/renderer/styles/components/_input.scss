@@ -1,17 +1,28 @@
 input {
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid var(--text-color-primary);
-  text-align: center;
-  color: var(--text-color-primary);
-  font-family: "Lato", sans-serif;
+  background-color: var(--surface-secondary);
 
-  &input:hover::-webkit-input-placeholder {
+  border: none;
+  border-bottom: none;
+  border-radius: var(--menu-border-radius);
+
+  color: var(--text-color-primary);
+  text-align: center;
+
+  &[type="number"] &[type="radio"] {
+    height: 30px;
+  }
+
+  &:hover::-webkit-input-placeholder {
     margin-bottom: 5px;
+  }
+
+  &:focus {
+    outline: 2px solid var(--ui-accent-color);
   }
 
   &:disabled {
     color: var(--text-color-secondary);
+    background-color: var(--surface-primary);
     border-color: var(--text-color-secondary);
   }
 }

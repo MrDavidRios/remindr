@@ -182,11 +182,6 @@ button:active {
   width: 100%;
 }
 
-input:focus {
-  outline: none;
-  border-bottom: 2px solid var(--ui-accent-color);
-}
-
 #update-notification {
   position: fixed;
   z-index: 10;
@@ -758,6 +753,8 @@ input:focus {
 
 #timeInputColon {
   padding-bottom: 4px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 #meridiemInputText {
@@ -2082,6 +2079,10 @@ input::-webkit-inner-spin-button {
   margin-left: 20px;
 }
 
+#reminderRepeatEditMenu input[type=number] {
+  width: 32px;
+  height: 30px;
+}
 #reminderRepeatEditMenu #repeatFrequencyTypeListbox {
   z-index: 1;
 }
@@ -2098,10 +2099,7 @@ input::-webkit-inner-spin-button {
   padding: 12px 32px;
 }
 .reminder-repeat-edit-menu-radio-group label > p {
-  margin-top: -2px;
-}
-.reminder-repeat-edit-menu-radio-group > div.options {
-  gap: 12px;
+  margin-top: -4px;
 }
 
 #weekdayPickerLabel {
@@ -2110,15 +2108,15 @@ input::-webkit-inner-spin-button {
   align-items: flex-start;
   justify-content: flex-start;
 }
+#weekdayPickerLabel > p {
+  margin-top: -2px;
+}
 
 #weekdayPickerWrapper {
   text-align: left;
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-#weekdayPickerWrapper > p {
-  margin-top: -2px;
 }
 
 .weekday-picker {
@@ -3462,18 +3460,25 @@ button:disabled:active {
 }
 
 input {
-  background-color: transparent;
+  background-color: var(--surface-secondary);
   border: none;
-  border-bottom: 2px solid var(--text-color-primary);
-  text-align: center;
+  border-bottom: none;
+  border-radius: var(--menu-border-radius);
   color: var(--text-color-primary);
-  font-family: "Lato", sans-serif;
+  text-align: center;
 }
-inputinput:hover::-webkit-input-placeholder {
+input[type=number] input[type=radio] {
+  height: 30px;
+}
+input:hover::-webkit-input-placeholder {
   margin-bottom: 5px;
+}
+input:focus {
+  outline: 2px solid var(--ui-accent-color);
 }
 input:disabled {
   color: var(--text-color-secondary);
+  background-color: var(--surface-primary);
   border-color: var(--text-color-secondary);
 }
 

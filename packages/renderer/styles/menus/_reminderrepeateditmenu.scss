@@ -1,4 +1,9 @@
 #reminderRepeatEditMenu {
+  input[type="number"] {
+    width: 32px;
+    height: 30px;
+  }
+
   #repeatFrequencyTypeListbox {
     z-index: 1;
   }
@@ -18,11 +23,7 @@
   padding: 12px 32px;
 
   label > p {
-    margin-top: -2px;
-  }
-
-  > div.options {
-    gap: 12px;
+    margin-top: -4px;
   }
 }
 
@@ -32,6 +33,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+
+  > p {
+    margin-top: -2px;
+  }
 }
 
 #weekdayPickerWrapper {
@@ -39,10 +44,6 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-
-  > p {
-    margin-top: -2px;
-  }
 }
 
 .weekday-picker {
