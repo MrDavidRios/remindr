@@ -85,11 +85,11 @@ export interface RepeatInfoOptions {
   durationType?: RepeatDurationType;
 
   /**
-   * If durationType is `Date`, this is the date when the repeat ends.
+   * If durationType is `Date`, this is the timestamp for when the repeat ends.
    * If durationType is `FixedAmount`, this is the number of times the repeat should occur.
    * If durationType is `Forever`, this is undefined.
    */
-  duration?: number | Date;
+  duration?: number;
 
   /**
    * If durationType is 'FixedAmount`, `elapsedReminders` keeps track of how many times this reminder has been triggered.
@@ -101,7 +101,7 @@ export class RepeatInfo {
   frequencyType: FrequencyType;
   frequency?: number | boolean[];
   durationType?: RepeatDurationType;
-  duration?: number | Date;
+  duration?: number;
   elapsedReminders = 0;
 
   constructor(options: RepeatInfoOptions) {

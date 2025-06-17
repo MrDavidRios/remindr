@@ -175,7 +175,7 @@ describe("Reminder Repeat Edit Menu", () => {
       );
       const reminder = getDefaultScheduledReminder();
       reminder.repeatInfo.durationType = RepeatDurationType.Date;
-      reminder.repeatInfo.duration = new Date("06-17-2025");
+      reminder.repeatInfo.duration = new Date("06-17-2025").getTime();
       editedTask.scheduledReminders = [reminder];
 
       renderWhileEditingTask({

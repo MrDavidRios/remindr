@@ -34,6 +34,9 @@ export const ReminderRepeatEditMenu: FC = () => {
   const editedTask = useAppSelector((state) =>
     getEditedTask(state.taskModificationState)
   );
+  const taskEditType = useAppSelector(
+    (state) => state.taskModificationState.lastEditType
+  );
   const reminderEditState = useAppSelector(
     (state) => state.taskModificationState.reminderEditState
   );
@@ -44,7 +47,7 @@ export const ReminderRepeatEditMenu: FC = () => {
   const handleSaveClick = () => {
     const getDuration = () => {
       if (durationOption === RepeatDurationType.Date) {
-        return repeatEndDate;
+        return repeatEndDateTimestamp;
       } else if (durationOption === RepeatDurationType.FixedAmount) {
         return durationCount;
       }
@@ -87,7 +90,11 @@ export const ReminderRepeatEditMenu: FC = () => {
 
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
     dispatch(setReminderEditState(reminderEditState));
-    dispatch(updateTask(editedTaskClone));
+
+    if (taskEditType === "edit") {
+      dispatch(updateTask(editedTaskClone));
+    }
+
     dispatch(hideMenu({ menu: Menu.ReminderRepeatEditMenu }));
   };
 
@@ -123,14 +130,15 @@ export const ReminderRepeatEditMenu: FC = () => {
   );
   const [durationCount, setDurationCount] = useState<number>(
     reminder.repeatInfo?.duration !== undefined &&
-      typeof reminder.repeatInfo?.duration === "number"
+      reminder.repeatInfo?.durationType === RepeatDurationType.FixedAmount
       ? reminder.repeatInfo?.duration
       : 1
   );
-  const [repeatEndDate, setRepeatEndDate] = useState<Date>(
-    reminder.repeatInfo?.durationType === RepeatDurationType.Date
-      ? (reminder.repeatInfo.duration as Date)
-      : new Date()
+  const [repeatEndDateTimestamp, setRepeatEndDateTimestamp] = useState<number>(
+    reminder.repeatInfo?.durationType === RepeatDurationType.Date &&
+      reminder.repeatInfo?.duration !== undefined
+      ? reminder.repeatInfo.duration
+      : new Date().getTime()
   );
 
   return (
@@ -251,8 +259,10 @@ export const ReminderRepeatEditMenu: FC = () => {
             />
             <p>Until</p>
             <FloatingDatePicker
-              value={repeatEndDate}
-              onChange={(date) => setRepeatEndDate(date)}
+              value={new Date(repeatEndDateTimestamp)}
+              onChange={(date) => setRepeatEndDateTimestamp(date.getTime())}
+              parentMenu={Menu.ReminderRepeatEditMenu}
+              disabled={durationOption !== RepeatDurationType.Date}
             />
           </label>
         </div>

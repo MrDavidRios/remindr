@@ -1,26 +1,62 @@
-import React from "react";
+import calendar from "@assets/icons/calendar-date-picker.svg";
+import { formatDate, Menu } from "@remindr/shared";
+import { DatePicker } from "@renderer/components/date-picker/DatePicker";
+import { ModalWrapper } from "@renderer/components/ModalWrapper";
+import { useAppSelector } from "@renderer/hooks";
+import React, { useState } from "react";
 
 type FloatingDatePickerProps = {
   value: Date;
   onChange: (date: Date) => void;
+  parentMenu: Menu;
+  disabled: boolean;
 };
 
 const FloatingDatePicker: React.FC<FloatingDatePickerProps> = ({
   value,
   onChange,
+  parentMenu,
+  disabled,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = new Date(e.target.value);
-    if (!isNaN(newDate.getTime())) {
-      onChange(newDate);
-    }
-  };
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
 
-  // Format date to yyyy-MM-dd for input value
-  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+  const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
+
+  const toggleDatePicker = () =>
+    datePickerVisible
+      ? setDatePickerVisible(false)
+      : setDatePickerVisible(true);
 
   return (
-    <input type="date" value={formatDate(value)} onChange={handleChange} />
+    <div id="floatingDatePickerWrapper">
+      <button
+        id="floatingDatePickerBtn"
+        onClick={toggleDatePicker}
+        disabled={disabled}
+      >
+        <img src={calendar} alt="date picker icon" />
+        {formatDate(value, dateFormat)}
+      </button>
+      {datePickerVisible && (
+        <ModalWrapper
+          parentMenu={parentMenu}
+          id="floatingDatePickerModal"
+          className="frosted"
+          onClose={() => setDatePickerVisible(false)}
+          closeOnClickOutside
+          ignoreGlobalClickOutsideExceptions
+          clickOutsideExceptions={["#floatingDatePickerBtn"]}
+        >
+          <DatePicker
+            date={value}
+            onChange={(date) => {
+              onChange(date);
+              setDatePickerVisible(false);
+            }}
+          />
+        </ModalWrapper>
+      )}
+    </div>
   );
 };
 

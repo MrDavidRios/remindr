@@ -112,7 +112,7 @@ export function getReadableRepeatDurationValue(
   }
 
   return `until ${formatDate(
-    scheduledReminder.repeatInfo.duration as Date,
+    new Date(scheduledReminder.repeatInfo.duration as number),
     dateFormat
   )}`;
 }

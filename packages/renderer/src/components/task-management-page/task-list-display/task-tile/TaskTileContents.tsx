@@ -10,7 +10,7 @@ import {
   getReminderDisplayDate,
   isOverdue,
   reminderRepeats,
-  taskHasNotes
+  taskHasNotes,
 } from "@remindr/shared";
 import {
   completeTask,
@@ -68,8 +68,9 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
       <div>
         <p className="task-title">{task.name}</p>
         <div
-          className={`reminder-time-container ${hasIndicators && "contains-images"
-            }`}
+          className={`reminder-time-container ${
+            hasIndicators && "contains-images"
+          }`}
         >
           {hasReminders && (
             <div className={timeDisplayClasses}>
@@ -98,7 +99,10 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
               className={`${indicatorClasses} repeat`}
               src={repeatIcon}
               draggable={false}
-              title={getReadableRepeatValue(task.scheduledReminders[0], dateFormat)}
+              title={getReadableRepeatValue(
+                task.scheduledReminders[0],
+                dateFormat
+              )}
               alt=""
             />
           )}
@@ -108,7 +112,7 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
                 className={`${indicatorClasses}`}
                 src={reminderIcon}
                 draggable={false}
-                title={`${task.scheduledReminders.length} Reminders`}
+                title={`${task.scheduledReminders.length} reminders`}
                 alt=""
               />
               <p>{task.scheduledReminders.length}</p>
