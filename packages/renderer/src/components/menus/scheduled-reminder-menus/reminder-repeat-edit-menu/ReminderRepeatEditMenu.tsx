@@ -23,6 +23,7 @@ import {
   setReminderEditState,
 } from "@renderer/features/task-modification/taskModificationSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
+import { useHotkey } from "@renderer/scripts/utils/hooks/usehotkey";
 import { FC, useState } from "react";
 import { FullScreenMenu } from "../../fullscreen-menu/FullScreenMenu";
 import FloatingDatePicker from "./FloatingDatePicker";
@@ -70,9 +71,7 @@ export const ReminderRepeatEditMenu: FC = () => {
 
     const repeatInfo = new RepeatInfo({
       frequencyType:
-        frequencyOption === "weekdays"
-          ? FrequencyType.Weekdays
-          : repeatIntervalType,
+        frequencyOption === "weekdays" ? FrequencyType.Weekdays : frequencyType,
       frequency:
         frequencyOption === "weekdays" ? pickedWeekdays : repeatInterval,
       durationType: durationOption,
@@ -97,6 +96,8 @@ export const ReminderRepeatEditMenu: FC = () => {
 
     dispatch(hideMenu({ menu: Menu.ReminderRepeatEditMenu }));
   };
+
+  useHotkey(["mod+s"], handleSaveClick, Menu.ReminderRepeatEditMenu);
 
   const [frequencyOption, setFrequencyOption] = useState<
     "fixedInterval" | "weekdays"
@@ -185,7 +186,10 @@ export const ReminderRepeatEditMenu: FC = () => {
             />
             <FrequencyTypeDropdown
               value={frequencyType}
-              onSelect={setFrequencyType}
+              onSelect={(freqType) => {
+                console.log("Selected frequency type:", freqType);
+                setFrequencyType(freqType);
+              }}
               disabled={frequencyOption !== "fixedInterval"}
               plural={repeatInterval > 1}
             />

@@ -29,7 +29,7 @@ export class ScheduledReminder {
   /**
    * @deprecated replaced by repeatInfo. Kept for backwards compatibility.
    */
-  repeat: Repeat;
+  repeat: Repeat | undefined;
 
   repeatInfo: RepeatInfo;
 
@@ -42,10 +42,6 @@ export class ScheduledReminder {
     hour?: number,
     minute?: number,
     meridiem?: "AM" | "PM",
-    /**
-     * @deprecated
-     */
-    repeat?: Repeat,
     repeatInfo?: RepeatInfo,
     id?: number
   ) {
@@ -55,7 +51,7 @@ export class ScheduledReminder {
     this.reminderHour = hour ?? -1;
     this.reminderMinute = minute ?? -1;
     this.reminderMeridiem = meridiem ?? "AM";
-    this.repeat = repeat ?? Repeat.NoRepeat;
+    this.repeat = undefined;
     this.repeatInfo =
       repeatInfo ?? new RepeatInfo({ frequencyType: FrequencyType.Never });
     this.id = id ?? generateUniqueID();

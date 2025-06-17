@@ -12,7 +12,7 @@ import { formatDate } from "./datefunctions.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
 
 export function reminderRepeats(scheduledReminder: ScheduledReminder): boolean {
-  if (scheduledReminder.repeatInfo === undefined) {
+  if (scheduledReminder.repeat !== undefined) {
     return getRepeatValue(scheduledReminder.repeat) !== Repeat.NoRepeat;
   } else {
     return scheduledReminder.repeatInfo.frequencyType !== FrequencyType.Never;
@@ -35,7 +35,7 @@ export function getReadableRepeatValue(
 export function getReadableRepeatFrequencyValue(
   scheduledReminder: ScheduledReminder
 ) {
-  if (scheduledReminder.repeatInfo === undefined) {
+  if (scheduledReminder.repeat !== undefined) {
     return `Repeats ${getRepeatValue(scheduledReminder.repeat)}`;
   }
 
@@ -120,25 +120,25 @@ export function getReadableRepeatDurationValue(
 export function getSimplifiedReadableRepeatValue(
   scheduledReminder: ScheduledReminder
 ) {
-  if (scheduledReminder.repeatInfo === undefined) {
+  if (scheduledReminder.repeat !== undefined) {
     return getRepeatValue(scheduledReminder.repeat);
   }
 
-  const { frequencyType, durationType } = scheduledReminder.repeatInfo;
+  const { frequency, frequencyType, durationType } =
+    scheduledReminder.repeatInfo;
   if (frequencyType === FrequencyType.Never) return "Don't Repeat";
   if (durationType === RepeatDurationType.Forever) {
     switch (frequencyType) {
       case FrequencyType.FixedIntervalDays:
-        return "Daily";
+        return frequency === 1 ? "Daily" : "Custom";
       case FrequencyType.FixedIntervalWeeks:
-        return "Weekly";
+        return frequency === 1 ? "Weekly" : "Custom";
       case FrequencyType.FixedIntervalMonths:
-        return "Monthly";
+        return frequency === 1 ? "Monthly" : "Custom";
       case FrequencyType.FixedIntervalYears:
-        return "Yearly";
+        return frequency === 1 ? "Yearly" : "Custom";
       case FrequencyType.Weekdays:
-        const selectedDays = scheduledReminder.repeatInfo
-          .frequency as boolean[];
+        const selectedDays = frequency as boolean[];
         if (
           selectedDays.slice(0, 5).every(Boolean) && // Monday to Friday are true
           !selectedDays[5] && // Saturday is false

@@ -1,7 +1,8 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   AppMode,
-  Repeat,
+  FrequencyType,
+  RepeatInfo,
   Task,
   TaskCollection,
   TaskListAction,
@@ -108,7 +109,9 @@ export const taskListSlice = createSlice({
     },
     togglePinTask(state, action: PayloadAction<InstanceType<typeof Task>>) {
       const taskIdx = getTaskIdx(action.payload, state.value);
-      const oldTaskState: Task = JSON.parse(JSON.stringify(state.value[taskIdx]));
+      const oldTaskState: Task = JSON.parse(
+        JSON.stringify(state.value[taskIdx])
+      );
 
       state.value[taskIdx].pinned = !state.value[taskIdx].pinned;
 
@@ -121,7 +124,9 @@ export const taskListSlice = createSlice({
     },
     removeFromColumn(state, action: PayloadAction<InstanceType<typeof Task>>) {
       const taskIdx = getTaskIdx(action.payload, state.value);
-      const oldTaskState: Task = JSON.parse(JSON.stringify(state.value[taskIdx]));
+      const oldTaskState: Task = JSON.parse(
+        JSON.stringify(state.value[taskIdx])
+      );
 
       state.value[taskIdx].columnIdx = undefined;
 
@@ -248,11 +253,9 @@ export const taskListSlice = createSlice({
 
       // If the task we're modifying through undo is selected, de-select it before modifying it.
       for (const task of state.lastTaskListAction.tasks) {
-        const selectedTaskIdx = getTaskIdx(
-          task,
-          state.selectedTasks
-        );
-        if (selectedTaskIdx >= 0) state.selectedTasks.splice(selectedTaskIdx, 1);
+        const selectedTaskIdx = getTaskIdx(task, state.selectedTasks);
+        if (selectedTaskIdx >= 0)
+          state.selectedTasks.splice(selectedTaskIdx, 1);
 
         const taskIdx = getTaskIdx(task, state.value);
         switch (state.lastTaskListAction?.type) {
@@ -316,7 +319,9 @@ export const taskListSlice = createSlice({
 
       state.value[taskIdx].scheduledReminders[
         action.payload.reminderIdx
-      ].repeat = Repeat.NoRepeat;
+      ].repeatInfo = JSON.parse(
+        JSON.stringify(new RepeatInfo({ frequencyType: FrequencyType.Never }))
+      );
       state.value[taskIdx].scheduledReminders.push(advancedScheduledReminder);
     },
     updateTaskGroupOrder: (
