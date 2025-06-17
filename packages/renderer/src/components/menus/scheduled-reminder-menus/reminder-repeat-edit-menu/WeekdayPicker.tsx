@@ -30,6 +30,7 @@ export const WeekdayPicker: React.FC<WeekdayPickerProps> = ({
         <button
           key={dayName}
           title={dayName}
+          aria-label={dayName}
           type="button"
           className={`weekday-btn${selected[idx] ? " selected" : ""}`}
           disabled={disabled}

@@ -1,5 +1,11 @@
-#reminderRepeatEditMenu #repeatFrequencyTypeListbox {
-  z-index: 1;
+#reminderRepeatEditMenu {
+  #repeatFrequencyTypeListbox {
+    z-index: 1;
+  }
+
+  .primary-button {
+    margin-top: 20px;
+  }
 }
 
 .reminder-repeat-edit-menu-radio-group {
@@ -21,6 +27,8 @@
 }
 
 #weekdayPickerLabel {
+  width: min-content;
+
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;

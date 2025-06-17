@@ -4,13 +4,24 @@
 
 import {
   FrequencyType,
+  getDefaultScheduledReminder,
+  getScheduledReminderClone,
   IntervalFrequencyType,
   isIntervalFrequencyType,
   Menu,
+  RepeatDurationType,
+  RepeatInfo,
   ScheduledReminder,
+  Task,
 } from "@remindr/shared";
 import { CloseMenuButton } from "@renderer/components/close-menu-button/CloseMenuButton";
-import { getEditedTask } from "@renderer/features/task-modification/taskModificationSlice";
+import { hideMenu, showDialog } from "@renderer/features/menu-state/menuSlice";
+import { updateTask } from "@renderer/features/task-list/taskListSlice";
+import {
+  getEditedTask,
+  setEditedTask,
+  setReminderEditState,
+} from "@renderer/features/task-modification/taskModificationSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
 import { FC, useState } from "react";
 import { FullScreenMenu } from "../../fullscreen-menu/FullScreenMenu";
@@ -26,42 +37,101 @@ export const ReminderRepeatEditMenu: FC = () => {
   const reminderEditState = useAppSelector(
     (state) => state.taskModificationState.reminderEditState
   );
+  const reminder: ScheduledReminder =
+    editedTask?.scheduledReminders[reminderEditState.idx] ??
+    getDefaultScheduledReminder();
 
   const handleSaveClick = () => {
-    throw new Error("Not implemented");
+    const getDuration = () => {
+      if (durationOption === RepeatDurationType.Date) {
+        return repeatEndDate;
+      } else if (durationOption === RepeatDurationType.FixedAmount) {
+        return durationCount;
+      }
+
+      return undefined;
+    };
+
+    const noWeekdaysSelected = pickedWeekdays.every(
+      (daySelected) => !daySelected
+    );
+    if (frequencyOption === "weekdays" && noWeekdaysSelected) {
+      dispatch(
+        showDialog({
+          title: "Select Weekdays",
+          message: "Please pick at least one weekday to continue.",
+        })
+      );
+      return;
+    }
+
+    const repeatInfo = new RepeatInfo({
+      frequencyType:
+        frequencyOption === "weekdays"
+          ? FrequencyType.Weekdays
+          : repeatIntervalType,
+      frequency:
+        frequencyOption === "weekdays" ? pickedWeekdays : repeatInterval,
+      durationType: durationOption,
+      duration: getDuration(),
+    });
+    const serializedRepeatInfo = JSON.parse(
+      JSON.stringify(repeatInfo)
+    ) as RepeatInfo;
+
+    // Create a new reminder with the updated repeat info
+    const updatedReminder = getScheduledReminderClone(reminder);
+    updatedReminder.repeatInfo = serializedRepeatInfo;
+    const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
+    editedTaskClone.scheduledReminders[reminderEditState.idx] = updatedReminder;
+
+    dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
+    dispatch(setReminderEditState(reminderEditState));
+    dispatch(updateTask(editedTaskClone));
+    dispatch(hideMenu({ menu: Menu.ReminderRepeatEditMenu }));
   };
 
-  const reminder: ScheduledReminder | undefined =
-    editedTask?.scheduledReminders[reminderEditState.idx];
   const [frequencyOption, setFrequencyOption] = useState<
     "fixedInterval" | "weekdays"
-  >("fixedInterval");
+  >(
+    isIntervalFrequencyType(reminder.repeatInfo?.frequencyType) ||
+      reminder.repeatInfo?.frequencyType === FrequencyType.Never
+      ? "fixedInterval"
+      : "weekdays"
+  );
 
-  const reminderFrequency = reminder?.repeatInfo?.frequency ?? 1;
+  const reminderFrequency = reminder.repeatInfo?.frequency ?? 1;
   const [repeatInterval, setRepeatInterval] = useState<number>(
     typeof reminderFrequency === "number" ? reminderFrequency : 1
   );
   const repeatIntervalType =
-    !isIntervalFrequencyType(reminder?.repeatInfo?.frequencyType) ||
-    reminder?.repeatInfo?.frequencyType === undefined
+    !isIntervalFrequencyType(reminder.repeatInfo?.frequencyType) ||
+    reminder.repeatInfo?.frequencyType === undefined
       ? FrequencyType.FixedIntervalDays
-      : reminder?.repeatInfo?.frequencyType;
+      : reminder.repeatInfo?.frequencyType;
   const [frequencyType, setFrequencyType] =
     useState<IntervalFrequencyType>(repeatIntervalType);
-  const [pickedWeekdays, setPickedWeekdays] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [pickedWeekdays, setPickedWeekdays] = useState(
+    typeof reminder.repeatInfo?.frequency !== "number" &&
+      reminder.repeatInfo?.frequency !== undefined
+      ? reminder.repeatInfo?.frequency
+      : [false, false, false, false, false, false, false]
+  );
 
-  const [durationOption, setDurationOption] = useState<
-    "forever" | "fixedAmount" | "date"
-  >("forever");
-  const [durationCount, setDurationCount] = useState<number>(1);
+  const [durationOption, setDurationOption] = useState<RepeatDurationType>(
+    reminder.repeatInfo?.durationType ?? RepeatDurationType.Forever
+  );
+  const [durationCount, setDurationCount] = useState<number>(
+    reminder.repeatInfo?.duration !== undefined &&
+      typeof reminder.repeatInfo?.duration === "number"
+      ? reminder.repeatInfo?.duration
+      : 1
+  );
+  const [repeatEndDate, setRepeatEndDate] = useState<Date>(
+    reminder.repeatInfo?.durationType === RepeatDurationType.Date
+      ? (reminder.repeatInfo.duration as Date)
+      : new Date()
+  );
 
   return (
     <FullScreenMenu
@@ -93,7 +163,9 @@ export const ReminderRepeatEditMenu: FC = () => {
               className="frequency-input"
               min={1}
               max={1000}
-              defaultValue={1}
+              defaultValue={
+                typeof reminderFrequency === "number" ? reminderFrequency : 1
+              }
               disabled={frequencyOption !== "fixedInterval"}
               onChange={(e) => {
                 const value = parseInt(e.target.value, 10);
@@ -110,23 +182,25 @@ export const ReminderRepeatEditMenu: FC = () => {
               plural={repeatInterval > 1}
             />
           </label>
-          <label id="weekdayPickerLabel">
-            <input
-              type="radio"
-              name="frequency"
-              value="weekdays"
-              checked={frequencyOption === "weekdays"}
-              onChange={() => setFrequencyOption("weekdays")}
-            />
-            <div id="weekdayPickerWrapper">
+          <div>
+            <label id="weekdayPickerLabel">
+              <input
+                type="radio"
+                name="frequency"
+                value="weekdays"
+                checked={frequencyOption === "weekdays"}
+                onChange={() => setFrequencyOption("weekdays")}
+              />
               <p>Weekdays</p>
+            </label>
+            <div id="weekdayPickerWrapper">
               <WeekdayPicker
                 selected={pickedWeekdays}
                 onChange={setPickedWeekdays}
                 disabled={frequencyOption !== "weekdays"}
               />
             </div>
-          </label>
+          </div>
         </div>
       </div>
       <div className="reminder-repeat-edit-menu-radio-group radio-group">
@@ -136,9 +210,9 @@ export const ReminderRepeatEditMenu: FC = () => {
             <input
               type="radio"
               name="duration"
-              value="forever"
-              checked={durationOption === "forever"}
-              onChange={() => setDurationOption("forever")}
+              value={RepeatDurationType.Forever}
+              checked={durationOption === RepeatDurationType.Forever}
+              onChange={() => setDurationOption(RepeatDurationType.Forever)}
             />
             <p>Forever</p>
           </label>
@@ -146,17 +220,17 @@ export const ReminderRepeatEditMenu: FC = () => {
             <input
               type="radio"
               name="duration"
-              value="fixedAmount"
-              checked={durationOption === "fixedAmount"}
-              onChange={() => setDurationOption("fixedAmount")}
+              value={RepeatDurationType.FixedAmount}
+              checked={durationOption === RepeatDurationType.FixedAmount}
+              onChange={() => setDurationOption(RepeatDurationType.FixedAmount)}
             />
             <input
               type="number"
               className="frequency-input"
               min={1}
               max={1000}
-              defaultValue={1}
-              disabled={durationOption !== "fixedAmount"}
+              defaultValue={durationCount}
+              disabled={durationOption !== RepeatDurationType.FixedAmount}
               onChange={(e) => {
                 const value = parseInt(e.target.value, 10);
                 if (!isNaN(value) && value > 0) {
@@ -171,22 +245,24 @@ export const ReminderRepeatEditMenu: FC = () => {
             <input
               type="radio"
               name="duration"
-              value="date"
-              checked={durationOption === "date"}
-              onChange={() => setDurationOption("date")}
+              value={RepeatDurationType.Date}
+              checked={durationOption === RepeatDurationType.Date}
+              onChange={() => setDurationOption(RepeatDurationType.Date)}
             />
-            <p>Until date</p>
-            <FloatingDatePicker value={new Date()} onChange={() => {}} />
+            <p>Until</p>
+            <FloatingDatePicker
+              value={repeatEndDate}
+              onChange={(date) => setRepeatEndDate(date)}
+            />
           </label>
         </div>
       </div>
-      {/*(${disableButton ? 'disabled' : ''}*/}
       <button
         className={`primary-button`}
         onClick={handleSaveClick}
         type="button"
       >
-        Save
+        Save Changes
       </button>
     </FullScreenMenu>
   );

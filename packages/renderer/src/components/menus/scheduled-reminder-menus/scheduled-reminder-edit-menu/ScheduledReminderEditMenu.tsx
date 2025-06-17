@@ -166,7 +166,7 @@ export const ScheduledReminderEditMenu: FC = () => {
     if (reminderEditState.idx === -1) return;
 
     setUpdatedReminder(reminder ?? getDefaultScheduledReminder());
-  }, [reminderEditState]);
+  }, [reminder, reminderEditState]);
 
   useEffect(() => {
     const waitAndFocus = async () => {

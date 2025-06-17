@@ -223,6 +223,19 @@ describe("getSimplifiedReadableRepeatValue", () => {
     expect(simplifiedReadableRepeatValue).toBe("Weekdays");
   });
 
+  it('returns "Custom" when reminder recurs on some weekdays and doesn\'t have a set duration', () => {
+    const reminder = new ScheduledReminder();
+    reminder.repeatInfo = new RepeatInfo({
+      frequencyType: FrequencyType.Weekdays,
+      frequency: [true, true, false, true, true, false, false],
+      durationType: RepeatDurationType.Forever,
+    });
+
+    const simplifiedReadableRepeatValue =
+      getSimplifiedReadableRepeatValue(reminder);
+    expect(simplifiedReadableRepeatValue).toBe("Custom");
+  });
+
   it('returns "Weekly" when reminder recurs weekly and doesn\'t have a set duration', () => {
     // Monthly, Yearly, Don't Repeat
     const reminder = new ScheduledReminder();

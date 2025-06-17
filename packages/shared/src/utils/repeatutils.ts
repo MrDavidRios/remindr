@@ -137,7 +137,15 @@ export function getSimplifiedReadableRepeatValue(
       case FrequencyType.FixedIntervalYears:
         return "Yearly";
       case FrequencyType.Weekdays:
-        return "Weekdays";
+        const selectedDays = scheduledReminder.repeatInfo
+          .frequency as boolean[];
+        if (
+          selectedDays.slice(0, 5).every(Boolean) && // Monday to Friday are true
+          !selectedDays[5] && // Saturday is false
+          !selectedDays[6]
+        )
+          return "Weekdays";
+        else return "Custom";
       default:
         return "Custom";
     }

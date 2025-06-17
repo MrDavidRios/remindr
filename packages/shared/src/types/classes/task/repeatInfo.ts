@@ -106,7 +106,7 @@ export class RepeatInfo {
 
   constructor(options: RepeatInfoOptions) {
     this.frequencyType = options.frequencyType;
-    this.frequency = options.frequency ?? 0;
+    this.frequency = options.frequency ?? 1;
     this.durationType = options.durationType ?? RepeatDurationType.Forever;
     this.duration = options.duration;
   }

@@ -2085,6 +2085,9 @@ input::-webkit-inner-spin-button {
 #reminderRepeatEditMenu #repeatFrequencyTypeListbox {
   z-index: 1;
 }
+#reminderRepeatEditMenu .primary-button {
+  margin-top: 20px;
+}
 
 .reminder-repeat-edit-menu-radio-group {
   width: 100%;
@@ -2102,6 +2105,7 @@ input::-webkit-inner-spin-button {
 }
 
 #weekdayPickerLabel {
+  width: min-content;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
