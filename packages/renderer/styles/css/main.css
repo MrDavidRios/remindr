@@ -1930,6 +1930,10 @@ input::-webkit-inner-spin-button {
   flex-direction: column;
   align-items: center;
   padding-right: 8px;
+  max-width: 180px;
+}
+#scheduledReminderEditMenu #timeInputContainer #readableCustomRepeatValue {
+  padding: 8px;
 }
 #scheduledReminderEditMenu #repeatIntervalInputButton button img,
 #scheduledReminderEditMenu #timeInputWrapper button img {

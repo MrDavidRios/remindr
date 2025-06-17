@@ -7,8 +7,10 @@ import {
   getDate,
   getDefaultScheduledReminder,
   getFormattedReminderTime,
+  getReadableRepeatValue,
   getReminderDisplayDate,
   getScheduledReminderClone,
+  getSimplifiedReadableRepeatValue,
   Menu,
   militaryToStandardHour,
   setDate,
@@ -307,6 +309,11 @@ export const ScheduledReminderEditMenu: FC = () => {
           reminder={updatedReminder}
           updateReminder={setUpdatedReminder}
         />
+        {getSimplifiedReadableRepeatValue(updatedReminder) === "Custom" && (
+          <p id="readableCustomRepeatValue" className="text-secondary">
+            {getReadableRepeatValue(updatedReminder, dateFormat)}
+          </p>
+        )}
 
         <button
           id="saveTaskButton"

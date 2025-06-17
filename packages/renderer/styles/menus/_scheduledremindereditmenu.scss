@@ -20,6 +20,12 @@
     align-items: center;
 
     padding-right: 8px;
+
+    max-width: 180px;
+
+    #readableCustomRepeatValue {
+      padding: 8px;
+    }
   }
 
   #repeatIntervalInputButton,
