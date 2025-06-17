@@ -1,5 +1,5 @@
+import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
 import { DateFormat } from "../types/dateformat.js";
-import { ScheduledReminder } from "../types/index.js";
 import { formatDate, getReminderDate } from "./datefunctions.js";
 
 export function getScheduledReminderClone(

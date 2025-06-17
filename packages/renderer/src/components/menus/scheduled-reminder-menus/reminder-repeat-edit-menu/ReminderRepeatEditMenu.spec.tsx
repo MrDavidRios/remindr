@@ -1,6 +1,8 @@
 import { renderWhileEditingTask } from "@mocks/renderHelpers";
 import { testTask } from "@mocks/testObjs";
 import {
+  createDefaultSettings,
+  formatDate,
   FrequencyType,
   getDefaultScheduledReminder,
   Menu,
@@ -191,9 +193,12 @@ describe("Reminder Repeat Edit Menu", () => {
       });
       expect(durationRadioButton).toBeChecked();
 
-      const reminderRepeatEndDatePicker =
-        screen.getByDisplayValue("2025-06-17");
-      expect(reminderRepeatEndDatePicker).toBeInTheDocument();
+      const reminderRepeatEndDatePicker = screen.getByRole("button", {
+        name: "date picker",
+      });
+      expect(reminderRepeatEndDatePicker).toHaveTextContent(
+        formatDate(new Date("06-17-2025"), createDefaultSettings().dateFormat)
+      );
     });
   });
 });

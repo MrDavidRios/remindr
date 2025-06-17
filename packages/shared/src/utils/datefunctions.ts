@@ -1,5 +1,5 @@
-import type { ScheduledReminder } from "../types/index.js";
-import { DateFormat } from "../types/index.js";
+import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
+import { DateFormat } from "../types/dateformat.js";
 
 export function getWeekNumber(date: Date): number {
   // Copy date so don't modify original

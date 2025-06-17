@@ -1,5 +1,6 @@
-import { Task } from "./classes/index.js";
-import { MenuDropdownMap, StreamTask } from "./index.js";
+import { Task } from "./classes/task/task.js";
+import { MenuDropdownMap } from "./menuDropdownMap.js";
+import { StreamTask } from "./stream.js";
 
 export enum Menu {
   TimeframeMenu,

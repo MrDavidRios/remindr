@@ -1,4 +1,4 @@
-import { TASK_COLUMNS } from '../index.js';
+import { TASK_COLUMNS } from "../constants/taskColumnMappings.js";
 
 export function getColumnIdxFromName(name: string) {
   // get idx of column by name (TASK_COLUMNS has idx as key and name as value)

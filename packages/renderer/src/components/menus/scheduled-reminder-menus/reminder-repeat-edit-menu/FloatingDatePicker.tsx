@@ -35,6 +35,7 @@ const FloatingDatePicker: React.FC<FloatingDatePickerProps> = ({
         id="floatingDatePickerBtn"
         onClick={toggleDatePicker}
         disabled={disabled}
+        aria-label="date picker"
       >
         <img src={calendar} alt="date picker icon" />
         {formatDate(value, dateFormat)}

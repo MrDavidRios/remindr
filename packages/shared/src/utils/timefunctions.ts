@@ -1,4 +1,4 @@
-import { ScheduledReminder } from '../types/index.js';
+import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
 
 /**
  * Formats an hour value to be displayed.
@@ -15,7 +15,7 @@ export function formatHour(hour: number): string {
  * @param {number} minute - Minute value (integer)
  */
 export function formatMinute(minute: number): string {
-  if (minute === 0) return '00';
+  if (minute === 0) return "00";
 
   if (minute < 10) return `0${minute}`;
 
@@ -31,20 +31,25 @@ export function formatMinute(minute: number): string {
 export function militaryToStandardHour(
   hour: number,
   meridiem = false,
-  format = false,
-): number | string | { hour: number; meridiem: string } | { hour: string; meridiem: string } {
+  format = false
+):
+  | number
+  | string
+  | { hour: number; meridiem: string }
+  | { hour: string; meridiem: string } {
   let _meridiem: string;
 
   // Get the meridiem value if requested
-  if (hour >= 12) _meridiem = 'PM';
-  else _meridiem = 'AM';
+  if (hour >= 12) _meridiem = "PM";
+  else _meridiem = "AM";
 
   // Convert the hour value
   let hourInStandardTime = hour > 12 ? hour - 12 : hour;
   if (hour === 0) hourInStandardTime = 12;
 
   if (meridiem) {
-    if (format) return { hour: formatHour(hourInStandardTime), meridiem: _meridiem };
+    if (format)
+      return { hour: formatHour(hourInStandardTime), meridiem: _meridiem };
     return { hour: hourInStandardTime, meridiem: _meridiem };
   }
   if (format) return formatHour(hourInStandardTime);
@@ -52,8 +57,12 @@ export function militaryToStandardHour(
 }
 
 export function milToStandardHour(
-  hour: number,
-): number | string | { hour: number; meridiem: string } | { hour: string; meridiem: string } {
+  hour: number
+):
+  | number
+  | string
+  | { hour: number; meridiem: string }
+  | { hour: string; meridiem: string } {
   return militaryToStandardHour(hour, false, true);
 }
 
@@ -69,7 +78,7 @@ export function standardToMilHour(hour: number, meridiem: string): number {
     return hour;
   }
 
-  if (meridiem === 'AM') {
+  if (meridiem === "AM") {
     if (hour === 12) return 0;
 
     return hour;
@@ -85,14 +94,19 @@ export function standardToMilHour(hour: number, meridiem: string): number {
  * Returns the formatted time of a reminder.
  * @param reminder
  */
-export function getFormattedReminderTime(reminderTime: ScheduledReminder, militaryTime: boolean): string {
+export function getFormattedReminderTime(
+  reminderTime: ScheduledReminder,
+  militaryTime: boolean
+): string {
   if (militaryTime) {
-    return `${reminderTime.reminderHour}:${formatMinute(reminderTime.reminderMinute)}`;
+    return `${reminderTime.reminderHour}:${formatMinute(
+      reminderTime.reminderMinute
+    )}`;
   }
 
-  return `${milToStandardHour(reminderTime.reminderHour)}:${formatMinute(reminderTime.reminderMinute)} ${
-    reminderTime.reminderMeridiem
-  }`;
+  return `${milToStandardHour(reminderTime.reminderHour)}:${formatMinute(
+    reminderTime.reminderMinute
+  )} ${reminderTime.reminderMeridiem}`;
 }
 
 export function singleToDoubleDigit(num: number): string {
@@ -109,7 +123,7 @@ export function formatSeconds(seconds: number): string {
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
 
-  let formattedTime = '';
+  let formattedTime = "";
   if (hours > 0) formattedTime += `${singleToDoubleDigit(hours)}:`;
   formattedTime += `${singleToDoubleDigit(minutes)}:`;
   formattedTime += `${singleToDoubleDigit(remainingSeconds)}`;

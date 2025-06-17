@@ -1,30 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { frequencyTypeToPluralNoun } from "../../dist/index.js";
+import { createDefaultSettings } from "../../../main/src/utils/defaultSettings.js";
 import {
   FrequencyType,
   frequencyTypeToAdverb,
-  IntervalFrequencyType,
+  frequencyTypeToPluralNoun,
   RepeatDurationType,
   RepeatInfo,
 } from "../../src/types/classes/task/repeatInfo.js";
 import { ScheduledReminder } from "../../src/types/classes/task/scheduledReminder.js";
-import { DateFormat } from "../../src/types/dateformat.js";
 import {
   getReadableRepeatValue,
   getSimplifiedReadableRepeatValue,
 } from "../../src/utils/repeatutils.js";
-
-const intervalFrequencyTypes: IntervalFrequencyType[] = [
-  FrequencyType.FixedIntervalMinutes,
-  FrequencyType.FixedIntervalHours,
-  FrequencyType.FixedIntervalDays,
-  FrequencyType.FixedIntervalWeeks,
-  FrequencyType.FixedIntervalMonths,
-  FrequencyType.FixedIntervalYears,
-];
+import { intervalFrequencyTypes } from "./repeatUtilConsts.js";
 
 describe("getReadableRepeatValue", () => {
-  const dateFormat = DateFormat.MDYText;
+  const dateFormat = createDefaultSettings().dateFormat;
 
   describe.for(intervalFrequencyTypes)("fixed interval %i", (frequencyType) => {
     it(`returns "Repeats ${frequencyTypeToAdverb[frequencyType]} when reminder recurs ${frequencyTypeToAdverb[frequencyType]} with no set duration`, () => {
@@ -171,7 +162,7 @@ describe("getReadableRepeatValue", () => {
         frequencyType: FrequencyType.FixedIntervalDays,
         frequency: 3,
         durationType: RepeatDurationType.Date,
-        duration: new Date("06-20-2025"),
+        duration: new Date("06-20-2025").getTime(),
       });
 
       reminder.repeatInfo.elapsedReminders = 4;

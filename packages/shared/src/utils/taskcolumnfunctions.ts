@@ -1,5 +1,11 @@
-import { getDate, getDaysBetweenDates, isOverdue, sortReminders } from '../index.js';
-import { ScheduledReminder, Task } from '../types/index.js';
+import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
+import { Task } from "../types/classes/task/task.js";
+import { getDaysBetweenDates } from "./datefunctions.js";
+import {
+  getDate,
+  isOverdue,
+  sortReminders,
+} from "./scheduledreminderfunctions.js";
 
 /**
  * Sets the task column idx for a task based on its earliest non-overdue reminder date.
@@ -22,7 +28,8 @@ export const getTaskColumnIdx = (task: Task): number | undefined => {
   const nonOverdueRemiders = reminders.filter((r) => !isOverdue(r));
 
   const lastReminderIdx = reminders.length - 1;
-  if (nonOverdueRemiders.length === 0) relevantReminder = reminders[lastReminderIdx];
+  if (nonOverdueRemiders.length === 0)
+    relevantReminder = reminders[lastReminderIdx];
   else relevantReminder = reminders[0];
 
   const reminderDate = getDate(relevantReminder);
@@ -32,7 +39,10 @@ export const getTaskColumnIdx = (task: Task): number | undefined => {
   return dayDiff;
 };
 
-export const columnTasksInDifferentOrder = (taskListA: Task[], taskListB: Task[]): boolean => {
+export const columnTasksInDifferentOrder = (
+  taskListA: Task[],
+  taskListB: Task[]
+): boolean => {
   for (const taskA of taskListA) {
     const taskB = taskListB.find((t) => t.creationTime === taskA.creationTime);
 

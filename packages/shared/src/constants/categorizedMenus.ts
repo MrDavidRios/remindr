@@ -1,4 +1,4 @@
-import { Menu, MenuType } from "../types/index.js";
+import { Menu, MenuType } from "../types/menu.js";
 
 /**
  * Menu Priority (top to bottom):
