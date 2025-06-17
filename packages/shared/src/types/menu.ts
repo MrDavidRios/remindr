@@ -19,6 +19,7 @@ export enum Menu {
   UpdateNotification,
   UndoNotification,
   AddExistingReminderMenu,
+  ReminderRepeatEditMenu,
   /** Used in cases where a `Menu` type needs to be specified but no `Menu` values qualify. */
   None,
 }

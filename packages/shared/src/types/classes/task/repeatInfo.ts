@@ -11,20 +11,30 @@ export enum Repeat {
 }
 
 export enum FrequencyType {
-  FixedIntervalMinutes,
-  FixedIntervalHours,
-  FixedIntervalDays,
-  FixedIntervalWeeks,
-  FixedIntervalMonths,
-  FixedIntervalYears,
-  Weekdays,
-  Never,
+  FixedIntervalMinutes = "FixedIntervalMinutes",
+  FixedIntervalHours = "FixedIntervalHours",
+  FixedIntervalDays = "FixedIntervalDays",
+  FixedIntervalWeeks = "FixedIntervalWeeks",
+  FixedIntervalMonths = "FixedIntervalMonths",
+  FixedIntervalYears = "FixedIntervalYears",
+  Weekdays = "Weekdays",
+  Never = "Never",
 }
 
 export type IntervalFrequencyType = Exclude<
   FrequencyType,
   FrequencyType.Weekdays | FrequencyType.Never
 >;
+
+export const isIntervalFrequencyType = (
+  type?: FrequencyType
+): type is IntervalFrequencyType => {
+  return (
+    type !== undefined &&
+    type !== FrequencyType.Weekdays &&
+    type !== FrequencyType.Never
+  );
+};
 
 export const frequencyTypeToPluralNoun: Record<FrequencyType, string> = {
   [FrequencyType.FixedIntervalMinutes]: "minutes",
@@ -57,9 +67,9 @@ export const weekdays = [
 ];
 
 export enum RepeatDurationType {
-  Forever,
-  FixedAmount,
-  Date,
+  Forever = "Forever",
+  FixedAmount = "FixedAmount",
+  Date = "Date",
 }
 
 export interface RepeatInfoOptions {

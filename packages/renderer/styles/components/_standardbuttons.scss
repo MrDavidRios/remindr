@@ -125,3 +125,7 @@
     filter: var(--error-filter);
   }
 }
+
+button:disabled:active {
+  position: static;
+}

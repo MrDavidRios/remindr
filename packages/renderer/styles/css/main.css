@@ -130,25 +130,6 @@ button:active {
   width: 300px;
 }
 
-input {
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid var(--text-color-primary);
-  text-align: center;
-  color: var(--text-color-primary);
-  transition-property: border-bottom;
-  transition-duration: 0.5s;
-  font-family: "Lato", sans-serif;
-}
-
-::-webkit-input-placeholder {
-  transition: all 0.25s;
-}
-
-input:hover::-webkit-input-placeholder {
-  margin-bottom: 5px;
-}
-
 .form-group {
   position: relative;
   margin: auto;
@@ -2101,6 +2082,75 @@ input::-webkit-inner-spin-button {
   margin-left: 20px;
 }
 
+#reminderRepeatEditMenu #repeatFrequencyTypeListbox {
+  z-index: 1;
+}
+
+.reminder-repeat-edit-menu-radio-group {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 32px;
+}
+.reminder-repeat-edit-menu-radio-group label > p {
+  margin-top: -2px;
+}
+.reminder-repeat-edit-menu-radio-group > div.options {
+  gap: 12px;
+}
+
+#weekdayPickerLabel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+#weekdayPickerWrapper {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#weekdayPickerWrapper > p {
+  margin-top: -2px;
+}
+
+.weekday-picker {
+  padding-top: 6px;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.weekday-btn {
+  text-align: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--surface-secondary);
+  outline: none;
+  cursor: pointer;
+}
+.weekday-btn:hover {
+  background: var(--surface-secondary);
+  filter: brightness(1.2);
+}
+.weekday-btn:disabled {
+  background: var(--surface-secondary);
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: none;
+}
+.weekday-btn.selected {
+  background: var(--ui-accent-color);
+  color: var(--text-color-over-accent);
+}
+.weekday-btn.selected:focus {
+  outline-color: var(--text-color-over-accent);
+}
+
 .context-menu {
   position: fixed;
   display: block;
@@ -2489,6 +2539,7 @@ input::-webkit-inner-spin-button {
 }
 .select-box:hover {
   background-color: transparent;
+  box-shadow: none;
 }
 .select-box:active {
   position: inherit;
@@ -2500,6 +2551,11 @@ input::-webkit-inner-spin-button {
 }
 .select-box label {
   cursor: pointer;
+}
+.select-box:disabled .selected-option {
+  color: var(--text-color-secondary);
+  background-color: transparent;
+  cursor: not-allowed;
 }
 .select-box .option .radio {
   display: none;
@@ -3206,6 +3262,10 @@ input::-webkit-inner-spin-button {
   filter: var(--error-filter);
 }
 
+button:disabled:active {
+  position: static;
+}
+
 .large-icon-button {
   display: flex;
   flex-direction: column;
@@ -3362,6 +3422,69 @@ input::-webkit-inner-spin-button {
   width: 3px;
   height: 12px;
   background-color: var(--surface-primary);
+}
+
+input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--text-color-primary);
+  text-align: center;
+  color: var(--text-color-primary);
+  font-family: "Lato", sans-serif;
+}
+inputinput:hover::-webkit-input-placeholder {
+  margin-bottom: 5px;
+}
+input:disabled {
+  color: var(--text-color-secondary);
+  border-color: var(--text-color-secondary);
+}
+
+input[type=radio] {
+  /* Add if not using autoprefixer */
+  -webkit-appearance: none;
+  /* Remove most all native input styles */
+  appearance: none;
+  /* Not removed via appearance */
+  margin: 0;
+  font: inherit;
+  color: var(--text-color-secondary);
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid currentColor;
+  border-radius: 50%;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type=radio]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--ui-accent-color);
+}
+
+input[type=radio]:checked::before {
+  transform: scale(1);
+}
+
+input[type=radio]:focus {
+  color: var(--ui-accent-color);
+}
+
+.radio-group > .options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radio-group > .options label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 #introScreen,

@@ -1,0 +1,17 @@
+input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--text-color-primary);
+  text-align: center;
+  color: var(--text-color-primary);
+  font-family: "Lato", sans-serif;
+
+  &input:hover::-webkit-input-placeholder {
+    margin-bottom: 5px;
+  }
+
+  &:disabled {
+    color: var(--text-color-secondary);
+    border-color: var(--text-color-secondary);
+  }
+}

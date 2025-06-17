@@ -1,5 +1,8 @@
 import { FrequencyType, Menu, RepeatInfo } from "@remindr/shared";
-import { closeDropdown } from "@renderer/features/menu-state/menuSlice";
+import {
+  closeDropdown,
+  showMenu,
+} from "@renderer/features/menu-state/menuSlice";
 import { useAppDispatch } from "@renderer/hooks";
 import React from "react";
 import { DropdownMenu } from "../../dropdown-menu/DropdownMenu";
@@ -32,7 +35,8 @@ export const RepeatIntervalsMenu: React.FC<RepeatIntervalsMenuProps> = ({
     setShowRepeatIntervalsMenu(false);
 
     if (intervalType === "custom") {
-      throw new Error("Custom repeat editor not yet implemented.");
+      dispatch(showMenu(Menu.ReminderRepeatEditMenu));
+      return;
     }
 
     const repeatInfo = new RepeatInfo({

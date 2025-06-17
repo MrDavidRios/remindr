@@ -1,0 +1,76 @@
+#reminderRepeatEditMenu #repeatFrequencyTypeListbox {
+  z-index: 1;
+}
+
+.reminder-repeat-edit-menu-radio-group {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 32px;
+
+  label > p {
+    margin-top: -2px;
+  }
+
+  > div.options {
+    gap: 12px;
+  }
+}
+
+#weekdayPickerLabel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+#weekdayPickerWrapper {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  > p {
+    margin-top: -2px;
+  }
+}
+
+.weekday-picker {
+  padding-top: 6px;
+  display: flex;
+  gap: 0.4rem;
+}
+
+.weekday-btn {
+  text-align: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--surface-secondary);
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-secondary);
+    filter: brightness(1.2);
+  }
+
+  &:disabled {
+    background: var(--surface-secondary);
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+    filter: none;
+  }
+
+  &.selected {
+    background: var(--ui-accent-color);
+    color: var(--text-color-over-accent);
+
+    &:focus {
+      outline-color: var(--text-color-over-accent);
+    }
+  }
+}

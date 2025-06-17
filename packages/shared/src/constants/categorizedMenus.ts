@@ -1,4 +1,4 @@
-import { Menu, MenuType } from '../types/index.js';
+import { Menu, MenuType } from "../types/index.js";
 
 /**
  * Menu Priority (top to bottom):
@@ -23,6 +23,7 @@ export const MENU_TYPES = new Map<Menu, MenuType>([
   [Menu.TaskCreateMenu, MenuType.Primary],
   [Menu.TaskEditMenu, MenuType.Primary],
   [Menu.ScheduledReminderEditMenu, MenuType.Secondary],
+  [Menu.ReminderRepeatEditMenu, MenuType.Modal],
 
   [Menu.TaskListViewSettingsMenu, MenuType.Floating],
   [Menu.AddExistingReminderMenu, MenuType.Floating],

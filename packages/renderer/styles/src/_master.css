@@ -92,25 +92,6 @@ button:active {
   width: 300px;
 }
 
-input {
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid var(--text-color-primary);
-  text-align: center;
-  color: var(--text-color-primary);
-  transition-property: border-bottom;
-  transition-duration: 0.5s;
-  font-family: "Lato", sans-serif;
-}
-
-::-webkit-input-placeholder {
-  transition: all 0.25s;
-}
-
-input:hover::-webkit-input-placeholder {
-  margin-bottom: 5px;
-}
-
 .form-group {
   position: relative;
   margin: auto;
