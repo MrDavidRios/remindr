@@ -1,14 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { AppMode, Page } from '@remindr/shared';
-import { unpausedStreamDialogMiddleware } from '@renderer/features/menu-state/middleware/unpausedStreamDialogMiddleware';
-import { unsavedTaskDialogMiddleware } from '../features/menu-state/middleware/unsavedTaskDialogMiddleware';
-import { initialSettingsState } from '../features/settings/settingsSlice';
-import { notificationEventMiddleware } from '../features/task-list/middleware/notificationEventMiddleware';
-import { overdueBadgeMiddleware } from '../features/task-list/middleware/overdueBadgeMiddleware';
-import { taskListStoreMiddleware } from '../features/task-list/middleware/taskListStoreMiddleware';
-import { initialUserState } from '../features/user-state/userSlice';
-import { getEmailVerifiedValue } from '../scripts/systems/authentication';
-import { rootReducer } from './rootReducer';
+import { configureStore } from "@reduxjs/toolkit";
+import { AppMode, Page } from "@remindr/shared";
+import { unpausedStreamDialogMiddleware } from "@renderer/features/menu-state/middleware/unpausedStreamDialogMiddleware";
+import { syncModifiedTaskMiddleware } from "@renderer/features/task-list/middleware/syncModifiedTaskMiddleware";
+import { unsavedTaskDialogMiddleware } from "../features/menu-state/middleware/unsavedTaskDialogMiddleware";
+import { initialSettingsState } from "../features/settings/settingsSlice";
+import { notificationEventMiddleware } from "../features/task-list/middleware/notificationEventMiddleware";
+import { overdueBadgeMiddleware } from "../features/task-list/middleware/overdueBadgeMiddleware";
+import { taskListStoreMiddleware } from "../features/task-list/middleware/taskListStoreMiddleware";
+import { initialUserState } from "../features/user-state/userSlice";
+import { getEmailVerifiedValue } from "../scripts/systems/authentication";
+import { rootReducer } from "./rootReducer";
 
 export const setupStore = (preloadedState?: Partial<RootState>) => {
   return configureStore({
@@ -20,7 +21,8 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
         .prepend(unpausedStreamDialogMiddleware.middleware)
         .concat(taskListStoreMiddleware)
         .concat(overdueBadgeMiddleware)
-        .concat(notificationEventMiddleware),
+        .concat(notificationEventMiddleware)
+        .concat(syncModifiedTaskMiddleware),
   });
 };
 
