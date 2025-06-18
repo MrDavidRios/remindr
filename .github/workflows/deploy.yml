@@ -42,6 +42,10 @@ jobs:
           echo "Contents of dist directory (detailed):"
           ls -la dist/
 
+      - name: Duplicate latest.yml to release.yml for auto-update visibility with old verions
+        run: |
+          if [ -f dist/latest.yml ]; then cp dist/latest.yml dist/release.yml; fi
+
       - run: gh release create v${{inputs.app-version}} dist/Remindr* dist/latest*.yml --draft --title "${{inputs.app-version}}" --repo ${{github.repository}}
         env:
           GH_TOKEN: ${{ github.token }}
