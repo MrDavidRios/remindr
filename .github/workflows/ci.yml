@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       distribution-channel:
-        description: Distribution channel for release. It can be `beta`, `alpha` or any string.
+        description: Distribution channel for release. It can be `latest`, `beta`, or `alpha`.
         required: false
         type: string
         default: "release"

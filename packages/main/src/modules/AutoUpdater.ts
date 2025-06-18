@@ -45,10 +45,6 @@ export class AutoUpdater implements AppModule {
       updater.logger = this.#logger || null;
       updater.fullChangelog = true;
 
-      if (import.meta.env.VITE_DISTRIBUTION_CHANNEL) {
-        updater.channel = import.meta.env.VITE_DISTRIBUTION_CHANNEL;
-      }
-
       log.transports.file.level = "info";
       updater.logger = log;
 
