@@ -1,7 +1,4 @@
-import {
-  FrequencyType,
-  RepeatInfo,
-} from "../../types/classes/task/repeatInfo.js";
+import { FrequencyType } from "../../types/classes/task/repeatInfo.js";
 import { ScheduledReminder } from "../../types/classes/task/scheduledReminder.js";
 import { generateUniqueID } from "../idutils.js";
 import {
@@ -63,9 +60,8 @@ export function advanceRecurringReminderInList(
     reminderListClone[scheduledReminderIdx]
   );
 
-  reminderListClone[scheduledReminderIdx].repeatInfo = JSON.parse(
-    JSON.stringify(new RepeatInfo({ frequencyType: FrequencyType.Never }))
-  );
+  reminderListClone[scheduledReminderIdx].repeatInfo.frequencyType =
+    FrequencyType.Never;
   reminderListClone.push(advancedScheduledReminder);
   return sortReminders(reminderListClone);
 }

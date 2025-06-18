@@ -32,7 +32,7 @@ describe("advanceRecurringReminder", () => {
       );
     });
 
-    it("adds non-recurring reminder once repeat end date has been reached", () => {
+    it("adds non-recurring reminder once repeat end date has been passed", () => {
       const fixedDurationReminder = getDefaultScheduledReminder();
       fixedDurationReminder.repeatInfo = new RepeatInfo({
         frequencyType: FrequencyType.FixedIntervalDays,
@@ -45,9 +45,11 @@ describe("advanceRecurringReminder", () => {
       expect(scheduledReminders.length).toBe(2);
       expect(scheduledReminders[1].repeatInfo.elapsedReminders).toBe(1);
       scheduledReminders = advanceRecurringReminderInList(scheduledReminders);
-      expect(scheduledReminders.length).toBe(2);
-      expect(scheduledReminders[1].repeatInfo.elapsedReminders).toBe(1);
-      expect(scheduledReminders[1].repeatInfo.frequencyType).toBe(
+      expect(scheduledReminders.length).toBe(3);
+      expect(scheduledReminders[2].repeatInfo.elapsedReminders).toBe(2);
+      scheduledReminders = advanceRecurringReminderInList(scheduledReminders);
+      expect(scheduledReminders.length).toBe(3);
+      expect(scheduledReminders[2].repeatInfo.frequencyType).toBe(
         FrequencyType.Never
       );
     });

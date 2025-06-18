@@ -170,6 +170,17 @@ export function canReminderBeFurtherAdvanced(
     case RepeatDurationType.Date:
       const nextRepeatDate = getNextRepeatDate(scheduledReminder);
       if (duration === undefined) return false;
+
+      // if same day, we can advance
+      const durationDate = new Date(duration);
+      if (
+        nextRepeatDate.getDate() === durationDate.getDate() &&
+        nextRepeatDate.getMonth() === durationDate.getMonth() &&
+        nextRepeatDate.getFullYear() === durationDate.getFullYear()
+      ) {
+        return true;
+      }
+
       return nextRepeatDate.getTime() < duration;
   }
 

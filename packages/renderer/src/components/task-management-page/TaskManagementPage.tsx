@@ -50,12 +50,15 @@ export function TaskManagementPage() {
         for (let i = 0; i < selectedTasks.length; i++) {
           if (
             selectedTasks[i].scheduledReminders.length > 0 &&
-            reminderRepeats(selectedTasks[i].scheduledReminders[0])
+            selectedTasks[i].scheduledReminders.some((r) => reminderRepeats(r))
           ) {
+            const reminderIdx = selectedTasks[i].scheduledReminders.findIndex(
+              (r) => reminderRepeats(r)
+            );
             dispatch(
               advanceRecurringReminderInTask({
                 task: selectedTasks[i],
-                reminderIdx: 0,
+                reminderIdx,
               })
             );
           }
