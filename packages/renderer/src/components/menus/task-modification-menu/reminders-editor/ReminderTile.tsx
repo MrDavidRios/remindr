@@ -8,7 +8,7 @@ import {
   getReadableRepeatValue,
   getReminderDisplayDate,
   isOverdue,
-  reminderRepeats
+  reminderRepeats,
 } from "@remindr/shared";
 import { convertDOMRectToMenuRect } from "@renderer/scripts/utils/menuutils";
 import type { FC } from "react";
@@ -20,6 +20,7 @@ interface ReminderTileProps {
   militaryTime: boolean;
   onEditReminder: (anchor?: MenuRect) => void;
   onDeleteReminder: () => void;
+  selected?: { actionType: "create" | "edit" };
 }
 
 export const ReminderTile: FC<ReminderTileProps> = ({
@@ -28,6 +29,7 @@ export const ReminderTile: FC<ReminderTileProps> = ({
   militaryTime,
   onEditReminder,
   onDeleteReminder,
+  selected,
 }) => {
   const tileRef = useRef<HTMLLIElement>(null);
   const tileRect = convertDOMRectToMenuRect(
@@ -53,7 +55,9 @@ export const ReminderTile: FC<ReminderTileProps> = ({
   return (
     <li
       ref={tileRef}
-      className="reminder-tile"
+      className={`reminder-tile ${
+        selected !== undefined ? selected.actionType : ""
+      }`}
       onClick={() => onEditReminder(tileRect)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") onEditReminder(tileRect);

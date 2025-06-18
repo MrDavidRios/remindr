@@ -2998,6 +2998,12 @@ input::-webkit-inner-spin-button {
   box-shadow: var(--subtle-box-shadow);
   border-radius: var(--menu-border-radius);
 }
+.reminder-tile.edit {
+  outline: 2px solid var(--ui-accent-color);
+}
+.reminder-tile.create {
+  outline: 2px dashed var(--ui-accent-color);
+}
 .reminder-tile .action-buttons:hover div > img, .reminder-tile .action-buttons:focus-visible div > img {
   filter: var(--ui-accent-color-filter);
 }

@@ -80,6 +80,14 @@
   box-shadow: var(--subtle-box-shadow);
   border-radius: var(--menu-border-radius);
 
+  &.edit {
+    outline: 2px solid var(--ui-accent-color);
+  }
+
+  &.create {
+    outline: 2px dashed var(--ui-accent-color);
+  }
+
   .action-buttons {
     &:hover,
     &:focus-visible {

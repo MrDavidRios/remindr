@@ -212,7 +212,7 @@ export const ScheduledReminderEditMenu: FC = () => {
       rightAlign={taskEditType === "edit"}
       id="scheduledReminderEditMenu"
       className="frosted"
-      clickOutsideExceptions={[".reminder-tile"]}
+      clickOutsideExceptions={[".reminder-tile.edit", ".reminder-tile.create"]}
       onClickOutside={() => {
         onMenuClose();
         dispatch(
