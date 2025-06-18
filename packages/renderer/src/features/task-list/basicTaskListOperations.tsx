@@ -1,15 +1,13 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import {
-  generateUniqueID,
-  getNextRepeatDate,
+  advanceRecurringReminderInList,
+  FrequencyType,
   getTaskColumnIdx,
   reminderRepeats,
-  Repeat,
+  RepeatInfo,
   ScheduledReminder,
-  setDate,
-  sortReminders,
   Task,
-  taskHasRecurringReminders
+  taskHasRecurringReminders,
 } from "@remindr/shared";
 import {
   getIdxInTaskList,
@@ -79,7 +77,11 @@ export const completeTaskReducer = (
     // If the task doesn't have recurring reminders, just remove it
     state.value[taskIdx].completed = true;
     state.value[taskIdx].completionTime = new Date().getTime();
-    state.lastTaskListAction = { type: "complete", tasks: [task], undone: false };
+    state.lastTaskListAction = {
+      type: "complete",
+      tasks: [task],
+      undone: false,
+    };
     saveData(state.value);
     return;
   }
@@ -96,21 +98,11 @@ export const completeTaskReducer = (
     // If the current reminder doesn't repeat, remove it from the uncompleted task
     state.value[taskIdx].scheduledReminders.splice(0, 1);
   } else {
-    const firstScheduledReminder = JSON.parse(
-      JSON.stringify(task.scheduledReminders[0])
-    );
-    const advancedScheduledReminder = setDate(
-      firstScheduledReminder,
-      getNextRepeatDate(firstScheduledReminder)
-    );
-    advancedScheduledReminder.id = generateUniqueID();
-
-    // Advance recurring reminder
-    state.value[taskIdx].scheduledReminders.splice(0, 1);
-    state.value[taskIdx].scheduledReminders.push(advancedScheduledReminder);
-    state.value[taskIdx].scheduledReminders = sortReminders(
+    state.value[taskIdx].scheduledReminders = advanceRecurringReminderInList(
       state.value[taskIdx].scheduledReminders
     );
+    // We want to remove the reminder that we completed
+    state.value[taskIdx].scheduledReminders.splice(0, 1);
     state.value[taskIdx].columnIdx = getTaskColumnIdx(state.value[taskIdx]);
   }
 
@@ -122,9 +114,11 @@ export const completeTaskReducer = (
    *     - Make sure it's not recurring anymore
    * 3. Mark the task complete
    */
-  const completedTask = JSON.parse(JSON.stringify(task)) as Task;
+  const completedTask: Task = JSON.parse(JSON.stringify(task));
   completedTask.creationTime = new Date().getTime();
-  scheduledReminderClone.repeat = Repeat.NoRepeat;
+  scheduledReminderClone.repeatInfo = JSON.parse(
+    JSON.stringify(new RepeatInfo({ frequencyType: FrequencyType.Never }))
+  );
   completedTask.scheduledReminders = [scheduledReminderClone];
   completedTask.completed = true;
   completedTask.completionTime = new Date().getTime();
@@ -154,7 +148,11 @@ export const markTaskIncompleteReducer = (
   // It is assumed that recurring reminders won't need any special treatment when marking tasks as incomplete.
   state.value[taskIdx].completed = false;
   state.value[taskIdx].completionTime = -1;
-  state.lastTaskListAction = { type: "markIncomplete", tasks: [task], undone: false };
+  state.lastTaskListAction = {
+    type: "markIncomplete",
+    tasks: [task],
+    undone: false,
+  };
   saveData(state.value);
 };
 

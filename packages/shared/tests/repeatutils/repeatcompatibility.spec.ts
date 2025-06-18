@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { Repeat } from "../../src/types/classes/task/repeatInfo.js";
-import { getRepeatValue } from "../../src/utils/repeatcompatibility.js";
+import { getRepeatValue } from "../../src/utils/repeatutils/repeatcompatibility.js";
 
 describe("getRepeatValue", () => {
   it("should return the correct Repeat value for number input", () => {

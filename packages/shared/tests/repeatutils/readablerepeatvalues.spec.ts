@@ -11,7 +11,7 @@ import { ScheduledReminder } from "../../src/types/classes/task/scheduledReminde
 import {
   getReadableRepeatValue,
   getSimplifiedReadableRepeatValue,
-} from "../../src/utils/repeatutils.js";
+} from "../../src/utils/repeatutils/repeatutils.js";
 import { intervalFrequencyTypes } from "./repeatUtilConsts.js";
 
 describe("getReadableRepeatValue", () => {

@@ -3,9 +3,9 @@ import { Repeat } from "../types/classes/task/repeatInfo.js";
 import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
 import { Task } from "../types/classes/task/task.js";
 import { getReminderDate } from "./datefunctions.js";
-import { getNextRepeatDate } from "./getnextrepeatdate.js";
 import { generateUniqueID } from "./idutils.js";
-import { reminderRepeats } from "./repeatutils.js";
+import { getNextRepeatDate } from "./repeatutils/getnextrepeatdate.js";
+import { reminderRepeats } from "./repeatutils/repeatutils.js";
 import {
   getDate,
   setDate,

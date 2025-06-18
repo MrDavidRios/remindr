@@ -1,17 +1,13 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   AppMode,
-  FrequencyType,
-  RepeatInfo,
   Task,
   TaskCollection,
   TaskListAction,
   Timeframe,
-  generateUniqueID,
-  getNextRepeatDate,
   getTimeframeDisplayName,
-  setDate,
 } from "@remindr/shared";
+import { advanceRecurringReminderInList } from "@remindr/shared/src";
 import {
   getTasksInGroup,
   sortForDisplay,
@@ -298,7 +294,7 @@ export const taskListSlice = createSlice({
       state.lastTaskListAction.undone = true;
       saveTaskData(state.value);
     },
-    advanceRecurringReminder: (
+    advanceRecurringReminderInTask: (
       state,
       action: PayloadAction<{
         task: InstanceType<typeof Task>;
@@ -308,21 +304,11 @@ export const taskListSlice = createSlice({
       const taskIdx = getTaskIdx(action.payload.task, state.value);
       const task = state.value[taskIdx];
 
-      const scheduledReminderClone = JSON.parse(
-        JSON.stringify(task.scheduledReminders[action.payload.reminderIdx])
-      );
-      const advancedScheduledReminder = setDate(
-        scheduledReminderClone,
-        getNextRepeatDate(scheduledReminderClone)
-      );
-      advancedScheduledReminder.id = generateUniqueID();
-
-      state.value[taskIdx].scheduledReminders[
+      const updatedScheduledReminders = advanceRecurringReminderInList(
+        task.scheduledReminders,
         action.payload.reminderIdx
-      ].repeatInfo = JSON.parse(
-        JSON.stringify(new RepeatInfo({ frequencyType: FrequencyType.Never }))
       );
-      state.value[taskIdx].scheduledReminders.push(advancedScheduledReminder);
+      state.value[taskIdx].scheduledReminders = updatedScheduledReminders;
     },
     updateTaskGroupOrder: (
       state,
@@ -430,7 +416,7 @@ export const {
   deselectAllTasksInGroup,
   setTaskDisplayOutdated,
   undoTaskListChange,
-  advanceRecurringReminder,
+  advanceRecurringReminderInTask,
   updateTaskGroupOrder,
   updateSearchQuery,
 } = taskListSlice.actions;

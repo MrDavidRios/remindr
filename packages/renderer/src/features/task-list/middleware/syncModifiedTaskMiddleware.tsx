@@ -15,7 +15,7 @@ import {
   getTaskIdx,
 } from "@renderer/scripts/utils/tasklistutils";
 import {
-  advanceRecurringReminder,
+  advanceRecurringReminderInTask,
   completeTask,
   removeTasks,
   togglePinTask,
@@ -50,7 +50,7 @@ export const syncModifiedTaskMiddleware: Middleware =
     // If currently edited task is updated externally, update edited task in taskModificationState
     const taskUpdateActions = [
       updateTask,
-      advanceRecurringReminder,
+      advanceRecurringReminderInTask,
       togglePinTask,
     ];
     if (

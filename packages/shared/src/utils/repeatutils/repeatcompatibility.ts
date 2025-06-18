@@ -1,4 +1,4 @@
-import { Repeat } from "../types/classes/task/repeatInfo.js";
+import { Repeat } from "../../types/classes/task/repeatInfo.js";
 
 /**
  * Backwards-compatible method of getting `Repeat` enum values. The enum type of `Repeat` was changed from `number`

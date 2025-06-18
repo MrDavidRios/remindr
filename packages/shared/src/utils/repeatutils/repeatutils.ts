@@ -5,10 +5,11 @@ import {
   Repeat,
   RepeatDurationType,
   weekdays,
-} from "../types/classes/task/repeatInfo.js";
-import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
-import { DateFormat } from "../types/dateformat.js";
-import { formatDate } from "./datefunctions.js";
+} from "../../types/classes/task/repeatInfo.js";
+import { ScheduledReminder } from "../../types/classes/task/scheduledReminder.js";
+import { DateFormat } from "../../types/dateformat.js";
+import { formatDate } from "../datefunctions.js";
+import { getNextRepeatDate } from "./getnextrepeatdate.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
 
 export function reminderRepeats(scheduledReminder: ScheduledReminder): boolean {
@@ -152,4 +153,27 @@ export function getSimplifiedReadableRepeatValue(
   }
 
   return "Custom";
+}
+
+export function canReminderBeFurtherAdvanced(
+  scheduledReminder: ScheduledReminder
+): boolean {
+  const { durationType, elapsedReminders, duration } =
+    scheduledReminder.repeatInfo;
+
+  switch (durationType) {
+    case RepeatDurationType.Forever:
+      return true;
+    case RepeatDurationType.FixedAmount:
+      if (duration === undefined) return false;
+      return elapsedReminders < duration - 1;
+    case RepeatDurationType.Date:
+      const nextRepeatDate = getNextRepeatDate(scheduledReminder);
+      if (duration === undefined) return false;
+      return nextRepeatDate.getTime() < duration;
+  }
+
+  throw new Error(
+    `Unhandled repeat duration type: ${scheduledReminder.repeatInfo.durationType}`
+  );
 }

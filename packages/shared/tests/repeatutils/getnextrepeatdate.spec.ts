@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { FrequencyType } from "../../src/types/classes/task/repeatInfo.js";
 import { ScheduledReminder } from "../../src/types/classes/task/scheduledReminder.js";
-import { getNextRepeatDate } from "../../src/utils/getnextrepeatdate.js";
+import { getNextRepeatDate } from "../../src/utils/repeatutils/getnextrepeatdate.js";
 import { setDate } from "../../src/utils/scheduledreminderfunctions.js";
 
 describe("getNextRepeatDate", () => {

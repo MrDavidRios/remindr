@@ -1,6 +1,6 @@
 import { Menu, reminderRepeats } from "@remindr/shared";
 import { hideMenu, showMenu } from "@renderer/features/menu-state/menuSlice";
-import { advanceRecurringReminder } from "@renderer/features/task-list/taskListSlice";
+import { advanceRecurringReminderInTask } from "@renderer/features/task-list/taskListSlice";
 import { useAppDispatch, useAppSelector } from "@renderer/hooks";
 import { useHotkey } from "@renderer/scripts/utils/hooks/usehotkey";
 import { AnimatePresence } from "framer-motion";
@@ -53,7 +53,7 @@ export function TaskManagementPage() {
             reminderRepeats(selectedTasks[i].scheduledReminders[0])
           ) {
             dispatch(
-              advanceRecurringReminder({
+              advanceRecurringReminderInTask({
                 task: selectedTasks[i],
                 reminderIdx: 0,
               })

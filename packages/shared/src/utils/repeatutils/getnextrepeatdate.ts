@@ -2,9 +2,9 @@ import {
   FrequencyType,
   IntervalFrequencyType,
   Repeat,
-} from "../types/classes/task/repeatInfo.js";
-import { ScheduledReminder } from "../types/classes/task/scheduledReminder.js";
-import { addMonths, getReminderDate } from "./datefunctions.js";
+} from "../../types/classes/task/repeatInfo.js";
+import { ScheduledReminder } from "../../types/classes/task/scheduledReminder.js";
+import { addMonths, getReminderDate } from "../datefunctions.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
 
 function getNextRepeatDateLegacy(repeatType: Repeat, reminderDate: Date): Date {
