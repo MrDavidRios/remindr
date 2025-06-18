@@ -123,3 +123,7 @@ export function isTaskInList(task: Task, taskList: Task[]) {
     _.find(taskList, (t) => t.creationTime === task.creationTime) !== undefined
   );
 }
+
+export function isSameTask(task1: Task, task2: Task) {
+  return task1.creationTime === task2.creationTime;
+}

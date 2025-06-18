@@ -304,3 +304,15 @@ export function getDaysInMonth(date: Date) {
       return 31;
   }
 }
+
+export const isDateTomorrow = (date: Date): boolean => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Set to start of the day
+
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  date.setHours(0, 0, 0, 0); // Set to start of the day
+
+  return date.getTime() === tomorrow.getTime();
+};

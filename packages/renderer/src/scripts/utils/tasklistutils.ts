@@ -1,12 +1,14 @@
-import { Task, getDate, isOverdue } from '@remindr/shared';
-import { getEarliestReminder } from '@remindr/shared/src';
-import _ from 'lodash';
+import { Task, getDate, isOverdue } from "@remindr/shared";
+import { getEarliestReminder } from "@remindr/shared/src";
+import _ from "lodash";
 
 export function getOverdueAmount(taskList: Task[]) {
   return _.filter(taskList, (task: Task) => {
     if (task.completed) return false;
 
-    return task.scheduledReminders.length === 0 ? false : isOverdue(task.scheduledReminders[0]);
+    return task.scheduledReminders.length === 0
+      ? false
+      : isOverdue(task.scheduledReminders[0]);
   }).length;
 }
 
@@ -14,6 +16,10 @@ export function getTaskIdx(task: Task | undefined, taskList: Task[]) {
   if (task === undefined) return -1;
 
   return _.findIndex(taskList, (t) => t.creationTime === task.creationTime);
+}
+
+export function getTaskFromList(task: Task, taskList: Task[]) {
+  return _.find(taskList, (t) => t.creationTime === task.creationTime);
 }
 
 export function tasksInSameOrder(taskList1: Task[], taskList2: Task[]) {
