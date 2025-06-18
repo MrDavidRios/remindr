@@ -17,6 +17,7 @@ export function advanceRecurringReminder(scheduledReminder: ScheduledReminder) {
     throw new Error("Scheduled reminder does not repeat.");
 
   const scheduledReminderClone = getScheduledReminderClone(scheduledReminder);
+
   const advancedScheduledReminder = setDate(
     scheduledReminderClone,
     getNextRepeatDate(scheduledReminderClone)
@@ -50,15 +51,15 @@ export function advanceRecurringReminderInList(
 
   const scheduledReminderIdx = idx === -1 ? firstRecurringReminderIdx : idx;
 
-  if (!canReminderBeFurtherAdvanced(reminderListClone[scheduledReminderIdx])) {
-    reminderListClone[scheduledReminderIdx].repeatInfo.frequencyType =
-      FrequencyType.Never;
-    return sortReminders(reminderListClone);
-  }
-
   const advancedScheduledReminder = advanceRecurringReminder(
     reminderListClone[scheduledReminderIdx]
   );
+
+  // If this was the last possible time the reminder can be advanced,
+  // set it to never repeat.
+  if (!canReminderBeFurtherAdvanced(advancedScheduledReminder)) {
+    advancedScheduledReminder.repeatInfo.frequencyType = FrequencyType.Never;
+  }
 
   reminderListClone[scheduledReminderIdx].repeatInfo.frequencyType =
     FrequencyType.Never;

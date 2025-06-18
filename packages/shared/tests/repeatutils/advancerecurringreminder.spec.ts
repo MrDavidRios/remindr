@@ -25,9 +25,11 @@ describe("advanceRecurringReminder", () => {
       expect(scheduledReminders.length).toBe(3);
       expect(scheduledReminders[2].repeatInfo.elapsedReminders).toBe(2);
       scheduledReminders = advanceRecurringReminderInList(scheduledReminders);
-      expect(scheduledReminders.length).toBe(3);
-      expect(scheduledReminders[2].repeatInfo.elapsedReminders).toBe(2);
-      expect(scheduledReminders[2].repeatInfo.frequencyType).toBe(
+      expect(scheduledReminders.length).toBe(4);
+      expect(scheduledReminders[3].repeatInfo.elapsedReminders).toBe(3);
+      scheduledReminders = advanceRecurringReminderInList(scheduledReminders);
+      expect(scheduledReminders.length).toBe(4);
+      expect(scheduledReminders[3].repeatInfo.frequencyType).toBe(
         FrequencyType.Never
       );
     });

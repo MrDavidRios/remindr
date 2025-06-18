@@ -9,6 +9,8 @@ import {
 import { ScheduledReminder } from "../../types/classes/task/scheduledReminder.js";
 import { DateFormat } from "../../types/dateformat.js";
 import { formatDate } from "../datefunctions.js";
+import { getScheduledReminderClone } from "../scheduledreminderfunctions.js";
+import { advanceRecurringReminder } from "./advancerecurringreminder.js";
 import { getNextRepeatDate } from "./getnextrepeatdate.js";
 import { getRepeatValue } from "./repeatcompatibility.js";
 
@@ -166,7 +168,7 @@ export function canReminderBeFurtherAdvanced(
       return true;
     case RepeatDurationType.FixedAmount:
       if (duration === undefined) return false;
-      return elapsedReminders < duration - 1;
+      return elapsedReminders < duration;
     case RepeatDurationType.Date:
       const nextRepeatDate = getNextRepeatDate(scheduledReminder);
       if (duration === undefined) return false;
@@ -187,4 +189,12 @@ export function canReminderBeFurtherAdvanced(
   throw new Error(
     `Unhandled repeat duration type: ${scheduledReminder.repeatInfo.durationType}`
   );
+}
+
+export function isLastTimeReminderCanBeAdvanced(
+  scheduledReminder: ScheduledReminder
+): boolean {
+  const reminderClone = getScheduledReminderClone(scheduledReminder);
+  const advancedReminder = advanceRecurringReminder(reminderClone);
+  return !canReminderBeFurtherAdvanced(advancedReminder);
 }

@@ -48,7 +48,7 @@ export const frequencyTypeToPluralNoun: Record<FrequencyType, string> = {
 };
 
 export const frequencyTypeToAdverb: Record<IntervalFrequencyType, string> = {
-  [FrequencyType.FixedIntervalMinutes]: "minutely",
+  [FrequencyType.FixedIntervalMinutes]: "every minute",
   [FrequencyType.FixedIntervalHours]: "hourly",
   [FrequencyType.FixedIntervalDays]: "daily",
   [FrequencyType.FixedIntervalWeeks]: "weekly",
