@@ -43,6 +43,10 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
     ? reminderRepeats(task.scheduledReminders[0])
     : false;
   const multipleReminders = task.scheduledReminders.length > 1;
+  const overdueReminders = task.scheduledReminders.filter((r) =>
+    isOverdue(r)
+  ).length;
+
   const hasSubtasks = task.subtasks.length > 0;
   const hasLinks = task.links?.length > 0;
 
@@ -112,7 +116,9 @@ export const TaskTileContents: FC<TaskTileContentsProps> = ({ task }) => {
                 className={`${indicatorClasses}`}
                 src={reminderIcon}
                 draggable={false}
-                title={`${task.scheduledReminders.length} reminders`}
+                title={`${task.scheduledReminders.length} reminders${
+                  overdueReminders > 0 ? ` (${overdueReminders} overdue)` : ""
+                }`}
                 alt=""
               />
               <p>{task.scheduledReminders.length}</p>
