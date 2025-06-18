@@ -1,19 +1,26 @@
-import checkImg from '@assets/icons/check.png';
-import circle from '@assets/icons/circle.svg';
-import pencilIcon from '@assets/icons/pencil.svg';
-import type { Subtask } from '@remindr/shared';
-import { Task, formatDateAndTime } from '@remindr/shared';
-import { showDialog } from '@renderer/features/menu-state/menuSlice';
-import { updateTask } from '@renderer/features/task-list/taskListSlice';
-import { getEditedTask, setEditedTask } from '@renderer/features/task-modification/taskModificationSlice';
-import { useAppDispatch, useAppSelector, useAppStore } from '@renderer/hooks';
-import type { FC } from 'react';
-import { DynamicTextArea } from '../../dynamic-text-area/DynamicTextArea';
-import { ActionBar } from './ActionBar';
-import { SubtaskEditor } from './SubtaskEditor';
-import { LinksEditor } from './links-editor/LinksEditor';
-import { NotesEditor } from './notes-editor/NotesEditor';
-import { RemindersEditor } from './reminders-editor/RemindersEditor';
+import checkImg from "@assets/icons/check.png";
+import circle from "@assets/icons/circle.svg";
+import pencilIcon from "@assets/icons/pencil.svg";
+import type { Subtask } from "@remindr/shared";
+import { Task, formatDateAndTime } from "@remindr/shared";
+import { showDialog } from "@renderer/features/menu-state/menuSlice";
+import {
+  completeTask,
+  markTaskIncomplete,
+  updateTask,
+} from "@renderer/features/task-list/taskListSlice";
+import {
+  getEditedTask,
+  setEditedTask,
+} from "@renderer/features/task-modification/taskModificationSlice";
+import { useAppDispatch, useAppSelector, useAppStore } from "@renderer/hooks";
+import type { FC } from "react";
+import { DynamicTextArea } from "../../dynamic-text-area/DynamicTextArea";
+import { ActionBar } from "./ActionBar";
+import { SubtaskEditor } from "./SubtaskEditor";
+import { LinksEditor } from "./links-editor/LinksEditor";
+import { NotesEditor } from "./notes-editor/NotesEditor";
+import { RemindersEditor } from "./reminders-editor/RemindersEditor";
 
 interface TaskModificationInterfaceProps {
   animationComplete: boolean;
@@ -29,8 +36,11 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
   const dispatch = useAppDispatch();
   const store = useAppStore();
 
-  const fallbackTask = JSON.parse(JSON.stringify(new Task(''))) as Task;
-  const editedTask = useAppSelector((state) => getEditedTask(state.taskModificationState, creating)) ?? fallbackTask;
+  const fallbackTask = JSON.parse(JSON.stringify(new Task(""))) as Task;
+  const editedTask =
+    useAppSelector((state) =>
+      getEditedTask(state.taskModificationState, creating)
+    ) ?? fallbackTask;
   const dateFormat = useAppSelector((state) => state.settings.value.dateFormat);
 
   /**
@@ -39,11 +49,18 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
    * @returns
    */
   async function save(task?: Task) {
-    const currentEditedTask = getEditedTask(store.getState().taskModificationState, creating) ?? fallbackTask;
+    const currentEditedTask =
+      getEditedTask(store.getState().taskModificationState, creating) ??
+      fallbackTask;
     const taskToSave = task ?? currentEditedTask;
 
-    if (taskToSave.name.trim() === '') {
-      dispatch(showDialog({ title: 'Invalid Name', message: 'Make sure your task has a name.' }));
+    if (taskToSave.name.trim() === "") {
+      dispatch(
+        showDialog({
+          title: "Invalid Name",
+          message: "Make sure your task has a name.",
+        })
+      );
       return;
     }
 
@@ -55,14 +72,13 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
   }
 
   const toggleComplete = () => {
-    const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
-    editedTaskClone.completed = !editedTaskClone.completed;
-    editedTaskClone.completionTime = editedTaskClone.completed ? Date.now() : -1;
-    dispatch(setEditedTask({ creating, task: editedTaskClone }));
-    return editedTaskClone;
+    if (editedTask.completed) dispatch(markTaskIncomplete(editedTask));
+    else dispatch(completeTask(editedTask));
   };
 
-  const toggleCompleteButtonTitle = editedTask.completed ? 'Mark incomplete' : 'Mark complete';
+  const toggleCompleteButtonTitle = editedTask.completed
+    ? "Mark incomplete"
+    : "Mark complete";
   return (
     <div className="task-panel frosted">
       <div className="task-modification-interface">
@@ -72,32 +88,42 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
               <button
                 className={`task-complete-button-container`}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.stopPropagation();
 
-                    const updatedTask = toggleComplete();
-                    save(updatedTask);
+                    toggleComplete();
                   }
                 }}
                 onClick={(e) => {
                   // Stops the parent from taking credit for the click
                   e.stopPropagation();
 
-                  const updatedTask = toggleComplete();
-                  save(updatedTask);
+                  toggleComplete();
                 }}
                 tabIndex={-1}
                 type="button"
                 aria-label={toggleCompleteButtonTitle}
                 title={toggleCompleteButtonTitle}
               >
-                <img className="task-complete-button svg-filter" src={circle} draggable="false" alt="" />
+                <img
+                  className="task-complete-button svg-filter"
+                  src={circle}
+                  draggable="false"
+                  alt=""
+                />
                 {editedTask.completed && (
-                  <img className="task-complete-button-checkmark" src={checkImg} draggable="false" alt="" />
+                  <img
+                    className="task-complete-button-checkmark"
+                    src={checkImg}
+                    draggable="false"
+                    alt=""
+                  />
                 )}
               </button>
             )}
-            <h3 id="taskCreationWindowHeader">{creating ? 'New Task' : 'Edit Task'}</h3>
+            <h3 id="taskCreationWindowHeader">
+              {creating ? "New Task" : "Edit Task"}
+            </h3>
           </div>
 
           <DynamicTextArea
@@ -105,14 +131,16 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
             aria-label="task-title"
             placeholder="Remind me to..."
             maxLength={255}
-            value={editedTask?.name ?? ''}
+            value={editedTask?.name ?? ""}
             autoFocus={animationComplete}
             allowNewLine={false}
             onChange={(e) => {
               // If there's no change, don't re-render (for some reason, this event was fired when clicking away from the title input opening the task modification interface)
               if (editedTask.name === e.currentTarget.value) return;
 
-              const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
+              const editedTaskClone = JSON.parse(
+                JSON.stringify(editedTask)
+              ) as Task;
               editedTaskClone.name = e.currentTarget.value;
               dispatch(setEditedTask({ creating, task: editedTaskClone }));
             }}
@@ -127,7 +155,9 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
             taskId={editedTask.creationTime}
             defaultSubtasks={editedTask?.subtasks ?? []}
             onSave={(subtasks: Subtask[]) => {
-              const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
+              const editedTaskClone = JSON.parse(
+                JSON.stringify(editedTask)
+              ) as Task;
               editedTaskClone.subtasks = JSON.parse(JSON.stringify(subtasks));
               dispatch(setEditedTask({ creating, task: editedTaskClone }));
 
@@ -146,7 +176,7 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
             <NotesEditor
               className="notes-editor"
               placeholder="Enter notes here..."
-              defaultValue={editedTask?.notes ?? ''}
+              defaultValue={editedTask?.notes ?? ""}
               taskId={editedTask.creationTime}
               saveOnChange={creating}
               onSave={(value) => {
@@ -163,9 +193,12 @@ export const TaskModificationInterface: FC<TaskModificationInterfaceProps> = ({
         {/* Footer of the Task Modification Interface */}
         {editedTask.completed && editedTask.completionTime > 0 && (
           <div className="task-panel-footer">
-            <p className="completion-timestamp" style={{ fontSize: 14 }}>{`Completed ${formatDateAndTime(
+            <p
+              className="completion-timestamp"
+              style={{ fontSize: 14 }}
+            >{`Completed ${formatDateAndTime(
               new Date(editedTask.completionTime),
-              dateFormat,
+              dateFormat
             )}`}</p>
           </div>
         )}
