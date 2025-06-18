@@ -43,9 +43,6 @@ const electronHandler = {
     isDebug: () => {
       return ipcRenderer.sendSync("is-debug");
     },
-    openDevTools: () => {
-      return ipcRenderer.sendSync("open-dev-tools");
-    },
   },
   shell: {
     openExternal: (url: string) => {
@@ -112,7 +109,7 @@ const mainWindowHandler = {
     return ipcRenderer.sendSync("get-window-height");
   },
   openDevTools() {
-    return ipcRenderer.sendSync("open-dev-tools");
+    return ipcRenderer.send("open-dev-tools");
   },
 };
 

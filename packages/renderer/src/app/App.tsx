@@ -1,14 +1,14 @@
-import { Menu } from '@remindr/shared';
-import { useHotkey } from '@renderer/scripts/utils/hooks/usehotkey';
-import { useEffect } from 'react';
-import { Route, MemoryRouter as Router, Routes } from 'react-router-dom';
-import '../../styles/css/main.css';
-import { Background } from '../components/background/Background';
-import Titlebar from '../components/titlebar/Titlebar';
-import { useAppDispatch } from '../hooks';
-import { DisplayMenus } from '../menuLogic';
-import { ChosenPage } from '../pageLogic';
-import { useStartupActions } from '../startup';
+import { Menu } from "@remindr/shared";
+import { useHotkey } from "@renderer/scripts/utils/hooks/usehotkey";
+import { useEffect } from "react";
+import { Route, MemoryRouter as Router, Routes } from "react-router-dom";
+import "../../styles/css/main.css";
+import { Background } from "../components/background/Background";
+import Titlebar from "../components/titlebar/Titlebar";
+import { useAppDispatch } from "../hooks";
+import { DisplayMenus } from "../menuLogic";
+import { ChosenPage } from "../pageLogic";
+import { useStartupActions } from "../startup";
 
 function Root() {
   const dispatch = useAppDispatch();
@@ -17,10 +17,18 @@ function Root() {
   useEffect(() => useStartupActions(dispatch), []);
 
   // Initialize Hotkeys
-  useHotkey(['mod+w'], () => window.mainWindow.hide(), Menu.None);
-  useHotkey(['mod+q'], () => window.electron.ipcRenderer.sendMessage('action-on-save', 'quit'), Menu.None);
-  useHotkey(['mod+r'], () => window.electron.ipcRenderer.sendMessage('action-on-save', 'restart'), Menu.None);
-  useHotkey(['mod+shift+i'], () => window.mainWindow.openDevTools(), Menu.None);
+  useHotkey(["mod+w"], () => window.mainWindow.hide(), Menu.None);
+  useHotkey(
+    ["mod+q"],
+    () => window.electron.ipcRenderer.sendMessage("action-on-save", "quit"),
+    Menu.None
+  );
+  useHotkey(
+    ["mod+r"],
+    () => window.electron.ipcRenderer.sendMessage("action-on-save", "restart"),
+    Menu.None
+  );
+  useHotkey(["mod+shift+i"], () => window.mainWindow.openDevTools(), Menu.None);
 
   return (
     <div id="appWrapper">

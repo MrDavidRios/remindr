@@ -373,10 +373,6 @@ ipcMain.on("is-platform-linux", (event) => {
   event.returnValue = process.platform === "linux";
 });
 
-ipcMain.on("open-dev-tools", () => {
-  getMainWindow()?.webContents.openDevTools();
-});
-
 ipcMain.handle("get-page-title", async (_event, url) => {
   const pageTitle = await getPageTitle(url);
   return pageTitle;
