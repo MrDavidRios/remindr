@@ -93,6 +93,9 @@ export const taskModificationSlice = createSlice({
       state.linkEditState = action.payload;
     },
     clearTaskEditState: () => initialState,
+    clearReminderEditState: (state) => {
+      state.reminderEditState = initialState.reminderEditState;
+    },
   },
 });
 
@@ -113,4 +116,5 @@ export const {
   setReminderEditState,
   setLinkEditState,
   clearTaskEditState,
+  clearReminderEditState,
 } = taskModificationSlice.actions;

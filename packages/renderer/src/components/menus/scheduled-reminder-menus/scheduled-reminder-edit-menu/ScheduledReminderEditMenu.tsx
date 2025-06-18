@@ -22,6 +22,7 @@ import { FloatingMenu } from "@renderer/components/floating-menu/FloatingMenu";
 import { hideMenu, showDialog } from "@renderer/features/menu-state/menuSlice";
 import { updateTask } from "@renderer/features/task-list/taskListSlice";
 import {
+  clearReminderEditState,
   getEditedTask,
   setEditedTask,
 } from "@renderer/features/task-modification/taskModificationSlice";
@@ -124,6 +125,7 @@ export const ScheduledReminderEditMenu: FC = () => {
 
     editedTaskClone.columnIdx = getTaskColumnIdx(editedTaskClone);
 
+    dispatch(clearReminderEditState());
     dispatch(setEditedTask({ creating: undefined, task: editedTaskClone }));
     if (taskEditType === "edit") {
       dispatch(updateTask(editedTaskClone));
@@ -133,6 +135,7 @@ export const ScheduledReminderEditMenu: FC = () => {
   }
 
   const onMenuClose = () => {
+    dispatch(clearReminderEditState());
     if (!creatingReminder) return;
 
     const editedTaskClone = JSON.parse(JSON.stringify(editedTask)) as Task;
