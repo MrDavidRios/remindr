@@ -8,7 +8,7 @@ on:
         description: Distribution channel for release. It can be `latest`, `beta`, or `alpha`.
         required: false
         type: string
-        default: "release"
+        default: "latest"
 
 concurrency:
   group: ${{github.workflow}}-${{ github.ref }}-${{inputs.distribution-channel}}
