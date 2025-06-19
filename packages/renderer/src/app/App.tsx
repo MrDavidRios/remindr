@@ -29,6 +29,11 @@ function Root() {
     Menu.None
   );
   useHotkey(["mod+shift+i"], () => window.mainWindow.openDevTools(), Menu.None);
+  useHotkey(
+    ["mod+alt+i"],
+    () => window.mainWindow.openAllWindowsDevTools(),
+    Menu.None
+  );
 
   return (
     <div id="appWrapper">

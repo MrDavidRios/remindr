@@ -111,6 +111,9 @@ const mainWindowHandler = {
   openDevTools() {
     return ipcRenderer.send("open-dev-tools");
   },
+  openAllWindowsDevTools() {
+    return ipcRenderer.send("open-all-windows-dev-tools");
+  },
 };
 
 const storeHandler = {

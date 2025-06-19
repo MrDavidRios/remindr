@@ -1,7 +1,7 @@
 import type { Task, TaskScheduledReminderPair } from "@remindr/shared";
-import { BrowserWindow, app, ipcMain, screen } from "electron";
+import { BrowserWindow, ipcMain, screen } from "electron";
 import _ from "lodash";
-import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createDefaultSettings } from "./utils/defaultSettings.js";
 import { getMainWindow } from "./utils/getMainWindow.js";
 import { getScreenHeight, getScreenWidth } from "./utils/screen.js";
@@ -155,9 +155,10 @@ export function notify(
     });
 
     win.loadFile(
-      join(
-        app.getAppPath(),
-        "packages/renderer/dist/src/notifications/notification.html"
+      fileURLToPath(
+        import.meta.resolve(
+          "@app/renderer/dist/src/notifications/notification.html"
+        )
       )
     );
   }
@@ -189,9 +190,12 @@ function createNotificationWindow() {
     parent: getMainWindow(),
     skipTaskbar: true,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: false,
+      webviewTag: false,
       devTools: DEBUG_NOTIF_WINDOW,
-      preload: join(app.getAppPath(), "packages/preload/dist/exposed.mjs"),
+      preload: fileURLToPath(import.meta.resolve("@app/preload/exposed.mjs")),
     },
   });
 
@@ -371,9 +375,10 @@ function convertToGroupNotif(notifDetails?: TaskScheduledReminderPair) {
 
   // Open one notification saying how many notifications that are in queue
   win.loadFile(
-    join(
-      app.getAppPath(),
-      "packages/renderer/dist/src/notifications/groupnotification.html"
+    fileURLToPath(
+      import.meta.resolve(
+        "@app/renderer/dist/src/notifications/groupnotification.html"
+      )
     )
   );
 

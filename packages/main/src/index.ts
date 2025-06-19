@@ -1,6 +1,7 @@
 import { BadgeInfo } from "@remindr/shared";
 import {
   app,
+  BrowserWindow,
   dialog,
   ipcMain,
   MessageBoxOptions,
@@ -160,6 +161,15 @@ ipcMain.on("is-debug", (event) => {
 
 ipcMain.on("open-dev-tools", () => {
   getMainWindow()?.webContents.openDevTools();
+});
+
+// Useful for debugging notifications
+ipcMain.on("open-all-windows-dev-tools", () => {
+  const windows = BrowserWindow.getAllWindows();
+  for (const window of windows) {
+    if (window.isDestroyed()) continue;
+    window.webContents.openDevTools();
+  }
 });
 
 ipcMain.on("get-system-theme", (event) => {

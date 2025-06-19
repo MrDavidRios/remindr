@@ -44,7 +44,7 @@ export function TaskManagementPage() {
     () => {
       if (window.electron.remote.isPackaged()) return;
 
-      const TEST_RECURRING_REMINDERS = true;
+      const TEST_RECURRING_REMINDERS = false;
 
       if (TEST_RECURRING_REMINDERS) {
         for (let i = 0; i < selectedTasks.length; i++) {
