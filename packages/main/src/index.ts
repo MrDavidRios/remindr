@@ -21,16 +21,10 @@ import {
 } from "node:fs";
 import path from "node:path";
 import type { AppInitConfig } from "./AppInitConfig.js";
-import {
-  deleteAccountData,
-  isSaving,
-  loadStreamsData,
-  loadTaskData,
-  loadUserData,
-  saveStreamsData,
-  saveTaskData,
-  saveUserData,
-} from "./dataFunctions.js";
+import { loadStreamsData, saveStreamsData } from "./data/syncStreamsData.js";
+import { loadTaskData, saveTaskData } from "./data/syncTaskData.js";
+import { loadUserData, saveUserData } from "./data/syncUserData.js";
+import { deleteAccountData, isSaving } from "./dataFunctions.js";
 import { createModuleRunner } from "./ModuleRunner.js";
 import { terminateAppOnLastWindowClose } from "./modules/ApplicationTerminatorOnLastWindowClose.js";
 import { AutoUpdater } from "./modules/AutoUpdater.js";
