@@ -16,7 +16,7 @@
     "@types/lodash": "^4.17.17",
     "@types/react-color": "^3.0.13",
     "fast-average-color": "^9.5.0",
-    "framer-motion": "^12.17.0",
+    "framer-motion": "^12.19.1",
     "lodash": "^4.17.21",
     "react": "^19.1.0",
     "react-color": "^2.19.3",
